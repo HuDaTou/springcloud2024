@@ -24,15 +24,19 @@
             <version>3.5.13</version>
         </dependency>
         <!-- Mybatis Generator 自己独有+自带版本号-->
-        <dependency>
-            <groupId>org.mybatis.generator</groupId>
-            <artifactId>mybatis-generator-core</artifactId>
-            <version>1.4.2</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.mybatis.generator</groupId>-->
+<!--            <artifactId>mybatis-generator-core</artifactId>-->
+<!--            <version>1.4.2</version>-->
+<!--        </dependency>-->
         <!--通用Mapper-->
+<!--        <dependency>-->
+<!--            <groupId>tk.mybatis</groupId>-->
+<!--            <artifactId>mapper</artifactId>-->
+<!--        </dependency>-->
         <dependency>
-            <groupId>tk.mybatis</groupId>
-            <artifactId>mapper</artifactId>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
         <!--mysql8.0-->
         <dependency>

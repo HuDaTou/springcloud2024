@@ -32,10 +32,16 @@
             <artifactId>druid-spring-boot-starter</artifactId>
         </dependency>
         <!-- Swagger3 调用方式 http://你的主机IP地址:5555/swagger-ui/index.html -->
+<!--        <dependency>-->
+<!--            <groupId>org.springdoc</groupId>-->
+<!--            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>-->
+<!--        </dependency>-->
+<!--        换成knife4j-->
         <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
         </dependency>
+
         <!--mybatis和springboot整合-->
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
@@ -52,10 +58,18 @@
             <artifactId>persistence-api</artifactId>
         </dependency>
         <!--通用Mapper4-->
+<!--        <dependency>-->
+<!--            <groupId>tk.mybatis</groupId>-->
+<!--            <artifactId>mapper</artifactId>-->
+<!--        </dependency>-->
+        <!--            把mapper4换成mybasitplus生成代码-->
+        <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
         <dependency>
-            <groupId>tk.mybatis</groupId>
-            <artifactId>mapper</artifactId>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
+
+
         <!--hutool-->
         <dependency>
             <groupId>cn.hutool</groupId>
