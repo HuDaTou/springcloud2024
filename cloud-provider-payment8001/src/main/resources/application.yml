@@ -19,3 +19,12 @@ mybatis:
   type-aliases-package: com.overthinker.cloud.entities
   configuration:
     map-underscore-to-camel-case: true
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+logging:
+  config: classpath:log4j2-spring.xml
+  level:
+    com.overthinker.cloud: debug
+
+
