@@ -1,0 +1,62 @@
+[INFO] [2024-04-22 16:22:28.912] [main] com.overthinker.cloud.Main8001:50 - Starting Main8001 using Java 17.0.10 with PID 111600 (D:\gitcode\springcloud2024\cloud-provider-payment8001\target\classes started by overh in D:\gitcode\springcloud2024)
+[DEBUG] [2024-04-22 16:22:28.920] [main] com.overthinker.cloud.Main8001:51 - Running with Spring Boot v3.2.0, Spring v6.1.1
+[INFO] [2024-04-22 16:22:28.921] [main] com.overthinker.cloud.Main8001:653 - No active profile set, falling back to 1 default profile: "default"
+[INFO] [2024-04-22 16:22:30.738] [main] com.overthinker.cloud.Main8001:56 - Started Main8001 in 2.281 seconds (process running for 2.892)
+[DEBUG] [2024-04-22 16:22:47.018] [http-nio-8001-exec-1] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - ==>  Preparing: SELECT id,pay_no,order_no,user_id,amount,deleted,create_time,update_time FROM t_pay
+[DEBUG] [2024-04-22 16:22:47.032] [http-nio-8001-exec-1] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - ==> Parameters: 
+[TRACE] [2024-04-22 16:22:47.052] [http-nio-8001-exec-1] com.overthinker.cloud.mapper.TPayMapper.selectList:141 - <==    Columns: id, pay_no, order_no, user_id, amount, deleted, create_time, update_time
+[TRACE] [2024-04-22 16:22:47.053] [http-nio-8001-exec-1] com.overthinker.cloud.mapper.TPayMapper.selectList:141 - <==        Row: 1, pay17203699, 6544bafb424a, 1, 9.90, 0, 2024-04-19 22:21:19, 2024-04-19 22:21:19
+[DEBUG] [2024-04-22 16:22:47.055] [http-nio-8001-exec-1] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - <==      Total: 1
+[DEBUG] [2024-04-22 16:22:51.028] [http-nio-8001-exec-2] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - ==>  Preparing: SELECT id,pay_no,order_no,user_id,amount,deleted,create_time,update_time FROM t_pay
+[DEBUG] [2024-04-22 16:22:51.028] [http-nio-8001-exec-2] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - ==> Parameters: 
+[TRACE] [2024-04-22 16:22:51.030] [http-nio-8001-exec-2] com.overthinker.cloud.mapper.TPayMapper.selectList:141 - <==    Columns: id, pay_no, order_no, user_id, amount, deleted, create_time, update_time
+[TRACE] [2024-04-22 16:22:51.030] [http-nio-8001-exec-2] com.overthinker.cloud.mapper.TPayMapper.selectList:141 - <==        Row: 1, pay17203699, 6544bafb424a, 1, 9.90, 0, 2024-04-19 22:21:19, 2024-04-19 22:21:19
+[DEBUG] [2024-04-22 16:22:51.031] [http-nio-8001-exec-2] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - <==      Total: 1
+[DEBUG] [2024-04-22 16:22:51.817] [http-nio-8001-exec-3] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - ==>  Preparing: SELECT id,pay_no,order_no,user_id,amount,deleted,create_time,update_time FROM t_pay
+[DEBUG] [2024-04-22 16:22:51.818] [http-nio-8001-exec-3] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - ==> Parameters: 
+[TRACE] [2024-04-22 16:22:51.819] [http-nio-8001-exec-3] com.overthinker.cloud.mapper.TPayMapper.selectList:141 - <==    Columns: id, pay_no, order_no, user_id, amount, deleted, create_time, update_time
+[TRACE] [2024-04-22 16:22:51.819] [http-nio-8001-exec-3] com.overthinker.cloud.mapper.TPayMapper.selectList:141 - <==        Row: 1, pay17203699, 6544bafb424a, 1, 9.90, 0, 2024-04-19 22:21:19, 2024-04-19 22:21:19
+[DEBUG] [2024-04-22 16:22:51.820] [http-nio-8001-exec-3] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - <==      Total: 1
+[DEBUG] [2024-04-22 16:22:52.688] [http-nio-8001-exec-4] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - ==>  Preparing: SELECT id,pay_no,order_no,user_id,amount,deleted,create_time,update_time FROM t_pay
+[DEBUG] [2024-04-22 16:22:52.688] [http-nio-8001-exec-4] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - ==> Parameters: 
+[TRACE] [2024-04-22 16:22:52.690] [http-nio-8001-exec-4] com.overthinker.cloud.mapper.TPayMapper.selectList:141 - <==    Columns: id, pay_no, order_no, user_id, amount, deleted, create_time, update_time
+[TRACE] [2024-04-22 16:22:52.690] [http-nio-8001-exec-4] com.overthinker.cloud.mapper.TPayMapper.selectList:141 - <==        Row: 1, pay17203699, 6544bafb424a, 1, 9.90, 0, 2024-04-19 22:21:19, 2024-04-19 22:21:19
+[DEBUG] [2024-04-22 16:22:52.690] [http-nio-8001-exec-4] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - <==      Total: 1
+[DEBUG] [2024-04-22 16:23:02.218] [http-nio-8001-exec-6] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - ==>  Preparing: SELECT id,pay_no,order_no,user_id,amount,deleted,create_time,update_time FROM t_pay
+[DEBUG] [2024-04-22 16:23:02.218] [http-nio-8001-exec-6] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - ==> Parameters: 
+[TRACE] [2024-04-22 16:23:02.220] [http-nio-8001-exec-6] com.overthinker.cloud.mapper.TPayMapper.selectList:141 - <==    Columns: id, pay_no, order_no, user_id, amount, deleted, create_time, update_time
+[TRACE] [2024-04-22 16:23:02.220] [http-nio-8001-exec-6] com.overthinker.cloud.mapper.TPayMapper.selectList:141 - <==        Row: 1, pay17203699, 6544bafb424a, 1, 9.90, 0, 2024-04-19 22:21:19, 2024-04-19 22:21:19
+[DEBUG] [2024-04-22 16:23:02.220] [http-nio-8001-exec-6] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - <==      Total: 1
+[DEBUG] [2024-04-22 16:23:07.137] [http-nio-8001-exec-8] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - ==>  Preparing: SELECT id,pay_no,order_no,user_id,amount,deleted,create_time,update_time FROM t_pay
+[DEBUG] [2024-04-22 16:23:07.137] [http-nio-8001-exec-8] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - ==> Parameters: 
+[TRACE] [2024-04-22 16:23:07.139] [http-nio-8001-exec-8] com.overthinker.cloud.mapper.TPayMapper.selectList:141 - <==    Columns: id, pay_no, order_no, user_id, amount, deleted, create_time, update_time
+[TRACE] [2024-04-22 16:23:07.139] [http-nio-8001-exec-8] com.overthinker.cloud.mapper.TPayMapper.selectList:141 - <==        Row: 1, pay17203699, 6544bafb424a, 1, 9.90, 0, 2024-04-19 22:21:19, 2024-04-19 22:21:19
+[DEBUG] [2024-04-22 16:23:07.140] [http-nio-8001-exec-8] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - <==      Total: 1
+[DEBUG] [2024-04-22 16:23:07.791] [http-nio-8001-exec-9] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - ==>  Preparing: SELECT id,pay_no,order_no,user_id,amount,deleted,create_time,update_time FROM t_pay
+[DEBUG] [2024-04-22 16:23:07.791] [http-nio-8001-exec-9] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - ==> Parameters: 
+[TRACE] [2024-04-22 16:23:07.792] [http-nio-8001-exec-9] com.overthinker.cloud.mapper.TPayMapper.selectList:141 - <==    Columns: id, pay_no, order_no, user_id, amount, deleted, create_time, update_time
+[TRACE] [2024-04-22 16:23:07.792] [http-nio-8001-exec-9] com.overthinker.cloud.mapper.TPayMapper.selectList:141 - <==        Row: 1, pay17203699, 6544bafb424a, 1, 9.90, 0, 2024-04-19 22:21:19, 2024-04-19 22:21:19
+[DEBUG] [2024-04-22 16:23:07.793] [http-nio-8001-exec-9] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - <==      Total: 1
+[DEBUG] [2024-04-22 16:23:08.945] [http-nio-8001-exec-1] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - ==>  Preparing: SELECT id,pay_no,order_no,user_id,amount,deleted,create_time,update_time FROM t_pay
+[DEBUG] [2024-04-22 16:23:08.946] [http-nio-8001-exec-1] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - ==> Parameters: 
+[TRACE] [2024-04-22 16:23:08.947] [http-nio-8001-exec-1] com.overthinker.cloud.mapper.TPayMapper.selectList:141 - <==    Columns: id, pay_no, order_no, user_id, amount, deleted, create_time, update_time
+[TRACE] [2024-04-22 16:23:08.948] [http-nio-8001-exec-1] com.overthinker.cloud.mapper.TPayMapper.selectList:141 - <==        Row: 1, pay17203699, 6544bafb424a, 1, 9.90, 0, 2024-04-19 22:21:19, 2024-04-19 22:21:19
+[DEBUG] [2024-04-22 16:23:08.949] [http-nio-8001-exec-1] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - <==      Total: 1
+[DEBUG] [2024-04-22 16:23:09.616] [http-nio-8001-exec-3] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - ==>  Preparing: SELECT id,pay_no,order_no,user_id,amount,deleted,create_time,update_time FROM t_pay
+[DEBUG] [2024-04-22 16:23:09.617] [http-nio-8001-exec-3] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - ==> Parameters: 
+[TRACE] [2024-04-22 16:23:09.618] [http-nio-8001-exec-3] com.overthinker.cloud.mapper.TPayMapper.selectList:141 - <==    Columns: id, pay_no, order_no, user_id, amount, deleted, create_time, update_time
+[TRACE] [2024-04-22 16:23:09.619] [http-nio-8001-exec-3] com.overthinker.cloud.mapper.TPayMapper.selectList:141 - <==        Row: 1, pay17203699, 6544bafb424a, 1, 9.90, 0, 2024-04-19 22:21:19, 2024-04-19 22:21:19
+[DEBUG] [2024-04-22 16:23:09.619] [http-nio-8001-exec-3] com.overthinker.cloud.mapper.TPayMapper.selectList:135 - <==      Total: 1
+[INFO] [2024-04-22 16:25:21.200] [main] com.overthinker.cloud.Main8001:50 - Starting Main8001 using Java 17.0.10 with PID 104368 (D:\gitcode\springcloud2024\cloud-provider-payment8001\target\classes started by overh in D:\gitcode\springcloud2024)
+[DEBUG] [2024-04-22 16:25:21.205] [main] com.overthinker.cloud.Main8001:51 - Running with Spring Boot v3.2.0, Spring v6.1.1
+[INFO] [2024-04-22 16:25:21.205] [main] com.overthinker.cloud.Main8001:653 - No active profile set, falling back to 1 default profile: "default"
+[INFO] [2024-04-22 16:25:22.551] [main] com.overthinker.cloud.Main8001:56 - Started Main8001 in 1.621 seconds (process running for 2.061)
+[INFO] [2024-04-22 17:14:45.252] [main] com.overthinker.cloud.Main8001:50 - Starting Main8001 using Java 17.0.10 with PID 44104 (D:\gitcode\springcloud2024\cloud-provider-payment8001\target\classes started by overh in D:\gitcode\springcloud2024)
+[DEBUG] [2024-04-22 17:14:45.257] [main] com.overthinker.cloud.Main8001:51 - Running with Spring Boot v3.2.0, Spring v6.1.1
+[INFO] [2024-04-22 17:14:45.258] [main] com.overthinker.cloud.Main8001:653 - No active profile set, falling back to 1 default profile: "default"
+[INFO] [2024-04-22 17:14:46.677] [main] com.overthinker.cloud.Main8001:56 - Started Main8001 in 1.708 seconds (process running for 2.191)
+[INFO] [2024-04-22 17:42:47.886] [main] com.overthinker.cloud.Main8001:50 - Starting Main8001 using Java 17.0.10 with PID 108708 (D:\gitcode\springcloud2024\cloud-provider-payment8001\target\classes started by overh in D:\gitcode\springcloud2024)
+[DEBUG] [2024-04-22 17:42:47.891] [main] com.overthinker.cloud.Main8001:51 - Running with Spring Boot v3.2.0, Spring v6.1.1
+[INFO] [2024-04-22 17:42:47.892] [main] com.overthinker.cloud.Main8001:653 - No active profile set, falling back to 1 default profile: "default"
+[INFO] [2024-04-22 17:42:49.285] [main] com.overthinker.cloud.Main8001:56 - Started Main8001 in 1.707 seconds (process running for 2.156)
+[INFO] [2024-04-22 17:45:31.443] [http-nio-8001-exec-6] com.overthinker.cloud.controller.TPayController:34 - 插入成功2
