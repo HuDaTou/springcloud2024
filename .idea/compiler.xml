@@ -8,8 +8,9 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="cloud-common" />
-        <module name="cloud-provider-payment8001" />
         <module name="mybatis_generator2024" />
+        <module name="cloud-consumer-order80" />
+        <module name="cloud-provider-payment8001" />
       </profile>
     </annotationProcessing>
   </component>

@@ -4,15 +4,19 @@ package com.overthinker.cloud.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.overthinker.cloud.entity.PayDTO;
 import com.overthinker.cloud.entity.TPay;
+import com.overthinker.cloud.resp.ResultData;
+import com.overthinker.cloud.resp.ReturnCodeEnum;
 import com.overthinker.cloud.service.impl.TPayServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
- * <p>
+ *
  * 支付交易表 前端控制器
- * </p>
+ *
  *
  * @author overthinker
  * @since 2024-04-21
@@ -28,35 +32,39 @@ public class TPayController {
 
 
     @PostMapping(value = "/add")
-    public String addPay(@RequestBody PayDTO payDTO){
+    public ResultData<String> addPay(@RequestBody PayDTO payDTO){
         TPay tPay = BeanUtil.copyProperties(payDTO, TPay.class);
         tPayService.save(tPay);
         log.info("插入成功"+ tPay.getId());
-        return "success 插入成功"+ tPay.getId();
+        return ResultData.success("成功插入记录，返回值："+tPay.getId());
 
     }
 
     @DeleteMapping("{id}")
-    public String deletePay(@PathVariable("id") Long id){
+    public ResultData<Integer> deletePay(@PathVariable("id") Long id){
         tPayService.removeById(id);
-        return "success";
+
+        return ResultData.success(1);
     }
 
     @PutMapping(value = "/update")
-    public String updatePay(@RequestBody PayDTO payDTO){
+    public ResultData<Integer> updatePay(@RequestBody PayDTO payDTO){
         TPay tPay = BeanUtil.copyProperties(payDTO, TPay.class);
         tPayService.updateById(tPay);
-        return "success";
+        return ResultData.success(1);
     }
 
     @GetMapping("{id}")
-    public TPay getPayBid(@PathVariable("id") Long id){
-        return tPayService.getById(id);
+    public ResultData<TPay> getPayBid(@PathVariable("id") Long id){
+//        如果id为负数抛出异常
+        if (id < 0) throw new RuntimeException("id不能为负数");
+        TPay tPay = tPayService.getById(id);
+        return ResultData.success(tPay);
     }
 
     @GetMapping("/list")
-    public String listPay(){
-        return tPayService.list().toString();
+    public ResultData<List> listPay(){
+        return ResultData.success(tPayService.list());
     }
 
 
