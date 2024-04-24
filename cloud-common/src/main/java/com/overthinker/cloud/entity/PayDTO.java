@@ -1,5 +1,4 @@
 package com.overthinker.cloud.entity;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -30,7 +30,7 @@ public class TPayController {
 
 
 
-
+//添加接口
     @PostMapping(value = "/add")
     public ResultData<String> addPay(@RequestBody PayDTO payDTO){
         TPay tPay = BeanUtil.copyProperties(payDTO, TPay.class);
@@ -40,6 +40,12 @@ public class TPayController {
 
     }
 
+
+    /**
+     * 删除
+     * @param id
+     * @return
+     */
     @DeleteMapping("{id}")
     public ResultData<Integer> deletePay(@PathVariable("id") Long id){
         tPayService.removeById(id);
