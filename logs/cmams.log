@@ -2,3 +2,7 @@
 [DEBUG] [2024-04-24 14:51:31.393] [main] com.overthinker.cloud.Main8001:51 - Running with Spring Boot v3.2.0, Spring v6.1.1
 [INFO] [2024-04-24 14:51:31.395] [main] com.overthinker.cloud.Main8001:653 - No active profile set, falling back to 1 default profile: "default"
 [INFO] [2024-04-24 14:51:32.905] [main] com.overthinker.cloud.Main8001:56 - Started Main8001 in 1.828 seconds (process running for 2.29)
+[INFO] [2024-04-24 15:09:49.102] [main] com.overthinker.cloud.Main8001:50 - Starting Main8001 using Java 17.0.10 with PID 276788 (D:\gitcode\springcloud2024\cloud-provider-payment8001\target\classes started by overh in D:\gitcode\springcloud2024)
+[DEBUG] [2024-04-24 15:09:49.107] [main] com.overthinker.cloud.Main8001:51 - Running with Spring Boot v3.2.0, Spring v6.1.1
+[INFO] [2024-04-24 15:09:49.108] [main] com.overthinker.cloud.Main8001:653 - No active profile set, falling back to 1 default profile: "default"
+[INFO] [2024-04-24 15:09:50.428] [main] com.overthinker.cloud.Main8001:56 - Started Main8001 in 1.589 seconds (process running for 2.105)
