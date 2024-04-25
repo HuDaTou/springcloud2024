@@ -5,10 +5,12 @@ import lombok.extern.log4j.Log4j2;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication
 @MapperScan("com.overthinker.cloud.mapper")
 @Log4j2
+@EnableDiscoveryClient
 public class Main8001 {
 //    当项目启动时控制台输出项目启动成功的日志
     static {

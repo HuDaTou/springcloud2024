@@ -10,19 +10,20 @@ import org.springframework.web.client.RestTemplate;
 
 @RestController
 public class OrderController {
-    public static final String PaymentSrv_URL = "http://localhost:8001/t-pay/";
+//    public static final String PaymentSrv_URL = "http://localhost:8001/t-pay/";
+    public static final String PaymentSrv_URL = "http://cloud-payment-service/";
 
     @Resource
     private RestTemplate restTemplate;
 
     @GetMapping("/consumer/pay/add")
     public ResultData addOrder(PayDTO payDTO) {
-        return restTemplate.postForObject(PaymentSrv_URL + "/t-pay/add", payDTO, ResultData.class);
+        return restTemplate.postForObject(PaymentSrv_URL + "t-pay/add", payDTO, ResultData.class);
     }
 
     @GetMapping("/consumer/pay/{id}")
     public ResultData getOrderById(@PathVariable("id") Integer id) {
-        return restTemplate.getForObject(PaymentSrv_URL + id, ResultData.class,id);
+        return restTemplate.getForObject(PaymentSrv_URL+ "t-pay/" + id, ResultData.class,id);
     }
 
 
