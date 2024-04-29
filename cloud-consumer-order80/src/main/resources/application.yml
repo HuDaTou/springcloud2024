@@ -26,3 +26,8 @@ spring:
             cloud-payment-service:
               connectTimeout: 8000
               readTimeout: 8000
+        #  Apache HttpClient5 配置开启
+        httpclient:
+          hc5:
+            enabled: true
+
