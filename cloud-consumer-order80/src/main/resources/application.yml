@@ -23,9 +23,10 @@ spring:
               connectTimeout: 3000
               #读取超时时间
               readTimeout: 3000
+#              TODO:为什么时间这么设置
             cloud-payment-service:
-              connectTimeout: 8000
-              readTimeout: 8000
+              connectTimeout: 3000
+              readTimeout: 3000
         #  Apache HttpClient5 配置开启
         httpclient:
           hc5:
@@ -37,6 +38,11 @@ spring:
             mime-types: text/xml,application/xml,application/json #触发压缩数据类型
           response:
             enabled: true
-
-
+logging:
+  level:
+    com:
+      overthinker:
+        cloud:
+          apis:
+            PayFeignApi: debug
 
