@@ -1,4 +1,4 @@
-package com.overthinker.cloud.entity;
+package com.overthinker.cloud.entityDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

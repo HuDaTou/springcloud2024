@@ -4,12 +4,9 @@ package com.overthinker.cloud.controller;
 import cn.hutool.core.bean.BeanUtil;
 import com.overthinker.cloud.entityDTO.PayDTO;
 import com.overthinker.cloud.entity.TPay;
-import com.overthinker.cloud.entityVO.PayVO;
 import com.overthinker.cloud.resp.ResultData;
-
 import com.overthinker.cloud.service.impl.TPayServiceImpl;
 import lombok.RequiredArgsConstructor;
-
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -32,11 +29,7 @@ public class TPayController {
     private final TPayServiceImpl tPayService;
 
 
-    /**
-     * 新增一条支付相关流水记录
-     * @param payDTO
-     * @return
-     */
+    //添加接口
     @PostMapping(value = "/add")
     public ResultData<String> addPay(@RequestBody PayDTO payDTO) {
         TPay tPay = BeanUtil.copyProperties(payDTO, TPay.class);
@@ -80,24 +73,11 @@ public class TPayController {
      * @return
      */
     @GetMapping("{id}")
-    public ResultData<PayVO> getPayBid(@PathVariable("id") Long id) {
+    public ResultData<TPay> getPayBid(@PathVariable("id") Long id) {
 //        如果id为负数抛出异常
         if (id < 0) throw new RuntimeException("id不能为负数");
         TPay tPay = tPayService.getById(id);
-        PayVO payVO = BeanUtil.copyProperties(tPay, PayVO.class);
-        return ResultData.success(payVO);
-    }
-
-    /**
-     * 根据ids批量查询
-     * @param ids
-     * @return
-     */
-    @GetMapping
-    public ResultData<List<PayVO>> getPay(@RequestParam("ids") List<Long> ids) {
-        List<TPay> tPay = tPayService.listByIds(ids);
-        List<PayVO> payVOS = BeanUtil.copyToList(tPay, PayVO.class);
-        return ResultData.success(payVOS);
+        return ResultData.success(tPay);
     }
 
     /**
@@ -106,14 +86,9 @@ public class TPayController {
      * @return
      */
     @GetMapping("/list")
-    public ResultData<List<PayVO>> listPay() {
-//        查询全部Pay
-        List<TPay> list = tPayService.list();
-//        Pay转换为PayVO
-        List<PayVO> payVOS = BeanUtil.copyToList(list, PayVO.class);
-        return ResultData.success(payVOS);
+    public ResultData<List> listPay() {
+        return ResultData.success(tPayService.list());
     }
-
 
 
     @Value("${server.port}")

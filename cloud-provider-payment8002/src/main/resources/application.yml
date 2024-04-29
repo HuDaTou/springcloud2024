@@ -1,5 +1,5 @@
 server:
-  port: 8001
+  port: 8002
 # ==========applicationName + druid-mysql8 driver===================
 spring:
   application:
@@ -22,10 +22,10 @@ mybatis:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-logging:
-  config: classpath:log4j2-spring.xml
-  level:
-    com.overthinker.cloud: debug
+#logging:
+#  config: classpath:log4j2-spring.xml
+#  level:
+#    com.overthinker.cloud: debug
 
 ## springdoc-openapi项目配置
 #springdoc:
