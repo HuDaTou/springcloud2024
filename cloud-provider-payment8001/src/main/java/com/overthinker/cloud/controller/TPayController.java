@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -107,6 +108,12 @@ public class TPayController {
      */
     @GetMapping("/list")
     public ResultData<List<PayVO>> listPay() {
+//        暂停63秒钟线程，故意写bug，测试出feign的默认调用超时时间
+        try {
+            TimeUnit.SECONDS.sleep(63);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 //        查询全部Pay
         List<TPay> list = tPayService.list();
 //        Pay转换为PayVO

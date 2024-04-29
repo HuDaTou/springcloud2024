@@ -1,10 +1,13 @@
 package com.overthinker.cloud.controller;
 
 
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import com.overthinker.cloud.apis.PayFeignApi;
 import com.overthinker.cloud.entityDTO.PayDTO;
 import com.overthinker.cloud.entityVO.PayVO;
 import com.overthinker.cloud.resp.ResultData;
+import com.overthinker.cloud.resp.ReturnCodeEnum;
 import jakarta.annotation.Resource;
 
 import org.springframework.web.bind.annotation.*;
@@ -57,7 +60,16 @@ public class OrderController {
 
     @GetMapping("/feign/pay/getList")
     public ResultData<List<PayVO>> getPayInfoVO() {
-        return payFeignApi.listPayInfo();
+        ResultData resultData = null;
+        try {
+            System.out.println("开始调用远程服务" + DateUtil.now());
+            resultData = payFeignApi.listPayInfo();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("调用远程服务失败" + DateUtil.now());
+            ResultData.fail(ReturnCodeEnum.RC500.getCode(), e.getMessage());
+        }
+        return resultData;
     }
 
 //    @GetMapping("/feign/pay/list")
