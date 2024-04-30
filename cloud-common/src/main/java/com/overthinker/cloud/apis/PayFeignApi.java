@@ -69,5 +69,5 @@ public interface PayFeignApi {
      * @return
      */
     @GetMapping(value = "/pay/circuit/{id}")
-    public String myCircuit(@PathVariable("id") Integer id);
+    String myCircuit(@PathVariable("id") Integer id);
 }
