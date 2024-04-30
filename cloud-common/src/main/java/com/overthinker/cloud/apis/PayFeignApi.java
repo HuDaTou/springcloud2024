@@ -3,6 +3,7 @@ package com.overthinker.cloud.apis;
 import com.overthinker.cloud.entityDTO.PayDTO;
 import com.overthinker.cloud.entityVO.PayVO;
 import com.overthinker.cloud.resp.ResultData;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,9 +64,10 @@ public interface PayFeignApi {
 
 
     /**
-     * openfeign天然支持负载均衡演示
+     * 服务熔断降级接口测试
+     * @param id
      * @return
      */
-//    @GetMapping(value = "/t-pay/get/info")
-//    public String mylb();
+    @GetMapping(value = "/pay/circuit/{id}")
+    public String myCircuit(@PathVariable("id") Integer id);
 }
