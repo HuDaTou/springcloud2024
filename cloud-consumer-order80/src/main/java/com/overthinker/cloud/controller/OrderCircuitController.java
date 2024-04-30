@@ -32,7 +32,7 @@ public class OrderCircuitController {
      */
     @GetMapping(value = "/feign/pay/bulkhead/{id}")
 //    TODO:这个注解什么用
-    @Bulkhead(name = "cloud-payment-service",fallbackMethod = "myBulkheadFallback",type = Bulkhead.Type.SEMAPHORE)
+    @Bulkhead(name = "cloud-payment-service",fallbackMethod = "myBulkheadFallback",type = Bulkhead.Type.THREADPOOL)
     public String myBulkhead(@PathVariable("id") Integer id)
     {
         return payFeignApi.myBulkhead(id);

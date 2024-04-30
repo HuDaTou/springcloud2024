@@ -19,6 +19,7 @@
 
     <dependencies>
 
+
         <!--resilience4j-bulkhead-->
         <dependency>
             <groupId>io.github.resilience4j</groupId>
