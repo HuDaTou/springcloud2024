@@ -3,6 +3,7 @@ package com.overthinker.cloud.controller;
 import com.overthinker.cloud.apis.PayFeignApi;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,4 +42,19 @@ public class OrderCircuitController {
     {
         return "myBulkheadFallback，隔板超出最大数量限制，系统繁忙，请稍后再试-----/(ㄒoㄒ)/~~";
     }
+
+
+
+    @GetMapping(value = "/feign/pay/ratelimit/{id}")
+    @RateLimiter(name = "cloud-payment-service",fallbackMethod = "myRatelimitFallback")
+    public String myBulkheadRatelimit(@PathVariable("id") Integer id)
+    {
+        return payFeignApi.myRatelimit(id);
+    }
+    public String myRatelimitFallback(Integer id,Throwable t)
+    {
+        return "你被限流了，禁止访问/(ㄒoㄒ)/~~";
+    }
+
+
 }
