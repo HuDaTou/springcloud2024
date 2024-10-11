@@ -15,6 +15,7 @@
         <module>cloud-consumer-order80</module>
         <module>cloud-getway9527</module>
         <module>cloud-Media-Asset-Processing</module>
+        <module>cloud-media</module>
     </modules>
 
     <properties>

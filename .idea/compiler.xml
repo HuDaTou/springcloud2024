@@ -12,11 +12,17 @@
         <module name="cloud-consumer-order80" />
         <module name="cloud-Media-Asset-Processing" />
         <module name="cloud-provider-payment8001" />
+        <module name="cloud-media" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="cloud-provider-payment8002" target="17" />
       <module name="mybatis_generator2024" target="17" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="cloud-media" options="" />
+    </option>
   </component>
 </project>
