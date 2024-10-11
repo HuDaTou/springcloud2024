@@ -22,10 +22,6 @@ mybatis:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-logging:
-  config: classpath:log4j2-spring.xml
-  level:
-    com.overthinker.cloud: debug
 
 ## springdoc-openapi项目配置
 #springdoc:
@@ -45,4 +41,12 @@ logging:
 #  setting:
 #    language: zh_cn
 
+# ========================zipkin===================
+management:
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+  tracing:
+    sampling:
+      probability: 1.0 #采样率默认为0.1(0.1就是10次只能有一次被记录下来)，值越大收集越及时。
 

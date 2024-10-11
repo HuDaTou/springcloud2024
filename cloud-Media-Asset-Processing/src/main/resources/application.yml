@@ -1,9 +1,9 @@
 server:
-  port: 8001
+  port: 8010
 # ==========applicationName + druid-mysql8 driver===================
 spring:
   application:
-    name: cloud-payment-service
+    name: cloud-Media-Asset-Processing-service
   profiles:
     active: dev
   datasource:
@@ -21,8 +21,15 @@ mybatis:
     map-underscore-to-camel-case: true
 mybatis-plus:
   configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.stdout.
 
+
+## 连接 minio
+#minio:
+#  endpoint: http://home.overthinker.top:30373
+#  accessKey: 8bSiCQK1SGLjmcsZdcVF
+#  secretKey: MKML4yqHVqK5oHrHf06nzDX1xRrHz2EqJZVINjuX
+#  bucketName: cloud
 ## springdoc-openapi项目配置
 #springdoc:
 #  swagger-ui:
@@ -42,11 +49,11 @@ mybatis-plus:
 #    language: zh_cn
 
 # ========================zipkin===================
-management:
-  zipkin:
-    tracing:
-      endpoint: http://localhost:9411/api/v2/spans
-  tracing:
-    sampling:
-      probability: 1.0 #采样率默认为0.1(0.1就是10次只能有一次被记录下来)，值越大收集越及时。
+#management:
+#  zipkin:
+#    tracing:
+#      endpoint: http://localhost:9411/api/v2/spans
+#  tracing:
+#    sampling:
+#      probability: 1.0 #采样率默认为0.1(0.1就是10次只能有一次被记录下来)，值越大收集越及时。
 

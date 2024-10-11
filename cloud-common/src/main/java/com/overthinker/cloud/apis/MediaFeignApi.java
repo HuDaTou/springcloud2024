@@ -3,15 +3,13 @@ package com.overthinker.cloud.apis;
 import com.overthinker.cloud.entityDTO.PayDTO;
 import com.overthinker.cloud.entityVO.PayVO;
 import com.overthinker.cloud.resp.ResultData;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(value = "cloud-payment-service")
-//@RequestMapping("/t-pay")
-public interface PayFeignApi {
+@FeignClient(value = "cloud-Media-Asset-Processing-service")
+public interface MediaFeignApi {
     /**
      * 新增一条支付相关流水记录
      * @param payDTO

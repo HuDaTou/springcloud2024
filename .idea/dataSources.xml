@@ -12,41 +12,17 @@ D:/gitcode/springcloud2024/mybatis_generator2024/src/main/resources/config.prope
       <jdbc-url>jdbc:mysql://localhost:8000/sgg_cloud_db2024?characterEncoding=utf8&amp;useSSL=false&amp;serverTimezone=GMT%2B8&amp;rewriteBatchedStatements=true&amp;allowPublicKeyRetrieval=true</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="sgg_cloud_db2024@localhost" uuid="6b942589-9939-45ce-90c9-b6599dd7becd">
+    <data-source source="LOCAL" name="cloud_2024@home.overthinker.top" uuid="90d00dd3-614d-4d76-8b70-0e6a2a6a67aa">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <imported>true</imported>
-      <remarks>$PROJECT_DIR$/cloud-provider-payment8001/src/main/resources/application.yml</remarks>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:8000/sgg_cloud_db2024?characterEncoding=utf8&amp;useSSL=false&amp;serverTimezone=GMT</jdbc-url>
+      <jdbc-url>jdbc:mysql://home.overthinker.top:30970/cloud_2024?characterEncoding=utf8&amp;useSSL=false&amp;serverTimezone=GMT</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
         <property name="com.intellij.clouds.kubernetes.db.container.port" />
       </jdbc-additional-properties>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
-    <data-source source="LOCAL" name="sgg_cloud_db2024@192.168.0.100" uuid="089a3fee-8543-4e0c-a51c-8e6959bbced4">
-      <driver-ref>mysql.8</driver-ref>
-      <synchronize>true</synchronize>
-      <imported>true</imported>
-      <remarks>$PROJECT_DIR$/cloud-provider-payment8001/src/main/resources/application.yml</remarks>
-      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://192.168.0.100:8000/sgg_cloud_db2024?characterEncoding=utf8&amp;useSSL=false&amp;serverTimezone=GMT</jdbc-url>
-      <jdbc-additional-properties>
-        <property name="com.intellij.clouds.kubernetes.db.host.port" />
-        <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
-        <property name="com.intellij.clouds.kubernetes.db.container.port" />
-      </jdbc-additional-properties>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
-    <data-source source="LOCAL" name="sgg_cloud_db2024@192.168.0.100" uuid="5c91c399-3cbc-4cf9-aeed-ecafa192f3f6">
-      <driver-ref>mysql.8</driver-ref>
-      <synchronize>true</synchronize>
-      <imported>true</imported>
-      <remarks>$PROJECT_DIR$/cloud-provider-payment8002/src/main/resources/application.yml</remarks>
-      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://192.168.0.100:8000/sgg_cloud_db2024?characterEncoding=utf8&amp;useSSL=false&amp;serverTimezone=GMT</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
