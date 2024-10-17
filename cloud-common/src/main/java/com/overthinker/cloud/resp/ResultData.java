@@ -3,6 +3,10 @@ package com.overthinker.cloud.resp;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+/**
+ * 通用结果类型
+ * @param <T>
+ */
 @Data
 @Accessors(chain = true)
 public class ResultData<T> {
@@ -19,6 +23,13 @@ public class ResultData<T> {
         ResultData<T> resultData = new ResultData<>();
         resultData.setCode(ReturnCodeEnum.RC200.getCode());
         resultData.setMessage(ReturnCodeEnum.RC200.getMessage());
+        resultData.setData(data);
+        return resultData;
+    }
+    public static <T> ResultData<T> success(T data , String message) {
+        ResultData<T> resultData = new ResultData<>();
+        resultData.setCode(ReturnCodeEnum.RC200.getCode());
+        resultData.setMessage(message);
         resultData.setData(data);
         return resultData;
     }

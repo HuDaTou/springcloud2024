@@ -5,10 +5,17 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/cloud-media/media-api/pom.xml" />
+        <option value="$PROJECT_DIR$/cloud-media/media-model/pom.xml" />
+        <option value="$PROJECT_DIR$/cloud-media/service/pom.xml" />
+        <option value="$PROJECT_DIR$/cloud-media/media-service/pom.xml" />
+        <option value="$PROJECT_DIR$/cloud-test/pom.xml" />
+        <option value="$PROJECT_DIR$/cloud-Media-Asset-Processing/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
+        <option value="$PROJECT_DIR$/cloud-media/service/pom.xml" />
         <option value="$PROJECT_DIR$/cloud-provider-payment8002/pom.xml" />
         <option value="$PROJECT_DIR$/mybatis_generator2024/pom.xml" />
       </set>

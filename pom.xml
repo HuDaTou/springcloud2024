@@ -9,13 +9,13 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-
         <module>cloud-provider-payment8001</module>
         <module>cloud-common</module>
         <module>cloud-consumer-order80</module>
         <module>cloud-getway9527</module>
         <module>cloud-Media-Asset-Processing</module>
         <module>cloud-media</module>
+        <module>cloud-test</module>
     </modules>
 
     <properties>
@@ -27,9 +27,7 @@
         <druid.version>1.1.20</druid.version>
         <mybatis.springboot.version>3.0.3</mybatis.springboot.version>
         <mysql.version>8.0.11</mysql.version>
-<!--        <swagger3.version>2.2.0</swagger3.version>-->
         <knife4j.version>4.4.0</knife4j.version>
-<!--        <mapper.version>4.2.3</mapper.version>-->
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <fastjson2.version>2.0.40</fastjson2.version>
         <persistence-api.version>1.0.2</persistence-api.version>
@@ -37,13 +35,14 @@
         <spring.boot.version>3.2.0</spring.boot.version>
         <spring.cloud.version>2023.0.0</spring.cloud.version>
         <spring.cloud.alibaba.version>2022.0.0.0-RC2</spring.cloud.alibaba.version>
-<!--        <log4j2.version>3.2.0</log4j2.version>-->
+        <log4j2.version>3.2.0</log4j2.version>
         <cloud.common.version>1.0-SNAPSHOT</cloud.common.version>
         <micrometer-tracing.version>1.2.0</micrometer-tracing.version>
         <micrometer-observation.version>1.12.0</micrometer-observation.version>
         <feign-micrometer.version>12.5</feign-micrometer.version>
         <zipkin-reporter-brave.version>2.17.0</zipkin-reporter-brave.version>
         <minio.version>8.5.7</minio.version>
+        <quartz.version>0.9.5.4</quartz.version>
     </properties>
 
     <dependencyManagement>
@@ -56,6 +55,11 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security</artifactId>
+            </dependency>
+
             <!--springcloud 2023.0.0-->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
@@ -72,6 +76,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- spring-boot-starter-test -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring.boot.test.version}</version>
+                <scope>test</scope>
+            </dependency>
             <!--SpringBoot集成mybatis-->
             <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
@@ -84,6 +95,9 @@
 <!--                    </exclusion>-->
 <!--                </exclusions>-->
             </dependency>
+
+
+
             <!--Mysql数据库驱动8 -->
             <dependency>
                 <groupId>mysql</groupId>
@@ -96,12 +110,6 @@
                 <artifactId>druid-spring-boot-starter</artifactId>
                 <version>${druid.version}</version>
             </dependency>
-            <!--通用Mapper4之tk.mybatis-->
-<!--            <dependency>-->
-<!--                <groupId>tk.mybatis</groupId>-->
-<!--                <artifactId>mapper</artifactId>-->
-<!--                <version>${mapper.version}</version>-->
-<!--            </dependency>-->
 <!--            把mapper4换成mybasitplus生成代码-->
             <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
             <dependency>
@@ -123,12 +131,6 @@
                 <artifactId>fastjson2</artifactId>
                 <version>${fastjson2.version}</version>
             </dependency>
-            <!-- swagger3 调用方式 http://你的主机IP地址:5555/swagger-ui/index.html -->
-<!--            <dependency>-->
-<!--                <groupId>org.springdoc</groupId>-->
-<!--                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>-->
-<!--                <version>${swagger3.version}</version>-->
-<!--            </dependency>-->
 <!--            把swagger换成knife4j-->
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
@@ -141,19 +143,43 @@
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
-            <!--lombok-->
+            <!-- jwt -->
             <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
+                <groupId>com.auth0</groupId>
+                <artifactId>java-jwt</artifactId>
+                <version>4.3.0</version>
             </dependency>
-            <!-- spring-boot-starter-test -->
+            <!-- 发送流式请求 -->
             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-test</artifactId>
-                <version>${spring.boot.test.version}</version>
-                <scope>test</scope>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>4.10.0-RC1</version>
             </dependency>
+            <!-- 获取系统信息 -->
+            <dependency>
+                <groupId>com.github.oshi</groupId>
+                <artifactId>oshi-core</artifactId>
+                <version>6.4.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna</artifactId>
+                <version>5.12.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna-platform</artifactId>
+                <version>5.12.1</version>
+            </dependency>
+            <!-- 授权第三方登录 -->
+            <dependency>
+                <groupId>me.zhyd.oauth</groupId>
+                <artifactId>JustAuth</artifactId>
+                <version>1.16.6</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.overthinker.cloud</groupId>
                 <artifactId>cloud-common</artifactId>
@@ -197,13 +223,27 @@
                 <artifactId>zipkin-reporter-brave</artifactId>
                 <version>${zipkin-reporter-brave.version}</version>
             </dependency>
-
             <!-- minio -->
             <dependency>
                 <groupId>io.minio</groupId>
                 <artifactId>minio</artifactId>
                 <version>${minio.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-quartz</artifactId>
+            </dependency>
+            <!--lombok-->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
         </dependencies>
+
     </dependencyManagement>
+
+    <dependencies>
+
+    </dependencies>
 </project>
