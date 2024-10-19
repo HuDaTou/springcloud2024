@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="cloud-getway9527" />
         <module name="media-api" />
+        <module name="cloud-Media-Asset-Processing" />
         <module name="cloud-provider-payment8001" />
         <module name="media-service" />
         <module name="cloud-common" />
@@ -18,7 +19,6 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="cloud-Media-Asset-Processing" target="17" />
       <module name="cloud-provider-payment8002" target="17" />
       <module name="mybatis_generator2024" target="17" />
       <module name="service" target="17" />
