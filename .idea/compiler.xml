@@ -7,19 +7,19 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="cloud-getway9527" />
         <module name="media-api" />
-        <module name="cloud-Media-Asset-Processing" />
-        <module name="cloud-provider-payment8001" />
         <module name="media-service" />
         <module name="cloud-common" />
         <module name="media-model" />
-        <module name="cloud-consumer-order80" />
-        <module name="cloud-test" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="cloud-consumer-order80" target="17" />
+      <module name="cloud-getway9527" target="17" />
+      <module name="cloud-Media-Asset-Processing" target="17" />
+      <module name="cloud-provider-payment8001" target="17" />
       <module name="cloud-provider-payment8002" target="17" />
+      <module name="cloud-test" target="17" />
       <module name="mybatis_generator2024" target="17" />
       <module name="service" target="17" />
     </bytecodeTargetLevel>
