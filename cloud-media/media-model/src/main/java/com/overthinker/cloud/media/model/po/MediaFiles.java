@@ -3,8 +3,10 @@ package com.overthinker.cloud.media.model.po;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
 
 /**
  * <p>
@@ -17,6 +19,7 @@ import java.time.LocalDateTime;
 @TableName("media_files")
 public class MediaFiles implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /**
@@ -26,24 +29,14 @@ public class MediaFiles implements Serializable {
     private String id;
 
     /**
-     * 机构ID
-     */
-    private Long companyId;
-
-    /**
-     * 机构名称
-     */
-    private String companyName;
-
-    /**
      * 文件名称
      */
-    private String filename;
+    private String fileName;
 
     /**
-     * 文件类型（文档，音频，视频）
+     * 文件类型
      */
-    private String fileType;
+    private String type;
 
     /**
      * 标签
@@ -51,7 +44,7 @@ public class MediaFiles implements Serializable {
     private String tags;
 
     /**
-     * 存储目录
+     * 存储桶
      */
     private String bucket;
 
@@ -90,24 +83,9 @@ public class MediaFiles implements Serializable {
     private LocalDateTime changeDate;
 
     /**
-     * 状态,1:未处理，视频处理完成更新为2
-     */
-    private String status;
-
-    /**
      * 备注
      */
     private String remark;
-
-    /**
-     * 审核状态
-     */
-    private String auditStatus;
-
-    /**
-     * 审核意见
-     */
-    private String auditMind;
 
     /**
      * 文件大小

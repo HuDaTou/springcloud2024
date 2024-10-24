@@ -15,10 +15,7 @@ public interface MediaFileService {
     /**
      * @param pageParams          分页参数
      * @param queryMediaParamsDto 查询条件
-     * @return com.xuecheng.base.model.PageResult<com.xuecheng.media.model.po.MediaFiles>
      * @description 媒资文件查询方法
-     * @author Mr.M
-     * @date 2022/9/10 8:57
      */
     PageResult<MediaFiles> queryMediaFiles(Long companyId, PageParams pageParams, QueryMediaParamsDto queryMediaParamsDto);
 
@@ -32,14 +29,23 @@ public interface MediaFileService {
      */
     UploadFileResultDto uploadFile(Long companyId, UploadFileParamsDto uploadFileParamsDto, String localFilePath, String objectName);
 
+
+    /**
+     * 这是干嘛用的
+     * @param companyId
+     * @param fileMd5
+     * @param uploadFileParamsDto
+     * @param bucket
+     * @param objectName
+     * @return
+     */
     MediaFiles addMediaFilesToDb(Long companyId, String fileMd5, UploadFileParamsDto uploadFileParamsDto, String bucket, String objectName);
 
     /**
      * @param fileMd5 文件的md5
      * @return com.xuecheng.base.model.RestResponse<java.lang.Boolean> false不存在，true存在
      * @description 检查文件是否存在
-     * @author Mr.M
-     * @date 2022/9/13 15:38
+
      */
     ResultData<Boolean> checkFile(String fileMd5);
 
@@ -48,8 +54,6 @@ public interface MediaFileService {
      * @param chunkIndex 分块序号
      * @return com.xuecheng.base.model.RestResponse<java.lang.Boolean> false不存在，true存在
      * @description 检查分块是否存在
-     * @author Mr.M
-     * @date 2022/9/13 15:39
      */
     ResultData<Boolean> checkChunk(String fileMd5, int chunkIndex);
 

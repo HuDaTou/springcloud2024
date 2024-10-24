@@ -1,29 +1,29 @@
 package com.overthinker.cloud.media.service.config;
 
+import com.overthinker.cloud.media.service.properties.MinioProperties;
 import io.minio.MinioClient;
-import org.springframework.beans.factory.annotation.Value;
+import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 public class MinioConfig {
 
-    @Value("${minio.endpoint}")
-    private String endpoint;
-    @Value("${minio.accessKey}")
-    private String accessKey;
-    @Value("${minio.secretKey}")
-    private String secretKey;
+    @Resource
+    MinioProperties minioProperties;
+
+
 
     @Bean
     public MinioClient minioClient() {
 
-        MinioClient minioClient =
+        MinioClient minioClient;
+        minioClient =
                 MinioClient.builder()
-                        .endpoint(endpoint)
-                        .credentials(accessKey, secretKey)
+                        .endpoint(minioProperties.getEndpoint())
+                        .credentials(minioProperties.getAccessKey(), minioProperties.getSecretKey())
                         .build();
         return minioClient;
     }
-
-
 }
 

@@ -41,5 +41,12 @@ public class ResultData<T> {
         resultData.setData(null);
         return resultData;
     }
+    public static <T> ResultData<T> fail(String message) {
+        ResultData<T> resultData = new ResultData<>();
+        resultData.setCode(ReturnCodeEnum.RC500.getCode());
+        resultData.setMessage(message);
+        resultData.setData(null);
+        return resultData;
+    }
 
 }
