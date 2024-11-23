@@ -13,12 +13,7 @@ spring:
     username: root
     password: DuinxIVa3w
 
-# ========================mybatis===================
-mybatis:
-  mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.overthinker.cloud.entities
-  configuration:
-    map-underscore-to-camel-case: true
+# ========================mybatis-plus===================
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
@@ -54,3 +49,7 @@ minio:
     endpoint: http://home.overthinker.top:9000
     accessKey: overthinker #minio用户名
     secretKey: overH@xlq.com #minio密码
+    bucketName:
+      file: cloud2024 #文件存储桶
+      image: cloud2024-image #图片存储桶
+      video: cloud2024-video #视频存储桶

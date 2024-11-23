@@ -16,6 +16,8 @@
         <module>cloud-Media-Asset-Processing</module>
         <module>cloud-media</module>
         <module>cloud-test</module>
+        <module>cloud-web</module>
+        <module>bilibili-common</module>
     </modules>
 
     <properties>
@@ -28,7 +30,13 @@
         <mybatis.springboot.version>3.0.3</mybatis.springboot.version>
         <mysql.version>8.0.11</mysql.version>
         <knife4j.version>4.4.0</knife4j.version>
+
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
+        <mybatis-plus-generator>3.5.9</mybatis-plus-generator>
+
+        <redis.version>3.2.0</redis.version>
+        <commons-pool2.version>2.8.1</commons-pool2.version>
+
         <fastjson2.version>2.0.40</fastjson2.version>
         <persistence-api.version>1.0.2</persistence-api.version>
         <spring.boot.test.version>3.1.5</spring.boot.test.version>
@@ -36,7 +44,7 @@
         <spring.cloud.version>2023.0.0</spring.cloud.version>
         <spring.cloud.alibaba.version>2022.0.0.0-RC2</spring.cloud.alibaba.version>
         <log4j2.version>3.2.0</log4j2.version>
-        <cloud.common.version>1.0-SNAPSHOT</cloud.common.version>
+
         <micrometer-tracing.version>1.2.0</micrometer-tracing.version>
         <micrometer-observation.version>1.12.0</micrometer-observation.version>
         <feign-micrometer.version>12.5</feign-micrometer.version>
@@ -44,6 +52,18 @@
         <minio.version>8.5.7</minio.version>
         <okhttp.version>4.10.0-RC1</okhttp.version>
         <quartz.version>0.9.5.4</quartz.version>
+
+        <boot.validation.version>3.2.0</boot.validation.version>
+
+        <cloud.common.version>1.0-SNAPSHOT</cloud.common.version>
+        <bilibili-common.version>1.0</bilibili-common.version>
+
+        <commons.lang3.version>3.4</commons.lang3.version>
+        <commons.csv.version>1.2</commons.csv.version>
+        <commons.codec.version>1.9</commons.codec.version>
+        <commons.io.version>2.5</commons.io.version>
+        <captcha.verion>1.6.2</captcha.verion>
+        <es.version>3.3.2</es.version>
     </properties>
 
     <dependencyManagement>
@@ -84,17 +104,19 @@
                 <version>${spring.boot.test.version}</version>
                 <scope>test</scope>
             </dependency>
+
+
             <!--SpringBoot集成mybatis-->
             <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-starter</artifactId>
                 <version>${mybatis.springboot.version}</version>
-<!--                <exclusions>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.springframework.boot</groupId>-->
-<!--                        <artifactId>spring-boot-starter-logging</artifactId>-->
-<!--                    </exclusion>-->
-<!--                </exclusions>-->
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-logging</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
 
@@ -115,10 +137,43 @@
             <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
 
+
+            <!-- 集成redis依赖  -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>${redis.version}</version>
+
+            </dependency>
+            <!-- redis 连接池  -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-pool2</artifactId>
+                <version>${commons-pool2.version}</version>
+            </dependency>
+
+
+
+            <!--            集成log4j2-->
+<!--            <dependency>-->
+<!--                <groupId>org.apache.logging.log4j</groupId>-->
+<!--                <artifactId>log4j-api</artifactId>-->
+<!--                <version>2.21.1</version>-->
+<!--            </dependency>-->
+<!--            <dependency>-->
+<!--                <groupId>org.apache.logging.log4j</groupId>-->
+<!--                <artifactId>log4j-core</artifactId>-->
+<!--                <version>2.21.1</version>-->
+<!--            </dependency>-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-log4j2</artifactId>
+                <version>${log4j2.version}</version>
+            </dependency>
 
             <!--persistence-->
             <dependency>
@@ -154,7 +209,7 @@
             <dependency>
                 <groupId>com.squareup.okhttp3</groupId>
                 <artifactId>okhttp</artifactId>
-                <version>4.10.0-RC1</version>
+                <version>${okhttp.version}</version>
             </dependency>
             <!-- 获取系统信息 -->
             <dependency>
@@ -181,11 +236,20 @@
                 <version>1.16.6</version>
             </dependency>
 
+<!--            公用包-->
             <dependency>
                 <groupId>com.overthinker.cloud</groupId>
                 <artifactId>cloud-common</artifactId>
                 <version>${cloud.common.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.overthinker.cloud</groupId>
+                <artifactId>bilibili-common</artifactId>
+                <version>${bilibili-common.version}</version>
+            </dependency>
+
+
             <!--micrometer-tracing-bom导入链路追踪版本中心  1-->
             <dependency>
                 <groupId>io.micrometer</groupId>
@@ -246,6 +310,51 @@
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
             </dependency>
+<!--            获取扩展名-->
+            <dependency>
+                <groupId>com.j256.simplemagic</groupId>
+                <artifactId>simplemagic</artifactId>
+                <version>1.17</version>
+            </dependency>
+
+<!--            <dependency>-->
+<!--                <groupId>org.apache.commons</groupId>-->
+<!--                <artifactId>commons-lang3</artifactId>-->
+<!--                <version>${commons.lang3.version}</version>-->
+<!--            </dependency>-->
+
+<!--            <dependency>-->
+<!--                <groupId>commons-codec</groupId>-->
+<!--                <artifactId>commons-codec</artifactId>-->
+<!--                <version>${commons.codec.version}</version>-->
+<!--            </dependency>-->
+
+<!--            <dependency>-->
+<!--                <groupId>commons-io</groupId>-->
+<!--                <artifactId>commons-io</artifactId>-->
+<!--                <version>${commons.io.version}</version>-->
+<!--            </dependency>-->
+
+<!--            <dependency>-->
+<!--                <groupId>com.github.whvcse</groupId>-->
+<!--                <artifactId>easy-captcha</artifactId>-->
+<!--                <version>${captcha.verion}</version>-->
+<!--            </dependency>-->
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+                <version>${es.version}</version>
+            </dependency>
+
+            <!-- 接口校验 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-validation</artifactId>
+                <version>${boot.validation.version}</version>
+            </dependency>
+
+
         </dependencies>
 
     </dependencyManagement>
