@@ -27,8 +27,11 @@ public class UserRegisterDTO {
     private String password;
     //验证码
     @Schema(description = "验证码")
-    @Length(max = 6, min = 6)
+//    @Length(max = 6, min = 6)
     private String code;
+//    验证码simpleUUID
+    @Schema(description = "simpleUUID")
+    private String simpleUUID;
     // 邮箱
     @Schema(description = "邮箱")
     @Email

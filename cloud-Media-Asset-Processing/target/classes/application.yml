@@ -21,8 +21,15 @@ mybatis:
     map-underscore-to-camel-case: true
 mybatis-plus:
   configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.stdout.
 
+
+## 连接 minio
+#minio:
+#  endpoint: http://home.overthinker.top:30373
+#  accessKey: 8bSiCQK1SGLjmcsZdcVF
+#  secretKey: MKML4yqHVqK5oHrHf06nzDX1xRrHz2EqJZVINjuX
+#  bucketName: cloud
 ## springdoc-openapi项目配置
 #springdoc:
 #  swagger-ui:

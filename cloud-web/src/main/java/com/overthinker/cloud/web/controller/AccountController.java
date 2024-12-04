@@ -2,21 +2,23 @@ package com.overthinker.cloud.web.controller;
 
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.CircleCaptcha;
-import cn.hutool.core.codec.Base64;
 import com.overthinker.cloud.resp.ResultData;
+import com.overthinker.cloud.resp.ReturnCodeEnum;
 import com.overthinker.cloud.web.component.RedisComponent;
-import com.overthinker.cloud.web.config.redis.RedisUtils;
 import com.overthinker.cloud.web.entity.DTO.UserRegisterDTO;
+import com.overthinker.cloud.web.entity.enums.ErrorEnum;
+import com.overthinker.cloud.web.exception.BusinessException;
+import com.overthinker.cloud.web.exception.CustomException;
 import com.overthinker.cloud.web.service.UserInfoService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,11 +36,11 @@ public class AccountController {
     @Resource
     private RedisComponent redisComponent;
     @Operation(summary = "获取验证码")
-    @RequestMapping("/checkCode")
-    public ResultData checkCode() {
+    @RequestMapping("/captchaCode")
+    public ResultData<Map> checkCode() {
         CircleCaptcha captcha = CaptchaUtil.createCircleCaptcha(200, 100, 4, 20);
         String code = captcha.getCode();
-        String checkcodeKey = redisComponent.saveCheckCode(code);
+        String checkcodeKey = redisComponent.saveCaptchaCode(code);
 //        将checkCode 转换成base64
         String imageChackCodeBase64 = captcha.getImageBase64();
         Map<String,String> result = new HashMap<>();
@@ -46,10 +48,10 @@ public class AccountController {
         result.put("checkCodeKey",checkcodeKey);
         result.put("imageChackCodeBase64","data:image/png;base64," +imageChackCodeBase64);
 
-
         return ResultData.success(result);
 
     }
+
 
     /**
      * 注册
@@ -59,9 +61,21 @@ public class AccountController {
     @RequestMapping("/register")
     @Operation(summary = "注册")
     public ResultData register(@RequestBody @Valid UserRegisterDTO userRegisterDTO) {
-//        String myCode = (String) redisUtils.get("checkCode");
-//        return ResultData.success(myCode.equalsIgnoreCase(checkCode));
-        return null;
+        //        1.判断验证码是否正确
+        String captchaCode = redisComponent.getCaptchaCode(userRegisterDTO.getSimpleUUID());
+        if (!userRegisterDTO.getCode().equals(captchaCode)) {
+            // 如果验证码不正确，抛出异常BusinessException
+            throw new BusinessException(ReturnCodeEnum.CAPTCHA_CHECK_ERROR,HttpStatusCode.valueOf(400));
+        }
+
+        return userInfoService.userRegister(userRegisterDTO);
 
     }
+
+    @GetMapping("/custom-exception")
+    public ResponseEntity<String> goneStatusCode() {
+        throw new CustomException("Resource Gone", HttpStatusCode.valueOf(400));
+    }
+
+
 }

@@ -22,9 +22,6 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="cloud-consumer-order80" target="17" />
-      <module name="cloud-Media-Asset-Processing" target="17" />
-      <module name="cloud-provider-payment8001" target="17" />
       <module name="cloud-provider-payment8002" target="17" />
       <module name="mybatis_generator2024" target="17" />
       <module name="service" target="17" />

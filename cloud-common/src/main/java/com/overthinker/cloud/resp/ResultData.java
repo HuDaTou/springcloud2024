@@ -10,6 +10,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class ResultData<T> {
+    private String userMessage;
     private String code;
     private String message;
     private T data;
@@ -34,6 +35,13 @@ public class ResultData<T> {
         return resultData;
     }
 
+    /**
+     * 异常报错
+     * @param code
+     * @param message
+     * @return
+     * @param <T>
+     */
     public static <T> ResultData<T> fail(String code, String message) {
         ResultData<T> resultData = new ResultData<>();
         resultData.setCode(code);
@@ -41,12 +49,37 @@ public class ResultData<T> {
         resultData.setData(null);
         return resultData;
     }
+
+    /**
+     * 异常报错
+     * @param message
+     * @return
+     * @param <T>
+     */
     public static <T> ResultData<T> fail(String message) {
         ResultData<T> resultData = new ResultData<>();
         resultData.setCode(ReturnCodeEnum.RC500.getCode());
         resultData.setMessage(message);
         resultData.setData(null);
         return resultData;
+    }
+
+    /**
+     * 异常报错
+     * @param userMessage
+     * @param code
+     * @param message
+     * @return
+     * @param <T>
+     */
+    public static <T> ResultData<T> fail(String userMessage, String code, String message) {
+        ResultData<T> resultData = new ResultData<>();
+        resultData.setUserMessage(userMessage);
+        resultData.setCode(code);
+        resultData.setMessage(message);
+        resultData.setData(null);
+        return resultData;
+
     }
 
 }

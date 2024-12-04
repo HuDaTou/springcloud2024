@@ -34,7 +34,9 @@ public enum ReturnCodeEnum {
     CLIENT_AUTHENTICATION_FAILED("1001","客户端认证失败"),
     USERNAME_OR_PASSWORD_ERROR("1002","用户名或密码错误"),
     BUSINESS_ERROR("1004","业务逻辑异常"),
-    UNSUPPORTED_GRANT_TYPE("1003", "不支持的认证模式");
+    UNSUPPORTED_GRANT_TYPE("1003", "不支持的认证模式"),
+    CAPTCHA_CHECK_ERROR("999","验证码验证错误");
+
 
 //    如何定义一个通用的枚举类，对于枚举编写
 //    举值-构造-遍历
