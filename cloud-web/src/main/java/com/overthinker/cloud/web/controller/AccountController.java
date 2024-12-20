@@ -77,5 +77,12 @@ public class AccountController {
         throw new CustomException("Resource Gone", HttpStatusCode.valueOf(400));
     }
 
+    @GetMapping("/redis")
+    public  ResponseEntity<String> getRedis() {
+        redisComponent.saveCaptchaCode("123456");
+        return  ResponseEntity.ok(redisComponent.getCaptchaCode("123456"));
+
+    }
+
 
 }

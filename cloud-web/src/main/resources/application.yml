@@ -1,5 +1,6 @@
-server:
-  port: 7071
+serveraddress: 192.168.0.100
+mysqlhost: { $serveraddress }
+redishost: { $serveraddress }
 
 spring:
   application:
@@ -7,14 +8,14 @@ spring:
   datasource:
       type: com.alibaba.druid.pool.DruidDataSource
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://home.overthinker.top:30970/easybilibili?characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
+      url: jdbc:mysql://{$mysqlhost}:30970/easybilibili?characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
       username: root
       password: DuinxIVa3w
 
   data:
     redis:
       database: 0
-      host: home.overthinker.top
+      host:  { $redishost }
       port: 31605
       lettuce:
         pool:
