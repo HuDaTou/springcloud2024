@@ -1,21 +1,16 @@
-serveraddress: 192.168.0.100
-mysqlhost: { $serveraddress }
-redishost: { $serveraddress }
 
 spring:
-  application:
-        name: cloud-bilibili-web
   datasource:
       type: com.alibaba.druid.pool.DruidDataSource
       driver-class-name: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://{$mysqlhost}:30970/easybilibili?characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
+      url: jdbc:mysql://home.overthinker.top:30970/easybilibili?characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
       username: root
       password: DuinxIVa3w
 
   data:
     redis:
       database: 0
-      host:  { $redishost }
+      host:  home.overthinker.top
       port: 31605
       lettuce:
         pool:
@@ -64,4 +59,5 @@ logging:
   config: classpath:log4j2-spring.xml
   file:
     path: /logs/cloud-bilibili-web.log
-
+server:
+  port: 7071

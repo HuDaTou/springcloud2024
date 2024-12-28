@@ -17,9 +17,15 @@ public class RedisComponent {
      * @param code
      * @return
      */
-    public String saveCaptchaCode(String code) {
+    public String saveCaptchaCode(String code ) {
         String simpleUUID = IdUtil.simpleUUID();
         redisUtils.setex(RedisConstants.REDIS_KEY_CAPTCHA +simpleUUID,code,RedisConstants.REDIS_KEY_EXPIRES_ONE_MIN*10);
+        return simpleUUID;
+    }
+
+    public String saveCaptchaCode(String code, String type) {
+        String simpleUUID = IdUtil.simpleUUID();
+        redisUtils.setex(RedisConstants.REDIS_KEY_CAPTCHA + type + simpleUUID,code,RedisConstants.REDIS_KEY_EXPIRES_ONE_MIN*10);
         return simpleUUID;
     }
 
@@ -32,6 +38,10 @@ public class RedisComponent {
     public String getCaptchaCode(String simpleUUID) {
        return (String) redisUtils.get(RedisConstants.REDIS_KEY_CAPTCHA +simpleUUID);
     }
+    public String getCaptchaCode(String simpleUUID, String type) {
+        return (String) redisUtils.get(RedisConstants.REDIS_KEY_CAPTCHA + type + simpleUUID);
+    }
+
 
     /**
      * 清除验证码

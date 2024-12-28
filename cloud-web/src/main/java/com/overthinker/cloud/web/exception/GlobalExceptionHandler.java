@@ -23,12 +23,18 @@ import org.springframework.web.method.HandlerMethod;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<ResultData<String>> handleGoneException(CustomException e) {
+        ResultData<String> resultData =  ResultData.fail(e.getStatusCode().toString(),e.getMessage());
+
+        return new ResponseEntity<>(resultData, e.getStatusCode());
+    }
+
 
     /**
      * 业务异常处理
      */
     @ExceptionHandler(BusinessException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ResultData<String>> handleBusiness(BusinessException e, HandlerMethod handlerMethod) {
         // BusinessException（自定义业务异常）的处理逻辑，比如：记录日志等逻辑。
         ResultData<String> resultData =  ResultData.fail(e.getUserMessage(), e.getErrorCode(), e.getErrorMessage());
@@ -44,11 +50,6 @@ public class GlobalExceptionHandler {
         return new  ResponseEntity<>(ResultData.fail(e.getMessage()),HttpStatusCode.valueOf(400));
     }
 
-    @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ResultData<String>> handleGoneException(CustomException e) {
-
-        return new ResponseEntity<ResultData<String>>(ResultData.fail(e.getStatusCode().toString(),e.getMessage()), e.getStatusCode());
-    }
 
 
 

@@ -100,6 +100,7 @@
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
         </dependency>
 
+<!--        注册中心-->
         <!--SpringCloud consul discovery -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -111,6 +112,17 @@
                 </exclusion>
             </exclusions>
         </dependency>
+<!--        配置集成-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-consul-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
+
+
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>

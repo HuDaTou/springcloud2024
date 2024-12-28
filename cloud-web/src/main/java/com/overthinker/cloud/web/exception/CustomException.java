@@ -1,5 +1,6 @@
 package com.overthinker.cloud.web.exception;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatusCode;
 
 /**
@@ -9,7 +10,7 @@ import org.springframework.http.HttpStatusCode;
  * @Date 2024/12/4 01:15
  * @description: 测试异常类
  */
-
+@Getter
 public class CustomException extends RuntimeException {
 
   private final HttpStatusCode statusCode;
@@ -19,7 +20,4 @@ public class CustomException extends RuntimeException {
     this.statusCode = statusCode;
   }
 
-  public HttpStatusCode getStatusCode() {
-    return statusCode;
-  }
 }

@@ -1,23 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="config" uuid="b376170f-e36e-4f3e-ba9e-ee58c29fbf56">
-      <driver-ref>mysql.8</driver-ref>
-      <synchronize>true</synchronize>
-      <imported>true</imported>
-      <remarks>jdbc.properties
-
-D:/gitcode/springcloud2024/mybatis_generator2024/src/main/resources/config.properties</remarks>
-      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:8000/sgg_cloud_db2024?characterEncoding=utf8&amp;useSSL=false&amp;serverTimezone=GMT%2B8&amp;rewriteBatchedStatements=true&amp;allowPublicKeyRetrieval=true</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
-    <data-source source="LOCAL" name="cloud_2024@home.overthinker.top" uuid="90d00dd3-614d-4d76-8b70-0e6a2a6a67aa">
+    <data-source source="LOCAL" name="easybilibili@mysql.overthinker.top" uuid="a501464a-8fe1-41df-8d70-8141a378fe63">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <imported>true</imported>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://home.overthinker.top:30970/cloud_2024?characterEncoding=utf8&amp;useSSL=false&amp;serverTimezone=GMT</jdbc-url>
+      <jdbc-url>jdbc:mysql://mysql.overthinker.top:80/easybilibili?characterEncoding=utf8&amp;useSSL=false&amp;serverTimezone=GMT</jdbc-url>
       <jdbc-additional-properties>
         <property name="com.intellij.clouds.kubernetes.db.host.port" />
         <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
@@ -25,11 +14,10 @@ D:/gitcode/springcloud2024/mybatis_generator2024/src/main/resources/config.prope
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="easybilibili@home.overthinker.top" uuid="49b1cd64-7c14-409c-8687-ca6ca976998a">
+    <data-source source="LOCAL" name="easybilibili@home.overthinker.top" uuid="e17cc4ad-6401-4462-8e66-516573c2b7ca">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <imported>true</imported>
-      <remarks>$PROJECT_DIR$/cloud-web/src/main/resources/application.yml</remarks>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://home.overthinker.top:30970/easybilibili?characterEncoding=utf8&amp;useSSL=false&amp;serverTimezone=GMT</jdbc-url>
       <jdbc-additional-properties>
@@ -39,7 +27,7 @@ D:/gitcode/springcloud2024/mybatis_generator2024/src/main/resources/config.prope
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="0@home.overthinker.top" uuid="d503001c-8ef3-44c9-9c62-341fdd00ed70">
+    <data-source source="LOCAL" name="0@home.overthinker.top" uuid="fce61db1-6b0c-49b0-8130-5d97830eb3ad">
       <driver-ref>redis</driver-ref>
       <synchronize>true</synchronize>
       <imported>true</imported>
