@@ -3,13 +3,17 @@ package com.overthinker.cloud.web.controller;
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.CircleCaptcha;
 import com.overthinker.cloud.resp.ResultData;
+import com.overthinker.cloud.resp.ReturnCodeEnum;
 import com.overthinker.cloud.web.component.RedisComponent;
 import com.overthinker.cloud.web.entity.DTO.UserInfoLoginDTO;
 import com.overthinker.cloud.web.entity.DTO.UserInfoRegisterDTO;
-import com.overthinker.cloud.web.entity.VO.UserInfoVO;
+import com.overthinker.cloud.web.entity.PO.UserInfo;
+import com.overthinker.cloud.web.entity.constants.RedisConstants;
+import com.overthinker.cloud.web.entity.constants.RedisTypeConstants;
 import com.overthinker.cloud.web.exception.CustomException;
 import com.overthinker.cloud.web.service.UserInfoService;
 
+import com.overthinker.cloud.web.utils.ConstantsUtils;
 import com.overthinker.cloud.web.utils.IpUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,9 +43,19 @@ public class AccountController {
     @Operation(summary = "获取验证码")
     @RequestMapping("/captchaCode")
     public ResultData<Map<String,String>> checkCode(String type) {
+        //        校验type是否为空
+        if (type == null) {
+            return ResultData.fail("type不能为空");
+        }
+//        校验type是否合法
+//        存在于RedisTypeConstants就合法
+        if (ConstantsUtils.isExist(RedisTypeConstants.class,type)) {
+            return ResultData.fail(ReturnCodeEnum.UNSUPPORTED_GRANT_TYPE.getCode(),ReturnCodeEnum.UNSUPPORTED_GRANT_TYPE.getMessage());
+        }
         CircleCaptcha captcha = CaptchaUtil.createCircleCaptcha(200, 100, 6, 20);
         String code = captcha.getCode();
-        String checkcodeKey = redisComponent.saveCaptchaCode(code,type);
+
+        String checkcodeKey = redisComponent.saveTypeCode(code,type);
 //        将checkCode 转换成base64
         String imageChackCodeBase64 = captcha.getImageBase64();
         Map<String,String> result = new HashMap<>();
@@ -74,20 +88,20 @@ public class AccountController {
 
     @GetMapping("/redis")
     public  ResponseEntity<String> getRedis() {
-        redisComponent.saveCaptchaCode("123456");
-        return  ResponseEntity.ok(redisComponent.getCaptchaCode("123456"));
+        redisComponent.saveTypeCode("123456", RedisConstants.REDIS_KEY_CAPTCHA);
+        return  ResponseEntity.ok(redisComponent.getRedisCode("123456",RedisConstants.REDIS_KEY_CAPTCHA));
 
     }
 
     @RequestMapping("login")
-    public ResultData<String> login(
+    public ResultData<UserInfo> login(
             HttpServletRequest request,
             @RequestBody UserInfoLoginDTO userInfoLoginDTO) {
-        UserInfoVO userInfoVO = userInfoService.userInfologin(userInfoLoginDTO, IpUtils.getIpAddr(request));
-        String ip = IpUtils.getIpAddr(request);
 
 
-        return ResultData.success("登录成功");
+
+
+        return userInfoService.userInfologin(userInfoLoginDTO, IpUtils.getIpAddr(request));
     }
 
 
