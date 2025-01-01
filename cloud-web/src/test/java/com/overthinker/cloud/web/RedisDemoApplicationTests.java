@@ -1,8 +1,8 @@
 package com.overthinker.cloud.web;
 
 import com.overthinker.cloud.web.component.RedisComponent;
+import com.overthinker.cloud.web.entity.constants.RedisConstants;
 import com.overthinker.cloud.web.utils.RedisUtils;
-import jakarta.annotation.Resource;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +31,8 @@ public class RedisDemoApplicationTests {
     @Test
     public void redisComponent() {
         String key = "test1";
-        String uuid = redisComponent.saveCaptchaCode(key);
-        String keycode = redisComponent.getCaptchaCode(uuid);
+        String uuid = redisComponent.saveTypeCode(key, RedisConstants.REDIS_KEY_CAPTCHA);
+        String keycode = redisComponent.getRedisCode(uuid,RedisConstants.REDIS_KEY_CAPTCHA);
         System.out.printf(keycode);
     }
 
