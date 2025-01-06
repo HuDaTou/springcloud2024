@@ -1,7 +1,6 @@
 package com.overthinker.cloud.web.utils;
 
 import jakarta.annotation.Resource;
-
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;

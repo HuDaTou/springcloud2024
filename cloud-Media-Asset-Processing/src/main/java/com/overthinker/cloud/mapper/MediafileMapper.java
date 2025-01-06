@@ -1,7 +1,7 @@
 package com.overthinker.cloud.mapper;
 
-import com.overthinker.cloud.entity.Mediafile;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.overthinker.cloud.entity.Mediafile;
 
 /**
 * @author overh

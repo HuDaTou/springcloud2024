@@ -18,8 +18,6 @@ import com.overthinker.cloud.resp.ResultData;
 import io.minio.MinioClient;
 import io.minio.UploadObjectArgs;
 import jakarta.annotation.Resource;
-
-import org.jboss.logging.BasicLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;

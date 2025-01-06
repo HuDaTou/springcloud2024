@@ -3,7 +3,6 @@ package com.overthinker.cloud.apis;
 import com.overthinker.cloud.entityDTO.PayDTO;
 import com.overthinker.cloud.entityVO.PayVO;
 import com.overthinker.cloud.resp.ResultData;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 

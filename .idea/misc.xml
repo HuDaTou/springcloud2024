@@ -17,6 +17,7 @@
       <set>
         <option value="$PROJECT_DIR$/cloud-media/service/pom.xml" />
         <option value="$PROJECT_DIR$/cloud-provider-payment8002/pom.xml" />
+        <option value="$PROJECT_DIR$/cloud-test/pom.xml" />
         <option value="$PROJECT_DIR$/mybatis_generator2024/pom.xml" />
       </set>
     </option>

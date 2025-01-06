@@ -1,7 +1,6 @@
 package com.overthinker.cloud.media.service;
 
 import io.minio.MinioClient;
-import io.minio.RemoveBucketArgs;
 import io.minio.RemoveObjectArgs;
 import io.minio.UploadObjectArgs;
 import io.minio.errors.*;

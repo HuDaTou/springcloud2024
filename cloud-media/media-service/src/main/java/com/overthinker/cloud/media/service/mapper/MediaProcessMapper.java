@@ -1,9 +1,7 @@
 package com.overthinker.cloud.media.service.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-
 import com.overthinker.cloud.media.model.po.MediaProcess;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;

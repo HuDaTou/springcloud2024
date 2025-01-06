@@ -1,5 +1,13 @@
 package com.overthinker.cloud.web;
 
+import com.baomidou.mybatisplus.generator.FastAutoGenerator;
+import com.baomidou.mybatisplus.generator.config.OutputFile;
+import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
+import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
+
+import java.sql.Types;
+import java.util.Collections;
+
 public class CodeGenerator {
     public static void main(String[] args) {
         FastAutoGenerator.create("url", "username", "password")

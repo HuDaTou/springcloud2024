@@ -10,7 +10,6 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class ResultData<T> {
-    private String userMessage;
     private String code;
     private String message;
     private T data;
@@ -19,6 +18,20 @@ public class ResultData<T> {
     public ResultData() {
         this.timestamp = System.currentTimeMillis();
     }
+
+
+
+    /**
+     * 成功响应，不需要返回数据
+     */
+    public static <T> ResultData<T> success() {
+        ResultData<T> resultData = new ResultData<>();
+        resultData.setCode(ReturnCodeEnum.RC200.getCode());
+        resultData.setMessage(ReturnCodeEnum.RC200.getMessage());
+        resultData.setData(null);
+        return resultData;
+    }
+
 
     public static <T> ResultData<T> success(T data) {
         ResultData<T> resultData = new ResultData<>();
@@ -74,7 +87,6 @@ public class ResultData<T> {
      */
     public static <T> ResultData<T> fail(String userMessage, String code, String message) {
         ResultData<T> resultData = new ResultData<>();
-        resultData.setUserMessage(userMessage);
         resultData.setCode(code);
         resultData.setMessage(message);
         resultData.setData(null);

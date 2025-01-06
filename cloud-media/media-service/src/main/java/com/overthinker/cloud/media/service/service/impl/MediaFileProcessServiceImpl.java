@@ -1,7 +1,6 @@
 package com.overthinker.cloud.media.service.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-
 import com.overthinker.cloud.media.model.po.MediaFiles;
 import com.overthinker.cloud.media.model.po.MediaProcess;
 import com.overthinker.cloud.media.model.po.MediaProcessHistory;
@@ -12,7 +11,6 @@ import com.overthinker.cloud.media.service.service.MediaFileProcessService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

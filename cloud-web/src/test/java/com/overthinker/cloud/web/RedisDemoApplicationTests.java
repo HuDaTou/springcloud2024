@@ -3,7 +3,6 @@ package com.overthinker.cloud.web;
 import com.overthinker.cloud.web.component.RedisComponent;
 import com.overthinker.cloud.web.entity.constants.RedisConstants;
 import com.overthinker.cloud.web.utils.RedisUtils;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
