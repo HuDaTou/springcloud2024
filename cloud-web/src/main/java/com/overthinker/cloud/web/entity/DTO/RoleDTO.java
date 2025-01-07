@@ -1,9 +1,9 @@
 package com.overthinker.cloud.web.entity.DTO;
 
+import com.overthinker.cloud.web.entity.BaseData;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import com.overthinker.cloud.web.entity.BaseData;
 
 import java.util.List;
 

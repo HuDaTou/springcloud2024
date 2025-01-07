@@ -1,10 +1,19 @@
 package com.overthinker.cloud.web.entity.enums.UserEnum;
 
 import com.overthinker.cloud.web.constants.ImageConst;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.util.List;
 
-
+/**
+ * @author kuailemao
+ * <p>
+ * 创建时间：2023/12/27 14:20
+ * 文件上传枚举
+ */
+@Getter
+@AllArgsConstructor
 public enum UploadEnum {
 
     // 站长头像

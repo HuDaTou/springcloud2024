@@ -1,5 +1,10 @@
 package com.overthinker.cloud.web.controller;
 
+import com.overthinker.cloud.web.annotation.AccessLimit;
+import com.overthinker.cloud.web.entity.enums.UserEnum.RegisterOrLoginTypeEnum;
+import com.overthinker.cloud.web.entity.oauth.GiteeBody;
+import com.overthinker.cloud.web.entity.oauth.GithubBody;
+import com.overthinker.cloud.web.service.OauthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -16,11 +21,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.overthinker.cloud.web.annotation.AccessLimit;
-import com.overthinker.cloud.web.entity.request.oauth.GiteeBody;
-import com.overthinker.cloud.web.entity.request.oauth.GithubBody;
-import com.overthinker.cloud.web.enums.RegisterOrLoginTypeEnum;
-import com.overthinker.cloud.web.service.OauthService;
 
 import java.io.IOException;
 

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.entity.DTO.SearchTagDTO;
 import com.overthinker.cloud.web.entity.DTO.TagDTO;
+import com.overthinker.cloud.web.entity.PO.Tag;
 import com.overthinker.cloud.web.entity.VO.TagVO;
 
 import java.util.List;

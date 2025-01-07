@@ -14,14 +14,13 @@ spring:
     password: DuinxIVa3w
 
 # ========================mybatis===================
-mybatis:
-  mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.overthinker.cloud.entities
-  configuration:
-    map-underscore-to-camel-case: true
+
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.overthinker.cloud.entities
 
 
 ## 连接 minio

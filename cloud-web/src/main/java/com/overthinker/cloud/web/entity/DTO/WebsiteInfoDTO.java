@@ -1,7 +1,7 @@
 package com.overthinker.cloud.web.entity.DTO;
 
 import com.overthinker.cloud.web.entity.BaseData;
-import lombok.Data;import com.overthinker.cloud.web.entity.BaseData;
+import lombok.Data;
 
 import java.util.Date;
 

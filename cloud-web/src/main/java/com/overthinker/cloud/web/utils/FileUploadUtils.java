@@ -3,25 +3,28 @@ package com.overthinker.cloud.web.utils;
 import com.overthinker.cloud.web.constants.Const;
 import com.overthinker.cloud.web.entity.enums.UserEnum.UploadEnum;
 import io.minio.*;
-import io.minio.errors.InsufficientDataException;
-import io.minio.errors.InvalidResponseException;
-import io.minio.errors.XmlParserException;
+import io.minio.errors.*;
 import io.minio.messages.DeleteError;
 import io.minio.messages.DeleteObject;
+import io.minio.messages.Item;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.ErrorResponseException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.rmi.ServerException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
+/**
+ * @author kuailemao
+ * <p>
+ * 创建时间：2023/12/26 19:16
+ * 文件上传工具类
+ */
 @Slf4j
 @Component
 public class FileUploadUtils {

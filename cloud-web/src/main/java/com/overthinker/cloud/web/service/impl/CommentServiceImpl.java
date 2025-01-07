@@ -18,6 +18,9 @@ import com.overthinker.cloud.web.entity.PO.User;
 import com.overthinker.cloud.web.entity.VO.ArticleCommentVO;
 import com.overthinker.cloud.web.entity.VO.CommentListVO;
 import com.overthinker.cloud.web.entity.VO.PageVO;
+import com.overthinker.cloud.web.entity.enums.UserEnum.CommentEnum;
+import com.overthinker.cloud.web.entity.enums.UserEnum.LikeEnum;
+import com.overthinker.cloud.web.entity.enums.UserEnum.MailboxAlertsEnum;
 import com.overthinker.cloud.web.mapper.CommentMapper;
 import com.overthinker.cloud.web.mapper.LeaveWordMapper;
 import com.overthinker.cloud.web.mapper.LikeMapper;
@@ -25,7 +28,9 @@ import com.overthinker.cloud.web.mapper.UserMapper;
 import com.overthinker.cloud.web.service.CommentService;
 import com.overthinker.cloud.web.service.LikeService;
 import com.overthinker.cloud.web.service.PublicService;
+import com.overthinker.cloud.web.utils.MyRedisCache;
 import com.overthinker.cloud.web.utils.SecurityUtils;
+import com.overthinker.cloud.web.utils.StringUtils;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -55,7 +60,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     private LikeService likeService;
 
     @Resource
-    private RedisCache redisCache;
+    private MyRedisCache redisCache;
 
     @Resource
     private LikeMapper likeMapper;

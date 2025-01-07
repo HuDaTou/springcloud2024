@@ -1,6 +1,7 @@
 package com.overthinker.cloud.web.entity.PO;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.overthinker.cloud.web.utils.MyRedisCache;
 import jakarta.annotation.Resource;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +10,6 @@ import lombok.experimental.Accessors;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import com.overthinker.cloud.web.utils.RedisCache;
 
 import java.util.Collection;
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class LoginUser implements UserDetails {
 
     @Resource
-    private RedisCache redisCache;
+    private MyRedisCache redisCache;
 
     private User user;
 

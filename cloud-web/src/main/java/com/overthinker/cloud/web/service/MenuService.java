@@ -3,6 +3,7 @@ package com.overthinker.cloud.web.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.entity.DTO.MenuDTO;
+import com.overthinker.cloud.web.entity.PO.Menu;
 import com.overthinker.cloud.web.entity.VO.MenuByIdVO;
 import com.overthinker.cloud.web.entity.VO.MenuVO;
 

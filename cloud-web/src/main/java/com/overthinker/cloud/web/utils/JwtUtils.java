@@ -24,6 +24,12 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+/**
+ * @author kuailemao
+ * <p>
+ * 创建时间：2023/10/10 17:28
+ * jwt 工具类
+ */
 @Component
 public class JwtUtils {
 
@@ -34,7 +40,7 @@ public class JwtUtils {
     private int expire;
 
     @Resource
-    private MyRedisCache myRedisCache;
+    private RedisCache redisCache;
 
 
     /**
@@ -69,7 +75,7 @@ public class JwtUtils {
         if (this.isInvalidToken(uuid))
             return false;
         // 删除
-        myRedisCache.deleteObject(RedisConst.JWT_WHITE_LIST + uuid);
+        redisCache.deleteObject(RedisConst.JWT_WHITE_LIST + uuid);
         return true;
     }
 
@@ -82,7 +88,7 @@ public class JwtUtils {
      */
     private boolean isInvalidToken(String uuid) {
         // 判断是否在redis中(白名单)
-        return !Boolean.TRUE.equals(myRedisCache.isHasKey(RedisConst.JWT_WHITE_LIST + uuid));
+        return !Boolean.TRUE.equals(redisCache.isHasKey(RedisConst.JWT_WHITE_LIST + uuid));
     }
 
 
@@ -134,7 +140,7 @@ public class JwtUtils {
                 .withIssuedAt(now)
                 .sign(algorithm);
         // 存入redis
-        myRedisCache.setCacheObject(RedisConst.JWT_WHITE_LIST + uuid, jwt, (int) (expire.getTime() - now.getTime()), TimeUnit.MILLISECONDS);
+        redisCache.setCacheObject(RedisConst.JWT_WHITE_LIST + uuid, jwt, (int) (expire.getTime() - now.getTime()), TimeUnit.MILLISECONDS);
         return jwt;
     }
 

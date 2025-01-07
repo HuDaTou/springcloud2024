@@ -2,6 +2,7 @@ package com.overthinker.cloud.web.controller;
 
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
+import com.overthinker.cloud.web.annotation.CheckBlacklist;
 import com.overthinker.cloud.web.entity.PO.Like;
 import com.overthinker.cloud.web.service.LikeService;
 import io.swagger.v3.oas.annotations.Operation;

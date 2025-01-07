@@ -6,6 +6,7 @@ import com.overthinker.cloud.web.entity.DTO.*;
 import com.overthinker.cloud.web.entity.VO.UserAccountVO;
 import com.overthinker.cloud.web.entity.VO.UserDetailsVO;
 import com.overthinker.cloud.web.entity.VO.UserListVO;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.multipart.MultipartFile;
 

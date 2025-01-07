@@ -1,11 +1,11 @@
 package com.overthinker.cloud.web.entity.PO;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.overthinker.cloud.web.entity.BaseData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.overthinker.cloud.web.entity.BaseData;
 
 import java.util.Date;
 

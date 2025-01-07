@@ -3,11 +3,11 @@ package com.overthinker.cloud.web.entity.PO;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.overthinker.cloud.web.entity.BaseData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.overthinker.cloud.web.entity.BaseData;
 
 import java.io.Serial;
 import java.io.Serializable;

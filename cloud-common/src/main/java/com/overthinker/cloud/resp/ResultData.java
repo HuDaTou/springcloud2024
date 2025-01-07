@@ -55,7 +55,7 @@ public class ResultData<T> {
      * @return
      * @param <T>
      */
-    public static <T> ResultData<T> fail(String code, String message) {
+    public static <T> ResultData<T> failure(String code, String message) {
         ResultData<T> resultData = new ResultData<>();
         resultData.setCode(code);
         resultData.setMessage(message);
@@ -79,19 +79,22 @@ public class ResultData<T> {
 
     /**
      * 异常报错
-     * @param userMessage
+     *
      * @param code
      * @param message
      * @return
      * @param <T>
      */
-    public static <T> ResultData<T> fail(String userMessage, String code, String message) {
+    public static <T> ResultData<T> fail( String code, String message) {
         ResultData<T> resultData = new ResultData<>();
         resultData.setCode(code);
-        resultData.setMessage(message);
+
         resultData.setData(null);
         return resultData;
 
     }
 
+    public static ResultData<Void> failure(Integer code, String defaultMessage) {
+        return null;
+    }
 }

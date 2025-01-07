@@ -1,7 +1,7 @@
 package com.overthinker.cloud.web.service;
 
 import jakarta.servlet.http.HttpServletRequest;
-
+import me.zhyd.oauth.model.AuthResponse;
 
 /**
  * @author kuailemao

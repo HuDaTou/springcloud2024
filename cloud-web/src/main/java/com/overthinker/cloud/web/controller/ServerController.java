@@ -1,14 +1,14 @@
 package com.overthinker.cloud.web.controller;
 
+import com.overthinker.cloud.resp.ResultData;
+import com.overthinker.cloud.web.annotation.AccessLimit;
+import com.overthinker.cloud.web.entity.PO.Server;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.overthinker.cloud.web.annotation.AccessLimit;
-import com.overthinker.cloud.web.entity.entity.Server;
-import com.overthinker.cloud.web.entity.response.ResultData;
 
 /**
  * @author kuailemao

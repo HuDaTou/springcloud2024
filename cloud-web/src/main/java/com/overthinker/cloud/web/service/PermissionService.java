@@ -3,6 +3,7 @@ package com.overthinker.cloud.web.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.entity.DTO.PermissionDTO;
+import com.overthinker.cloud.web.entity.PO.Permission;
 import com.overthinker.cloud.web.entity.VO.PermissionMenuVO;
 import com.overthinker.cloud.web.entity.VO.PermissionVO;
 

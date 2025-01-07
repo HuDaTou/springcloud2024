@@ -1,9 +1,16 @@
 package com.overthinker.cloud.web.utils;
 
+
 import cn.hutool.http.useragent.Browser;
 import cn.hutool.http.useragent.UserAgent;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * @author kuailemao
+ * <p>
+ * 创建时间：2023/12/8 14:12
+ * 浏览器信息工具类
+ */
 public class BrowserUtil {
 
     /**

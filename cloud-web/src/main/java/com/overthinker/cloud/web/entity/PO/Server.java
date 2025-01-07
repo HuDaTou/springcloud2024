@@ -1,18 +1,18 @@
 package com.overthinker.cloud.web.entity.PO;
 
+
+import com.overthinker.cloud.web.entity.server.*;
+import com.overthinker.cloud.web.utils.Arith;
+import com.overthinker.cloud.web.utils.IpUtils;
 import lombok.Data;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
-import oshi.hardware.CentralProcessor.TickType;
 import oshi.hardware.GlobalMemory;
 import oshi.hardware.HardwareAbstractionLayer;
 import oshi.software.os.FileSystem;
 import oshi.software.os.OSFileStore;
 import oshi.software.os.OperatingSystem;
 import oshi.util.Util;
-import com.overthinker.cloud.web.entity.entity.server.*;
-import com.overthinker.cloud.web.utils.Arith;
-import com.overthinker.cloud.web.utils.IpUtils;
 
 import java.util.LinkedList;
 import java.util.List;

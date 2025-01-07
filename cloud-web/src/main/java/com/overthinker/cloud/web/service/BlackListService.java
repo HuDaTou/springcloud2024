@@ -2,6 +2,9 @@ package com.overthinker.cloud.web.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.overthinker.cloud.resp.ResultData;
+import com.overthinker.cloud.web.entity.DTO.AddBlackListDTO;
+import com.overthinker.cloud.web.entity.DTO.SearchBlackListDTO;
+import com.overthinker.cloud.web.entity.DTO.UpdateBlackListDTO;
 import com.overthinker.cloud.web.entity.PO.BlackList;
 import com.overthinker.cloud.web.entity.VO.BlackListVO;
 

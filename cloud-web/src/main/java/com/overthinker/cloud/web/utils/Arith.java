@@ -3,7 +3,13 @@ package com.overthinker.cloud.web.utils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public class Arith {
+/**
+ * 精确的浮点数运算
+ * 
+ * @author ruoyi
+ */
+public class Arith
+{
 
     /** 默认除法运算精度 */
     private static final int DEF_DIV_SCALE = 10;
@@ -106,4 +112,3 @@ public class Arith {
         return b.divide(one, scale, RoundingMode.HALF_UP).doubleValue();
     }
 }
-

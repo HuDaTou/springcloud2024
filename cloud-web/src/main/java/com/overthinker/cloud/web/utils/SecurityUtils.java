@@ -12,6 +12,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @author kuailemao
+ * <p>
+ * 创建时间：2023/10/12 0:01
+ *
+ * Security获取相关信息工具类
+ */
 public class SecurityUtils {
 
     /**
@@ -60,4 +67,5 @@ public class SecurityUtils {
         }
         return null;
     }
+
 }

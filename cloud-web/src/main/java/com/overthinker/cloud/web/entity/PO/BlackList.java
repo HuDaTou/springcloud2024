@@ -2,12 +2,12 @@ package com.overthinker.cloud.web.entity.PO;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
+import com.overthinker.cloud.web.entity.BaseData;
+import com.overthinker.cloud.web.entity.ip.BlackListIpInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.overthinker.cloud.web.entity.BaseData;
-import com.overthinker.cloud.web.entity.ip.BlackListIpInfo;
 
 import java.util.Date;
 

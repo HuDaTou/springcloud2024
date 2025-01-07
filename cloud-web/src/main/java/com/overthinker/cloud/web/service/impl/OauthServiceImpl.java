@@ -1,6 +1,12 @@
 package com.overthinker.cloud.web.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.overthinker.cloud.web.entity.PO.User;
+import com.overthinker.cloud.web.mapper.UserMapper;
+import com.overthinker.cloud.web.service.IpService;
+import com.overthinker.cloud.web.service.OauthService;
+import com.overthinker.cloud.web.service.UserService;
+import com.overthinker.cloud.web.utils.IpUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -8,12 +14,6 @@ import me.zhyd.oauth.model.AuthResponse;
 import me.zhyd.oauth.model.AuthUser;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.overthinker.cloud.web.entity.entity.User;
-import com.overthinker.cloud.web.mapper.UserMapper;
-import com.overthinker.cloud.web.service.IpService;
-import com.overthinker.cloud.web.service.OauthService;
-import com.overthinker.cloud.web.service.UserService;
-import com.overthinker.cloud.web.utils.IpUtils;
 
 import java.util.Date;
 

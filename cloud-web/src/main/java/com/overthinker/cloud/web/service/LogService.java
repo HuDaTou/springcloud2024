@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.entity.DTO.LogDTO;
 import com.overthinker.cloud.web.entity.DTO.LogDeleteDTO;
+import com.overthinker.cloud.web.entity.PO.Log;
 import com.overthinker.cloud.web.entity.VO.PageVO;
 
 

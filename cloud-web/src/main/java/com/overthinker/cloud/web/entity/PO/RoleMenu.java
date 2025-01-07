@@ -2,10 +2,10 @@ package com.overthinker.cloud.web.entity.PO;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.overthinker.cloud.web.entity.BaseData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.overthinker.cloud.web.entity.BaseData;
 
 
 /**

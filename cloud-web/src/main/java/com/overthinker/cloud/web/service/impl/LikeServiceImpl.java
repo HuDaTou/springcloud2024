@@ -2,16 +2,16 @@ package com.overthinker.cloud.web.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import jakarta.annotation.Resource;
-import org.springframework.stereotype.Service;
+import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.constants.RedisConst;
-import com.overthinker.cloud.web.entity.entity.Like;
-import com.overthinker.cloud.web.entity.response.ResultData;
-import com.overthinker.cloud.web.enums.LikeEnum;
+import com.overthinker.cloud.web.entity.PO.Like;
+import com.overthinker.cloud.web.entity.enums.UserEnum.LikeEnum;
 import com.overthinker.cloud.web.mapper.LikeMapper;
 import com.overthinker.cloud.web.service.LikeService;
 import com.overthinker.cloud.web.utils.RedisCache;
 import com.overthinker.cloud.web.utils.SecurityUtils;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;

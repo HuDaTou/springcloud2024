@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ResultData<String>> handleBusiness(BusinessException e, HandlerMethod handlerMethod) {
         // BusinessException（自定义业务异常）的处理逻辑，比如：记录日志等逻辑。
-        ResultData<String> resultData =  ResultData.fail(e.getUserMessage(), e.getErrorCode(), e.getErrorMessage());
+        ResultData<String> resultData =  ResultData.fail(e.getErrorCode(), e.getErrorMessage());
 
 
         return new ResponseEntity<>(resultData ,e.getHttpStatusCode());
