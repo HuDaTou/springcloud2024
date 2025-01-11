@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.entity.DTO.PermissionDTO;
+import com.overthinker.cloud.web.entity.PO.Menu;
 import com.overthinker.cloud.web.entity.PO.Permission;
 import com.overthinker.cloud.web.entity.PO.RolePermission;
 import com.overthinker.cloud.web.entity.VO.PermissionMenuVO;
@@ -25,7 +26,7 @@ import java.util.Optional;
 /**
  * (Permission)表服务实现类
  *
- * @author kuailemao
+ * @author overH
  * @since 2023-12-05 19:53:31
  */
 @Service

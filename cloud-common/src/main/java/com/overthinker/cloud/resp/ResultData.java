@@ -1,16 +1,20 @@
 package com.overthinker.cloud.resp;
 
+import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSONWriter;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 /**
  * 通用结果类型
  * @param <T>
  */
 @Data
-@Accessors(chain = true)
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResultData<T> {
-    private String code;
+    private Integer code;
     private String message;
     private T data;
     private long timestamp;
@@ -48,53 +52,43 @@ public class ResultData<T> {
         return resultData;
     }
 
+
+
+
     /**
-     * 异常报错
-     * @param code
-     * @param message
-     * @return
-     * @param <T>
+     * 失败响应，不需要返回数据
      */
-    public static <T> ResultData<T> failure(String code, String message) {
+    public static <T> ResultData<T> failure() {
+        ResultData<T> resultData = new ResultData<>();
+        resultData.setCode(ReturnCodeEnum.FAILURE.getCode());
+        resultData.setMessage(ReturnCodeEnum.FAILURE.getMessage());
+        resultData.setData(null);
+        return resultData;
+    }
+    public static <T> ResultData<T> failure(String msg) {
+        ResultData<T> resultData = new ResultData<>();
+        resultData.setCode(ReturnCodeEnum.FAILURE.getCode());
+        resultData.setMessage(msg);
+        resultData.setData(null);
+        return resultData;
+    }
+    public static <T> ResultData<T> failure(T data)  {
+        ResultData<T> resultData = new ResultData<>();
+        resultData.setCode(ReturnCodeEnum.FAILURE.getCode());
+        resultData.setMessage(ReturnCodeEnum.FAILURE.getMessage());
+        resultData.setData(data);
+        return resultData;
+    }
+
+    public static <T> ResultData<T> failure(Integer code, String msg) {
         ResultData<T> resultData = new ResultData<>();
         resultData.setCode(code);
-        resultData.setMessage(message);
+        resultData.setMessage(msg);
         resultData.setData(null);
         return resultData;
     }
 
-    /**
-     * 异常报错
-     * @param message
-     * @return
-     * @param <T>
-     */
-    public static <T> ResultData<T> fail(String message) {
-        ResultData<T> resultData = new ResultData<>();
-        resultData.setCode(ReturnCodeEnum.RC500.getCode());
-        resultData.setMessage(message);
-        resultData.setData(null);
-        return resultData;
-    }
-
-    /**
-     * 异常报错
-     *
-     * @param code
-     * @param message
-     * @return
-     * @param <T>
-     */
-    public static <T> ResultData<T> fail( String code, String message) {
-        ResultData<T> resultData = new ResultData<>();
-        resultData.setCode(code);
-
-        resultData.setData(null);
-        return resultData;
-
-    }
-
-    public static ResultData<Void> failure(Integer code, String defaultMessage) {
-        return null;
+    public String asJsonString() {
+        return JSONObject.toJSONString(this, JSONWriter.Feature.WriteNulls);
     }
 }

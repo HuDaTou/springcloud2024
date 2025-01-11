@@ -7,13 +7,13 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.overthinker.cloud.resp.ResultData;
+import com.overthinker.cloud.resp.ReturnCodeEnum;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.constants.RedisConst;
 import com.overthinker.cloud.web.constants.SQLConst;
 import com.overthinker.cloud.web.entity.DTO.AddBlackListDTO;
 import com.overthinker.cloud.web.entity.PO.BlackList;
 import com.overthinker.cloud.web.entity.enums.UserEnum.BlackListPolicy;
-import com.overthinker.cloud.web.entity.enums.UserEnum.RespEnum;
 import com.overthinker.cloud.web.mapper.BlackListMapper;
 import com.overthinker.cloud.web.service.BlackListService;
 import com.overthinker.cloud.web.utils.IpUtils;
@@ -91,7 +91,7 @@ public class AccessLimitInterceptor implements HandlerInterceptor {
                 }
 
                 if (count > maxCount) {
-                    WebUtil.renderString(response, ResultData.failure(RespEnum.REQUEST_FREQUENTLY.getCode(), accessLimit.msg()).asJsonString());
+                    WebUtil.renderString(response, ResultData.failure(ReturnCodeEnum.REQUEST_FREQUENTLY.getCode(), accessLimit.msg()).asJsonString());
                     // 限制
                     log.warn("用户IP[" + ip + "]访问地址[" + uri + "]超过了限定的次数[" + maxCount + "]");
                     result = false;
@@ -131,7 +131,7 @@ public class AccessLimitInterceptor implements HandlerInterceptor {
                 }
             } else {
                 DateTime date = DateUtil.date(timestampByIP != null ? timestampByIP : timestampByUID);
-                WebUtil.renderString(response, ResultData.failure(RespEnum.BLACK_LIST_ERROR.getCode(), StrUtil.format("已被封禁，无法访问，距解封剩余：{}", DateUtil.formatBetween(new Date(), date, BetweenFormatter.Level.SECOND))).asJsonString());
+                WebUtil.renderString(response, ResultData.failure(ReturnCodeEnum.BLACK_LIST_ERROR.getCode(), StrUtil.format("已被封禁，无法访问，距解封剩余：{}", DateUtil.formatBetween(new Date(), date, BetweenFormatter.Level.SECOND))).asJsonString());
                 return true;
             }
         }
@@ -143,7 +143,7 @@ public class AccessLimitInterceptor implements HandlerInterceptor {
         // 如果当前已经封禁，并且封禁的时间大于当前时间这不会再次进行封禁
         if (timestampByIP != null && DateUtil.offset(DateUtil.date(expireTime), dateField, offset).getTime() < timestampByIP) {
             DateTime date = DateUtil.date(timestampByIP);
-            WebUtil.renderString(response, ResultData.failure(RespEnum.BLACK_LIST_ERROR.getCode(),
+            WebUtil.renderString(response, ResultData.failure(ReturnCodeEnum.BLACK_LIST_ERROR.getCode(),
                     StrUtil.format("已被封禁，无法访问，距解封剩余：{}", DateUtil.formatBetween(new Date(), date, BetweenFormatter.Level.SECOND))).asJsonString());
             return true;
         }
@@ -155,7 +155,7 @@ public class AccessLimitInterceptor implements HandlerInterceptor {
                 .expiresTime(DateUtil.offset(DateUtil.date(expireTime), dateField, offset))
                 .build();
         blackListService.addBlackList(addBlackListDTO);
-        WebUtil.renderString(response, ResultData.failure(RespEnum.BLACK_LIST_ERROR.getCode(), message).asJsonString());
+        WebUtil.renderString(response, ResultData.failure(ReturnCodeEnum.BLACK_LIST_ERROR.getCode(), message).asJsonString());
         return true;
     }
 }

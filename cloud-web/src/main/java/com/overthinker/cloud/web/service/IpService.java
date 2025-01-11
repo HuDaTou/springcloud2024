@@ -1,7 +1,7 @@
 package com.overthinker.cloud.web.service;
 
 /**
- * @author kuailemao
+ * @author overH
  * @since 2024/9/25 上午11:05
  */
 public interface IpService {

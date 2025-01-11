@@ -9,11 +9,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.naming.Binding;
-import java.util.Queue;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.Queue;
 
 /**
- * @author kuailemao
+ * @author overH
  * <p>
  * 创建时间：2023/10/16 20:26
  * RabbitMq配置类

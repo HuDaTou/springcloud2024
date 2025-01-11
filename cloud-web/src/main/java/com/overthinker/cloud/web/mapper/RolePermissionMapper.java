@@ -7,7 +7,7 @@ import com.overthinker.cloud.web.entity.PO.RolePermission;
 /**
  * (RolePermission)表数据库访问层
  *
- * @author kuailemao
+ * @author overH
  * @since 2023-10-13 15:02:40
  */
 public interface RolePermissionMapper extends BaseMapper<RolePermission> {

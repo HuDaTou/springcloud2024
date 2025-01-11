@@ -12,6 +12,7 @@ import com.overthinker.cloud.web.entity.PO.Log;
 import com.overthinker.cloud.web.entity.PO.LoginLog;
 import com.overthinker.cloud.web.entity.PO.User;
 import com.overthinker.cloud.web.entity.ip.IpDetail;
+import com.overthinker.cloud.web.handler.GlobalUncaughtExceptionHandler;
 import com.overthinker.cloud.web.mapper.BlackListMapper;
 import com.overthinker.cloud.web.mapper.LogMapper;
 import com.overthinker.cloud.web.mapper.LoginLogMapper;
@@ -30,7 +31,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author kuailemao
+ * @author overH
  * @since 2024/9/25 上午11:06
  * ip 处理类
  */

@@ -7,7 +7,7 @@ import com.overthinker.cloud.web.entity.PO.Banners;
 /**
  * (Banners)表数据库访问层
  *
- * @author kuailemao
+ * @author overH
  * @since 2024-08-28 09:51:13
  */
 public interface BannersMapper extends BaseMapper<Banners> {

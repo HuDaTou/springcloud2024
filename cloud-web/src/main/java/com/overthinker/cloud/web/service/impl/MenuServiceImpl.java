@@ -4,11 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.overthinker.cloud.resp.ResultData;
+import com.overthinker.cloud.resp.ReturnCodeEnum;
 import com.overthinker.cloud.web.entity.DTO.MenuDTO;
 import com.overthinker.cloud.web.entity.PO.*;
 import com.overthinker.cloud.web.entity.VO.MenuByIdVO;
 import com.overthinker.cloud.web.entity.VO.MenuVO;
-import com.overthinker.cloud.web.entity.enums.UserEnum.RespEnum;
 import com.overthinker.cloud.web.mapper.*;
 import com.overthinker.cloud.web.service.MenuService;
 import com.overthinker.cloud.web.service.RoleMenuService;
@@ -25,7 +25,7 @@ import java.util.Objects;
 /**
  * (Menu)表服务实现类
  *
- * @author kuailemao
+ * @author overH
  * @since 2023-11-17 22:15:22
  */
 @Slf4j
@@ -190,7 +190,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     public ResultData<String> deleteMenu(Long id) {
         // 判断是否有未删除的子目录
         if (menuMapper.selectCount(new LambdaQueryWrapper<Menu>().eq(Menu::getParentId, id)) > 0) {
-            return ResultData.failure(RespEnum.NO_DELETE_CHILD_MENU.getCode(),RespEnum.NO_DELETE_CHILD_MENU.getMsg());
+            return ResultData.failure(ReturnCodeEnum.NO_DELETE_CHILD_MENU.getCode(),ReturnCodeEnum.NO_DELETE_CHILD_MENU.getMessage());
         }
         if (this.removeById(id)) {
             // 删除相关菜单角色关系

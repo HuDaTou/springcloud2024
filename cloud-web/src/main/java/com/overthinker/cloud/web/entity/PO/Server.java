@@ -7,6 +7,7 @@ import com.overthinker.cloud.web.utils.IpUtils;
 import lombok.Data;
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
+import oshi.hardware.CentralProcessor.TickType;
 import oshi.hardware.GlobalMemory;
 import oshi.hardware.HardwareAbstractionLayer;
 import oshi.software.os.FileSystem;

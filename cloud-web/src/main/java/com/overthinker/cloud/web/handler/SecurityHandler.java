@@ -1,15 +1,16 @@
 package com.overthinker.cloud.web.handler;
 
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+
 import com.overthinker.cloud.resp.ResultData;
+import com.overthinker.cloud.resp.ReturnCodeEnum;
 import com.overthinker.cloud.web.constants.Const;
 import com.overthinker.cloud.web.constants.RespConst;
 import com.overthinker.cloud.web.entity.PO.LoginUser;
 import com.overthinker.cloud.web.entity.VO.AuthorizeVO;
-import com.overthinker.cloud.web.entity.enums.UserEnum.RespEnum;
 import com.overthinker.cloud.web.service.LoginLogService;
 import com.overthinker.cloud.web.utils.JwtUtils;
 import com.overthinker.cloud.web.utils.MyRedisCache;
+import com.overthinker.cloud.web.utils.StringUtils;
 import com.overthinker.cloud.web.utils.WebUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +26,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * @author kuailemao
+ * @author overH
  * <p>
  * 创建时间：2023/10/11 16:03
  */
@@ -96,7 +97,7 @@ public class SecurityHandler {
             AuthenticationException exception
     ) throws IOException {
         loginLogService.loginLog(request, request.getParameter(USER_NAME), 1, exception.getMessage());
-        WebUtil.renderString(response, ResultData.failure(RespEnum.USERNAME_OR_PASSWORD_ERROR.getCode(), exception.getMessage()).asJsonString());
+        WebUtil.renderString(response, ResultData.failure(ReturnCodeEnum.USERNAME_OR_PASSWORD_ERROR.getCode(), exception.getMessage()).asJsonString());
     }
 
     /**
@@ -112,7 +113,7 @@ public class SecurityHandler {
             WebUtil.renderString(response, ResultData.success().asJsonString());
             return;
         }
-        WebUtil.renderString(response, ResultData.failure(RespEnum.NOT_LOGIN.getCode(), RespEnum.NOT_LOGIN.getMsg()).asJsonString());
+        WebUtil.renderString(response, ResultData.failure(ReturnCodeEnum.NOT_LOGIN.getCode(), ReturnCodeEnum.NOT_LOGIN.getMessage()).asJsonString());
     }
 
     /**
@@ -123,7 +124,7 @@ public class SecurityHandler {
             HttpServletResponse response,
             AuthenticationException exception
     ) throws IOException {
-        WebUtil.renderString(response, ResultData.failure(RespEnum.NOT_LOGIN.getCode(), RespEnum.NOT_LOGIN.getMsg()).asJsonString());
+        WebUtil.renderString(response, ResultData.failure(ReturnCodeEnum.NOT_LOGIN.getCode(), ReturnCodeEnum.NOT_LOGIN.getMessage()).asJsonString());
     }
 
     /**
@@ -134,6 +135,6 @@ public class SecurityHandler {
             HttpServletResponse response,
             AccessDeniedException exception
     ) {
-        WebUtil.renderString(response, ResultData.failure(RespEnum.NO_PERMISSION.getCode(), RespEnum.NO_PERMISSION.getMsg()).asJsonString());
+        WebUtil.renderString(response, ResultData.failure(ReturnCodeEnum.NO_PERMISSION.getCode(), ReturnCodeEnum.NO_PERMISSION.getMessage()).asJsonString());
     }
 }

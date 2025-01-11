@@ -156,9 +156,7 @@ public class StringUtil {
 			return str;
 		}
 		StringBuilder sb = new StringBuilder(minLength);
-		for (int i = str.length(); i < minLength; i++) {
-			sb.append(padChar);
-		}
+        sb.append(String.valueOf(padChar).repeat(minLength - str.length()));
 		sb.append(str);
 		return sb.toString();
 	}
@@ -180,9 +178,7 @@ public class StringUtil {
 		}
 		StringBuilder sb = new StringBuilder(minLength);
 		sb.append(str);
-		for (int i = str.length(); i < minLength; i++) {
-			sb.append(padChar);
-		}
+        sb.append(String.valueOf(padChar).repeat(minLength - str.length()));
 		return sb.toString();
 	}
 
@@ -326,12 +322,12 @@ public class StringUtil {
 	public static Boolean checkArrayValue(String[] arr, String checkValue) {
 		Boolean checkFlag = false;
 		if (arr != null && arr.length > 0) {
-			for (int i = 0; i < arr.length; i++) {
-				if (arr[i].equals(checkValue)) {
-					checkFlag = true;
-					break;
-				}
-			}
+            for (String s : arr) {
+                if (s.equals(checkValue)) {
+                    checkFlag = true;
+                    break;
+                }
+            }
 		}
 		return checkFlag;
 	}
@@ -344,7 +340,7 @@ public class StringUtil {
 	 * @return
 	 */
 	public static Boolean isContains(String[] arr, String checkValue) {
-		Boolean checkFlag = false;
+		boolean checkFlag = false;
 		if (arr != null && arr.length > 0) {
 			for (String str : arr) {
 				if (checkValue.indexOf(str)!=-1) {

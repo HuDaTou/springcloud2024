@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 /**
- * @author kuailemao
+ * @author overH
  * <p>
  * 创建时间：2023/9/7 0:22
  * 处理跨域请求

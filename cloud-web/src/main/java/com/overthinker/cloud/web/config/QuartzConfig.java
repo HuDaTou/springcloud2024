@@ -1,6 +1,11 @@
 package com.overthinker.cloud.web.config;
 
 
+import com.overthinker.cloud.web.quartz.RefreshTheCache;
+import org.quartz.JobBuilder;
+import org.quartz.JobDetail;
+import org.quartz.SimpleScheduleBuilder;
+import org.quartz.TriggerBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.Trigger;
 
@@ -12,7 +17,7 @@ import org.springframework.scheduling.Trigger;
 public class QuartzConfig {
     @Bean
     public JobDetail jobDetail() {
-        //指定任务描述具体的实现类
+        //指定任务描述具体地实现类
         return JobBuilder.newJob(RefreshTheCache.class)
                 // 指定任务的名称
                 .withIdentity("refreshTheCache")
@@ -26,7 +31,7 @@ public class QuartzConfig {
     @Bean
     public Trigger trigger() {
         //创建触发器
-        return TriggerBuilder.newTrigger()
+        return (Trigger) TriggerBuilder.newTrigger()
                 // 绑定工作任务
                 .forJob(jobDetail())
                 // 每隔 5 分钟执行一次 job

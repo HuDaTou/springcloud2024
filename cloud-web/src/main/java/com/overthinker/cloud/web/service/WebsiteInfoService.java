@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * (WebsiteInfo)表服务接口
  *
- * @author kuailemao
+ * @author overH
  * @since 2023-12-27 14:07:34
  */
 public interface WebsiteInfoService extends IService<WebsiteInfo> {

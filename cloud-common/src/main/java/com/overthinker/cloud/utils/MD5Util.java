@@ -18,14 +18,14 @@ public class MD5Util {
   
             int i;  
   
-            StringBuffer buf = new StringBuffer("");  
-            for (int offset = 0; offset < b.length; offset++) {  
-                i = b[offset];  
-                if (i < 0)  
-                    i += 256;  
-                if (i < 16)  
-                    buf.append("0");  
-                buf.append(Integer.toHexString(i));  
+            StringBuilder buf = new StringBuilder("");
+            for (byte value : b) {
+                i = value;
+                if (i < 0)
+                    i += 256;
+                if (i < 16)
+                    buf.append("0");
+                buf.append(Integer.toHexString(i));
             }  
             //32位加密  
             return buf.toString();  

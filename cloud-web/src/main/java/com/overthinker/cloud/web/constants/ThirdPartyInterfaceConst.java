@@ -1,7 +1,7 @@
 package com.overthinker.cloud.web.constants;
 
 /**
- * @author kuailemao
+ * @author overH
  * @since 2024/9/27 上午9:40
  * 第三方接口常量
  */

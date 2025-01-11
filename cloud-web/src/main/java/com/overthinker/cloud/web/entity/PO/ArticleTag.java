@@ -15,7 +15,7 @@ import java.util.Date;
 /**
  * (ArticleTag)表实体类
  *
- * @author kuailemao
+ * @author overH
  * @since 2023-10-15 02:29:13
  */
 @SuppressWarnings("serial")

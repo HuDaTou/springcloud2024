@@ -2,6 +2,7 @@ package com.overthinker.cloud.web.utils;
 
 import com.overthinker.cloud.web.constants.Const;
 import com.overthinker.cloud.web.entity.enums.UserEnum.UploadEnum;
+import com.overthinker.cloud.web.exception.FileUploadException;
 import io.minio.*;
 import io.minio.errors.*;
 import io.minio.messages.DeleteError;
@@ -20,7 +21,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 /**
- * @author kuailemao
+ * @author overH
  * <p>
  * 创建时间：2023/12/26 19:16
  * 文件上传工具类

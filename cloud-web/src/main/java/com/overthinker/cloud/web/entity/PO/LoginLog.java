@@ -17,7 +17,7 @@ import java.util.Date;
 /**
  * (LoginLog)表实体类
  *
- * @author kuailemao
+ * @author overH
  * @since 2023-12-08 14:38:43
  */
 @Data

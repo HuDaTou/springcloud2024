@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * @author kuailemao
+ * @author overH
  * <p>
  * 创建时间：2023/10/11 16:29
  * 授权VO

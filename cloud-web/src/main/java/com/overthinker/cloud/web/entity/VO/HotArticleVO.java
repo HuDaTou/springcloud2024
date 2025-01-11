@@ -3,7 +3,7 @@ package com.overthinker.cloud.web.entity.VO;
 import lombok.Data;
 
 /**
- * @author kuailemao
+ * @author overH
  * @since 2024/10/29 17:56
  * 热门推荐VO
  */

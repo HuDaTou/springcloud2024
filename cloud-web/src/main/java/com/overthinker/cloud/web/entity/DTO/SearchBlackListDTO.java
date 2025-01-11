@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @author kuailemao
+ * @author overH
  * @since 2024/10/8 11:10
  * 搜索DTO
  */

@@ -7,7 +7,7 @@ import com.overthinker.cloud.web.entity.PO.ArticleTag;
 /**
  * (ArticleTag)表数据库访问层
  *
- * @author kuailemao
+ * @author overH
  * @since 2023-10-15 02:29:13
  */
 public interface ArticleTagMapper extends BaseMapper<ArticleTag> {

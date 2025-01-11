@@ -1,7 +1,7 @@
 package com.overthinker.cloud.web.constants;
 
 /**
- * @author kuailemao
+ * @author overH
  * <p>
  * 创建时间：2023/10/12 16:01
  * 公共常量

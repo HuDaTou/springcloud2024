@@ -1,7 +1,7 @@
 package com.overthinker.cloud.web.constants;
 
 /**
- * @author kuailemao
+ * @author overH
  * @since 2024/9/2 下午6:14
  */
 public class ImageConst {

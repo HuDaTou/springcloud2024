@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 /**
  * (Favorite)表服务实现类
  *
- * @author kuailemao
+ * @author overH
  * @since 2023-10-18 14:12:25
  */
 @Service("favoriteService")

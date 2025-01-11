@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.overthinker.cloud.resp.ResultData;
+import com.overthinker.cloud.resp.ReturnCodeEnum;
 import com.overthinker.cloud.web.constants.*;
 import com.overthinker.cloud.web.entity.DTO.*;
 import com.overthinker.cloud.web.entity.PO.*;
@@ -24,7 +25,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.User;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -44,7 +45,7 @@ import java.util.stream.Collectors;
 /**
  * (User)表服务实现类
  *
- * @author kuailemao
+ * @author overH
  * @since 2023-10-10 19:33:44
  */
 @Slf4j
@@ -251,7 +252,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         // 2.判断用户名或邮箱是否已存在
         if (userIsExist(userRegisterDTO.getUsername(), userRegisterDTO.getEmail())) {
-            return ResultData.failure(RespEnum.USERNAME_OR_EMAIL_EXIST.getCode(), RespEnum.USERNAME_OR_EMAIL_EXIST.getMsg());
+            return ResultData.failure(ReturnCodeEnum.USERNAME_OR_EMAIL_EXIST.getCode(), ReturnCodeEnum.USERNAME_OR_EMAIL_EXIST.getMessage());
         }
         // 3.密码加密
         String enPassword = passwordEncoder.encode(userRegisterDTO.getPassword());
@@ -459,9 +460,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private ResultData<Void> verifyCode(String email, String code, String type) {
         String redisCode = redisCache.getCacheObject(RedisConst.VERIFY_CODE + type + RedisConst.SEPARATOR + email);
         if (redisCode == null)
-            return ResultData.failure(RespEnum.VERIFY_CODE_ERROR.getCode(), RespConst.VERIFY_CODE_NULL_MSG);
+            return ResultData.failure(ReturnCodeEnum.VERIFY_CODE_ERROR.getCode(), RespConst.VERIFY_CODE_NULL_MSG);
         if (!redisCode.equals(code))
-            return ResultData.failure(RespEnum.VERIFY_CODE_ERROR.getCode(), RespEnum.VERIFY_CODE_ERROR.getMsg());
+            return ResultData.failure(ReturnCodeEnum.VERIFY_CODE_ERROR.getCode(), ReturnCodeEnum.VERIFY_CODE_ERROR.getMessage());
         return null;
     }
 }

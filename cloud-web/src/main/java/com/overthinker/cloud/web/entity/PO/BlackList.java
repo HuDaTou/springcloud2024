@@ -15,7 +15,7 @@ import java.util.Date;
 /**
  * (BlackList)表实体类
  *
- * @author kuailemao
+ * @author overH
  * @since 2024-09-05 16:13:19
  */
 @Builder

@@ -587,10 +587,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils
             final int len = s.length();
             if (s.length() <= size)
             {
-                for (int i = size - len; i > 0; i--)
-                {
-                    sb.append(c);
-                }
+                sb.append(String.valueOf(c).repeat(size - len));
                 sb.append(s);
             }
             else
@@ -600,10 +597,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils
         }
         else
         {
-            for (int i = size; i > 0; i--)
-            {
-                sb.append(c);
-            }
+            sb.append(String.valueOf(c).repeat(Math.max(0, size)));
         }
         return sb.toString();
     }

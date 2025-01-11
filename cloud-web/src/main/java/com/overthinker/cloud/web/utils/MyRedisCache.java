@@ -149,6 +149,20 @@ public class MyRedisCache {
     }
 
     /**
+     * 增加缓存set
+     */
+    public <T> Long addCacheSetValue(final String key, final T data) {
+        return redisTemplate.opsForSet().add(key, data);
+    }
+
+    /**
+     * 是否存在set值
+     */
+    public Boolean isSetValue(final String key, final String sValue) {
+        return redisTemplate.opsForSet().isMember(key, sValue);
+    }
+
+    /**
      * 缓存Map
      *
      * @param key
@@ -180,6 +194,16 @@ public class MyRedisCache {
      */
     public <T> void setCacheMapValue(final String key, final String hKey, final T value) {
         redisTemplate.opsForHash().put(key, hKey, value);
+    }
+
+    /**
+     * 删除Hash中的数据
+     *
+     * @param key   Redis键
+     * @param hKey  Hash键
+     */
+    public <T> void deleteCacheMapValue(final String key,final String hKey) {
+        redisTemplate.opsForHash().delete(key, hKey);
     }
 
     /**

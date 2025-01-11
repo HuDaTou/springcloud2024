@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * (WebsiteInfo)表控制层
  *
- * @author kuailemao
+ * @author overH
  * @since 2023-12-27 14:07:33
  */
 @Tag(name = "网站基本信息")

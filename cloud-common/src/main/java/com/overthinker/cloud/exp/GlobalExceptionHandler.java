@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
     public ResultData<String> exception(Exception e){
 
         log.error("全局异常信息处理：{}",e.getMessage(),e);
-        return ResultData.fail(ReturnCodeEnum.RC500.getCode(),e.getMessage());
+        return ResultData.failure(ReturnCodeEnum.RC500.getCode(),e.getMessage());
 
     }
 

@@ -3,10 +3,10 @@ package com.overthinker.cloud.web.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.entity.DTO.*;
+import com.overthinker.cloud.web.entity.PO.User;
 import com.overthinker.cloud.web.entity.VO.UserAccountVO;
 import com.overthinker.cloud.web.entity.VO.UserDetailsVO;
 import com.overthinker.cloud.web.entity.VO.UserListVO;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * (User)表服务接口
  *
- * @author kuailemao
+ * @author overH
  * @since 2023-10-10 19:33:43
  */
 public interface UserService extends IService<User>, UserDetailsService {

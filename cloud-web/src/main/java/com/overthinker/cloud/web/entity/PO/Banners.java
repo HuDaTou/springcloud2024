@@ -15,7 +15,7 @@ import java.util.Date;
 /**
  * (Banners)表实体类
  *
- * @author kuailemao
+ * @author overH
  * @since 2024-08-28 09:51:16
  */
 @Data

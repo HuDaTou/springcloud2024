@@ -26,12 +26,12 @@ public class MediaOpenController {
         MediaFiles mediaFiles = mediaFileService.getFileById(mediaId);
 
         if (mediaFiles == null) {
-            return ResultData.fail("找不到视频");
+            return ResultData.failure("找不到视频");
         }
         //取出视频播放地址
         String url = mediaFiles.getUrl();
         if (StringUtils.isEmpty(url)) {
-            return ResultData.fail("该视频正在处理中");
+            return ResultData.failure("该视频正在处理中");
         }
         return ResultData.success(mediaFiles.getUrl());
     }

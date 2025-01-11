@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 /**
  * (RoleMenu)表实体类
  *
- * @author kuailemao
+ * @author overH
  * @since 2023-11-28 10:23:15
  */
 @Data

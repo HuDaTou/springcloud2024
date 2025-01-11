@@ -1,12 +1,12 @@
 package com.overthinker.cloud.web.utils;
 
 
-import cn.hutool.http.useragent.Browser;
-import cn.hutool.http.useragent.UserAgent;
+import eu.bitwalker.useragentutils.Browser;
+import eu.bitwalker.useragentutils.OperatingSystem;
+import eu.bitwalker.useragentutils.UserAgent;
 import jakarta.servlet.http.HttpServletRequest;
-
 /**
- * @author kuailemao
+ * @author overH
  * <p>
  * 创建时间：2023/12/8 14:12
  * 浏览器信息工具类

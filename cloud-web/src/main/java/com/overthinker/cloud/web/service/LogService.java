@@ -11,7 +11,7 @@ import com.overthinker.cloud.web.entity.VO.PageVO;
 /**
  * (Log)表服务接口
  *
- * @author kuailemao
+ * @author overH
  * @since 2023-12-12 09:12:32
  */
 public interface LogService extends IService<Log> {

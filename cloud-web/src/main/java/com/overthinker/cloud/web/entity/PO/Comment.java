@@ -13,7 +13,7 @@ import java.util.Date;
 /**
  * (CommentEmail)表实体类
  *
- * @author kuailemao
+ * @author overH
  * @since 2023-10-19 15:44:56
  */
 @Data

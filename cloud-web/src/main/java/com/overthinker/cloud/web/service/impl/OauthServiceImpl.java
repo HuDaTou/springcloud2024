@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 /**
- * @author kuailemao
+ * @author overH
  * <p>
  * 创建时间：2023/12/21 17:09
  */
@@ -62,7 +62,8 @@ public class OauthServiceImpl implements OauthService {
                         .loginIp(ipAddr)
                         .loginTime(new Date())
                         .build();
-                if (userService.save(user)) {
+                if (userService.save(
+                        user)) {
                     ipService.refreshIpDetailAsyncByUidAndRegister(user.getId());
                 }
             }

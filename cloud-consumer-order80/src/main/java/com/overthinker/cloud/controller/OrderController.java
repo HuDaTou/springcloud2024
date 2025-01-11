@@ -65,7 +65,7 @@ public class OrderController {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("调用远程服务失败" + DateUtil.now());
-            ResultData.fail(ReturnCodeEnum.RC500.getCode(), e.getMessage());
+            ResultData.failure(ReturnCodeEnum.RC500.getCode(), e.getMessage());
         }
         return resultData;
     }

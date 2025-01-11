@@ -12,7 +12,7 @@ import java.util.Date;
 /**
  * (Like)表实体类
  *
- * @author kuailemao
+ * @author overH
  * @since 2023-10-18 19:41:18
  */
 @Data

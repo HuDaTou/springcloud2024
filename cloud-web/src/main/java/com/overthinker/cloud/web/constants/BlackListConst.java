@@ -1,7 +1,7 @@
 package com.overthinker.cloud.web.constants;
 
 /**
- * @author kuailemao
+ * @author overH
  * @since 2024/9/25 上午10:06
  * 黑名单常量类
  */

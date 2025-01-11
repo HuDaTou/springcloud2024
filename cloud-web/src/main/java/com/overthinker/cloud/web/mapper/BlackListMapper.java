@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Select;
 /**
  * (BlackList)表数据库访问层
  *
- * @author kuailemao
+ * @author overH
  * @since 2024-09-05 16:13:19
  */
 public interface BlackListMapper extends BaseMapper<BlackList> {
