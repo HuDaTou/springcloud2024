@@ -1,7 +1,7 @@
 package com.overthinker.cloud.web.controller;
 
 import com.overthinker.cloud.web.annotation.AccessLimit;
-import com.overthinker.cloud.web.entity.enums.UserEnum.RegisterOrLoginTypeEnum;
+import com.overthinker.cloud.web.entity.enums.RegisterOrLoginTypeEnum;
 import com.overthinker.cloud.web.entity.oauth.GiteeBody;
 import com.overthinker.cloud.web.entity.oauth.GithubBody;
 import com.overthinker.cloud.web.service.OauthService;
@@ -78,7 +78,7 @@ public class OauthController {
     @GetMapping("/github/callback")
     public void githubLogin(AuthCallback callback, HttpServletRequest request, HttpServletResponse response) throws IOException {
         AuthRequest authRequest = getGithubAuthRequest();
-        String parameter = oauthService.handleLogin(authRequest.login(callback), request,RegisterOrLoginTypeEnum.GITHUB.getRegisterType());
+        String parameter = oauthService.handleLogin(authRequest.login(callback), request, RegisterOrLoginTypeEnum.GITHUB.getRegisterType());
         response.sendRedirect(path+parameter);
     }
 

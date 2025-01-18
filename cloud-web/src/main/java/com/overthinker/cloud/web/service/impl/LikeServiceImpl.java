@@ -5,10 +5,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.constants.RedisConst;
 import com.overthinker.cloud.web.entity.PO.Like;
-import com.overthinker.cloud.web.entity.enums.UserEnum.LikeEnum;
+import com.overthinker.cloud.web.entity.enums.LikeEnum;
 import com.overthinker.cloud.web.mapper.LikeMapper;
 import com.overthinker.cloud.web.service.LikeService;
-import com.overthinker.cloud.web.utils.RedisCache;
+import com.overthinker.cloud.web.utils.MyRedisCache;
 import com.overthinker.cloud.web.utils.SecurityUtils;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like> implements Li
     private LikeMapper likeMapper;
 
     @Resource
-    private RedisCache redisCache;
+    private MyRedisCache myRedisCache;
 
     @Override
     public ResultData<Void> userLike(Integer type, Integer typeId) {
@@ -44,7 +44,7 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like> implements Li
                 .type(type)
                 .typeId(typeId).build();
         if (Objects.equals(type, LikeEnum.LIKE_TYPE_ARTICLE.getType()))
-            redisCache.incrementCacheMapValue(RedisConst.ARTICLE_LIKE_COUNT, typeId.toString(), 1);
+            myRedisCache.incrementCacheMapValue(RedisConst.ARTICLE_LIKE_COUNT, typeId.toString(), 1);
         if (this.save(saveLike)) return ResultData.success();
         return ResultData.failure();
     }
@@ -62,7 +62,7 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like> implements Li
                 .eq(Like::getType, type)
                 .eq(Like::getTypeId, typeId));
         if (Objects.equals(type, LikeEnum.LIKE_TYPE_ARTICLE.getType()))
-            redisCache.incrementCacheMapValue(RedisConst.ARTICLE_LIKE_COUNT, typeId.toString(), -1);
+            myRedisCache.incrementCacheMapValue(RedisConst.ARTICLE_LIKE_COUNT, typeId.toString(), -1);
         if (like) return ResultData.success();
         return ResultData.failure();
     }

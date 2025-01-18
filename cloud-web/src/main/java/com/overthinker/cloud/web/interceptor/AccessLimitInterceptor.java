@@ -1,5 +1,6 @@
 package com.overthinker.cloud.web.interceptor;
 
+
 import cn.hutool.core.date.BetweenFormatter;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
@@ -13,7 +14,7 @@ import com.overthinker.cloud.web.constants.RedisConst;
 import com.overthinker.cloud.web.constants.SQLConst;
 import com.overthinker.cloud.web.entity.DTO.AddBlackListDTO;
 import com.overthinker.cloud.web.entity.PO.BlackList;
-import com.overthinker.cloud.web.entity.enums.UserEnum.BlackListPolicy;
+import com.overthinker.cloud.web.entity.enums.BlackListPolicy;
 import com.overthinker.cloud.web.mapper.BlackListMapper;
 import com.overthinker.cloud.web.service.BlackListService;
 import com.overthinker.cloud.web.utils.IpUtils;
@@ -23,8 +24,8 @@ import com.overthinker.cloud.web.utils.WebUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -35,8 +36,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Redis限流拦截器
+ */
 @Slf4j
-@Component
+@Component("accessLimitInterceptor")
 public class AccessLimitInterceptor implements HandlerInterceptor {
 
     @Resource
@@ -159,3 +163,4 @@ public class AccessLimitInterceptor implements HandlerInterceptor {
         return true;
     }
 }
+

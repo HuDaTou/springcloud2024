@@ -8,7 +8,7 @@ import com.overthinker.cloud.web.constants.LogConst;
 import com.overthinker.cloud.web.entity.DTO.StationmasterInfoDTO;
 import com.overthinker.cloud.web.entity.DTO.WebsiteInfoDTO;
 import com.overthinker.cloud.web.entity.VO.WebsiteInfoVO;
-import com.overthinker.cloud.web.entity.enums.UserEnum.UploadEnum;
+import com.overthinker.cloud.web.entity.enums.UploadEnum;
 import com.overthinker.cloud.web.service.WebsiteInfoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

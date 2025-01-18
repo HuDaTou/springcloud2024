@@ -11,7 +11,7 @@ import com.overthinker.cloud.web.entity.DTO.ArticleDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchArticleDTO;
 import com.overthinker.cloud.web.entity.PO.*;
 import com.overthinker.cloud.web.entity.VO.*;
-import com.overthinker.cloud.web.entity.enums.UserEnum.*;
+import com.overthinker.cloud.web.entity.enums.*;
 import com.overthinker.cloud.web.exception.FileUploadException;
 import com.overthinker.cloud.web.mapper.*;
 import com.overthinker.cloud.web.service.*;
@@ -63,7 +63,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     private CommentService commentService;
 
     @Resource
-    private MyRedisCache redisCache;
+    private MyRedisCache myRedisCache;
 
     @Resource
     private FileUploadUtils fileUploadUtils;
@@ -83,7 +83,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public PageVO<List<ArticleVO>> listAllArticle(Integer pageNum, Integer pageSize) {
-        boolean hasKey = redisCache.isHasKey(RedisConst.ARTICLE_COMMENT_COUNT) && redisCache.isHasKey(RedisConst.ARTICLE_FAVORITE_COUNT) && redisCache.isHasKey(RedisConst.ARTICLE_LIKE_COUNT);
+        boolean hasKey = myRedisCache.isHasKey(RedisConst.ARTICLE_COMMENT_COUNT) && myRedisCache.isHasKey(RedisConst.ARTICLE_FAVORITE_COUNT) && myRedisCache.isHasKey(RedisConst.ARTICLE_LIKE_COUNT);
         // 文章
         Page<Article> page = new Page<>(pageNum, pageSize);
         this.page(page, new LambdaQueryWrapper<Article>().eq(Article::getStatus, SQLConst.PUBLIC_ARTICLE).orderByDesc(Article::getCreateTime));
@@ -121,13 +121,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     private void setArticleCount(ArticleVO articleVO, String redisKey, CountTypeEnum articleFieldName) {
         String articleId = articleVO.getId().toString();
-        Object countObj = redisCache.getCacheMap(redisKey).get(articleId);
+        Object countObj = myRedisCache.getCacheMap(redisKey).get(articleId);
         long count = 0L;
         if (countObj != null) {
             count = Long.parseLong(countObj.toString());
         } else {
             // 缓存发布新文章时数量缓存不存在
-            redisCache.setCacheMap(redisKey, Map.of(articleId, 0));
+            myRedisCache.setCacheMap(redisKey, Map.of(articleId, 0));
         }
 
         if (articleFieldName.equals(CountTypeEnum.FAVORITE)) {
@@ -229,9 +229,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public void addVisitCount(Long id) {
-        if (redisCache.isHasKey(RedisConst.ARTICLE_VISIT_COUNT + id))
-            redisCache.increment(RedisConst.ARTICLE_VISIT_COUNT + id, 1L);
-        else redisCache.setCacheObject(RedisConst.ARTICLE_VISIT_COUNT + id, 0);
+        if (myRedisCache.isHasKey(RedisConst.ARTICLE_VISIT_COUNT + id))
+            myRedisCache.increment(RedisConst.ARTICLE_VISIT_COUNT + id, 1L);
+        else myRedisCache.setCacheObject(RedisConst.ARTICLE_VISIT_COUNT + id, 0);
     }
 
     @Override

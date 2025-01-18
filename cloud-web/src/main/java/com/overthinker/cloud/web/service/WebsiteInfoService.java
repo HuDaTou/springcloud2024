@@ -6,7 +6,7 @@ import com.overthinker.cloud.web.entity.DTO.StationmasterInfoDTO;
 import com.overthinker.cloud.web.entity.DTO.WebsiteInfoDTO;
 import com.overthinker.cloud.web.entity.PO.WebsiteInfo;
 import com.overthinker.cloud.web.entity.VO.WebsiteInfoVO;
-import com.overthinker.cloud.web.entity.enums.UserEnum.UploadEnum;
+import com.overthinker.cloud.web.entity.enums.UploadEnum;
 import org.springframework.web.multipart.MultipartFile;
 
 

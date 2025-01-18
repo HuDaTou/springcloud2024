@@ -7,7 +7,7 @@ import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.constants.RespConst;
 import com.overthinker.cloud.web.constants.SQLConst;
 import com.overthinker.cloud.web.entity.PO.Banners;
-import com.overthinker.cloud.web.entity.enums.UserEnum.UploadEnum;
+import com.overthinker.cloud.web.entity.enums.UploadEnum;
 import com.overthinker.cloud.web.mapper.BannersMapper;
 import com.overthinker.cloud.web.service.BannersService;
 import com.overthinker.cloud.web.utils.FileUploadUtils;

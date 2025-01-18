@@ -18,9 +18,9 @@ import com.overthinker.cloud.web.entity.PO.User;
 import com.overthinker.cloud.web.entity.VO.ArticleCommentVO;
 import com.overthinker.cloud.web.entity.VO.CommentListVO;
 import com.overthinker.cloud.web.entity.VO.PageVO;
-import com.overthinker.cloud.web.entity.enums.UserEnum.CommentEnum;
-import com.overthinker.cloud.web.entity.enums.UserEnum.LikeEnum;
-import com.overthinker.cloud.web.entity.enums.UserEnum.MailboxAlertsEnum;
+import com.overthinker.cloud.web.entity.enums.CommentEnum;
+import com.overthinker.cloud.web.entity.enums.LikeEnum;
+import com.overthinker.cloud.web.entity.enums.MailboxAlertsEnum;
 import com.overthinker.cloud.web.mapper.CommentMapper;
 import com.overthinker.cloud.web.mapper.LeaveWordMapper;
 import com.overthinker.cloud.web.mapper.LikeMapper;
@@ -45,7 +45,6 @@ import java.util.stream.Collectors;
  * (CommentEmail)表服务实现类
  *
  * @author overH
- * @since 2023-10-19 15:44:57
  */
 @Service("commentService")
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
@@ -60,7 +59,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     private LikeService likeService;
 
     @Resource
-    private MyRedisCache redisCache;
+    private MyRedisCache myRedisCache;
 
     @Resource
     private LikeMapper likeMapper;
@@ -155,7 +154,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
      */
     public ResultData<String> commentEmailReminder(UserCommentDTO commentDTO, User user, Comment comment) {
         // 缓存评论数量+1
-        redisCache.incrementCacheMapValue(RedisConst.ARTICLE_COMMENT_COUNT, commentDTO.getTypeId().toString(), 1);
+        myRedisCache.incrementCacheMapValue(RedisConst.ARTICLE_COMMENT_COUNT, commentDTO.getTypeId().toString(), 1);
         // 评论
         if (StringUtils.isNull(commentDTO.getReplyId())) {
 
@@ -249,9 +248,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                                     .eq(Comment::getType, CommentEnum.COMMENT_TYPE_ARTICLE.getType())).getTypeId();
             // 2.修改redis数量
             if (Objects.equals(isCheckDTO.getIsCheck(), SQLConst.COMMENT_IS_CHECK)) {
-                redisCache.incrementCacheMapValue(RedisConst.ARTICLE_COMMENT_COUNT, articleId.toString(), updateCount);
+                myRedisCache.incrementCacheMapValue(RedisConst.ARTICLE_COMMENT_COUNT, articleId.toString(), updateCount);
             } else {
-                redisCache.incrementCacheMapValue(RedisConst.ARTICLE_COMMENT_COUNT, articleId.toString(), -updateCount);
+                myRedisCache.incrementCacheMapValue(RedisConst.ARTICLE_COMMENT_COUNT, articleId.toString(), -updateCount);
             }
             return ResultData.success();
         }

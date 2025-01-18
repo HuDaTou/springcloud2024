@@ -8,12 +8,12 @@ import com.overthinker.cloud.web.entity.PO.Comment;
 import com.overthinker.cloud.web.entity.PO.Favorite;
 import com.overthinker.cloud.web.entity.PO.Like;
 import com.overthinker.cloud.web.entity.VO.ArticleVO;
-import com.overthinker.cloud.web.entity.enums.UserEnum.CommentEnum;
-import com.overthinker.cloud.web.entity.enums.UserEnum.FavoriteEnum;
-import com.overthinker.cloud.web.entity.enums.UserEnum.LikeEnum;
+import com.overthinker.cloud.web.entity.enums.CommentEnum;
+import com.overthinker.cloud.web.entity.enums.FavoriteEnum;
+import com.overthinker.cloud.web.entity.enums.LikeEnum;
 import com.overthinker.cloud.web.mapper.*;
 import com.overthinker.cloud.web.service.RedisService;
-import com.overthinker.cloud.web.utils.RedisCache;
+import com.overthinker.cloud.web.utils.MyRedisCache;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 public class RedisServiceImpl implements RedisService {
 
     @Resource
-    private RedisCache redisCache;
+    private MyRedisCache myRedisCache;
 
     @Resource
     private ArticleMapper articleMapper;
@@ -41,9 +41,9 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public void articleCountClear() {
         log.info("--------执行清除redis文章相关数量缓存--------");
-        boolean isDel = redisCache.deleteObject(RedisConst.ARTICLE_FAVORITE_COUNT);
-        isDel = isDel && redisCache.deleteObject(RedisConst.ARTICLE_LIKE_COUNT);
-        isDel = isDel && redisCache.deleteObject(RedisConst.ARTICLE_COMMENT_COUNT);
+        boolean isDel = myRedisCache.deleteObject(RedisConst.ARTICLE_FAVORITE_COUNT);
+        isDel = isDel && myRedisCache.deleteObject(RedisConst.ARTICLE_LIKE_COUNT);
+        isDel = isDel && myRedisCache.deleteObject(RedisConst.ARTICLE_COMMENT_COUNT);
         if (isDel) log.info("--------清除redis文章相关数量缓存成功--------");
         else log.info("--------清除redis文章相关数量缓存失败--------");
     }
@@ -51,7 +51,7 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public void articleVisitCount() {
         try {
-            articleMapper.selectList(null).forEach(article -> redisCache.setCacheObject(RedisConst.ARTICLE_VISIT_COUNT + article.getId(), article.getVisitCount()));
+            articleMapper.selectList(null).forEach(article -> myRedisCache.setCacheObject(RedisConst.ARTICLE_VISIT_COUNT + article.getId(), article.getVisitCount()));
             log.info("--------执行redis文章访问量缓存成功--------");
         } catch (Exception e) {
             log.error("--------执行redis文章访问量缓存失败", e);
@@ -62,8 +62,8 @@ public class RedisServiceImpl implements RedisService {
     public void clearLimitCache() {
         log.info("--------执行清除redis限流缓存--------:");
         try {
-            Collection<String> keys = redisCache.keys("limit*");
-            if (redisCache.deleteObject(keys) > 0) log.info("--------清除redis限流缓存成功--------");
+            Collection<String> keys = myRedisCache.keys("limit*");
+            if (myRedisCache.deleteObject(keys) > 0) log.info("--------清除redis限流缓存成功--------");
             else log.info("--------没有redis限流缓存，无法清除--------");
         } catch (Exception e) {
             log.error("--------执行清除redis限流缓存失败", e);
@@ -99,17 +99,17 @@ public class RedisServiceImpl implements RedisService {
         Map<String, Long> favoriteCount = articleVOS.stream().collect(Collectors.toMap(articleVO -> articleVO.getId().toString(), ArticleVO::getFavoriteCount));
         Map<String, Long> likeCount = articleVOS.stream().collect(Collectors.toMap(articleVO -> articleVO.getId().toString(), ArticleVO::getLikeCount));
         Map<String, Long> commentCount = articleVOS.stream().collect(Collectors.toMap(articleVO -> articleVO.getId().toString(), ArticleVO::getCommentCount));
-        redisCache.setCacheMap(RedisConst.ARTICLE_FAVORITE_COUNT, favoriteCount);
-        redisCache.setCacheMap(RedisConst.ARTICLE_LIKE_COUNT, likeCount);
-        redisCache.setCacheMap(RedisConst.ARTICLE_COMMENT_COUNT, commentCount);
+        myRedisCache.setCacheMap(RedisConst.ARTICLE_FAVORITE_COUNT, favoriteCount);
+        myRedisCache.setCacheMap(RedisConst.ARTICLE_LIKE_COUNT, likeCount);
+        myRedisCache.setCacheMap(RedisConst.ARTICLE_COMMENT_COUNT, commentCount);
         log.info("--------成功执行缓存文章点赞数量，评论数量，收藏数量--------");
     }
 
     @Override
     public void initBlackList() {
         // 清除黑名单缓存
-        redisCache.deleteObject(RedisConst.BLACK_LIST_UID_KEY);
-        redisCache.deleteObject(RedisConst.BLACK_LIST_IP_KEY);
+        myRedisCache.deleteObject(RedisConst.BLACK_LIST_UID_KEY);
+        myRedisCache.deleteObject(RedisConst.BLACK_LIST_IP_KEY);
 
         // 将所有黑名单id初始化到redis中
         log.info("--------开始执行初始化黑名单缓存--------");
@@ -117,9 +117,9 @@ public class RedisServiceImpl implements RedisService {
         if (!blackLists.isEmpty()) {
             blackLists.forEach(blackList -> {
                 if (blackList.getUserId() != null) {
-                    redisCache.setCacheMapValue(RedisConst.BLACK_LIST_UID_KEY, blackList.getUserId().toString(), blackList.getExpiresTime());
+                    myRedisCache.setCacheMapValue(RedisConst.BLACK_LIST_UID_KEY, blackList.getUserId().toString(), blackList.getExpiresTime());
                 } else {
-                    redisCache.setCacheMapValue(RedisConst.BLACK_LIST_IP_KEY, blackList.getIpInfo().getCreateIp(), blackList.getExpiresTime());
+                    myRedisCache.setCacheMapValue(RedisConst.BLACK_LIST_IP_KEY, blackList.getIpInfo().getCreateIp(), blackList.getExpiresTime());
                 }
             });
             log.info("--------成功执行初始化黑名单缓存--------");

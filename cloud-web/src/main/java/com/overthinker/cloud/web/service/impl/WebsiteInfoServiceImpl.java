@@ -10,7 +10,7 @@ import com.overthinker.cloud.web.entity.DTO.WebsiteInfoDTO;
 import com.overthinker.cloud.web.entity.PO.Article;
 import com.overthinker.cloud.web.entity.PO.WebsiteInfo;
 import com.overthinker.cloud.web.entity.VO.WebsiteInfoVO;
-import com.overthinker.cloud.web.entity.enums.UserEnum.UploadEnum;
+import com.overthinker.cloud.web.entity.enums.UploadEnum;
 import com.overthinker.cloud.web.mapper.ArticleMapper;
 import com.overthinker.cloud.web.mapper.CategoryMapper;
 import com.overthinker.cloud.web.mapper.CommentMapper;

@@ -40,7 +40,7 @@ public class JwtUtils {
     private int expire;
 
     @Resource
-    private RedisCache redisCache;
+    private MyRedisCache myRedisCache;
 
 
     /**
@@ -75,7 +75,7 @@ public class JwtUtils {
         if (this.isInvalidToken(uuid))
             return false;
         // 删除
-        redisCache.deleteObject(RedisConst.JWT_WHITE_LIST + uuid);
+        myRedisCache.deleteObject(RedisConst.JWT_WHITE_LIST + uuid);
         return true;
     }
 
@@ -88,7 +88,7 @@ public class JwtUtils {
      */
     private boolean isInvalidToken(String uuid) {
         // 判断是否在redis中(白名单)
-        return !Boolean.TRUE.equals(redisCache.isHasKey(RedisConst.JWT_WHITE_LIST + uuid));
+        return !Boolean.TRUE.equals(myRedisCache.isHasKey(RedisConst.JWT_WHITE_LIST + uuid));
     }
 
 
@@ -140,7 +140,7 @@ public class JwtUtils {
                 .withIssuedAt(now)
                 .sign(algorithm);
         // 存入redis
-        redisCache.setCacheObject(RedisConst.JWT_WHITE_LIST + uuid, jwt, (int) (expire.getTime() - now.getTime()), TimeUnit.MILLISECONDS);
+        myRedisCache.setCacheObject(RedisConst.JWT_WHITE_LIST + uuid, jwt, (int) (expire.getTime() - now.getTime()), TimeUnit.MILLISECONDS);
         return jwt;
     }
 

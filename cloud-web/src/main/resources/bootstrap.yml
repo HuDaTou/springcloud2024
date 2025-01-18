@@ -6,7 +6,7 @@ spring:
   ####Spring Cloud Consul for Service Discovery
   cloud:
     consul:
-      host: home.overthinker.top
+      host: ${baseserveraddress.address}
       port: 8500
       discovery:
         service-name: ${spring.application.name}
@@ -16,3 +16,6 @@ spring:
         profile-separator: '-'
         # default value is ","，we update '-'
         format: YAML
+baseserveraddress:
+  homeaddress: 192.168.0.100
+  address: home.overthinker.top
