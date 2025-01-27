@@ -64,11 +64,7 @@
         </dependency>
 
 
-        <!--fastjson-->
-        <dependency>
-            <groupId>com.alibaba.fastjson2</groupId>
-            <artifactId>fastjson2</artifactId>
-        </dependency>
+
 
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -174,6 +170,12 @@
             <version>1.21</version>
         </dependency>
 
+        <!-- 发送流式请求 -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+        </dependency>
+
         <!-- 获取系统信息 -->
         <dependency>
             <groupId>com.github.oshi</groupId>
@@ -205,6 +207,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.mchange</groupId>
+            <artifactId>c3p0</artifactId>
+            <version>0.9.5.4</version>
+        </dependency>
+
+        <dependency>
             <groupId>io.minio</groupId>
             <artifactId>minio</artifactId>
         </dependency>
@@ -213,6 +221,12 @@
         <dependency>
             <groupId>com.github.oshi</groupId>
             <artifactId>oshi-core</artifactId>
+        </dependency>
+
+        <!-- aop -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
     </dependencies>
 

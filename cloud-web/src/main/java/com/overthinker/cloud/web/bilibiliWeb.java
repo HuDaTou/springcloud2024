@@ -14,13 +14,18 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 @EnableDiscoveryClient
 @RefreshScope //consul配置动态刷新
 public class bilibiliWeb {
-//    当项目启动时控制台输出项目启动成功的日志
-    static {
-        log.info("项目启动成功");
-    }
+
 
     public static void main(String[] args) {
         SpringApplication.run(bilibiliWeb.class, args);
+
+
+        log.info(
+                """
+                后端启动成功
+                """
+        );
+
     }
 }
 

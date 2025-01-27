@@ -1,5 +1,13 @@
 package com.overthinker.cloud.web.filter;
 
+/**
+ * @author overH
+ * <p>
+ * 创建时间：2023/9/7 0:22
+ * 处理跨域请求
+ */
+//@Component
+
 import com.overthinker.cloud.web.constants.Const;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -7,18 +15,10 @@ import jakarta.servlet.http.HttpFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-/**
- * @author overH
- * <p>
- * 创建时间：2023/9/7 0:22
- * 处理跨域请求
- */
-@Component
-// 优先级
+//// 优先级
 @Order(Const.ORDER_CORS)
 public class CorsFilter extends HttpFilter {
     @Override

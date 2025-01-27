@@ -3,7 +3,7 @@ package com.overthinker.cloud.web.config;
 import com.overthinker.cloud.web.constants.SecurityConst;
 import com.overthinker.cloud.web.filter.JwtAuthorizeFilter;
 import com.overthinker.cloud.web.handler.SecurityHandler;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
+
 /**
  * @author overH
  * <p>
@@ -23,10 +24,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfiguration {
 
-    @Autowired
+    @Resource
     private SecurityHandler securityHandler;
 
-    @Autowired
+    @Resource
     private JwtAuthorizeFilter jwtAuthorizeFilter;
 
     @Bean
@@ -70,6 +71,7 @@ public class SecurityConfiguration {
                 .sessionManagement(conf -> conf.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // token 校验添加过滤器
                 .addFilterBefore(jwtAuthorizeFilter, UsernamePasswordAuthenticationFilter.class)
+//                .cors(Customizer.withDefaults())
                 .build();
     }
 

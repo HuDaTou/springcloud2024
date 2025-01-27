@@ -370,7 +370,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             // 删除用户留言
             leaveWordMapper.delete(new LambdaQueryWrapper<LeaveWord>().in(LeaveWord::getUserId, ids));
             // 删除用户聊天记录
-            chatGptMapper.delete(new LambdaQueryWrapper<ChatGpt>().in(ChatGpt::getUserId, ids));
+//            chatGptMapper.delete(new LambdaQueryWrapper<ChatGpt>().in(ChatGpt::getUserId, ids));
             // 删除用户友链
             linkMapper.delete(new LambdaQueryWrapper<Link>().in(Link::getUserId, ids));
             return ResultData.success();

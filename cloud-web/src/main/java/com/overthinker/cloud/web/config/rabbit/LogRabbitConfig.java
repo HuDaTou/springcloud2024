@@ -1,6 +1,7 @@
 package com.overthinker.cloud.web.config.rabbit;
 
 import org.springframework.amqp.core.*;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -62,7 +63,7 @@ public class LogRabbitConfig {
      * 绑定队列跟交换机(登录日志)
      */
     @Bean
-    public Binding loginBinding(DirectExchange logExchange, Queue loginQueue) {
+    public Binding loginBinding(@Qualifier("logExchange") DirectExchange logExchange, @Qualifier("loginQueue") Queue loginQueue) {
         return BindingBuilder.bind(loginQueue).to(logExchange).with(LOG_ROUTING_KEY_LOGIN);
     }
 
@@ -78,7 +79,7 @@ public class LogRabbitConfig {
      * 绑定队列跟交换机(系统操作日志)
      */
     @Bean
-    public Binding systemBinding(DirectExchange logExchange, Queue systemQueue) {
+    public Binding systemBinding(@Qualifier("logExchange") DirectExchange logExchange, @Qualifier("systemQueue") Queue systemQueue) {
         return BindingBuilder.bind(systemQueue).to(logExchange).with(LOG_ROUTING_KEY_SYSTEM);
     }
 }

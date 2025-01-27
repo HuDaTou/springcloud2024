@@ -1,16 +1,11 @@
 package com.overthinker.cloud.web.config.rabbit;
 
 
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.ExchangeBuilder;
-import org.springframework.amqp.core.QueueBuilder;
+import org.springframework.amqp.core.*;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.Queue;
 
 /**
  * @author overH
@@ -56,7 +51,7 @@ public class EmailRabbitConfig {
      * 绑定队列跟交换机
      */
     @Bean
-    public Binding mailBinding(DirectExchange mailExchange, Queue mailQueue) {
+    public Binding mailBinding(@Qualifier("mailExchange") DirectExchange mailExchange, @Qualifier("mailQueue") Queue mailQueue) {
         return BindingBuilder.bind(mailQueue).to(mailExchange).with(MAIL_ROUTING_KEY);
     }
 
