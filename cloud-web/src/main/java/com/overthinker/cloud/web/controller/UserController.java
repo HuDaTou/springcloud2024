@@ -145,7 +145,7 @@ public class UserController {
     @Parameter(name = "id", description = "用户id")
     @AccessLimit(seconds = 60, maxCount = 30)
     @GetMapping("/details/{id}")
-    public ResultData<UserDetailsVO> getUserDetails(@PathVariable Long id) {
+    public ResultData<UserDetailsVO> getUserDetails(@PathVariable("id") Long id) {
         return ControllerUtils.messageHandler(() -> userService.findUserDetailsById(id));
     }
 

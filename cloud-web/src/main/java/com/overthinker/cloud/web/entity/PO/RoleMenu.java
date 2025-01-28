@@ -1,5 +1,6 @@
 package com.overthinker.cloud.web.entity.PO;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.overthinker.cloud.web.entity.BaseData;
@@ -20,9 +21,9 @@ import lombok.NoArgsConstructor;
 @TableName("sys_role_menu")
 public class RoleMenu implements BaseData {
     //主键
+    @TableId(value = "id",type = IdType.AUTO)
     private Integer id;
     //角色id
-    @TableId
     private Long roleId;
     //菜单id
     private Long menuId;

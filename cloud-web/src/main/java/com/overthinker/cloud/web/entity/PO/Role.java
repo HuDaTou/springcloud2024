@@ -1,9 +1,7 @@
 package com.overthinker.cloud.web.entity.PO;
 
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.overthinker.cloud.web.entity.BaseData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,6 +24,7 @@ import java.util.Date;
 @TableName("sys_role")
 public class Role implements BaseData {
     //角色id
+    @TableId(value = "id",type = IdType.AUTO)
     private Long id;
     // 角色名称
     private String roleName;

@@ -47,7 +47,7 @@ public class UserRoleController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @GetMapping("/user/list")
     public ResultData<List<RoleUserVO>> selectUser(
-            @NotNull(message = "角色id不能为空") Long roleId,
+            @NotNull(message = "角色id不能为空")@RequestParam(name = "roleId") Long roleId,
             @RequestParam(required = false,name = "username") String username,
             @RequestParam(required = false,name = "email") String email
     ) {
@@ -64,7 +64,7 @@ public class UserRoleController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @GetMapping("/not/user/list")
     public ResultData<List<RoleUserVO>> selectNotUserByRole(
-            @NotNull(message = "角色id不能为空") Long roleId,
+            @NotNull(message = "角色id不能为空")@RequestParam(name = "roleId") Long roleId,
             @RequestParam(required = false,name = "username") String username,
             @RequestParam(required = false,name = "email") String email
     ) {
@@ -100,7 +100,7 @@ public class UserRoleController {
     @Operation(summary = "查询拥有用户的角色列表")
     @GetMapping("/role/list")
     public ResultData<List<RoleAllVO>> selectPermissionIdRole(
-            @NotNull(message = "用户id不能为空") Long userId,
+            @NotNull(message = "用户id不能为空") @RequestParam(name = "userId")  Long userId,
             @RequestParam(required = false, name = "roleName") String roleName,
             @RequestParam(required = false, name = "roleKey") String roleKey
     ) {
@@ -117,7 +117,7 @@ public class UserRoleController {
     @Operation(summary = "查询没有该用户的角色列表")
     @GetMapping("/not/role/list")
     public ResultData<List<RoleAllVO>> selectUserNotRole(
-            @NotNull(message = "用户id不能为空") Long userId,
+            @NotNull(message = "用户id不能为空")@RequestParam(name = "userId") Long userId,
             @RequestParam(required = false, name = "roleName") String roleName,
             @RequestParam(required = false, name = "roleKey") String roleKey
     ) {

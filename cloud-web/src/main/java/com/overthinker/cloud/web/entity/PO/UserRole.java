@@ -1,5 +1,7 @@
 package com.overthinker.cloud.web.entity.PO;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +22,7 @@ import lombok.NoArgsConstructor;
 @TableName("sys_user_role")
 public class UserRole {
     //主键
+    @TableId(value = "id" ,type = IdType.AUTO)
     private Long id;
     //用户id
     private Long userId;

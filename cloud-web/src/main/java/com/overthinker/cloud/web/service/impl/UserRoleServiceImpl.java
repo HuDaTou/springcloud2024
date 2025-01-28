@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * (UserRole)表服务实现类
@@ -127,27 +129,76 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
         return null;
     }
 
+//    @Transactional
+//    @Override
+//    public ResultData<Void> addRoleUser(RoleUserDTO roleUserDTO) {
+//        List<Long> roleIds = roleUserDTO.getRoleId();
+//        List<Long> userIds = roleUserDTO.getUserId();
+//        LambdaQueryWrapper<UserRole> wrapper = new LambdaQueryWrapper<>();
+//        wrapper.in(UserRole::getUserId, userIds)
+//                .in(UserRole::getRoleId, roleIds);
+//        // 如有，先删除
+//        if (userRoleMapper.selectCount(wrapper) > 0) userRoleMapper.delete(wrapper);
+//
+//        List<UserRole> userRoles = new ArrayList<>();
+//        roleIds.forEach(roleId -> {
+//            userIds.forEach(userId -> {
+//                userRoles.add(UserRole.builder().roleId(roleId).userId(userId).build());
+//            });
+//        });
+//        if (saveBatch(userRoles)) return ResultData.success();
+//
+//        return ResultData.failure();
+//    }
+
     @Transactional
     @Override
     public ResultData<Void> addRoleUser(RoleUserDTO roleUserDTO) {
         List<Long> roleIds = roleUserDTO.getRoleId();
         List<Long> userIds = roleUserDTO.getUserId();
+
+        // 查询所有 user_id 对应的用户角色关系
         LambdaQueryWrapper<UserRole> wrapper = new LambdaQueryWrapper<>();
-        wrapper.in(UserRole::getUserId, userIds)
-                .in(UserRole::getRoleId, roleIds);
-        // 如有，先删除
-        if (userRoleMapper.selectCount(wrapper) > 0) userRoleMapper.delete(wrapper);
+        wrapper.in(UserRole::getUserId, userIds);
+        List<UserRole> existingUserRoles = userRoleMapper.selectList(wrapper);
 
-        List<UserRole> userRoles = new ArrayList<>();
-        roleIds.forEach(roleId -> {
-            userIds.forEach(userId -> {
-                userRoles.add(UserRole.builder().roleId(roleId).userId(userId).build());
-            });
-        });
-        if (saveBatch(userRoles)) return ResultData.success();
+        // 提取数据库中已存在的用户角色关系的唯一标识（roleId + userId）
+        Set<String> existingKeys = existingUserRoles.stream()
+                .map(userRole -> userRole.getRoleId() + "-" + userRole.getUserId())
+                .collect(Collectors.toSet());
 
-        return ResultData.failure();
+        // 提取 roleUserDTO 中的用户角色关系的唯一标识（roleId + userId）
+        Set<String> targetKeys = roleIds.stream()
+                .flatMap(roleId -> userIds.stream().map(userId -> roleId + "-" + userId))
+                .collect(Collectors.toSet());
+
+        // 需要删除的用户角色关系：数据库中存在但 roleUserDTO 中不存在
+        List<Long> deleteIds = existingUserRoles.stream()
+                .filter(userRole -> !targetKeys.contains(userRole.getRoleId() + "-" + userRole.getUserId()))
+                .map(UserRole::getId)
+                .collect(Collectors.toList());
+
+        // 需要新增的用户角色关系：roleUserDTO 中存在但数据库中不存在
+        List<UserRole> newUserRoles = roleIds.stream()
+                .flatMap(roleId -> userIds.stream()
+                        .filter(userId -> !existingKeys.contains(roleId + "-" + userId))
+                        .map(userId -> UserRole.builder().roleId(roleId).userId(userId).build()))
+                .collect(Collectors.toList());
+
+        // 删除需要删除的用户角色关系
+        if (!deleteIds.isEmpty()) {
+            userRoleMapper.deleteBatchIds(deleteIds);
+
+        }
+
+        // 批量保存需要新增的用户角色关系
+        if (!newUserRoles.isEmpty() && saveBatch(newUserRoles)) {
+            return ResultData.success();
+        }
+
+        return ResultData.failure("用户角色添加失败");
     }
+
 
     @Override
     public ResultData<Void> deleteRoleUser(RoleUserDTO roleUserDTO) {

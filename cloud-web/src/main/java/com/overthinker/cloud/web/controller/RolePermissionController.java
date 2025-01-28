@@ -43,7 +43,7 @@ public class RolePermissionController {
     @Operation(summary = "查询权限的角色列表")
     @GetMapping("/role/list")
     public ResultData<List<RoleAllVO>> selectPermissionIdRole(
-            @NotNull(message = "角色id不能为空") Long permissionId,
+            @NotNull(message = "角色id不能为空")@RequestParam(name = "permissionId") Long permissionId,
             @RequestParam(required = false, name = "roleName") String roleName,
             @RequestParam(required = false, name = "roleKey") String roleKey
     ) {
