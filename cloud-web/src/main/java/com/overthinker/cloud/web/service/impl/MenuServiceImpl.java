@@ -1,5 +1,6 @@
 package com.overthinker.cloud.web.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -123,6 +124,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
 
     @Override
     public ResultData<Void> addMenu(MenuDTO menuDTO) {
+//        TODO 为什么这么大的id
         if (menuDTO.getRouterType() == null) {
             menuDTO.setRouterType(0);
         }
@@ -137,7 +139,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
             case 2 -> menuDTO.setComponent(null);
         }
 
-        Menu menu = menuDTO.asViewObject(Menu.class);
+//        Menu menu = menuDTO.asViewObject(Menu.class);
+        Menu menu = BeanUtil.toBean(menuDTO, Menu.class);
         if (this.save(menu)) {
             log.info("菜单添加成功");
             return ResultData.success();

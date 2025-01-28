@@ -27,7 +27,7 @@ public interface BaseData {
     }
 
     /**
-     * 创建指定的VO类并将当前DTO对象中的所有成员变量值直接复制到VO对象中
+     * 创建指定的VO类并将当前DTO对象中的所有成员变量值直接复制到VO对象中 也可以是po
      *
      * @param clazz 指定VO类型
      * @param <V>   指定VO类型
@@ -35,9 +35,13 @@ public interface BaseData {
      */
     default <V> V asViewObject(Class<V> clazz) {
         try {
+//            获取 clazz 类型的所有声明字段（包括私有字段），并将其存储在一个 Field[] 数组中。
             Field[] fields = clazz.getDeclaredFields();
+//            获取 clazz 类型的默认构造方法，并使用该构造方法创建一个新实例。尝试获取 clazz 类型的无参构造函数，并将其存储在 constructor 变量中。
             Constructor<V> constructor = clazz.getConstructor();
+//            使用无参构造函数创建 clazz 类型的新实例，并将其存储在变量 v 中。
             V v = constructor.newInstance();
+//            遍历 fields 数组中的所有字段，并将当前对象中的同名字段的值复制到 v 对象中。
             Arrays.asList(fields).forEach(field -> convert(field, v));
             return v;
         } catch (ReflectiveOperationException exception) {
