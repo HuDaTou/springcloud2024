@@ -94,12 +94,13 @@ public class AccessLimitInterceptor implements HandlerInterceptor {
                     return false;
                 }
 
-                if (count > maxCount) {
-                    WebUtil.renderString(response, ResultData.failure(ReturnCodeEnum.REQUEST_FREQUENTLY.getCode(), accessLimit.msg()).asJsonString());
-                    // 限制
-                    log.warn("用户IP[" + ip + "]访问地址[" + uri + "]超过了限定的次数[" + maxCount + "]");
-                    result = false;
-                }
+//                TODO 暂且关闭限流
+//                if (count > maxCount) {
+//                    WebUtil.renderString(response, ResultData.failure(ReturnCodeEnum.REQUEST_FREQUENTLY.getCode(), accessLimit.msg()).asJsonString());
+//                    // 限制
+//                    log.warn("用户IP[" + ip + "]访问地址[" + uri + "]超过了限定的次数[" + maxCount + "]");
+//                    result = false;
+//                }
             } catch (RedisConnectionFailureException e) {
                 log.error("redis连接异常", e);
                 result = false;

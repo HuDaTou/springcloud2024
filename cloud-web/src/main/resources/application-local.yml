@@ -130,6 +130,9 @@ mail:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
 
 # springdoc-openapi项目配置
 springdoc:
@@ -192,7 +195,7 @@ http_pool:
   validate_after_inactivity: 2000
 # 连接 minio
 minio:
-  endpoint: http://home.overthinker.top:32290
+  endpoint: http://home.overthinker.top:30284
   accessKey: cloudadmin
   secretKey: overH@xlq.159
   bucketName: cloud

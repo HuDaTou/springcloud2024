@@ -62,7 +62,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
                     .selectList(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, SecurityUtils.getUserId()))
                     .stream().map(UserRole::getRoleId).toList();
             // 2.使用角色id查询对应拥有的菜单
-            List<Long> menuIds = new java.util.ArrayList<>(roleMenuMapper.selectBatchIds(roleIds).stream().map(RoleMenu::getMenuId).toList());
+//            List<Long> menuIds = new java.util.ArrayList<>(roleMenuMapper.selectBatchIds(roleIds).stream().map(RoleMenu::getMenuId).toList());
+            List<Long> menuIds = new java.util.ArrayList<>(roleMenuMapper.selectList(new LambdaQueryWrapper<RoleMenu>().in(RoleMenu::getRoleId, roleIds)).stream().map(RoleMenu::getMenuId).toList());
             // 关系表里面所有的菜单id
             List<Long> roleMenuAllIds = roleMenuService.list().stream().map(RoleMenu::getMenuId).toList();
             // 所有的菜单id
