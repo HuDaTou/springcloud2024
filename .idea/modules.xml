@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/bilibili-common/bilibili-common.iml" filepath="$PROJECT_DIR$/bilibili-common/bilibili-common.iml" />
       <module fileurl="file://$PROJECT_DIR$/cloud-Media-Asset-Processing/cloud-Media-Asset-Processing.iml" filepath="$PROJECT_DIR$/cloud-Media-Asset-Processing/cloud-Media-Asset-Processing.iml" />
       <module fileurl="file://$PROJECT_DIR$/cloud-consumer-order80/cloud-consumer-order80.iml" filepath="$PROJECT_DIR$/cloud-consumer-order80/cloud-consumer-order80.iml" />
       <module fileurl="file://$PROJECT_DIR$/cloud-getway9527/cloud-getway9527.iml" filepath="$PROJECT_DIR$/cloud-getway9527/cloud-getway9527.iml" />
