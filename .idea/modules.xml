@@ -2,18 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/bilibili-common/bilibili-common.iml" filepath="$PROJECT_DIR$/bilibili-common/bilibili-common.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cloud-Media-Asset-Processing/cloud-Media-Asset-Processing.iml" filepath="$PROJECT_DIR$/cloud-Media-Asset-Processing/cloud-Media-Asset-Processing.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cloud-consumer-order80/cloud-consumer-order80.iml" filepath="$PROJECT_DIR$/cloud-consumer-order80/cloud-consumer-order80.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cloud-getway9527/cloud-getway9527.iml" filepath="$PROJECT_DIR$/cloud-getway9527/cloud-getway9527.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cloud-media/cloud-media.iml" filepath="$PROJECT_DIR$/cloud-media/cloud-media.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cloud-provider-payment8001/cloud-provider-payment8001.iml" filepath="$PROJECT_DIR$/cloud-provider-payment8001/cloud-provider-payment8001.iml" />
-      <module fileurl="file://$PROJECT_DIR$/cloud-web/cloud-web.iml" filepath="$PROJECT_DIR$/cloud-web/cloud-web.iml" />
       <module fileurl="file://$PROJECT_DIR$/cloud-media/media-api/media-api.iml" filepath="$PROJECT_DIR$/cloud-media/media-api/media-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/cloud-media/media-model/media-model.iml" filepath="$PROJECT_DIR$/cloud-media/media-model/media-model.iml" />
       <module fileurl="file://$PROJECT_DIR$/cloud-media/media-service/media-service.iml" filepath="$PROJECT_DIR$/cloud-media/media-service/media-service.iml" />
-      <module fileurl="file://$PROJECT_DIR$/spring-security-study.iml" filepath="$PROJECT_DIR$/spring-security-study.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/springcloud2024.iml" filepath="$PROJECT_DIR$/.idea/springcloud2024.iml" />
     </modules>
   </component>
 </project>
