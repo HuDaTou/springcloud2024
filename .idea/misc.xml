@@ -17,6 +17,7 @@
     </option>
     <option name="ignoredFiles">
       <set>
+        <option value="$PROJECT_DIR$/backend/springcloud2024/cloud-media/pom.xml" />
         <option value="$PROJECT_DIR$/cloud-media/service/pom.xml" />
         <option value="$PROJECT_DIR$/cloud-provider-payment8002/pom.xml" />
         <option value="$PROJECT_DIR$/cloud-test/pom.xml" />

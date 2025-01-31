@@ -23,6 +23,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="cloud-media" target="17" />
       <module name="cloud-provider-payment8002" target="17" />
       <module name="cloud-test" target="17" />
       <module name="media-api" target="17" />
