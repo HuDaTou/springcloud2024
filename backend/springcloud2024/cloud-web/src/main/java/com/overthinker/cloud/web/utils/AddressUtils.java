@@ -1,7 +1,7 @@
 package com.overthinker.cloud.web.utils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.overthinker.cloud.web.constants.Const;
+import com.overthinker.cloud.web.entity.constants.Const;
 import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

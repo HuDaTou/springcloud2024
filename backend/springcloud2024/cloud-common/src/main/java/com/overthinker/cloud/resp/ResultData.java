@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONWriter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -13,6 +14,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Builder
 public class ResultData<T> {
     private Integer code;
     private String msg;
@@ -29,27 +31,15 @@ public class ResultData<T> {
      * 成功响应，不需要返回数据
      */
     public static <T> ResultData<T> success() {
-        ResultData<T> resultData = new ResultData<>();
-        resultData.setCode(ReturnCodeEnum.RC200.getCode());
-        resultData.setMsg(ReturnCodeEnum.RC200.getMessage());
-        resultData.setData(null);
-        return resultData;
+        return ResultData.<T>builder().code(ReturnCodeEnum.RC200.getCode()).msg(ReturnCodeEnum.RC200.getMessage()).data(null).build();
     }
 
 
     public static <T> ResultData<T> success(T data) {
-        ResultData<T> resultData = new ResultData<>();
-        resultData.setCode(ReturnCodeEnum.RC200.getCode());
-        resultData.setMsg(ReturnCodeEnum.RC200.getMessage());
-        resultData.setData(data);
-        return resultData;
+        return ResultData.<T>builder().code(ReturnCodeEnum.RC200.getCode()).msg(ReturnCodeEnum.RC200.getMessage()).data(data).build();
     }
     public static <T> ResultData<T> success(T data , String message) {
-        ResultData<T> resultData = new ResultData<>();
-        resultData.setCode(ReturnCodeEnum.RC200.getCode());
-        resultData.setMsg(message);
-        resultData.setData(data);
-        return resultData;
+        return ResultData.<T>builder().code(ReturnCodeEnum.RC200.getCode()).msg(message).data(data).build();
     }
 
 
@@ -59,33 +49,17 @@ public class ResultData<T> {
      * 失败响应，不需要返回数据
      */
     public static <T> ResultData<T> failure() {
-        ResultData<T> resultData = new ResultData<>();
-        resultData.setCode(ReturnCodeEnum.FAILURE.getCode());
-        resultData.setMsg(ReturnCodeEnum.FAILURE.getMessage());
-        resultData.setData(null);
-        return resultData;
+        return ResultData.<T>builder().code(ReturnCodeEnum.FAILURE.getCode()).msg(ReturnCodeEnum.FAILURE.getMessage()).data(null).build();
     }
     public static <T> ResultData<T> failure(String msg) {
-        ResultData<T> resultData = new ResultData<>();
-        resultData.setCode(ReturnCodeEnum.FAILURE.getCode());
-        resultData.setMsg(msg);
-        resultData.setData(null);
-        return resultData;
+        return ResultData.<T>builder().code(ReturnCodeEnum.FAILURE.getCode()).msg(msg).data(null).build();
     }
     public static <T> ResultData<T> failure(T data)  {
-        ResultData<T> resultData = new ResultData<>();
-        resultData.setCode(ReturnCodeEnum.FAILURE.getCode());
-        resultData.setMsg(ReturnCodeEnum.FAILURE.getMessage());
-        resultData.setData(data);
-        return resultData;
+        return ResultData.<T>builder().code(ReturnCodeEnum.FAILURE.getCode()).msg(ReturnCodeEnum.FAILURE.getMessage()).data(data).build();
     }
 
     public static <T> ResultData<T> failure(Integer code, String msg) {
-        ResultData<T> resultData = new ResultData<>();
-        resultData.setCode(code);
-        resultData.setMsg(msg);
-        resultData.setData(null);
-        return resultData;
+        return ResultData.<T>builder().code(code).msg(msg).data(null).build();
     }
 
     public String asJsonString() {

@@ -99,19 +99,19 @@ mail:
       # 邮箱审核友链回调地址（如果不开启）apply-notice 则无需在意该配置，随便填写即可
       redirect-uri: http://[后端地址:端口/域名]/link/email/apply
   # 是否开启文章邮箱评论提醒
-  article-email-notice: true
+  article-email-notice: false
   # 是否开启文章邮箱回复提醒
   article-reply-notice: false
   # 是否开启留言邮箱评论提醒
   message-email-notice: false
   # 是否开启新的留言提醒
-  message-new-notice: true
+  message-new-notice: false
   # 是否开启留言回复提醒
-  message-reply-notice: true
+  message-reply-notice: false
   # 是否开启友链申请提醒（可以在邮箱中通过友链）
-  apply-notice: true
+  apply-notice: false
   # 是否开启友链审核通知提醒对方
-  pass-notice: true
+  pass-notice: false
   data:
     redis:
       database: 0

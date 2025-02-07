@@ -1,9 +1,9 @@
 import type { LayoutSetting } from '../stores/app'
 
 export default {
-  'title': 'Ruyu-blog',
+  'title': 'overthinker',
   'theme': 'light',
-  'logo': 'https://image.kuailemao.xyz/blog/logo/blog后台logo.svg',
+  'logo': 'http://minioapi.overthinker.top/cloud/logo/Logo 设计.png',
   'collapsed': false,
   'drawerVisible': true,
   'colorPrimary': '#1677FF',

@@ -3,15 +3,15 @@ package com.overthinker.cloud.web.controller;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.web.constants.LogConst;
+import com.overthinker.cloud.web.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.RoleDTO;
 import com.overthinker.cloud.web.entity.DTO.RoleDeleteDTO;
 import com.overthinker.cloud.web.entity.DTO.RoleSearchDTO;
 import com.overthinker.cloud.web.entity.DTO.UpdateRoleStatusDTO;
 import com.overthinker.cloud.web.entity.VO.RoleAllVO;
 import com.overthinker.cloud.web.entity.VO.RoleByIdVO;
+import com.overthinker.cloud.web.entity.constants.LogConst;
 import com.overthinker.cloud.web.service.RoleService;
-import com.overthinker.cloud.web.utils.ControllerUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,7 +31,7 @@ import java.util.List;
 @RestController
 @Tag(name = "角色相关接口")
 @RequestMapping("role")
-public class RoleController {
+public class RoleController extends BaseController {
 
     /**
      * 服务对象
@@ -44,7 +44,7 @@ public class RoleController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @GetMapping("/list")
     public ResultData<List<RoleAllVO>> selectAllRole() {
-        return ControllerUtils.messageHandler(() -> roleService.selectRole(null));
+        return messageHandler(() -> roleService.selectRole(null));
     }
     @PreAuthorize("hasAnyAuthority('system:role:status:update')")
     @Operation(summary = "更新角色状态")
@@ -102,6 +102,6 @@ public class RoleController {
     @LogAnnotation(module="角色管理",operation=LogConst.SEARCH)
     @PostMapping("/search")
     public ResultData<List<RoleAllVO>> searchRole(@RequestBody RoleSearchDTO roleSearchDTO) {
-        return ControllerUtils.messageHandler(() -> roleService.selectRole(roleSearchDTO));
+        return messageHandler(() -> roleService.selectRole(roleSearchDTO));
     }
 }

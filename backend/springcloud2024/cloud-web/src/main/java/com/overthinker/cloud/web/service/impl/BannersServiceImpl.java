@@ -4,10 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.overthinker.cloud.resp.ResultData;
-import com.overthinker.cloud.web.constants.RespConst;
-import com.overthinker.cloud.web.constants.SQLConst;
+import com.overthinker.cloud.web.entity.constants.RespConst;
+import com.overthinker.cloud.web.entity.constants.SQLConst;
 import com.overthinker.cloud.web.entity.PO.Banners;
-import com.overthinker.cloud.web.entity.enums.UploadEnum;
+import com.overthinker.cloud.web.entity.enums.ImageUploadEnum;
 import com.overthinker.cloud.web.mapper.BannersMapper;
 import com.overthinker.cloud.web.service.BannersService;
 import com.overthinker.cloud.web.utils.FileUploadUtils;
@@ -61,7 +61,7 @@ public class BannersServiceImpl extends ServiceImpl<BannersMapper, Banners> impl
                 if (bannersMapper.selectCount(null) >= SQLConst.BANNER_MAX_COUNT) {
                     return ResultData.failure(RespConst.BANNER_MAX_COUNT_MSG);
                 }
-                bannerUrl = fileUploadUtils.uploadImage(UploadEnum.UI_BANNERS, bannerImage);
+                bannerUrl = fileUploadUtils.uploadImage(ImageUploadEnum.UI_BANNERS, bannerImage);
                 Banners banner = Banners.builder().size(bannerImage.getSize())
                         .type(bannerImage.getContentType())
                         .userId(SecurityUtils.getUserId())
@@ -73,7 +73,7 @@ public class BannersServiceImpl extends ServiceImpl<BannersMapper, Banners> impl
                 return ResultData.failure(e.getMessage());
             }
         } catch (Exception e) {
-            log.error(UploadEnum.UI_BANNERS.getDescription() + "上传失败", e);
+            log.error(ImageUploadEnum.UI_BANNERS.getDescription() + "上传失败", e);
             return ResultData.failure();
         }
     }
@@ -83,8 +83,8 @@ public class BannersServiceImpl extends ServiceImpl<BannersMapper, Banners> impl
         Banners banner = bannersMapper.selectById(id);
         if (this.removeById(id)) {
             // minio是否存在
-            if (fileUploadUtils.isFileExist(UploadEnum.UI_BANNERS.getDir(), fileUploadUtils.getFileName(banner.getPath()))) {
-                fileUploadUtils.deleteFile(UploadEnum.UI_BANNERS.getDir(), fileUploadUtils.getFileName(banner.getPath()));
+            if (fileUploadUtils.isFileExist(ImageUploadEnum.UI_BANNERS.getDir(), fileUploadUtils.getFileName(banner.getPath()))) {
+                fileUploadUtils.deleteFile(ImageUploadEnum.UI_BANNERS.getDir(), fileUploadUtils.getFileName(banner.getPath()));
             }
         } else return ResultData.failure("删除失败");
         return ResultData.success("删除成功");

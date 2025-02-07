@@ -1,8 +1,8 @@
 package com.overthinker.cloud.web.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.overthinker.cloud.web.constants.RedisConst;
-import com.overthinker.cloud.web.constants.SQLConst;
+import com.overthinker.cloud.web.entity.constants.RedisConst;
+import com.overthinker.cloud.web.entity.constants.SQLConst;
 import com.overthinker.cloud.web.entity.PO.BlackList;
 import com.overthinker.cloud.web.entity.PO.Comment;
 import com.overthinker.cloud.web.entity.PO.Favorite;

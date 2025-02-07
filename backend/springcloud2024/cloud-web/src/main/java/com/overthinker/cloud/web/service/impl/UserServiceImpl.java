@@ -6,12 +6,12 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.resp.ReturnCodeEnum;
-import com.overthinker.cloud.web.constants.*;
 import com.overthinker.cloud.web.entity.DTO.*;
 import com.overthinker.cloud.web.entity.PO.*;
 import com.overthinker.cloud.web.entity.VO.UserAccountVO;
 import com.overthinker.cloud.web.entity.VO.UserDetailsVO;
 import com.overthinker.cloud.web.entity.VO.UserListVO;
+import com.overthinker.cloud.web.entity.constants.*;
 import com.overthinker.cloud.web.entity.enums.*;
 import com.overthinker.cloud.web.mapper.*;
 import com.overthinker.cloud.web.service.IpService;
@@ -393,7 +393,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public ResultData<String> uploadAvatar(MultipartFile avatarFile) throws Exception {
-        String upload = fileUploadUtils.uploadImage(UploadEnum.USER_AVATAR, avatarFile);
+        String upload = fileUploadUtils.uploadImage(ImageUploadEnum.USER_AVATAR, avatarFile);
         return ResultData.success(upload);
     }
 

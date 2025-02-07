@@ -3,13 +3,13 @@ package com.overthinker.cloud.web.controller;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.web.constants.LogConst;
+import com.overthinker.cloud.web.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.RoleUserDTO;
 import com.overthinker.cloud.web.entity.DTO.UserRoleDTO;
 import com.overthinker.cloud.web.entity.VO.RoleAllVO;
 import com.overthinker.cloud.web.entity.VO.RoleUserVO;
+import com.overthinker.cloud.web.entity.constants.LogConst;
 import com.overthinker.cloud.web.service.UserRoleService;
-import com.overthinker.cloud.web.utils.ControllerUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -32,7 +32,7 @@ import java.util.List;
 @Tag(name = "用户角色相关接口")
 @RequestMapping("user/role")
 @Validated
-public class UserRoleController {
+public class UserRoleController extends BaseController {
 
     @Resource
     private UserRoleService userRoleService;
@@ -51,7 +51,7 @@ public class UserRoleController {
             @RequestParam(required = false,name = "username") String username,
             @RequestParam(required = false,name = "email") String email
     ) {
-        return ControllerUtils.messageHandler(() -> userRoleService.selectRoleUser(roleId,username,email,0));
+        return messageHandler(() -> userRoleService.selectRoleUser(roleId,username,email,0));
     }
 
     @PreAuthorize("hasAnyAuthority('system:not:role:user:list')")
@@ -68,7 +68,7 @@ public class UserRoleController {
             @RequestParam(required = false,name = "username") String username,
             @RequestParam(required = false,name = "email") String email
     ) {
-        return ControllerUtils.messageHandler(() -> userRoleService.selectRoleUser(roleId,username,email,1));
+        return messageHandler(() -> userRoleService.selectRoleUser(roleId,username,email,1));
     }
 
     @PreAuthorize("hasAnyAuthority('system:user:role:add')")
@@ -104,7 +104,7 @@ public class UserRoleController {
             @RequestParam(required = false, name = "roleName") String roleName,
             @RequestParam(required = false, name = "roleKey") String roleKey
     ) {
-        return ControllerUtils.messageHandler(() -> userRoleService.selectRoleByUserId(userId,roleName,roleKey,0));
+        return messageHandler(() -> userRoleService.selectRoleByUserId(userId,roleName,roleKey,0));
     }
 
     @PreAuthorize("hasAnyAuthority('system:user:role:not:list')")
@@ -121,7 +121,7 @@ public class UserRoleController {
             @RequestParam(required = false, name = "roleName") String roleName,
             @RequestParam(required = false, name = "roleKey") String roleKey
     ) {
-        return ControllerUtils.messageHandler(() -> userRoleService.selectRoleByUserId(userId,roleName,roleKey,1));
+        return messageHandler(() -> userRoleService.selectRoleByUserId(userId,roleName,roleKey,1));
     }
 
     @Operation(summary = "添加角色用户关系")

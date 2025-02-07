@@ -3,9 +3,9 @@ package com.overthinker.cloud.web.controller;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.web.constants.LogConst;
+import com.overthinker.cloud.web.controller.base.BaseController;
+import com.overthinker.cloud.web.entity.constants.LogConst;
 import com.overthinker.cloud.web.service.PublicService;
-import com.overthinker.cloud.web.utils.ControllerUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "公共接口")
 @RequestMapping("/public")
 @Validated
-public class PublicController {
+public class PublicController extends BaseController {
 
     @Resource
     private PublicService publicService;
@@ -49,7 +49,7 @@ public class PublicController {
             @RequestParam @Email String email,
             @RequestParam @Pattern(regexp = "(register|reset|resetEmail)",message = "邮箱类型错误" ) String type
     ) {
-        return ControllerUtils.messageHandler(() -> publicService.registerEmailVerifyCode(type, email));
+        return messageHandler(() -> publicService.registerEmailVerifyCode(type, email));
     }
 
 }

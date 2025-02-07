@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.config;
 
-import com.overthinker.cloud.web.constants.SecurityConst;
+import com.overthinker.cloud.web.entity.constants.SecurityConst;
 import com.overthinker.cloud.web.filter.JwtAuthorizeFilter;
 import com.overthinker.cloud.web.handler.SecurityHandler;
 import jakarta.annotation.Resource;

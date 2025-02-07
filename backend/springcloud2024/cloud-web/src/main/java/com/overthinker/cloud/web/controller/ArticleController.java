@@ -3,12 +3,12 @@ package com.overthinker.cloud.web.controller;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.web.constants.LogConst;
+import com.overthinker.cloud.web.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.ArticleDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchArticleDTO;
 import com.overthinker.cloud.web.entity.VO.*;
+import com.overthinker.cloud.web.entity.constants.LogConst;
 import com.overthinker.cloud.web.service.ArticleService;
-import com.overthinker.cloud.web.utils.ControllerUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -34,7 +34,7 @@ import java.util.List;
 @Tag(name = "文章相关接口")
 @RequestMapping("/article")
 @Validated
-public class ArticleController {
+public class ArticleController extends BaseController {
 
     @Resource
     private ArticleService articleService;
@@ -48,7 +48,7 @@ public class ArticleController {
     @AccessLimit(seconds = 60, maxCount = 5)
     @GetMapping("/search/init/title")
     public ResultData<List<InitSearchTitleVO>> initSearchByTitle() {
-        return ControllerUtils.messageHandler(() -> articleService.initSearchByTitle());
+        return messageHandler(articleService::initSearchByTitle);
     }
 
     /**
@@ -68,7 +68,7 @@ public class ArticleController {
             @Length(min = 1, max = 15, message = "文章搜索长度应在1-15之间")
             @RequestParam("content") String content
     ) {
-        return ControllerUtils.messageHandler(() -> articleService.searchArticleByContent(content));
+        return messageHandler(() -> articleService.searchArticleByContent(content));
     }
 
     // 热门推荐
@@ -76,7 +76,7 @@ public class ArticleController {
     @AccessLimit(seconds = 60, maxCount = 60)
     @GetMapping("/hot")
     public ResultData<List<HotArticleVO>> hot() {
-        return ControllerUtils.messageHandler(() -> articleService.listHotArticle());
+        return messageHandler(articleService::listHotArticle);
     }
 
 
@@ -88,24 +88,24 @@ public class ArticleController {
     })
     @GetMapping("/list")
     public ResultData<PageVO<List<ArticleVO>>> list(
-            @NotNull Integer pageNum,
-            @NotNull Integer pageSize
+            @NotNull @RequestParam(name = "pageNum") Integer pageNum,
+            @NotNull @RequestParam(name = "pageSize") Integer pageSize
     ) {
-        return ControllerUtils.messageHandler((() -> articleService.listAllArticle(pageNum, pageSize)));
+        return messageHandler((() -> articleService.listAllArticle(pageNum, pageSize)));
     }
 
     @Operation(summary = "获取推荐的文章信息")
     @AccessLimit(seconds = 60, maxCount = 60)
     @GetMapping("/recommend")
     public ResultData<List<RecommendArticleVO>> recommend() {
-        return ControllerUtils.messageHandler((() -> articleService.listRecommendArticle()));
+        return messageHandler((() -> articleService.listRecommendArticle()));
     }
 
     @Operation(summary = "获取随机的文章信息")
     @AccessLimit(seconds = 60, maxCount = 60)
     @GetMapping("/random")
     public ResultData<List<RandomArticleVO>> random() {
-        return ControllerUtils.messageHandler((() -> articleService.listRandomArticle()));
+        return messageHandler((() -> articleService.listRandomArticle()));
     }
 
     @Operation(summary = "获取文章详情")
@@ -113,7 +113,7 @@ public class ArticleController {
     @AccessLimit(seconds = 60, maxCount = 60)
     @GetMapping("/detail/{id}")
     public ResultData<ArticleDetailVO> detail(@PathVariable("id") @NotNull Integer id) {
-        return ControllerUtils.messageHandler((() -> articleService.getArticleDetail(id)));
+        return messageHandler((() -> articleService.getArticleDetail(id)));
     }
 
     @Operation(summary = "相关文章信息")
@@ -127,14 +127,14 @@ public class ArticleController {
             @PathVariable("categoryId") @NotNull Integer categoryId,
             @PathVariable("articleId") @NotNull Integer articleId
     ) {
-        return ControllerUtils.messageHandler((() -> articleService.relatedArticleList(categoryId, articleId)));
+        return messageHandler((() -> articleService.relatedArticleList(categoryId, articleId)));
     }
 
     @Operation(summary = "获取时间轴数据")
     @AccessLimit(seconds = 60, maxCount = 15)
     @GetMapping("/timeLine")
     public ResultData<List<TimeLineVO>> timeLine() {
-        return ControllerUtils.messageHandler((articleService::listTimeLine));
+        return messageHandler((articleService::listTimeLine));
     }
 
     @Operation(summary = "获取分类与标签下的文章")
@@ -148,7 +148,7 @@ public class ArticleController {
             @NotNull @PathVariable("typeId") Long typeId,
             @NotNull @RequestParam("type") Integer type
     ) {
-        return ControllerUtils.messageHandler(() -> articleService.listCategoryArticle(type, typeId));
+        return messageHandler(() -> articleService.listCategoryArticle(type, typeId));
     }
 
     @Operation(summary = "文章访问量+1")
@@ -157,7 +157,7 @@ public class ArticleController {
     @GetMapping("/visit/{id}")
     public ResultData<Void> visit(@PathVariable("id") @NotNull Long id) {
         articleService.addVisitCount(id);
-        return ControllerUtils.messageHandler(() -> null);
+        return messageHandler(() -> null);
     }
 
     @PreAuthorize("hasAnyAuthority('blog:publish:article')")
@@ -211,7 +211,7 @@ public class ArticleController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @GetMapping("/back/list")
     public ResultData<List<ArticleListVO>> listArticle() {
-        return ControllerUtils.messageHandler(() -> articleService.listArticle());
+        return messageHandler(() -> articleService.listArticle());
     }
 
     @PreAuthorize("hasAnyAuthority('blog:article:search')")
@@ -223,7 +223,7 @@ public class ArticleController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @PostMapping("/back/search")
     public ResultData<List<ArticleListVO>> searchArticle(@RequestBody SearchArticleDTO searchArticleDTO) {
-        return ControllerUtils.messageHandler(() -> articleService.searchArticle(searchArticleDTO));
+        return messageHandler(() -> articleService.searchArticle(searchArticleDTO));
     }
 
     @PreAuthorize("hasAnyAuthority('blog:article:update')")
@@ -267,7 +267,7 @@ public class ArticleController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @GetMapping("/back/echo/{id}")
     public ResultData<ArticleDTO> getArticleEcho(@PathVariable("id") Long id) {
-        return ControllerUtils.messageHandler(() -> articleService.getArticleDTO(id));
+        return messageHandler(() -> articleService.getArticleDTO(id));
     }
 
     @PreAuthorize("hasAnyAuthority('blog:article:delete')")

@@ -75,9 +75,9 @@ async function beforeUpload(file: UploadProps['fileList'][number]) {
     return
   }
 
-  const isLt400KB = file.size / 1024 < 400
+  const isLt400KB = file.size / 1024 < 10240
   if (!isLt400KB) {
-    message.error('图片必须小于 0.3MB')
+    message.error('图片必须小于 10MB')
     return
   }
 

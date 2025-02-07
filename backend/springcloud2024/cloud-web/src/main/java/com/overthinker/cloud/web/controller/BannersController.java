@@ -4,10 +4,10 @@ package com.overthinker.cloud.web.controller;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.web.constants.LogConst;
+import com.overthinker.cloud.web.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.PO.Banners;
+import com.overthinker.cloud.web.entity.constants.LogConst;
 import com.overthinker.cloud.web.service.BannersService;
-import com.overthinker.cloud.web.utils.ControllerUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.annotation.Resource;
@@ -25,7 +25,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("banners")
-public class BannersController {
+public class BannersController extends BaseController {
     /**
      * 服务对象
      */
@@ -40,7 +40,7 @@ public class BannersController {
     @AccessLimit(seconds = 60, maxCount = 25)
     @GetMapping("/list")
     public ResultData<List<String>> getBanners() {
-        return ControllerUtils.messageHandler(() -> bannersService.getBanners());
+        return messageHandler(() -> bannersService.getBanners());
     }
 
     /**
@@ -52,7 +52,7 @@ public class BannersController {
     @AccessLimit(seconds = 60, maxCount = 60)
     @GetMapping("/back/list")
     public ResultData<List<Banners>> backGetBanners() {
-        return ControllerUtils.messageHandler(() -> bannersService.backGetBanners());
+        return messageHandler(() -> bannersService.backGetBanners());
     }
 
     /**

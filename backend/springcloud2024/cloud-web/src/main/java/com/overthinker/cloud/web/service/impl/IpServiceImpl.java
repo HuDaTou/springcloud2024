@@ -5,7 +5,7 @@ import cn.hutool.core.thread.NamedThreadFactory;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import com.overthinker.cloud.web.constants.ThirdPartyInterfaceConst;
+import com.overthinker.cloud.web.entity.constants.ThirdPartyInterfaceConst;
 import com.overthinker.cloud.web.entity.DTO.IpResult;
 import com.overthinker.cloud.web.entity.PO.BlackList;
 import com.overthinker.cloud.web.entity.PO.Log;

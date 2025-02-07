@@ -10,8 +10,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.resp.ReturnCodeEnum;
 import com.overthinker.cloud.web.annotation.AccessLimit;
-import com.overthinker.cloud.web.constants.RedisConst;
-import com.overthinker.cloud.web.constants.SQLConst;
+import com.overthinker.cloud.web.entity.constants.RedisConst;
+import com.overthinker.cloud.web.entity.constants.SQLConst;
 import com.overthinker.cloud.web.entity.DTO.AddBlackListDTO;
 import com.overthinker.cloud.web.entity.PO.BlackList;
 import com.overthinker.cloud.web.entity.enums.BlackListPolicy;
@@ -44,7 +44,7 @@ import java.util.concurrent.TimeUnit;
 public class AccessLimitInterceptor implements HandlerInterceptor {
 
     @Resource
-    private MyRedisCache redisCache;
+    private MyRedisCache myRedisCache;
 
     @Resource
     private BlackListService blackListService;
@@ -77,16 +77,16 @@ public class AccessLimitInterceptor implements HandlerInterceptor {
                 String expireTimeKey = EXPIRE_TIME_KEY_PREFIX + key;
 
                 // 从Redis中获取过期时间，保证访问时间与封禁时间一直
-                Long expireTime = redisCache.getCacheObject(expireTimeKey);
+                Long expireTime = myRedisCache.getCacheObject(expireTimeKey);
 
                 // redis 进行自增
-                Long count = redisCache.increment(key, 1L);
+                Long count = myRedisCache.increment(key, 1L);
 
                 if (count == 1) {
                     // 第一次访问，设置过期时间
-                    redisCache.expire(key, seconds, TimeUnit.SECONDS);
+                    myRedisCache.expire(key, seconds, TimeUnit.SECONDS);
                     expireTime = System.currentTimeMillis();
-                    redisCache.setCacheObject(expireTimeKey, expireTime);
+                    myRedisCache.setCacheObject(expireTimeKey, expireTime);
                 }
 
                 // 封禁判断方法
@@ -111,8 +111,8 @@ public class AccessLimitInterceptor implements HandlerInterceptor {
     }
 
     private Boolean isBlocked(HttpServletResponse response, String ip, String uri, Long count, Long expireTime) {
-        Long timestampByIP = redisCache.getCacheMapValue(RedisConst.BLACK_LIST_IP_KEY, ip);
-        Long timestampByUID = redisCache.getCacheMapValue(RedisConst.BLACK_LIST_UID_KEY, String.valueOf(SecurityUtils.getUserId()));
+        Long timestampByIP = myRedisCache.getCacheMapValue(RedisConst.BLACK_LIST_IP_KEY, ip);
+        Long timestampByUID = myRedisCache.getCacheMapValue(RedisConst.BLACK_LIST_UID_KEY, String.valueOf(SecurityUtils.getUserId()));
 
         // 封禁策略
         for (BlackListPolicy policy : BlackListPolicy.values()) {
@@ -128,10 +128,10 @@ public class AccessLimitInterceptor implements HandlerInterceptor {
             if (System.currentTimeMillis() > timestamp) {
                 // 解封
                 if (timestampByIP != null) {
-                    redisCache.delCacheMapValue(RedisConst.BLACK_LIST_IP_KEY, ip);
+                    myRedisCache.delCacheMapValue(RedisConst.BLACK_LIST_IP_KEY, ip);
                     blackListMapper.deleteByIp(ip);
                 } else {
-                    redisCache.delCacheMapValue(RedisConst.BLACK_LIST_UID_KEY, String.valueOf(SecurityUtils.getUserId()));
+                    myRedisCache.delCacheMapValue(RedisConst.BLACK_LIST_UID_KEY, String.valueOf(SecurityUtils.getUserId()));
                     blackListMapper.delete(new LambdaQueryWrapper<BlackList>().eq(BlackList::getUserId, SecurityUtils.getUserId()));
                 }
             } else {

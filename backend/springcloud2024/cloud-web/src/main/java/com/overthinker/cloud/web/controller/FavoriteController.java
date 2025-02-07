@@ -4,12 +4,12 @@ import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.CheckBlacklist;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.web.constants.LogConst;
+import com.overthinker.cloud.web.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.FavoriteIsCheckDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchFavoriteDTO;
 import com.overthinker.cloud.web.entity.VO.FavoriteListVO;
+import com.overthinker.cloud.web.entity.constants.LogConst;
 import com.overthinker.cloud.web.service.FavoriteService;
-import com.overthinker.cloud.web.utils.ControllerUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -32,7 +32,7 @@ import java.util.List;
 @Tag(name = "收藏相关接口")
 @RequestMapping("/favorite")
 @Validated
-public class FavoriteController {
+public class FavoriteController extends BaseController {
 
     @Resource
     private FavoriteService favoriteService;
@@ -78,7 +78,7 @@ public class FavoriteController {
             @Valid @NotNull @RequestParam("type") Integer type,
             @RequestParam(value = "typeId", required = false) Integer typeId
     ) {
-        return ControllerUtils.messageHandler((() -> favoriteService.isFavorite(type, typeId)));
+        return messageHandler((() -> favoriteService.isFavorite(type, typeId)));
     }
 
     @PreAuthorize("hasAnyAuthority('blog:favorite:list')")
@@ -87,7 +87,7 @@ public class FavoriteController {
     @LogAnnotation(module="收藏管理",operation= LogConst.GET)
     @GetMapping("/back/list")
     public ResultData<List<FavoriteListVO>> backList() {
-        return ControllerUtils.messageHandler(() -> favoriteService.getBackFavoriteList(null));
+        return messageHandler(() -> favoriteService.getBackFavoriteList(null));
     }
 
     @PreAuthorize("hasAnyAuthority('blog:favorite:search')")
@@ -96,7 +96,7 @@ public class FavoriteController {
     @LogAnnotation(module="收藏管理",operation= LogConst.SEARCH)
     @PostMapping("/back/search")
     public ResultData<List<FavoriteListVO>> backList(@RequestBody SearchFavoriteDTO searchDTO) {
-        return ControllerUtils.messageHandler(() -> favoriteService.getBackFavoriteList(searchDTO));
+        return messageHandler(() -> favoriteService.getBackFavoriteList(searchDTO));
     }
 
     @PreAuthorize("hasAnyAuthority('blog:favorite:isCheck')")

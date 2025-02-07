@@ -3,12 +3,12 @@ package com.overthinker.cloud.web.controller;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.web.constants.LogConst;
+import com.overthinker.cloud.web.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.SearchTagDTO;
 import com.overthinker.cloud.web.entity.DTO.TagDTO;
 import com.overthinker.cloud.web.entity.VO.TagVO;
+import com.overthinker.cloud.web.entity.constants.LogConst;
 import com.overthinker.cloud.web.service.TagService;
-import com.overthinker.cloud.web.utils.ControllerUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -28,7 +28,7 @@ import java.util.List;
 @Tag(name = "标签相关接口")
 @RequestMapping("/tag")
 @Validated
-public class TagController {
+public class TagController extends BaseController {
 
     @Resource
     private TagService tagService;
@@ -37,7 +37,7 @@ public class TagController {
     @GetMapping("/list")
     @AccessLimit(seconds = 60, maxCount = 60)
     public ResultData<List<TagVO>> list() {
-        return ControllerUtils.messageHandler(() -> tagService.listAllTag());
+        return messageHandler(() -> tagService.listAllTag());
     }
 
     @Operation(summary = "新增标签-文章列表")
@@ -55,7 +55,7 @@ public class TagController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @GetMapping("/back/list")
     public ResultData<List<TagVO>> listArticleTag() {
-        return ControllerUtils.messageHandler(() -> tagService.listAllTag());
+        return messageHandler(() -> tagService.listAllTag());
     }
 
     @Operation(summary = "搜索标签列表")
@@ -64,7 +64,7 @@ public class TagController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @PostMapping("/back/search")
     public ResultData<List<TagVO>> searchTag(@RequestBody SearchTagDTO searchTagDTO) {
-        return ControllerUtils.messageHandler(() -> tagService.searchTag(searchTagDTO));
+        return messageHandler(() -> tagService.searchTag(searchTagDTO));
     }
 
     @Operation(summary = "根据id查询标签")
@@ -73,7 +73,7 @@ public class TagController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @GetMapping("/back/get/{id}")
     public ResultData<TagVO> getTagById(@PathVariable(value = "id") Long id) {
-        return ControllerUtils.messageHandler(() -> tagService.getTagById(id));
+        return messageHandler(() -> tagService.getTagById(id));
     }
 
     @Operation(summary = "新增标签-标签列表")

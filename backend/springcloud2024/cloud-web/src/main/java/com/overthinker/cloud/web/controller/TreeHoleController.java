@@ -5,13 +5,13 @@ import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.CheckBlacklist;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.web.constants.LogConst;
+import com.overthinker.cloud.web.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.SearchTreeHoleDTO;
 import com.overthinker.cloud.web.entity.DTO.TreeHoleIsCheckDTO;
 import com.overthinker.cloud.web.entity.VO.TreeHoleListVO;
 import com.overthinker.cloud.web.entity.VO.TreeHoleVO;
+import com.overthinker.cloud.web.entity.constants.LogConst;
 import com.overthinker.cloud.web.service.TreeHoleService;
-import com.overthinker.cloud.web.utils.ControllerUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -34,7 +34,7 @@ import java.util.List;
 @Tag(name = "树洞相关接口")
 @RequestMapping("/treeHole")
 @Validated
-public class TreeHoleController {
+public class TreeHoleController extends BaseController {
 
     @Resource
     private TreeHoleService treeHoleService;
@@ -51,7 +51,7 @@ public class TreeHoleController {
     @AccessLimit(seconds = 60, maxCount = 60)
     @GetMapping("/getTreeHoleList")
     public ResultData<List<TreeHoleVO>> getTreeHoleList() {
-        return ControllerUtils.messageHandler(() -> treeHoleService.getTreeHole());
+        return messageHandler(() -> treeHoleService.getTreeHole());
     }
 
     @PreAuthorize("hasAnyAuthority('blog:treeHole:list')")
@@ -60,7 +60,7 @@ public class TreeHoleController {
     @LogAnnotation(module="树洞管理",operation= LogConst.GET)
     @GetMapping("/back/list")
     public ResultData<List<TreeHoleListVO>> backList() {
-        return ControllerUtils.messageHandler(() -> treeHoleService.getBackTreeHoleList(null));
+        return messageHandler(() -> treeHoleService.getBackTreeHoleList(null));
     }
 
     @PreAuthorize("hasAnyAuthority('blog:treeHole:search')")
@@ -69,7 +69,7 @@ public class TreeHoleController {
     @LogAnnotation(module="树洞管理",operation= LogConst.SEARCH)
     @PostMapping("/back/search")
     public ResultData<List<TreeHoleListVO>> backList(@RequestBody SearchTreeHoleDTO searchDTO) {
-        return ControllerUtils.messageHandler(() -> treeHoleService.getBackTreeHoleList(searchDTO));
+        return messageHandler(() -> treeHoleService.getBackTreeHoleList(searchDTO));
     }
 
     @PreAuthorize("hasAnyAuthority('blog:treeHole:isCheck')")

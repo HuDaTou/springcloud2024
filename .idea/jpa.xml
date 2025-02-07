@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JpaBuddyIdeaProjectConfig">
-    <option name="reLastEntityCreationPackage" value="cloud-media/media-api/src/main/java/com/overthinker/cloud" />
+    <option name="reLastEntityCreationPackage" value="cloud-web/src/main/java/com/overthinker/cloud/web/entity/PO" />
     <option name="reverseEngineeringLastDbConnectionId" value="4d8067c2-c6b9-43ac-aeeb-1bbc0c85af17" />
   </component>
 </project>

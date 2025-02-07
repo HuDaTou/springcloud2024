@@ -4,11 +4,11 @@ package com.overthinker.cloud.web.controller;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.web.constants.LogConst;
+import com.overthinker.cloud.web.entity.constants.LogConst;
 import com.overthinker.cloud.web.entity.DTO.StationmasterInfoDTO;
 import com.overthinker.cloud.web.entity.DTO.WebsiteInfoDTO;
 import com.overthinker.cloud.web.entity.VO.WebsiteInfoVO;
-import com.overthinker.cloud.web.entity.enums.UploadEnum;
+import com.overthinker.cloud.web.entity.enums.ImageUploadEnum;
 import com.overthinker.cloud.web.service.WebsiteInfoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -48,7 +48,7 @@ public class WebsiteInfoController {
     @LogAnnotation(module="信息管理",operation= LogConst.UPLOAD_IMAGE)
     @PostMapping("/upload/avatar")
     public ResultData<String> upload(@RequestParam("avatar") MultipartFile avatar) {
-        return websiteInfoService.uploadImageInsertOrUpdate(UploadEnum.WEBSITE_INFO_AVATAR, avatar,0);
+        return websiteInfoService.uploadImageInsertOrUpdate(ImageUploadEnum.WEBSITE_INFO_AVATAR, avatar,0);
     }
 
     /**
@@ -63,7 +63,7 @@ public class WebsiteInfoController {
     @LogAnnotation(module="信息管理",operation= LogConst.UPLOAD_IMAGE)
     @PostMapping("/upload/background")
     public ResultData<String> uploadBackground(@RequestParam("background") MultipartFile background) {
-        return websiteInfoService.uploadImageInsertOrUpdate(UploadEnum.WEBSITE_INFO_BACKGROUND, background, 1);
+        return websiteInfoService.uploadImageInsertOrUpdate(ImageUploadEnum.WEBSITE_INFO_BACKGROUND, background, 1);
     }
 
     /**

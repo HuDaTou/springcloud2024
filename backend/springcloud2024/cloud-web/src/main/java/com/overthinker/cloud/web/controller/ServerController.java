@@ -2,6 +2,7 @@ package com.overthinker.cloud.web.controller;
 
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
+import com.overthinker.cloud.web.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.PO.Server;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Tag(name = "服务监控")
 @RequestMapping("/monitor/server")
-public class ServerController
+public class ServerController extends BaseController
 {
     @PreAuthorize("hasAnyAuthority('monitor:server:list')")
     @AccessLimit(seconds = 60, maxCount = 30)
@@ -28,6 +29,6 @@ public class ServerController
     {
         Server server = new Server();
         server.copyTo();
-        return ResultData.success(server);
+        return messageHandler(() -> server);
     }
 }

@@ -4,14 +4,14 @@ import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.CheckBlacklist;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.web.constants.LogConst;
+import com.overthinker.cloud.web.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.LinkDTO;
 import com.overthinker.cloud.web.entity.DTO.LinkIsCheckDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchLinkDTO;
 import com.overthinker.cloud.web.entity.VO.LinkListVO;
 import com.overthinker.cloud.web.entity.VO.LinkVO;
+import com.overthinker.cloud.web.entity.constants.LogConst;
 import com.overthinker.cloud.web.service.LinkService;
-import com.overthinker.cloud.web.utils.ControllerUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,7 +35,7 @@ import java.util.List;
 @RestController
 @Validated
 @RequestMapping("link")
-public class LinkController {
+public class LinkController extends BaseController {
     /**
      * 服务对象
      */
@@ -55,7 +55,7 @@ public class LinkController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @GetMapping("/list")
     public ResultData<List<LinkVO>> getLinkList() {
-        return ControllerUtils.messageHandler(() -> linkService.getLinkList());
+        return messageHandler(() -> linkService.getLinkList());
     }
 
     @PreAuthorize("hasAnyAuthority('blog:link:list')")
@@ -64,7 +64,7 @@ public class LinkController {
     @LogAnnotation(module = "友链管理", operation = LogConst.GET)
     @GetMapping("/back/list")
     public ResultData<List<LinkListVO>> backList() {
-        return ControllerUtils.messageHandler(() -> linkService.getBackLinkList(null));
+        return messageHandler(() -> linkService.getBackLinkList(null));
     }
 
     @PreAuthorize("hasAnyAuthority('blog:link:search')")
@@ -73,7 +73,7 @@ public class LinkController {
     @LogAnnotation(module = "友链管理", operation = LogConst.SEARCH)
     @PostMapping("/back/search")
     public ResultData<List<LinkListVO>> backList(@RequestBody SearchLinkDTO searchDTO) {
-        return ControllerUtils.messageHandler(() -> linkService.getBackLinkList(searchDTO));
+        return messageHandler(() -> linkService.getBackLinkList(searchDTO));
     }
 
     @PreAuthorize("hasAnyAuthority('blog:link:isCheck')")

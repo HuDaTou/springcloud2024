@@ -4,12 +4,12 @@ package com.overthinker.cloud.web.controller;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.web.constants.LogConst;
+import com.overthinker.cloud.web.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.LoginLogDTO;
 import com.overthinker.cloud.web.entity.DTO.LoginLogDeleteDTO;
 import com.overthinker.cloud.web.entity.VO.LoginLogVO;
+import com.overthinker.cloud.web.entity.constants.LogConst;
 import com.overthinker.cloud.web.service.LoginLogService;
-import com.overthinker.cloud.web.utils.ControllerUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,7 +29,7 @@ import java.util.List;
 @Tag(name = "登录日志相关接口")
 @RestController
 @RequestMapping("loginLog")
-public class LoginLogController {
+public class LoginLogController extends BaseController {
     /**
      * 服务对象
      */
@@ -41,7 +41,7 @@ public class LoginLogController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @GetMapping("/list")
     public ResultData<List<LoginLogVO>> getLoginLogList() {
-        return ControllerUtils.messageHandler(() -> loginLogService.searchLoginLog(null));
+        return messageHandler(() -> loginLogService.searchLoginLog(null));
     }
 
     @PreAuthorize("hasAnyAuthority('system:log:login:search')")
@@ -51,7 +51,7 @@ public class LoginLogController {
     @LogAnnotation(module="登录日志",operation= LogConst.SEARCH)
     @PostMapping("/search")
     public ResultData<List<LoginLogVO>> getLoginLogSearch(@RequestBody LoginLogDTO loginLogDTO) {
-        return ControllerUtils.messageHandler(() -> loginLogService.searchLoginLog(loginLogDTO));
+        return messageHandler(() -> loginLogService.searchLoginLog(loginLogDTO));
     }
 
     @PreAuthorize("hasAnyAuthority('system:log:login:delete')")

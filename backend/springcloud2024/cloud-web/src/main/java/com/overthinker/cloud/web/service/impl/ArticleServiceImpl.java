@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.overthinker.cloud.resp.ResultData;
-import com.overthinker.cloud.web.constants.RedisConst;
-import com.overthinker.cloud.web.constants.SQLConst;
+import com.overthinker.cloud.web.entity.constants.RedisConst;
+import com.overthinker.cloud.web.entity.constants.SQLConst;
 import com.overthinker.cloud.web.entity.DTO.ArticleDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchArticleDTO;
 import com.overthinker.cloud.web.entity.PO.*;
@@ -239,7 +239,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         try {
             String articleCoverUrl = null;
             try {
-                articleCoverUrl = fileUploadUtils.uploadImage(UploadEnum.ARTICLE_COVER, articleCover);
+                articleCoverUrl = fileUploadUtils.uploadImage(ImageUploadEnum.ARTICLE_COVER, articleCover);
             } catch (FileUploadException e) {
                 return ResultData.failure(e.getMessage());
             }
@@ -290,7 +290,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public ResultData<String> uploadArticleImage(MultipartFile articleImage) {
         try {
-            String url = fileUploadUtils.uploadImage(UploadEnum.ARTICLE_IMAGE, articleImage);
+            String url = fileUploadUtils.uploadImage(ImageUploadEnum.ARTICLE_IMAGE, articleImage);
             if (StringUtils.isNotNull(url))
                 return ResultData.success(url);
             else

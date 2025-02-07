@@ -1,8 +1,8 @@
 package com.overthinker.cloud.web.utils;
 
 import cn.hutool.core.io.file.FileNameUtil;
-import com.overthinker.cloud.web.constants.Const;
-import com.overthinker.cloud.web.entity.enums.UploadEnum;
+import com.overthinker.cloud.web.entity.constants.Const;
+import com.overthinker.cloud.web.entity.enums.ImageUploadEnum;
 import com.overthinker.cloud.web.exception.FileUploadException;
 import io.minio.*;
 import io.minio.errors.*;
@@ -43,18 +43,18 @@ public class FileUploadUtils {
     /**
      * 上传文件
      *
-     * @param uploadEnum 文件枚举
+     * @param imageUploadEnum 文件枚举
      * @param file       文件
      * @return 上传后的文件地址
      * @throws Exception 异常
      */
-    public String uploadImage(UploadEnum uploadEnum, MultipartFile file) throws Exception {
+    public String uploadImage(ImageUploadEnum imageUploadEnum, MultipartFile file) throws Exception {
         // 验证文件大小
-        if (verifyTheFileSize(file.getSize(), uploadEnum.getLimitSize()))
-            throw new FileUploadException("上传文件超过限制大小:" + uploadEnum.getLimitSize() + "MB");
+        if (verifyTheFileSize(file.getSize(), imageUploadEnum.getLimitSize()))
+            throw new FileUploadException("上传文件超过限制大小:" + imageUploadEnum.getLimitSize() + "MB");
 
         // 验证文件格式
-        if (isFormatFile(file.getOriginalFilename(), uploadEnum.getFormat())) {
+        if (isFormatFile(file.getOriginalFilename(), imageUploadEnum.getFormat())) {
 
             InputStream stream = file.getInputStream();
             String name = UUID.randomUUID().toString();
@@ -66,11 +66,11 @@ public class FileUploadUtils {
             PutObjectArgs args = PutObjectArgs.builder()
                     .bucket(bucketName)
                     .headers(Map.of(Const.CONTENT_TYPE, Objects.requireNonNull(file.getContentType())))
-                    .object(uploadEnum.getDir() + name + "." + fileExtension)
+                    .object(imageUploadEnum.getDir() + name + "." + fileExtension)
                     .stream(stream, file.getSize(), -1)
                     .build();
             client.putObject(args);
-            return endpoint + "/" + bucketName + "/" + uploadEnum.getDir() + name + "." + fileExtension;
+            return endpoint + "/" + bucketName + "/" + imageUploadEnum.getDir() + name + "." + fileExtension;
         }
         log.error("--------------------上传文件格式不正确--------------------");
         throw new FileUploadException("上传文件类型错误");
@@ -101,7 +101,7 @@ public class FileUploadUtils {
     public double convertFileSizeToMB(long sizeInBytes) {
         double sizeInMB = (double) sizeInBytes / (1024 * 1024);
         String formatted = String.format("%.2f", sizeInMB);
-        // String转为Long
+        // String转为double
         return Double.parseDouble(formatted);
     }
 
@@ -196,7 +196,7 @@ public class FileUploadUtils {
      * @param format   支持的后辍
      * @return 是否支持
      */
-    public boolean isFormatFile(String fileName, List<String> format) {
+    public boolean isFormatFile(String fileName, Set<String> format) {
         for (String s : format) {
             if (fileName.endsWith(s)) {
                 return true;

@@ -3,14 +3,14 @@ package com.overthinker.cloud.web.controller;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.web.constants.LogConst;
+import com.overthinker.cloud.web.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.AddBlackListDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchBlackListDTO;
 import com.overthinker.cloud.web.entity.DTO.UpdateBlackListDTO;
 import com.overthinker.cloud.web.entity.VO.BlackListVO;
+import com.overthinker.cloud.web.entity.constants.LogConst;
 import com.overthinker.cloud.web.exception.BlackListException;
 import com.overthinker.cloud.web.service.BlackListService;
-import com.overthinker.cloud.web.utils.ControllerUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.annotation.Resource;
@@ -28,7 +28,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("blackList")
-public class BlackListController {
+public class BlackListController extends BaseController {
     /**
      * 服务对象
      */
@@ -70,7 +70,7 @@ public class BlackListController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @PostMapping("/getBlackListing")
     public ResultData<List<BlackListVO>> getBlackList(@RequestBody(required = false) SearchBlackListDTO searchBlackListDTO) {
-        return ControllerUtils.messageHandler(() -> blackListService.getBlackList(searchBlackListDTO));
+        return messageHandler(() -> blackListService.getBlackList(searchBlackListDTO));
     }
 
     /**

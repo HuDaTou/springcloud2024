@@ -2,12 +2,12 @@ package com.overthinker.cloud.web.controller;
 
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.web.constants.LogConst;
+import com.overthinker.cloud.web.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.PermissionDTO;
 import com.overthinker.cloud.web.entity.VO.PermissionMenuVO;
 import com.overthinker.cloud.web.entity.VO.PermissionVO;
+import com.overthinker.cloud.web.entity.constants.LogConst;
 import com.overthinker.cloud.web.service.PermissionService;
-import com.overthinker.cloud.web.utils.ControllerUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -28,7 +28,7 @@ import java.util.List;
 @RestController
 @Tag(name = "权限字符相关接口")
 @RequestMapping("permission")
-public class PermissionController {
+public class PermissionController extends BaseController {
     /**
      * 服务对象
      */
@@ -63,7 +63,7 @@ public class PermissionController {
     @Operation(summary = "查询所有权限所在菜单")
     @GetMapping("/menu")
     public ResultData<List<PermissionMenuVO>> menu() {
-        return ControllerUtils.messageHandler(() -> permissionService.selectPermissionMenu());
+        return messageHandler(() -> permissionService.selectPermissionMenu());
     }
 
     @Operation(summary = "添加权限字符")
@@ -91,7 +91,7 @@ public class PermissionController {
     public ResultData<PermissionDTO> getPermission(
             @PathVariable("id") @NotNull(message = "权限id不能为空") Long id
     ) {
-        return ControllerUtils.messageHandler(() -> permissionService.getPermission(id));
+        return messageHandler(() -> permissionService.getPermission(id));
     }
 
     @Operation(summary = "删除权限字符")

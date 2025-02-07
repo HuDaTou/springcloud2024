@@ -3,13 +3,13 @@ package com.overthinker.cloud.web.controller;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.web.constants.LogConst;
+import com.overthinker.cloud.web.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.*;
 import com.overthinker.cloud.web.entity.VO.UserAccountVO;
 import com.overthinker.cloud.web.entity.VO.UserDetailsVO;
 import com.overthinker.cloud.web.entity.VO.UserListVO;
+import com.overthinker.cloud.web.entity.constants.LogConst;
 import com.overthinker.cloud.web.service.UserService;
-import com.overthinker.cloud.web.utils.ControllerUtils;
 import com.overthinker.cloud.web.utils.SecurityUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -32,7 +32,7 @@ import java.util.List;
 @RestController
 @Tag(name = "用户相关接口")
 @RequestMapping("/user")
-public class UserController {
+public class UserController extends BaseController {
 
     @Resource
     private UserService userService;
@@ -41,7 +41,7 @@ public class UserController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @GetMapping("/auth/info")
     public ResultData<UserAccountVO> getInfo() {
-        return ControllerUtils.messageHandler(() -> userService.findAccountById(SecurityUtils.getUserId()));
+        return messageHandler(() -> userService.findAccountById(SecurityUtils.getUserId()));
     }
 
     /**
@@ -119,7 +119,7 @@ public class UserController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @GetMapping("/list")
     public ResultData<List<UserListVO>> getUserList() {
-        return ControllerUtils.messageHandler(() -> userService.getUserOrSearch(null));
+        return messageHandler(() -> userService.getUserOrSearch(null));
     }
 
     @PreAuthorize("hasAnyAuthority('system:user:search')")
@@ -127,7 +127,7 @@ public class UserController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @PostMapping("/search")
     public ResultData<List<UserListVO>> searchUserList(@RequestBody UserSearchDTO userSearchDTO) {
-        return ControllerUtils.messageHandler(() -> userService.getUserOrSearch(userSearchDTO));
+        return messageHandler(() -> userService.getUserOrSearch(userSearchDTO));
     }
 
     @PreAuthorize("hasAnyAuthority('system:user:status:update')")
@@ -146,7 +146,7 @@ public class UserController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @GetMapping("/details/{id}")
     public ResultData<UserDetailsVO> getUserDetails(@PathVariable("id") Long id) {
-        return ControllerUtils.messageHandler(() -> userService.findUserDetailsById(id));
+        return messageHandler(() -> userService.findUserDetailsById(id));
     }
 
     @PreAuthorize("hasAnyAuthority('system:user:delete')")

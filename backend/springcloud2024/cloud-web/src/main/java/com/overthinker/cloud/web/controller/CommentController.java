@@ -4,15 +4,15 @@ import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.CheckBlacklist;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.web.constants.LogConst;
+import com.overthinker.cloud.web.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.CommentIsCheckDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchCommentDTO;
 import com.overthinker.cloud.web.entity.DTO.UserCommentDTO;
 import com.overthinker.cloud.web.entity.VO.ArticleCommentVO;
 import com.overthinker.cloud.web.entity.VO.CommentListVO;
 import com.overthinker.cloud.web.entity.VO.PageVO;
+import com.overthinker.cloud.web.entity.constants.LogConst;
 import com.overthinker.cloud.web.service.CommentService;
-import com.overthinker.cloud.web.utils.ControllerUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -35,7 +35,7 @@ import java.util.List;
 @Tag(name = "评论相关接口")
 @RequestMapping("/comment")
 @Validated
-public class CommentController {
+public class CommentController extends BaseController {
 
     @Resource
     private CommentService commentService;
@@ -55,7 +55,7 @@ public class CommentController {
             @Valid @NotNull Integer pageNum,
             @Valid @NotNull Integer pageSize
     ) {
-        return ControllerUtils.messageHandler((() -> commentService.getComment(type, typeId, pageNum, pageSize)));
+        return messageHandler((() -> commentService.getComment(type, typeId, pageNum, pageSize)));
     }
 
     @CheckBlacklist
@@ -73,7 +73,7 @@ public class CommentController {
     @LogAnnotation(module="评论管理",operation= LogConst.GET)
     @GetMapping("/back/list")
     public ResultData<List<CommentListVO>> backList() {
-        return ControllerUtils.messageHandler(() -> commentService.getBackCommentList(null));
+        return messageHandler(() -> commentService.getBackCommentList(null));
     }
 
     @PreAuthorize("hasAnyAuthority('blog:comment:search')")
@@ -82,7 +82,7 @@ public class CommentController {
     @LogAnnotation(module="评论管理",operation= LogConst.SEARCH)
     @PostMapping("/back/search")
     public ResultData<List<CommentListVO>> backList(@RequestBody SearchCommentDTO searchDTO) {
-        return ControllerUtils.messageHandler(() -> commentService.getBackCommentList(searchDTO));
+        return messageHandler(() -> commentService.getBackCommentList(searchDTO));
     }
 
     @PreAuthorize("hasAnyAuthority('blog:comment:isCheck')")

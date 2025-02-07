@@ -3,7 +3,7 @@ package com.overthinker.cloud.web.aop;
 import com.alibaba.fastjson.JSON;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.web.constants.FunctionConst;
+import com.overthinker.cloud.web.entity.constants.FunctionConst;
 import com.overthinker.cloud.web.entity.PO.Log;
 import com.overthinker.cloud.web.entity.PO.User;
 import com.overthinker.cloud.web.mapper.UserMapper;
@@ -58,6 +58,7 @@ public class LogAspect {
     // 环绕通知，在方法执行前后执行
     @Around("pt()")
     public Object log(ProceedingJoinPoint joinPoint) throws Throwable {
+        log.info("================日志开始=========================");
         long beginTime = System.currentTimeMillis();
         try {
             // 执行方法
@@ -113,9 +114,16 @@ public class LogAspect {
         return null;
     }
 
+    /**
+     * 记录日志
+     *
+     * @param joinPoint 切点
+     * @param time      耗时
+     */
     private void recordLog(ProceedingJoinPoint joinPoint, long time,Object result) {
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        Method method = signature.getMethod();
+        // 获取方法签名
+        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+        Method method = methodSignature.getMethod();
         LogAnnotation logAnnotation = method.getAnnotation(LogAnnotation.class);
         // 操作描述
         Operation operation = method.getAnnotation(Operation.class);
@@ -124,7 +132,7 @@ public class LogAspect {
         HttpServletRequest request = SecurityUtils.getCurrentHttpRequest();
         // 请求的方法名
         String className = joinPoint.getTarget().getClass().getName();
-        String methodName = signature.getName();
+        String methodName = methodSignature.getName();
         assert request != null;
         String ipAddr = IpUtils.getIpAddr(request);
         User user = userMapper.selectById(SecurityUtils.getUserId());

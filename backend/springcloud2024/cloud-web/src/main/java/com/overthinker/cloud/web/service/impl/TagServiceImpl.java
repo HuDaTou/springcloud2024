@@ -3,7 +3,7 @@ package com.overthinker.cloud.web.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.overthinker.cloud.resp.ResultData;
-import com.overthinker.cloud.web.constants.FunctionConst;
+import com.overthinker.cloud.web.entity.constants.FunctionConst;
 import com.overthinker.cloud.web.entity.DTO.SearchTagDTO;
 import com.overthinker.cloud.web.entity.DTO.TagDTO;
 import com.overthinker.cloud.web.entity.PO.ArticleTag;

@@ -8,7 +8,7 @@ package com.overthinker.cloud.web.filter;
  */
 //@Component
 
-import com.overthinker.cloud.web.constants.Const;
+import com.overthinker.cloud.web.entity.constants.Const;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpFilter;

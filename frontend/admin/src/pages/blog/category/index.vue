@@ -40,7 +40,7 @@ const columns: any = [
     align: 'center',
   },
   {
-    title: '文章数量',
+    title: '内容数量',
     dataIndex: 'articleCount',
     align: 'center',
   },

@@ -3,12 +3,12 @@ package com.overthinker.cloud.web.controller;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.web.constants.LogConst;
+import com.overthinker.cloud.web.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.CategoryDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchCategoryDTO;
 import com.overthinker.cloud.web.entity.VO.CategoryVO;
+import com.overthinker.cloud.web.entity.constants.LogConst;
 import com.overthinker.cloud.web.service.CategoryService;
-import com.overthinker.cloud.web.utils.ControllerUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -28,7 +28,7 @@ import java.util.List;
 @Tag(name = "分类相关接口")
 @RequestMapping("/category")
 @Validated
-public class CategoryController {
+public class CategoryController extends BaseController {
 
     @Resource
     private CategoryService categoryService;
@@ -37,7 +37,7 @@ public class CategoryController {
     @AccessLimit(seconds = 60, maxCount = 60)
     @GetMapping("/list")
     public ResultData<List<CategoryVO>> listAllCategory() {
-        return ControllerUtils.messageHandler((categoryService::listAllCategory));
+        return messageHandler((categoryService::listAllCategory));
     }
 
     @Operation(summary = "新增分类-文章列表")
@@ -55,7 +55,7 @@ public class CategoryController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @GetMapping("/back/list")
     public ResultData<List<CategoryVO>> listArticleCategory() {
-        return ControllerUtils.messageHandler((categoryService::listAllCategory));
+        return messageHandler((categoryService::listAllCategory));
     }
 
     @Operation(summary = "搜索分类列表")
@@ -64,7 +64,7 @@ public class CategoryController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @PostMapping("/back/search")
     public ResultData<List<CategoryVO>> searchCategory(@RequestBody SearchCategoryDTO searchCategoryDTO) {
-        return ControllerUtils.messageHandler(() -> categoryService.searchCategory(searchCategoryDTO));
+        return messageHandler(() -> categoryService.searchCategory(searchCategoryDTO));
     }
 
     @Operation(summary = "根据id查询分类")
@@ -73,7 +73,7 @@ public class CategoryController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @GetMapping("/back/get/{id}")
     public ResultData<CategoryVO> getCategoryById(@PathVariable(value = "id") Long id) {
-        return ControllerUtils.messageHandler(() -> categoryService.getCategoryById(id));
+        return messageHandler(() -> categoryService.getCategoryById(id));
     }
 
     @Operation(summary = "新增分类-分类列表")

@@ -35,6 +35,7 @@
 
     <mybatis-plus.version>3.5.5</mybatis-plus.version>
     <mybatis-plus-generator.version>3.5.5</mybatis-plus-generator.version>
+    <p6spy.version>1.10.0</p6spy.version>
 
     <redis.version>3.2.0</redis.version>
     <commons-pool2.version>2.8.1</commons-pool2.version>
@@ -132,10 +133,17 @@
         <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
         <version>${mybatis-plus.version}</version>
       </dependency>
+<!--      crud生成包-->
       <dependency>
         <groupId>com.baomidou</groupId>
         <artifactId>mybatis-plus-generator</artifactId>
         <version>${mybatis-plus-generator.version}</version>
+      </dependency>
+<!--      SQL分析与打印-->
+      <dependency>
+        <groupId>com.github.gavlyukovskiy</groupId>
+        <artifactId>p6spy-spring-boot-starter</artifactId>
+        <version>${p6spy.version}</version>
       </dependency>
 
       <dependency>

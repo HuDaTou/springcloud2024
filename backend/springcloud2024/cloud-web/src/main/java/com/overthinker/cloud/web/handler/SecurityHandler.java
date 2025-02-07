@@ -3,8 +3,8 @@ package com.overthinker.cloud.web.handler;
 
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.resp.ReturnCodeEnum;
-import com.overthinker.cloud.web.constants.Const;
-import com.overthinker.cloud.web.constants.RespConst;
+import com.overthinker.cloud.web.entity.constants.Const;
+import com.overthinker.cloud.web.entity.constants.RespConst;
 import com.overthinker.cloud.web.entity.PO.LoginUser;
 import com.overthinker.cloud.web.entity.VO.AuthorizeVO;
 import com.overthinker.cloud.web.service.LoginLogService;

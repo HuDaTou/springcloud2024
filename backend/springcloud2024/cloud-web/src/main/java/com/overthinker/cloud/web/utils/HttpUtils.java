@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.utils;
 
-import com.overthinker.cloud.web.constants.Const;
+import com.overthinker.cloud.web.entity.constants.Const;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

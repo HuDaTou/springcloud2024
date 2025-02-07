@@ -1,5 +1,9 @@
 package com.overthinker.cloud.web.controller.base;
 
+import com.overthinker.cloud.resp.ResultData;
+
+import java.util.function.Supplier;
+
 /**
  * @Title: ABaseController
  * @Author overthinker
@@ -9,5 +13,9 @@ package com.overthinker.cloud.web.controller.base;
  */
 //TODO 配置基础统一
 public class BaseController {
+
+    public static  <T> ResultData<T> messageHandler(Supplier<T> supplier) {
+        return ResultData.success(supplier.get());
+    }
 
 }

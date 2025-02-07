@@ -4,12 +4,12 @@ package com.overthinker.cloud.web.controller;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.web.constants.LogConst;
+import com.overthinker.cloud.web.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.LogDTO;
 import com.overthinker.cloud.web.entity.DTO.LogDeleteDTO;
 import com.overthinker.cloud.web.entity.VO.PageVO;
+import com.overthinker.cloud.web.entity.constants.LogConst;
 import com.overthinker.cloud.web.service.LogService;
-import com.overthinker.cloud.web.utils.ControllerUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("log")
 @Validated
-public class LogController {
+public class LogController extends BaseController {
     /**
      * 服务对象
      */
@@ -42,7 +42,7 @@ public class LogController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @GetMapping("/list/{current}/{pageSize}")
     public ResultData<PageVO> getLogList(@PathVariable("current") @NotNull Long current, @PathVariable("pageSize") @NotNull Long pageSize) {
-        return ControllerUtils.messageHandler(() -> logService.searchLog(null, current,pageSize));
+        return messageHandler(() -> logService.searchLog(null, current,pageSize));
     }
 
     @PreAuthorize("hasAnyAuthority('system:log:search')")
@@ -51,7 +51,7 @@ public class LogController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @PostMapping("/search")
     public ResultData<PageVO> getLogSearch(@RequestBody @Valid LogDTO logDTO) {
-        return ControllerUtils.messageHandler(() -> logService.searchLog(logDTO, logDTO.getCurrent(),logDTO.getPageSize()));
+        return messageHandler(() -> logService.searchLog(logDTO, logDTO.getCurrent(),logDTO.getPageSize()));
     }
 
     @PreAuthorize("hasAnyAuthority('system:log:delete')")
