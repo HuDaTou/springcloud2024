@@ -239,7 +239,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         try {
             String articleCoverUrl = null;
             try {
-                articleCoverUrl = fileUploadUtils.uploadImage(ImageUploadEnum.ARTICLE_COVER, articleCover);
+                articleCoverUrl = fileUploadUtils.uploadImage(UploadEnum.ARTICLE_COVER, articleCover);
             } catch (FileUploadException e) {
                 return ResultData.failure(e.getMessage());
             }
@@ -290,7 +290,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public ResultData<String> uploadArticleImage(MultipartFile articleImage) {
         try {
-            String url = fileUploadUtils.uploadImage(ImageUploadEnum.ARTICLE_IMAGE, articleImage);
+            String url = fileUploadUtils.uploadImage(UploadEnum.ARTICLE_IMAGE, articleImage);
             if (StringUtils.isNotNull(url))
                 return ResultData.success(url);
             else

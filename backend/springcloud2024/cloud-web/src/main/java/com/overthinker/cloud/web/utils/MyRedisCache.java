@@ -222,9 +222,9 @@ public class MyRedisCache {
     /**
      * 调用方法实现对 Hash 对应的 key 的值操作
      *
-     * @param key
-     * @param hKey
-     * @param v
+     * @param key  Redis键
+     * @param hKey Hash键
+     * @param v   增加的值
      */
     public void incrementCacheMapValue(String key, String hKey, int v) {
         redisTemplate.opsForHash().increment(key, hKey, v);
@@ -233,8 +233,8 @@ public class MyRedisCache {
     /**
      * 删除Hash中的数据
      *
-     * @param key
-     * @param hkey
+     * @param key Redis键
+     * @param hkey Hash键
      */
     public void delCacheMapValue(final String key, final String hkey) {
         HashOperations hashOperations = redisTemplate.opsForHash();

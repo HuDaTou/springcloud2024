@@ -1,10 +1,5 @@
 package com.overthinker.cloud.web.entity.constants;
 
-/**
- * @author overH
- * <p>
- * 创建时间：2023/10/16 0:01
- */
 public class SQLConst {
     /**
      * 推荐文章的字段标识
@@ -63,11 +58,16 @@ public class SQLConst {
 
     /**
      * 查询一条
-      */
+     */
     public static final String LIMIT_ONE_SQL = "LIMIT 1";
 
     /**
      * Banner最多数量
      */
     public static final Integer BANNER_MAX_COUNT = 5;
+
+    /**
+     * 优先显示相册，再显示照片，时间倒序
+     */
+    public static final String ORDER_BY_CREATE_TIME_DESC = "ORDER BY CASE WHEN type = 1 THEN 0 ELSE 1 END, create_time DESC";
 }

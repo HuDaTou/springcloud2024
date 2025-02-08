@@ -6,7 +6,7 @@ import com.overthinker.cloud.web.entity.DTO.StationmasterInfoDTO;
 import com.overthinker.cloud.web.entity.DTO.WebsiteInfoDTO;
 import com.overthinker.cloud.web.entity.PO.WebsiteInfo;
 import com.overthinker.cloud.web.entity.VO.WebsiteInfoVO;
-import com.overthinker.cloud.web.entity.enums.ImageUploadEnum;
+import com.overthinker.cloud.web.entity.enums.UploadEnum;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -22,12 +22,12 @@ public interface WebsiteInfoService extends IService<WebsiteInfo> {
     /**
      * 上传或更新图片
      *
-     * @param imageUploadEnum 目录
+     * @param uploadEnum 目录
      * @param avatar     图片
      * @param type       类型
      * @return 是否成功&图片地址
      */
-    ResultData<String> uploadImageInsertOrUpdate(ImageUploadEnum imageUploadEnum, MultipartFile avatar, Integer type);
+    ResultData<String> uploadImageInsertOrUpdate(UploadEnum uploadEnum, MultipartFile avatar, Integer type);
 
     /**
      * 查询网站信息

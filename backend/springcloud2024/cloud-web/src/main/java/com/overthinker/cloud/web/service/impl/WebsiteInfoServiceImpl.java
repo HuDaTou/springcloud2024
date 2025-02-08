@@ -10,7 +10,7 @@ import com.overthinker.cloud.web.entity.DTO.WebsiteInfoDTO;
 import com.overthinker.cloud.web.entity.PO.Article;
 import com.overthinker.cloud.web.entity.PO.WebsiteInfo;
 import com.overthinker.cloud.web.entity.VO.WebsiteInfoVO;
-import com.overthinker.cloud.web.entity.enums.ImageUploadEnum;
+import com.overthinker.cloud.web.entity.enums.UploadEnum;
 import com.overthinker.cloud.web.mapper.ArticleMapper;
 import com.overthinker.cloud.web.mapper.CategoryMapper;
 import com.overthinker.cloud.web.mapper.CommentMapper;
@@ -52,15 +52,15 @@ public class WebsiteInfoServiceImpl extends ServiceImpl<WebsiteInfoMapper, Websi
 
     @Transactional
     @Override
-    public ResultData<String> uploadImageInsertOrUpdate(ImageUploadEnum imageUploadEnum, MultipartFile avatar, Integer type) {
+    public ResultData<String> uploadImageInsertOrUpdate(UploadEnum uploadEnum, MultipartFile avatar, Integer type) {
         try {
-            List<String> avatarNames = fileUploadUtils.listFiles(imageUploadEnum.getDir());
+            List<String> avatarNames = fileUploadUtils.listFiles(uploadEnum.getDir());
             if (!avatarNames.isEmpty()) {
                 if (fileUploadUtils.deleteFiles(avatarNames))
                     log.info("删除旧图片成功,{}", avatarNames);
             }
             // 上传
-            String url = fileUploadUtils.uploadImage(imageUploadEnum, avatar);
+            String url = fileUploadUtils.uploadImage(uploadEnum, avatar);
             switch (type) {
                 case 0 ->
                         this.saveOrUpdate(WebsiteInfo.builder().webmasterAvatar(url).id(WebsiteInfoConst.WEBSITE_INFO_ID).build());
