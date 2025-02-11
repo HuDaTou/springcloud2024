@@ -123,7 +123,6 @@ const env = import.meta.env
             class="avatar-uploader"
             :headers="headers"
             :show-upload-list="false"
-            :action="env.MODE === 'production' ? env.VITE_APP_BASE_URL + env.VITE_APP_BASE_API + '/websiteInfo/upload/avatar' : env.VITE_APP_BASE_URL + '/websiteInfo/upload/avatar'"
             :before-upload="beforeUpload"
             @change="handleChangeAvatar"
         >

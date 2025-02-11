@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,22 +33,21 @@ public class VideoController extends BaseController {
 
 
     @Operation(summary = "上传视频")
-    @RequestMapping("/upload")
+
+    @PostMapping("/upload")
     @Parameters({
             @Parameter(name = "videoFile", description = "视频文件"),
             @Parameter(name = "videoCover", description = "视频封面"),
             @Parameter(name = "VideoPremissions", description = "视频权限，如果是私有视频则为true，否则为false", required = true),
     })
-    public ResultData<Map<String, Object>> uploadVideo(@Valid @NotNull(message = "视频文件不能为空") @RequestParam("VideoFile") MultipartFile videoFile,
-                                                       @Validated @NotNull(message = "视频封面不能为空") @RequestParam("VideoCover") MultipartFile videoCover,
-                                                         @RequestParam("categoryId") Integer categoryId,
+    public ResultData<Map<String, Object>> uploadVideo( @NotNull(message = "视频文件不能为空") @RequestParam("VideoFile") MultipartFile videoFile,
                                                             @RequestParam("VideoPermissions") Boolean VideoPermissions
 
     ) {
-        return messageHandler(() -> videoService.uploadVideo(videoFile, videoCover, categoryId, VideoPermissions));
-//        错误用法
-//        return  messageHandler(videoService::uploadVideo(videoFile, videoCover, categoryId, VideoPermissions));
+        return messageHandler(() -> videoService.uploadVideo(videoFile, VideoPermissions));
     }
+
+
 
 
     @Operation(summary = "获取视频列表")
@@ -83,19 +81,16 @@ public class VideoController extends BaseController {
         return messageHandler(() -> videoService.updateVideoInfo(videoInfoTDO));
     }
 
-
-
     @Operation(summary = "发布视频")
     @PostMapping("/publish")
     public ResultData<String> publishVideo(@RequestParam("videoId") Integer videoId) {
         return messageHandler(() -> "发布成功");
     }
 
-
-
-
-
-
-
+    @Operation(summary = "获取视频的缓存地址")
+    @GetMapping("/cachepath")
+    public ResultData<String> getVideoCachePath(@RequestParam("videoId") Integer videoId) {
+        return messageHandler(() -> videoService.getVideoCachePath());
+    }
 
 }

@@ -1,5 +1,5 @@
 import { message } from 'ant-design-vue'
-import type { roleListType } from './type.ts'
+import type { roleListType } from '~/api/role/type.ts'
 
 /**
  * 查询所有角色信息

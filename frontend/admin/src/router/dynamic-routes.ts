@@ -2,7 +2,7 @@ import type { RouteRecordRaw } from 'vue-router'
 
 // export const ROOT_ROUTE_REDIRECT_PATH = '/dashboard'
 export const ROOT_ROUTE_REDIRECT_PATH = '/welcome'
-const Layout = () => import('../layouts/index.vue')
+const Layout = () => import('~/layouts/index.vue')
 
 export const rootRoute: RouteRecordRaw = {
   path: '/',

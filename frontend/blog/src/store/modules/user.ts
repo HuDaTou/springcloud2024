@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia'
-import {GET_TOKEN} from '../../utils/auth.ts';
-import {getUserInfo, UserInfo} from "../../apis/user";
+import {GET_TOKEN} from '@/utils/auth.ts';
+import {getUserInfo, UserInfo} from "@/apis/user";
 
 const useUserStore = defineStore('user', () => {
     const token = GET_TOKEN()

@@ -1,10 +1,10 @@
 import {defineStore} from "pinia";
 import {shallowRef} from "vue";
-import WebsiteInfo from "../../apis/website/type.ts";
-import {getWebsiteInfo} from "../../apis/website";
-import {returnTime} from "../../utils/tool.ts";
-import {getSearchTitleList} from "../../apis/article";
-import {ArticleSearch} from "../../apis/article/type.ts";
+import WebsiteInfo from "@/apis/website/type.ts";
+import {getWebsiteInfo} from "@/apis/website";
+import {returnTime} from "@/utils/tool.ts";
+import {getSearchTitleList} from "@/apis/article";
+import {ArticleSearch} from "@/apis/article/type.ts";
 
 const useWebsiteStore = defineStore('website', () => {
     const webInfo = shallowRef<WebsiteInfo>()

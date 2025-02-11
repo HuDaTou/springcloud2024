@@ -6,7 +6,7 @@ const chargingList = ref([
   {
     name: "One",
     money: "200",
-    message: "全网最美博客ruyu-blog，期待新功能"
+    message: "全网最美博客overthinker，期待新功能"
   },
   {
     name: "李貌",

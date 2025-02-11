@@ -1,4 +1,4 @@
-import http from "../../utils/http.ts";
+import http from "@/utils/http.ts";
 
 // 相册和照片的类型定义
 export interface PhotoAndAlbumVO {

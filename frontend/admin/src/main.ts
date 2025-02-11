@@ -9,14 +9,14 @@ import {
   setupAccessDirectiveHasRole,
   setupLoadingDirective,
 } from './directive'
-import router from './router'
-import './router/router-guard'
+import router from '~/router'
+import '~/router/router-guard'
 import 'ant-design-vue/dist/reset.css'
-import './assets/styles/reset.css'
+import '~/assets/styles/reset.css'
 import 'uno.css'
 
 // 自定义 a-button 颜色
-import './assets/styles/my-a-button.css'
+import '~/assets/styles/my-a-button.css'
 
 const pinia = createPinia()
 

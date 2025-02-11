@@ -1,4 +1,4 @@
-import {loadingImg} from "../utils/base64-img/loading-img.ts";
+import {loadingImg} from "@/utils/base64-img/loading-img.ts";
 
 // 图片懒加载自定义只狼
 const lazyBinding = (el: any, binding: any) => {

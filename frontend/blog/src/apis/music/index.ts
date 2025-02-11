@@ -1,4 +1,4 @@
-import http from "../../utils/http.ts";
+import http from "@/utils/http.ts";
 
 /** 获取榜单 */
 export const reqToplist = () => {

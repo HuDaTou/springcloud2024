@@ -14,13 +14,12 @@ public interface VideoService extends IService<Video> {
 
 
     /**
-     * 上传视频 图片和视频
+     * 上传视频
      * @param VideoPermissions 视频权限 true 私有视频 false 公共视频
      * @param videoFile 视频文件
-     * @param videoCover 视频封面
      * @return Map<String, String>
      */
-    Map<String, Object> uploadVideo(MultipartFile videoFile , MultipartFile videoCover, Integer categoryId, Boolean VideoPermissions);
+    Map<String, Object> uploadVideo(MultipartFile videoFile ,  Boolean VideoPermissions);
 
 
     /**
@@ -57,6 +56,14 @@ public interface VideoService extends IService<Video> {
      * @return String
      */
     String  deleteVideo();
+
+
+    /**
+     * 获取上传视频缓存路径, 根据用户id 生成 uuid 临时文件，将视频存储在本地后，在将视频上传到云存储
+     * 后面改成切片上传
+     * @return String
+     */
+    String getVideoCachePath();
 
 
 

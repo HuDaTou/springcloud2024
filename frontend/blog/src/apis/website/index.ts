@@ -1,5 +1,5 @@
-import http from "../../utils/http.ts";
-import WebsiteInfo from "./type.ts";
+import http from "@/utils/http.ts";
+import WebsiteInfo from "@/apis/website/type.ts";
 import {AxiosResponse} from "axios";
 
 // 获取网站信息

@@ -1,7 +1,7 @@
 // 使用 vue-router 配置路由
 import {createRouter, createWebHistory} from 'vue-router'
-import {constantRouter} from './routers.ts'
-import {GET_TOKEN} from "../utils/auth.ts";
+import {constantRouter} from '@/router/routers.ts'
+import {GET_TOKEN} from "@/utils/auth.ts";
 
 let router = createRouter({
     // 路由模式 History

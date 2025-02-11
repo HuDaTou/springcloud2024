@@ -1,4 +1,4 @@
-import http from "../../utils/http.ts";
+import http from "@/utils/http.ts";
 import EasyTyper from "easy-typer-js";
 // 第三方的api接口
 // 一言接口

@@ -1,4 +1,4 @@
-import router from '../router'
+import router from '@/router'
 
 export function useCurrentRoute() {
   const currentRoute = router.currentRoute

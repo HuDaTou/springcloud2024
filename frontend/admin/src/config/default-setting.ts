@@ -1,9 +1,9 @@
-import type { LayoutSetting } from '../stores/app'
+import type { LayoutSetting } from '~@/stores/app'
 
 export default {
   'title': 'overthinker',
   'theme': 'light',
-  'logo': 'http://minioapi.overthinker.top/cloud/logo/Logo 设计.png',
+  'logo': 'https://image.kuailemao.xyz/blog/logo/blog后台logo.svg',
   'collapsed': false,
   'drawerVisible': true,
   'colorPrimary': '#1677FF',
@@ -24,7 +24,7 @@ export default {
   'accordionMode': false,
   'leftCollapsed': true,
   'headerHeight': 48,
-  'copyright': 'ruyu-blog 2024',
+  'copyright': 'overthinker 2024',
   'animationName': 'slide-fadein-right',
 } as LayoutSetting
 

@@ -1,7 +1,7 @@
 import { message } from 'ant-design-vue'
-import type { MenuData } from '../../layouts/basic-layout/typing'
-import type { formType } from '../../pages/system/menu/type.ts'
-import type { roleListType } from './type.ts'
+import type { MenuData } from '~@/layouts/basic-layout/typing'
+import type { formType } from '~/pages/system/menu/type.ts'
+import type { roleListType } from '~/api/common/type.ts'
 
 /**
  * 获取路由菜单

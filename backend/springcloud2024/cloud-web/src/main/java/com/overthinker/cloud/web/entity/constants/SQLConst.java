@@ -19,7 +19,7 @@ public class SQLConst {
     /**
      * 公开文章的字段标识
      */
-    public static final Integer PUBLIC_ARTICLE = 1;
+    public static final Integer PUBLIC_STATUS = 1;
 
     /**
      * 公开

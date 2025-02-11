@@ -1,4 +1,4 @@
-import http from "../../utils/http.ts";
+import http from "@/utils/http.ts";
 
 // 申请友链
 export function applyLink(data: any) {

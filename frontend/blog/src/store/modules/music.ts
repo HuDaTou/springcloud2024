@@ -1,6 +1,6 @@
 import {defineStore} from "pinia"; //引入pinia
 // 歌曲枚举
-import {MODELLIST, PLAYTYPE, LYRICTYPE} from "../../utils/enum";
+import {MODELLIST, PLAYTYPE, LYRICTYPE} from "@/utils/enum";
 // 歌曲工具
 import {
     getNextMusic,
@@ -11,7 +11,7 @@ import {
     getMusicDescription,
 } from "@/components/Music/musicTool";
 
-import blogAvatar from "../../assets/images/blogAvatar.svg";
+import blogAvatar from "@/assets/images/blogAvatar.svg";
 
 const audio = new Audio();
 

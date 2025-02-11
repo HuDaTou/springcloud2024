@@ -1,4 +1,4 @@
-import { config } from "../config/config";
+import { config } from "@/config/config";
 // 转码
 export const Base64 = {
     encode: function (v) {

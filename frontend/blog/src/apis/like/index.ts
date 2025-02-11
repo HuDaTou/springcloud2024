@@ -1,4 +1,4 @@
-import http from "../../utils/http.ts";
+import http from "@/utils/http.ts";
 // 点赞
 export const userLike = (type: number, typeId: string) => {
     return http.request({

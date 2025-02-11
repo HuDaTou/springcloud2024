@@ -72,11 +72,11 @@ public class VideoUploadUtils {
 
 
     /**
-     * 统一文件校验
+     * 视频校验
      */
     public void validateVideo(VideoUploadEnum config,
-                              MultipartFile video,
-                              MultipartFile cover) throws FileUploadException {
+                              MultipartFile video
+                              ) throws FileUploadException {
         // 视频校验
         if (video.isEmpty()) throw new FileUploadException("视频文件不能为空");
         if (video.getSize() > config.getVideoLimitSize() * 1024 * 1024) {
@@ -86,14 +86,6 @@ public class VideoUploadUtils {
             throw new FileUploadException("视频格式不支持");
         }
 
-        // 封面校验
-        if (cover.isEmpty()) throw new FileUploadException("封面文件不能为空");
-        if (cover.getSize() > config.getCoverLimitSize() * 1024 * 1024) {
-            throw new FileUploadException("封面大小超过限制");
-        }
-        if (isValidFormat(cover, config.getCoverFormat())) {
-            throw new FileUploadException("封面格式不支持");
-        }
     }
 
     /**

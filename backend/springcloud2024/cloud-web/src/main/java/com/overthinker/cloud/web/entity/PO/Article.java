@@ -1,11 +1,8 @@
 package com.overthinker.cloud.web.entity.PO;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.overthinker.cloud.web.entity.BaseData;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,11 +18,14 @@ import java.util.Date;
 @SuppressWarnings("serial")
 @Data
 @AllArgsConstructor
-@Builder
+
 @NoArgsConstructor
 @TableName("t_article")
 public class Article implements BaseData {
+
+
     //文章id
+    @TableId(value = "id" ,type = IdType.AUTO)
     private Long id;
     //作者id
     private Long userId;

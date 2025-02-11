@@ -3,10 +3,10 @@ import axios, {AxiosError, AxiosInstance, InternalAxiosRequestConfig} from 'axio
 import {ElMessage} from "element-plus"
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
-import {Jwt_Prefix} from "../const/Jwt";
-import {GET_TOKEN} from "./auth.ts";
-import useLoadingStore from "../store/modules/loading.ts";
-import {REQUEST_LOADING_PATH} from "./enum.ts";
+import {Jwt_Prefix} from "@/const/Jwt";
+import {GET_TOKEN} from "@/utils/auth.ts";
+import useLoadingStore from "@/store/modules/loading.ts";
+import {REQUEST_LOADING_PATH} from "@/utils/enum.ts";
 
 // 创建axios实例
 const http: AxiosInstance = axios.create({

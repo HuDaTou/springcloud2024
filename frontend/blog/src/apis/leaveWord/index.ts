@@ -1,4 +1,4 @@
-import http from "../../utils/http.ts";
+import http from "@/utils/http.ts";
 
 // 查询留言板列表
 export function getLeaveWordList(id?: any) {

@@ -43,27 +43,22 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
 
 
     @Override
-    public Map<String, Object> uploadVideo( MultipartFile videoFile, MultipartFile videoCover , Integer categoryId, Boolean VideoPermissions) {
+    public Map<String, Object> uploadVideo( MultipartFile videoFile, Boolean VideoPermissions) {
         VideoUploadEnum videoUploadEnum = VideoUploadEnum.VIDEO_PUBLIC;
         if (VideoPermissions) {
             videoUploadEnum = VideoUploadEnum.VIDEO_PRIVATE;
         }
 //        参数校验
-        videoUploadUtils.validateVideo(videoUploadEnum, videoFile, videoCover);
+        videoUploadUtils.validateVideo(videoUploadEnum, videoFile);
         // 生成统一存储路径
         final String BasePath = videoUploadUtils.buildUserBasePath(videoUploadEnum);
         final String videoObjectName = BasePath + videoFile.getOriginalFilename();
-        final String coverObjectName = BasePath + videoCover.getOriginalFilename();
-
         CountDownLatch latch = new CountDownLatch(2);
         Map<String, Future<String>> futures = new HashMap<>();
         try {
             // 提交上传任务
             futures.put("video", uploadExecutor.submit(
                     createUploadTask(videoFile, videoObjectName, latch)));
-            futures.put("videoCover", uploadExecutor.submit(
-                    createUploadTask(videoCover, coverObjectName, latch)));
-
             latch.await(3, TimeUnit.SECONDS); // 等待任务启动
 
             // 获取结果
@@ -86,7 +81,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
             throw new RuntimeException(e);
         } finally {
 //            关闭流
-            closeResources(videoFile, videoCover);
+            closeResources(videoFile);
         }
 
     }
@@ -123,6 +118,10 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         return "";
     }
 
+    @Override
+    public String getVideoCachePath() {
+        return "";
+    }
 
 
     /**

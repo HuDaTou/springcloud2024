@@ -123,7 +123,7 @@ function beforeUpload(file: UploadProps['fileList'][number]) {
 
   const isLt5M = file.size / 1024 / 1024 < 5
   if (!isLt5M) {
-    message.error('图片必须小于 5MB')
+    message.error('图片必须小于 3MB')
     return false
   }
 
@@ -359,6 +359,7 @@ function close() {
           </a-select-option>
         </a-select>
       </a-form-item>
+      
       <a-form-item>
         <a-space>
           <template v-if="previewBase64 || formData.articleCover">

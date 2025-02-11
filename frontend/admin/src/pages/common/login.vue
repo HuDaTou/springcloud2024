@@ -115,7 +115,7 @@ onBeforeUnmount(() => {
         >
           <div class="flex-end">
             <span class="ant-pro-form-login-title">
-              ruyu-blog
+              overthinker
             </span>
             <span class="ant-pro-form-login-desc">
               欢迎进入个人博客后台
