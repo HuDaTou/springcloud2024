@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.utils;
 
-import cn.hutool.core.io.file.FileNameUtil;
+import cn.hutool.core.io.FileUtil;
 import com.overthinker.cloud.web.entity.enums.VideoUploadEnum;
 import com.overthinker.cloud.web.exception.FileUploadException;
 import io.minio.MinioClient;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Set;
@@ -73,28 +72,52 @@ public class VideoUploadUtils {
 
     /**
      * 视频校验
+     * @param config 配置
+     * @param file 文件
+     * @throws FileUploadException 文件上传异常
      */
     public void validateVideo(VideoUploadEnum config,
-                              MultipartFile video
+                              MultipartFile file
                               ) throws FileUploadException {
         // 视频校验
-        if (video.isEmpty()) throw new FileUploadException("视频文件不能为空");
-        if (video.getSize() > config.getVideoLimitSize() * 1024 * 1024) {
+        if (file.isEmpty()) throw new FileUploadException("视频文件不能为空");
+        if (file.getSize() > config.getVideoLimitSize() * 1024 * 1024) {
             throw new FileUploadException("视频大小超过限制");
         }
-        if (isValidFormat(video, config.getVideoFormat())) {
+        if (!isValidFormat(file, config.getVideoFormat())) {
             throw new FileUploadException("视频格式不支持");
         }
 
     }
 
     /**
-     * 增强格式校验
+     * 封面校验
+     * @param config 配置
+     * @param cover 封面
+     * @throws FileUploadException 文件上传异常
+     */
+    public void validateVideoCover(VideoUploadEnum config ,MultipartFile cover) throws FileUploadException {
+        if (cover.isEmpty()) throw new FileUploadException("封面文件不能为空");
+        if (cover.getSize() > config.getCoverLimitSize() * 1024 * 1024) {
+            throw new FileUploadException("封面大小超过限制");
+        }
+        if (!isValidFormat(cover, config.getCoverFormat())) {
+            throw new FileUploadException("封面格式不支持");
+        }
+    }
+
+    /**
+     * 增强格式校验 校验文件格式是否合法 合法返回true 不合法返回false
+     * @param file 文件
      */
     private boolean isValidFormat(MultipartFile file, Set<String> allowedExtensions) {
-        String fileName = FileNameUtil.extName((File) file);
-        return allowedExtensions.stream()
-                .noneMatch(fileName::endsWith);
+
+        String fileName = file.getOriginalFilename();
+        String fileFormat = FileUtil.extName(fileName);
+        if (fileFormat == null) {
+            return false;
+        }
+        return allowedExtensions.contains(fileFormat);
     }
 
     /**
@@ -111,6 +134,13 @@ public class VideoUploadUtils {
                 log.warn("文件清理失败: {}", name, e);
             }
         });
+    }
+
+    /**
+     * 根据文件路径来获取文件
+     */
+    public String getFileByPath(String path) {
+        return endpoint + "/" + bucketName + "/" + path;
     }
 
     /**

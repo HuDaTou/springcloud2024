@@ -4,6 +4,7 @@ import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.resp.ReturnCodeEnum;
 import com.overthinker.cloud.web.exception.BlackListException;
 import com.overthinker.cloud.web.exception.FileUploadException;
+import com.overthinker.cloud.web.exception.ServerException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;
@@ -40,6 +41,7 @@ public class GlobalExceptionControllerHandler {
     public ResultData<Void> handlerFileUploadException(FileUploadException e){
         log.error("文件上传异常:{}({})", e.getMessage(), e.getStackTrace());
         String bindingResult = e.getMessage();
+
         return ResultData.failure(ReturnCodeEnum.FILE_UPLOAD_ERROR.getCode(), bindingResult);
     }
 
@@ -47,6 +49,11 @@ public class GlobalExceptionControllerHandler {
     public ResultData<Void> handlerBlackListException(BlackListException e){
         log.error("黑名单异常:{}({})", e.getMessage(), e.getStackTrace());
         return ResultData.failure(ReturnCodeEnum.BLACK_LIST_ERROR.getCode(), e.getMessage());
+    }
+    @ExceptionHandler(ServerException.class)
+    public ResultData<Void> handlerServerException(ServerException e){
+        log.error("服务器监控异常:{}({})", e.getMessage(), e.getStackTrace());
+        return ResultData.failure(e.getReturnCodeEnum().getCode(), e.getMessage());
     }
 
     // 最大的异常，防止出现其他不明异常无法处理

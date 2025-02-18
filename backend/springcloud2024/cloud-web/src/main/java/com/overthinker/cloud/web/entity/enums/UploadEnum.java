@@ -26,10 +26,21 @@ public enum UploadEnum {
     ARTICLE_IMAGE("article/articleImage/", "文章图片", Set.of(ImageConst.JPG, ImageConst.JPEG, ImageConst.PNG, ImageConst.GIF, ImageConst.WEBP), 3.0),
     // 用户头像
     USER_AVATAR("user/avatar/", "用户头像", Set.of(ImageConst.JPG, ImageConst.JPEG, ImageConst.PNG, ImageConst.WEBP), 0.3),
+
+
+    VEDIO_COVER("video/cover/", "视频封面", Set.of(ImageConst.JPG, ImageConst.JPEG, ImageConst.PNG, ImageConst.WEBP), 0.3),
+
+
+
+
     // 前台首页Banners图片
     UI_BANNERS("banners/", "前台首页Banners图片", Set.of(ImageConst.JPG, ImageConst.JPEG, ImageConst.PNG, ImageConst.WEBP), 0.3),
     // 相册模块图片
     PHOTO_ALBUM("photoAlbum/", "相册模块图片", Set.of(ImageConst.JPG, ImageConst.JPEG, ImageConst.PNG, ImageConst.WEBP, ImageConst.GIF), 8.0);
+
+
+
+
 
 
     // 上传目录

@@ -43,10 +43,10 @@ public class BusinessException extends RuntimeException {
 
 
     public BusinessException(ReturnCodeEnum ReturnCodeEnum, HttpStatusCode httpStatusCode) {
-        super(String.format("错误码：[%s]，错误信息：[%s]，用户提示：[%s]", ReturnCodeEnum.name(), ReturnCodeEnum.getMessage(), ReturnCodeEnum.getMessage()));
+        super(String.format("错误码：[%s]，错误信息：[%s]，用户提示：[%s]", ReturnCodeEnum.name(), ReturnCodeEnum.getMsg(), ReturnCodeEnum.getMsg()));
         this.userMessage = null;
         this.errorCode = ReturnCodeEnum.getCode();
-        this.errorMessage = ReturnCodeEnum.getMessage();
+        this.errorMessage = ReturnCodeEnum.getMsg();
 
         this.httpStatusCode = httpStatusCode;
     }

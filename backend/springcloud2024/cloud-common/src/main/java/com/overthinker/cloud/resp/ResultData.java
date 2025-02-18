@@ -31,12 +31,12 @@ public class ResultData<T> {
      * 成功响应，不需要返回数据
      */
     public static <T> ResultData<T> success() {
-        return ResultData.<T>builder().code(ReturnCodeEnum.RC200.getCode()).msg(ReturnCodeEnum.RC200.getMessage()).data(null).build();
+        return ResultData.<T>builder().code(ReturnCodeEnum.RC200.getCode()).msg(ReturnCodeEnum.RC200.getMsg()).data(null).build();
     }
 
 
     public static <T> ResultData<T> success(T data) {
-        return ResultData.<T>builder().code(ReturnCodeEnum.RC200.getCode()).msg(ReturnCodeEnum.RC200.getMessage()).data(data).build();
+        return ResultData.<T>builder().code(ReturnCodeEnum.RC200.getCode()).msg(ReturnCodeEnum.RC200.getMsg()).data(data).build();
     }
     public static <T> ResultData<T> success(T data , String message) {
         return ResultData.<T>builder().code(ReturnCodeEnum.RC200.getCode()).msg(message).data(data).build();
@@ -49,13 +49,13 @@ public class ResultData<T> {
      * 失败响应，不需要返回数据
      */
     public static <T> ResultData<T> failure() {
-        return ResultData.<T>builder().code(ReturnCodeEnum.FAILURE.getCode()).msg(ReturnCodeEnum.FAILURE.getMessage()).data(null).build();
+        return ResultData.<T>builder().code(ReturnCodeEnum.FAILURE.getCode()).msg(ReturnCodeEnum.FAILURE.getMsg()).data(null).build();
     }
     public static <T> ResultData<T> failure(String msg) {
         return ResultData.<T>builder().code(ReturnCodeEnum.FAILURE.getCode()).msg(msg).data(null).build();
     }
     public static <T> ResultData<T> failure(T data)  {
-        return ResultData.<T>builder().code(ReturnCodeEnum.FAILURE.getCode()).msg(ReturnCodeEnum.FAILURE.getMessage()).data(data).build();
+        return ResultData.<T>builder().code(ReturnCodeEnum.FAILURE.getCode()).msg(ReturnCodeEnum.FAILURE.getMsg()).data(data).build();
     }
 
     public static <T> ResultData<T> failure(Integer code, String msg) {

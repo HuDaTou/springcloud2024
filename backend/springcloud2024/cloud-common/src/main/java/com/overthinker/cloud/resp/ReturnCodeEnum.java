@@ -3,6 +3,8 @@ package com.overthinker.cloud.resp;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @Getter
 public enum ReturnCodeEnum {
 //    举值
@@ -87,17 +89,25 @@ public enum ReturnCodeEnum {
     /**
      * 账号被封禁
      */
-    BLACK_LIST_ERROR(1012, "账号被封禁");
+    BLACK_LIST_ERROR(1012, "账号被封禁"),
+
+
+
+
+    SERVER_ERROR(1013, "服务器监控错误"),
+    SERVER_SSE_PUSH_ERROR(1014, "服务器SSE推送错误"),
+    SERVER_SSE_MONITORING_DATA_COLLECTION_FAILED(1015, "服务器SSE监控数据采集失败"),
+    SERVER_SSE_CONNECTION_TIMEOUT(1016, "服务器SSE连接超时"),;
 
 //    如何定义一个通用的枚举类，对于枚举编写
 //    举值-构造-遍历
     private final Integer code;
-    private final String message;
+    private final String msg;
 
 //    遍历
-    ReturnCodeEnum(Integer code, String message) {
+    ReturnCodeEnum(Integer code, String meg) {
         this.code = code;
-        this.message = message;
+        this.msg = meg;
     }
 ////    遍历
 ////    传统版遍历
@@ -110,9 +120,16 @@ public enum ReturnCodeEnum {
 //        return null;
 //    }
 ////    stream流式计算版
-//    public static ReturnCodeEnum getReturnCodeEnumByCode(Integer code){
-//        return Arrays.stream(ReturnCodeEnum.values()).filter(element -> element.getCode().equalsIgnoreCase(code)).findFirst().orElse(null);
-//    }
+    public static ReturnCodeEnum getReturnCodeEnumByCode(Integer code){
+        return Arrays.stream(ReturnCodeEnum.values()).filter(element -> element.getCode().equals(code)).findFirst().orElse(null);
+    }
+
+    public static ReturnCodeEnum getReturnCodeEnumBymsg(String msg){
+        return Arrays.stream(ReturnCodeEnum.values())
+                .filter(element -> element.getMsg().equalsIgnoreCase(msg))
+                .findFirst()
+                .orElse(null);
+    }
 
 
 }

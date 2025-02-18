@@ -33,6 +33,7 @@
     "@vue/language-server": "2.0.28",
     "@vueuse/core": "^10.6.0",
     "ant-design-vue": "^4.0.7",
+    "antd-img-crop": "^4.24.0",
     "axios": "^1.6.1",
     "dayjs": "^1.11.10",
     "lodash-es": "^4.17.21",

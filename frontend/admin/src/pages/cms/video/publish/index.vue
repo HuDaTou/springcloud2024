@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { message } from 'ant-design-vue'
 import Step1 from './components/step1.vue'
 import Step2 from './components/step2.vue'
 import Step3 from './components/step3.vue'
+import { permission } from 'process'
 
 defineOptions({
   name: 'StepForm',
@@ -16,6 +18,7 @@ function nextStep() {
     state.currentTab += 1
 }
 
+
 function prevStep() {
   if (state.currentTab > 0)
     state.currentTab -= 1
@@ -24,12 +27,34 @@ function prevStep() {
 function finish() {
   state.currentTab = 0
 }
+
+
+function uploudVideoMsgToStep2(data: any) {
+  videoInfo.value.video = data.video
+  videoInfo.value.permission  = data.permission
+  videoInfo.value.videoSize = data.videoSize
+  videoInfo.value.videoTitle = data.videoTitle
+  videoInfo.value.videoType   = data.videoType
+
+
+}
+const videoInfo = ref({
+  categoryId: "",
+  videoCover: "",
+  video: "",
+  videoTitle: "",
+  videoDescription: "",
+  videoType: "",
+  permission: "",
+  videoSize: "",
+});
+
 </script>
 
 <template>
   <page-container>
     <template #content>
-      啊吧啊吧
+      <a-divider dashed />
     </template>
     <a-card :bordered="false">
       <a-steps class="steps" :current="state.currentTab">
@@ -37,9 +62,10 @@ function finish() {
         <a-step title="确认视频信息" />
         <a-step title="完成" />
       </a-steps>
+      <a-divider dashed />
       <div class="content">
-        <Step1 v-if="state.currentTab === 0" @next-step="nextStep" />
-        <Step2 v-if="state.currentTab === 1" @next-step="nextStep" @prev-step="prevStep" />
+        <Step1 v-if="state.currentTab === 0" @next-step="nextStep" @uploudVideoMsgToStep2="uploudVideoMsgToStep2" />
+        <Step2 v-if="state.currentTab === 1" @next-step="nextStep" @prev-step="prevStep" :videoInfo="videoInfo" />
         <Step3 v-if="state.currentTab === 2" @prevs-step="prevStep" @finish="finish" />
       </div>
     </a-card>

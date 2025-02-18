@@ -123,6 +123,20 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         return "";
     }
 
+    @Override
+    public String uploadVideoCover(MultipartFile videoCover, String videoaddress) {
+        VideoUploadEnum videoUploadEnum = VideoUploadEnum.VIDEO_PRIVATE;
+        if (videoaddress.contains("public")) {
+             videoUploadEnum = VideoUploadEnum.VIDEO_PUBLIC;
+        }
+
+        videoUploadUtils.validateVideoCover(videoUploadEnum, videoCover);
+
+
+
+        return "";
+    }
+
 
     /**
      * 创建上传任务

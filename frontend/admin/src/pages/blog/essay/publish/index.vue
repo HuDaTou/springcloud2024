@@ -74,6 +74,7 @@ onMounted(async () => {
 async function getCategory() {
   const { data } = await articleCategory()
   categoryList.value = data
+  console.log(categoryList.value)
 }
 async function getTag() {
   const { data } = await articleTag()
@@ -114,7 +115,7 @@ function addTagFunc(e: MouseEvent) {
   }, 0)
 }
 
-function beforeUpload(file: UploadProps['fileList'][number]) {
+const beforeUpload:UploadProps["beforeUpload"] = file => {
   const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/webp'
   if (!isJpgOrPng) {
     message.error('文件格式必须是jpg或png或webp')

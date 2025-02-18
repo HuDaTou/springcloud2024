@@ -67,10 +67,10 @@ public interface VideoService extends IService<Video> {
 
 
 
-
-
-
-
-
-
+    /**
+     * 上传视频封面
+     * @param videoCover 视频封面
+     * @return String
+     */
+    String uploadVideoCover(MultipartFile videoCover , String videoaddress);
 }

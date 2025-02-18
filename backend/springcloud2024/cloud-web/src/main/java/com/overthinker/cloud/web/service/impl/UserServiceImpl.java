@@ -251,7 +251,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         // 2.判断用户名或邮箱是否已存在
         if (userIsExist(userRegisterDTO.getUsername(), userRegisterDTO.getEmail())) {
-            return ResultData.failure(ReturnCodeEnum.USERNAME_OR_EMAIL_EXIST.getCode(), ReturnCodeEnum.USERNAME_OR_EMAIL_EXIST.getMessage());
+            return ResultData.failure(ReturnCodeEnum.USERNAME_OR_EMAIL_EXIST.getCode(), ReturnCodeEnum.USERNAME_OR_EMAIL_EXIST.getMsg());
         }
         // 3.密码加密
         String enPassword = passwordEncoder.encode(userRegisterDTO.getPassword());
@@ -461,7 +461,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (redisCode == null)
             return ResultData.failure(ReturnCodeEnum.VERIFY_CODE_ERROR.getCode(), RespConst.VERIFY_CODE_NULL_MSG);
         if (!redisCode.equals(code))
-            return ResultData.failure(ReturnCodeEnum.VERIFY_CODE_ERROR.getCode(), ReturnCodeEnum.VERIFY_CODE_ERROR.getMessage());
+            return ResultData.failure(ReturnCodeEnum.VERIFY_CODE_ERROR.getCode(), ReturnCodeEnum.VERIFY_CODE_ERROR.getMsg());
         return null;
     }
 }

@@ -18,6 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Map;
 
+
+
+
 /**
  * @author overH
  * <p>
@@ -32,20 +35,42 @@ public class VideoController extends BaseController {
     VideoService videoService;
 
 
-    @Operation(summary = "上传视频")
 
-    @PostMapping("/upload")
+
+
+    @Operation(summary = "上传视频")
+    @RequestMapping("/upload")
     @Parameters({
             @Parameter(name = "videoFile", description = "视频文件"),
-            @Parameter(name = "videoCover", description = "视频封面"),
             @Parameter(name = "VideoPremissions", description = "视频权限，如果是私有视频则为true，否则为false", required = true),
     })
     public ResultData<Map<String, Object>> uploadVideo( @NotNull(message = "视频文件不能为空") @RequestParam("VideoFile") MultipartFile videoFile,
-                                                            @RequestParam("VideoPermissions") Boolean VideoPermissions
+                                                        @RequestParam("VideoPermissions") Boolean VideoPermissions
 
     ) {
         return messageHandler(() -> videoService.uploadVideo(videoFile, VideoPermissions));
     }
+
+
+
+
+
+    @Operation(summary = "上传封面信息")
+    @RequestMapping("/upload/videocover")
+    @Parameters({
+            @Parameter(name = "videoCover", description = "视频封面"),
+            @Parameter(name = "videoaddress", description = "视频地址", required = true)
+    })
+    public ResultData<String> uploadVideoCover(
+            @RequestParam("videocover") MultipartFile videoCover , @RequestParam("videoaddress") String videoaddress
+    ) {
+//        return messageHandler(() -> videoService.uploadVideoCover(videoCover, videoaddress));
+        return messageHandler(() -> "上传成功");
+    }
+
+    @Operation(summary = "添加或更改视频信息")
+    @PostMapping("/upload/videoInfo")
+    public ResultData<String> saveVideoInfo(@Valid @RequestBody VideoInfoTDO videoInfoTDO){return messageHandler(() -> videoService.updateVideoInfo(videoInfoTDO));}
 
 
 

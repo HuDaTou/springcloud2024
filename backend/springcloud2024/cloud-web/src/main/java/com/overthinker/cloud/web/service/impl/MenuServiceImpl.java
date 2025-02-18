@@ -194,7 +194,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     public ResultData<String> deleteMenu(Long id) {
         // 判断是否有未删除的子目录
         if (menuMapper.selectCount(new LambdaQueryWrapper<Menu>().eq(Menu::getParentId, id)) > 0) {
-            return ResultData.failure(ReturnCodeEnum.NO_DELETE_CHILD_MENU.getCode(),ReturnCodeEnum.NO_DELETE_CHILD_MENU.getMessage());
+            return ResultData.failure(ReturnCodeEnum.NO_DELETE_CHILD_MENU.getCode(),ReturnCodeEnum.NO_DELETE_CHILD_MENU.getMsg());
         }
         if (this.removeById(id)) {
             // 删除相关菜单角色关系

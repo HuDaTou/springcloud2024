@@ -1,21 +1,35 @@
 <script setup lang="ts">
-import type {UploadChangeParam, UploadProps} from 'ant-design-vue'
-import { message, Upload  } from 'ant-design-vue'
+import type { UploadChangeParam, UploadProps } from 'ant-design-vue'
+import { message, Upload } from 'ant-design-vue'
 const env = import.meta.env
 
+const emit = defineEmits(['uploudVideoMsgToStep2', 'nextStep'])
 import {
-  getUploadId
+  videoUpload
 } from '~/api/cms/video'
 
-const emit = defineEmits(['nextStep'])
 
 
 const fileList = ref<UploadProps['fileList']>([])
 
-const uploadData = {
-  VideoPermissions:false
+async function nextStep() {
+  try {
+    emit('nextStep')
+  }
+  catch (errorInfo) {
+    console.log('Failed:', errorInfo)
+  }
 }
-const beforeUpload = (file: UploadProps['fileList'][number]) => {
+
+async function loadVideoInfo(data: any) {
+  data.permission = checked.value.toString()
+  
+  emit('uploudVideoMsgToStep2', data)
+}
+const checked = ref<boolean>(false);
+
+
+const beforeUpload: UploadProps['beforeUpload'] = file => {
   const videoFormat = ['video/mp4', 'video/webm', 'video/ogg']
   const isVideo = videoFormat.includes(file.type)
   if (!isVideo) {
@@ -31,6 +45,28 @@ const beforeUpload = (file: UploadProps['fileList'][number]) => {
   return true
 }
 
+const chunkSize = 10 * 1024 * 1024
+
+const customRequest = async (file: any) => {
+  // message.loading(`视频上传中${file.file.name}`)
+  const formData = new FormData()
+  formData.append('VideoFile', file.file)
+  formData.append('VideoPermissions', checked.value.toString())
+  videoUpload(formData).then(res => {
+    if (res.code === 200) {
+      fileList.value[0].status = 'done'
+      message.success("视频上传成功")
+
+
+      loadVideoInfo(res.data).then(nextStep) // 等待 loadVideoInfo 完成
+    } else {
+      fileList.value[0].status = 'error'
+      message.error("视频上传失败")
+    }
+  })
+}
+
+
 
 
 const handleChange = (info: UploadChangeParam) => {
@@ -40,7 +76,7 @@ const handleChange = (info: UploadChangeParam) => {
   }
   if (status === 'done' && info.file.response.code === 200) {
     info.file.response.data.value
-    
+
     message.success(info.file.response.data.value)
 
 
@@ -55,25 +91,22 @@ function handleDrop(e: DragEvent) {
 
 <template>
   <div>
-    <a-upload-dragger
-    v-model:fileList="fileList"
-    name="video"
-    :before-upload="beforeUpload"
-    :data="uploadData"
-    :action="env.MODE === 'production' ? env.VITE_APP_BASE_URL + env.VITE_APP_BASE_API + '/video/upload'  : env.VITE_APP_BASE_URL + '/video/upload' "
-    :max-count="1"
-    @change="handleChange"
-    @drop="handleDrop"
-  >
-    <p class="ant-upload-drag-icon">
-      <inbox-outlined></inbox-outlined>
-    </p>
-    <p class="ant-upload-text">Click or drag file to this area to upload</p>
-    <p class="ant-upload-hint">
-      Support for a single or bulk upload. Strictly prohibit from uploading company data or other
-      band files
-    </p>
-  </a-upload-dragger>
+    <a-switch v-model:checked="checked" />
+    默认关闭，为公共视频
+  </div>
+  <a-divider dashed />
+  <div>
+    <a-upload-dragger v-model:fileList="fileList" name="videoFile" :before-upload="beforeUpload"
+      :max-count="1" :custom-request="customRequest" @change="handleChange" @drop="handleDrop">
+      <p class="ant-upload-drag-icon">
+        <inbox-outlined></inbox-outlined>
+      </p>
+      <p class="ant-upload-text">Click or drag file to this area to upload</p>
+      <p class="ant-upload-hint">
+        Support for a single or bulk upload. Strictly prohibit from uploading company data or other
+        band files
+      </p>
+    </a-upload-dragger>
 
 
     <a-divider />

@@ -113,7 +113,7 @@ public class SecurityHandler {
             WebUtil.renderString(response, ResultData.success().asJsonString());
             return;
         }
-        WebUtil.renderString(response, ResultData.failure(ReturnCodeEnum.NOT_LOGIN.getCode(), ReturnCodeEnum.NOT_LOGIN.getMessage()).asJsonString());
+        WebUtil.renderString(response, ResultData.failure(ReturnCodeEnum.NOT_LOGIN.getCode(), ReturnCodeEnum.NOT_LOGIN.getMsg()).asJsonString());
     }
 
     /**
@@ -124,7 +124,7 @@ public class SecurityHandler {
             HttpServletResponse response,
             AuthenticationException exception
     ) throws IOException {
-        WebUtil.renderString(response, ResultData.failure(ReturnCodeEnum.NOT_LOGIN.getCode(), ReturnCodeEnum.NOT_LOGIN.getMessage()).asJsonString());
+        WebUtil.renderString(response, ResultData.failure(ReturnCodeEnum.NOT_LOGIN.getCode(), ReturnCodeEnum.NOT_LOGIN.getMsg()).asJsonString());
     }
 
     /**
@@ -135,6 +135,6 @@ public class SecurityHandler {
             HttpServletResponse response,
             AccessDeniedException exception
     ) {
-        WebUtil.renderString(response, ResultData.failure(ReturnCodeEnum.NO_PERMISSION.getCode(), ReturnCodeEnum.NO_PERMISSION.getMessage()).asJsonString());
+        WebUtil.renderString(response, ResultData.failure(ReturnCodeEnum.NO_PERMISSION.getCode(), ReturnCodeEnum.NO_PERMISSION.getMsg()).asJsonString());
     }
 }
