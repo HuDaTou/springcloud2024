@@ -1,5 +1,6 @@
 package com.overthinker.cloud.web.controller;
 
+
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.resp.ReturnCodeEnum;
 import com.overthinker.cloud.web.annotation.AccessLimit;
@@ -10,9 +11,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,15 +58,15 @@ public class ServerController extends BaseController
 
 
 
-//    @CrossOrigin(origins = "*", maxAge = 3600)
+    @CrossOrigin(origins = "*", maxAge = 3600)
 //    @PreAuthorize("hasAnyAuthority('monitor:server:list')")
     @Operation(summary = "SSE获取服务监控数据")
-    @GetMapping(produces = MediaType.TEXT_EVENT_STREAM_VALUE ,value = "/sse")
-    public SseEmitter getSseEmitter(HttpServletResponse httpServletResponse) throws Exception {
-        httpServletResponse.setHeader("Content-Type", "text/event-stream");
-        httpServletResponse.setHeader("Cache-Control", "no-cache");
-        httpServletResponse.setHeader("Connection", "keep-alive");
-        httpServletResponse.setCharacterEncoding("UTF-8");
+    @GetMapping(value = "/sse")
+    public ResultData<SseEmitter> getSseEmitter(HttpServletResponse httpServletResponse)  {
+//        httpServletResponse.setHeader("Content-Type", "text/event-stream");
+//        httpServletResponse.setHeader("Cache-Control", "no-cache");
+//        httpServletResponse.setHeader("Connection", "keep-alive");
+//        httpServletResponse.setCharacterEncoding("UTF-8");
 
         SseEmitter emitter = new SseEmitter(30_000L); // 设置30秒超时
 
@@ -86,7 +87,7 @@ public class ServerController extends BaseController
         });
 
 
-        return emitter;
+        return messageHandler(() -> emitter);
     }
     @Scheduled(fixedDelay = 3, initialDelay = 1,timeUnit = TimeUnit.SECONDS)
     private void job()  {

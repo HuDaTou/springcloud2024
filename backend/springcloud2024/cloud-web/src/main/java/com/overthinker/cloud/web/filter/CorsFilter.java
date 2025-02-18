@@ -21,6 +21,8 @@ import java.io.IOException;
 //// 优先级
 @Order(Const.ORDER_CORS)
 public class CorsFilter extends HttpFilter {
+
+//    cors预检请求OPTIONS 请求
     @Override
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         this.addCorsHeader(request, response);

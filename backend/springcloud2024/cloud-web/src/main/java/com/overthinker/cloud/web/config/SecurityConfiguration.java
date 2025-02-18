@@ -65,6 +65,7 @@ public class SecurityConfiguration {
                         // 没有权限处理
                         .accessDeniedHandler(securityHandler::onAccessDeny)
                 )
+//                TODO 设置跨域
                 // 禁用 csrf
                 .csrf(AbstractHttpConfigurer::disable)
                 // 不处理 session ，使用token
