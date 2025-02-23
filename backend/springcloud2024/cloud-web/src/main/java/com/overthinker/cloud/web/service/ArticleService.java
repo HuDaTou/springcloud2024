@@ -7,6 +7,7 @@ import com.overthinker.cloud.web.entity.DTO.SearchArticleDTO;
 import com.overthinker.cloud.web.entity.PO.Article;
 import com.overthinker.cloud.web.entity.VO.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
 
@@ -159,4 +160,10 @@ public interface ArticleService extends IService<Article> {
      * @return 文章
      */
     List<SearchArticleByContentVO> searchArticleByContent(String content);
+
+    /**
+     * 获取文章总数量
+     * @return 文章数量
+     */
+    SseEmitter getArticleCount();
 }

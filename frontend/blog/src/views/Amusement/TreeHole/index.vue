@@ -70,7 +70,7 @@ function getTreeHole() {
 
 <style scoped lang="scss">
 .container {
-  background-image: url('https://image.kuailemao.xyz/blog/TreeHole/TreeHole-back_compressed.webp');
+  background-image: url('http://minioapi.overthinker.top/cloud/banners/wallhaven-we1l5r_3840x1600.png');
   background-size: cover;
   background-position: center;
   min-width: 100vw;

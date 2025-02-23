@@ -10,7 +10,7 @@ import {
   Postcard,
   PriceTag,
   UserFilled,
-  Link, Setting, Promotion, ArrowDownBold, IceCreamRound, Close, PictureFilled
+  Link, Setting, Promotion, ArrowDownBold, IceCreamRound, Close, PictureFilled, VideoCamera
 } from "@element-plus/icons-vue";
 import {logout} from "@/apis/user"
 import {REMOVE_TOKEN} from "@/utils/auth.ts";
@@ -213,6 +213,14 @@ onUnmounted(() => {
                 <PictureFilled/>
               </el-icon>
               <span>相册</span>
+            </span>
+          </div>
+          <div class="menus_item" @click="router.push('/video')">
+            <span>
+              <el-icon>
+                <VideoCamera />
+              </el-icon>
+              <span>视频</span>
             </span>
           </div>
         </div>

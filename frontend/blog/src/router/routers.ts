@@ -10,7 +10,7 @@ export const constantRouter = [
                 component: () => import('@/views/Home/index.vue'),
                 name: 'home',
                 meta: {
-                    title: 'overthinker | 不断追求完美的开源博客',
+                    title: 'overthinker | 首页',
                 }
             },
             // 时间轴
@@ -107,6 +107,15 @@ export const constantRouter = [
                 name: 'photo',
                 meta: {
                     title: '相册',
+                }
+            },
+            // 视频
+            {
+                path: '/video',
+                component: () => import('@/views/Video/index.vue'),
+                name: 'video',
+                meta: {
+                    title: '视频',
                 }
             },
         ]

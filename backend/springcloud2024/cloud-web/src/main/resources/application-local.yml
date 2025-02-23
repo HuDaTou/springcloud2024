@@ -30,7 +30,7 @@ spring:
     # rabbitmq 地址
     host: home.overthinker.top
     # rabbitmq 端口
-    port: 30098
+    port: 5672
     # rabbitmq 用户名
     username: guest
     # rabbitmq 密码

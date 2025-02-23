@@ -36,7 +36,7 @@ const next = async () => {
 onMounted(() => {
   ElNotification({
     offset: 60,
-    title: "欢迎访问我的个人博客~",
+    title: "欢迎访问overthinker~",
   });
   music().init();
   ElNotification({

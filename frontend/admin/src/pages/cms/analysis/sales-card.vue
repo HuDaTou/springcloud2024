@@ -13,7 +13,7 @@ defineProps({
 const rankingListData: { title: string, total: number }[] = []
 for (let i = 0; i < 7; i += 1) {
   rankingListData.push({
-    title: `工专路 ${i} 号店`,
+    title: `月份 ${i} `,
     total: 323234,
   })
 }
@@ -192,7 +192,7 @@ onBeforeUnmount(() => {
             />
           </div>
         </template>
-        <a-tab-pane key="sales" tab="销售额">
+        <a-tab-pane key="sales" tab="资源">
           <a-row>
             <a-col :xl="16" :lg="12" :md="12" :sm="24" :xs="24">
               <div class="salesBar">
@@ -202,7 +202,7 @@ onBeforeUnmount(() => {
             <a-col :xl="8" :lg="12" :md="12" :sm="24" :xs="24">
               <div class="salesRank">
                 <h4 class="rankingTitle">
-                  门店销售额排名
+                  增长月份排名
                 </h4>
                 <ul class="rankingList">
                   <li v-for="(item, index) in rankingListData" :key="index">
@@ -233,7 +233,7 @@ onBeforeUnmount(() => {
             <a-col :xl="8" :lg="12" :md="12" :sm="24" :xs="24">
               <div class="salesRank">
                 <h4 class="rankingTitle">
-                  门店访问量排名
+                  访问量排名
                 </h4>
                 <ul class="rankingList">
                   <li v-for="(item, index) in rankingListData" :key="index">

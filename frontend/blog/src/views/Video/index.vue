@@ -138,13 +138,13 @@ function applyLinkFunc() {
     </el-dialog>
     <Main only-father-container>
       <template #banner>
-        <Banner title="友链" subtitle="link"/>
+        <Banner title="视频" subtitle="video"/>
       </template>
       <template #content>
         <div class="content">
           <div class="header">
             <div class="title">友链</div>
-            <el-button type="primary" :icon="Watermelon" plain @click="dialogVisible = true" style="margin-right: 1rem">申请友链</el-button>
+            <el-button type="primary" :icon="Watermelon" plain @click="dialogVisible = true" style="margin-right: 1rem">视频上传</el-button>
           </div>
           <el-divider/>
           <div class="title_content">

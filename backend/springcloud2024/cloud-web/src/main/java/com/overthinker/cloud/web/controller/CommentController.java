@@ -50,10 +50,10 @@ public class CommentController extends BaseController {
     @AccessLimit(seconds = 60, maxCount = 60)
     @GetMapping("/getComment")
     public ResultData<PageVO<List<ArticleCommentVO>>> comment(
-            @Valid @NotNull Integer type,
-            @Valid @NotNull Integer typeId,
-            @Valid @NotNull Integer pageNum,
-            @Valid @NotNull Integer pageSize
+            @Valid @NotNull @RequestParam(name = "type") Integer type,
+            @Valid @NotNull @RequestParam(name = "typeId") Integer typeId,
+            @Valid @NotNull @RequestParam(name = "pageNum") Integer pageNum,
+            @Valid @NotNull @RequestParam(name = "pageSize") Integer pageSize
     ) {
         return messageHandler((() -> commentService.getComment(type, typeId, pageNum, pageSize)));
     }

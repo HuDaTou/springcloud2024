@@ -1,32 +1,47 @@
 <script setup lang="ts">
 import type { Ref } from 'vue'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, onBeforeUnmount } from 'vue'
 import type SystemInfo from './type.ts'
 import { getServiceMonitorData, getSseSystemMonitorData } from '~/api/server'
 
 const serverInfo: Ref<SystemInfo> = ref()
-const serverInfosse: Ref<SystemInfo> = ref()
+  let eventSource: EventSource
+const serverInfosse = ref()
+const sseUUID = ref()
 const loading = ref(true)
 
 
-const getSseSystemMonitorData = () => {
-  const eventSource = new EventSource('http://localhost:8080/api/monitor/server/sse')
+const getSseData = () => {
+  eventSource = new EventSource('/api/monitor/server/sse')
   eventSource.onmessage = (event) => {
-    const data = JSON.parse(event.data)
-    console.log(data)
+    // const data = JSON.parse(event.data)
+    console.log(event.data)
+    serverInfo.value = event.data
+    sseUUID.value = event.lastEventId
+    console.log(sseUUID.value)
+    // serverInfo.value = event.data
+
   } 
 }
 
 
+
+
 onMounted(async () => {
   const { data } = await getServiceMonitorData()
+  // getSseData()
   serverInfo.value = data
   loading.value = false
 })
+onBeforeUnmount(() => {
+  eventSource.close()
+})
+
+
 </script>
 
 <template>
-   <a-button type="primary" @click="getSseSystemMonitorData">Primary Button</a-button>
+   <a-button type="primary" @click="getSseData">{{ serverInfosse }}</a-button>
   <page-container>
     <template #default>
       <div class="cpuSty">

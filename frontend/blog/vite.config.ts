@@ -1,5 +1,6 @@
 import {ConfigEnv, defineConfig, loadEnv} from 'vite'
 import AutoImport from 'unplugin-auto-import/vite'
+// vite-plugin-compression 是一个用于 Vite 项目的插件，旨在通过 Gzip 或 Brotli 压缩资源文件
 import viteCompression from 'vite-plugin-compression';
 import Components from 'unplugin-vue-components/vite'
 import {ElementPlusResolver} from 'unplugin-vue-components/resolvers'
@@ -91,11 +92,11 @@ export default defineConfig(({ mode }: ConfigEnv) => {
                     changeOrigin: true,
                     rewrite: (path) => path.replace(/^\/api/, '')
                 },
-                '/wapi': {
-                    target: `${loadEnv(mode, process.cwd()).VITE_MUSIC_SERVE}`,
-                    changeOrigin: true,
-                    rewrite: (path) => path.replace(/^\/wapi/, '')
-                }
+                // '/wapi': {
+                //     target: `${loadEnv(mode, process.cwd()).VITE_MUSIC_SERVE}`,
+                //     changeOrigin: true,
+                //     rewrite: (path) => path.replace(/^\/wapi/, '')
+                // }
             }
         }
     }

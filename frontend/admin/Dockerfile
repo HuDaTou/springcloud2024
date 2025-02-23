@@ -1,6 +1,6 @@
 FROM nginx
 
-MAINTAINER 博客后台
+MAINTAINER overthinker后台
 
 RUN rm /etc/nginx/conf.d/default.conf
 

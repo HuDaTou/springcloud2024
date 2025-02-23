@@ -37,7 +37,7 @@ function renderPie(container: any, data: any) {
     interactions: [{ type: 'element-selected' }, { type: 'element-active' }],
     statistic: {
       title: {
-        content: '销售额',
+        content: '文件总数',
       },
     },
   })
@@ -46,29 +46,17 @@ function renderPie(container: any, data: any) {
 }
 
 const salesTypeData = [
-  {
-    x: '家用电器',
-    y: 4544,
+{
+    x: '图片',
+    y: 100,
   },
   {
-    x: '食用酒水',
-    y: 3321,
+    x: '文章',
+    y: 200,
   },
   {
-    x: '个护健康',
-    y: 3113,
-  },
-  {
-    x: '服饰箱包',
-    y: 2341,
-  },
-  {
-    x: '母婴产品',
-    y: 1231,
-  },
-  {
-    x: '其他',
-    y: 1231,
+    x: '视频',
+    y: 300,
   },
 ]
 const salesTypeDataOnline = [
@@ -139,7 +127,7 @@ onUnmounted(() => {
     :loading="loading"
     class="salesCard"
     :bordered="false"
-    title="销售额类别占比"
+    title="资源占比"
     :style="{
       height: '100%',
     }"
@@ -158,7 +146,7 @@ onUnmounted(() => {
         <div class="salesTypeRadio">
           <a-radio-group :value="salesType" @change="handleChangeSalesType">
             <a-radio-button value="all">
-              全部渠道
+              全部资源
             </a-radio-button>
             <a-radio-button value="online">
               线上
@@ -171,7 +159,7 @@ onUnmounted(() => {
       </div>
     </template>
     <div>
-      <a-typography-text>销售额</a-typography-text>
+      <a-typography-text>资源</a-typography-text>
       <div v-show="salesType === 'all'" ref="pieContainer1" />
       <div v-show="salesType === 'online'" ref="pieContainer2" />
       <div v-show="salesType === 'stores'" ref="pieContainer3" />

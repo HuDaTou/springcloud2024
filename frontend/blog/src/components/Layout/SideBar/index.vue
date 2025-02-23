@@ -18,7 +18,7 @@
     <div>
       <RandomArticle/>
     </div>
-    <ChargingList/>
+    <!-- <ChargingList/> -->
     <div>
       <Card title="每日鸡汤" prefix-icon="edit" suffix-icon="rotate" :isRotate="true" :isScale="true" @invoke="soupSub">
         <p>{{ soup }}</p>

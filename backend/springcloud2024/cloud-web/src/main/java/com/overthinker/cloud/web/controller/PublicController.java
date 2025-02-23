@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,8 +47,8 @@ public class PublicController extends BaseController {
     @LogAnnotation(module="邮件发送",operation= LogConst.EMAIL_SEND)
     @GetMapping("/ask-code")
     public ResultData<String> askVerifyCode(
-            @RequestParam @Email String email,
-            @RequestParam @Pattern(regexp = "(register|reset|resetEmail)",message = "邮箱类型错误" ) String type
+            @RequestParam(name = "email") @Email @NotNull String email,
+            @RequestParam(name = "type") @Pattern(regexp = "(register|reset|resetEmail)",message = "邮箱类型错误" ) @NotNull String type
     ) {
         return messageHandler(() -> publicService.registerEmailVerifyCode(type, email));
     }

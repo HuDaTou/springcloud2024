@@ -1,13 +1,49 @@
 <script setup lang="ts">
-import IntroduceRow from '~/pages/cms/analysis/introduce-row.vue'
-import SalesCard from '~/pages/cms/analysis/sales-card.vue'
-import TopSearch from '~/pages/cms/analysis/components/top-search.vue'
-import ProportionSales from '~/pages/cms/analysis/proportion-sales.vue'
-import OfflineData from '~/pages/cms/analysis/offline-data.vue'
+import IntroduceRow from './introduce-row.vue'
+import SalesCard from './sales-card.vue'
+import TopSearch from './components/top-search.vue'
+import ProportionSales from './proportion-sales.vue'
+import OfflineData from './offline-data.vue'
+import { sseData } from './type'
 
 defineOptions({
   name: 'Analysis',
 })
+
+let eventSource: EventSource
+const sseUUID = ref()
+const sseDataInfo = ref<sseData>({
+  onlineCount: 2000,
+  userCount: 0,
+  articleCount: 0,
+  photoCount: 0,
+}
+
+)
+
+const getSseData = () => {
+  eventSource = new EventSource('/api/sse/data')
+  eventSource.onmessage = (event) => {
+    const data = JSON.parse(event.data)
+    console.log(event.data)
+    console.log(data)
+    sseDataInfo.value = data
+    // console.log(sseDataInfo.value.onlineCount)
+    sseUUID.value = event.lastEventId
+    // console.log(sseUUID.value)
+    // serverInfo.value = event.data
+
+  } 
+}
+
+onMounted(() => {
+  getSseData()
+})
+
+onUnmounted(() => {
+  eventSource.close() 
+})
+
 
 const loading = ref(false)
 
@@ -17,7 +53,7 @@ const visitData = ref([])
 <template>
   <page-container>
     <Suspense :fallback="null">
-      <IntroduceRow :loading="loading" :visit-data="visitData" />
+      <IntroduceRow :loading="loading" :sse-data-info="sseDataInfo" />
     </Suspense>
 
     <Suspense :fallback="null">
@@ -40,8 +76,8 @@ const visitData = ref([])
       </a-col>
     </a-row>
 
-    <Suspense :fallback="null">
+    <!-- <Suspense :fallback="null">
       <OfflineData />
-    </Suspense>
+    </Suspense> -->
   </page-container>
 </template>

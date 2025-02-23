@@ -10,6 +10,10 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  sseDataInfo: {
+    type: Object,
+    default:false,
+  },
 })
 
 function convertNumber(number: number) {
@@ -34,6 +38,14 @@ const visitData = [7, 5, 4, 2, 4, 7, 5, 6, 5, 9, 6, 3, 1, 5, 3, 6, 5]
 const tinyArea = shallowRef()
 const tinyColumn = shallowRef()
 const progress = shallowRef()
+
+const getSseData = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(visitData)
+    }, 1000)
+  })
+}
 
 onMounted(() => {
   tinyArea.value = new TinyArea(tinyAreaContainer.value, {
@@ -81,17 +93,17 @@ onBeforeUnmount(() => {
 <template>
   <a-row :gutter="24">
     <a-col v-bind="{ ...topColResponsiveProps }">
-      <ChartCard :bordered="false" title="文件总数" :loading="loading" :content-height="46">
+      <ChartCard :bordered="false" title="当前在线人数" :loading="loading" :content-height="46">
         <template #action>
           <a-tooltip title="指标说明">
             <InfoCircleOutlined />
           </a-tooltip>
         </template>
         <template #total>
-          <span>{{ `${convertNumber(126560)}` }}</span>
+          <span>{{ sseDataInfo.onlineCount }}</span>
         </template>
         <template #footer>
-          <Field label="日销售额" value="￥12,423" />
+          <!-- <Field label="文章总数" value="￥12,423" /> -->
         </template>
         <Trend flag="up" :style="{ marginRight: '16px' } ">
           周同比
@@ -122,14 +134,14 @@ onBeforeUnmount(() => {
     </a-col>
 
     <a-col v-bind="{ ...topColResponsiveProps }">
-      <ChartCard :bordered="false" title="支付笔数" :loading="loading" :content-height="46">
+      <ChartCard :bordered="false" title="用户统计" :loading="loading" :content-height="46">
         <template #action>
           <a-tooltip title="指标说明">
             <InfoCircleOutlined />
           </a-tooltip>
         </template>
         <template #total>
-          <span>{{ `${convertNumber(6560)}` }}</span>
+          <span>{{ `${convertNumber(sseDataInfo.userCount)}` }}</span>
         </template>
         <template #footer>
           <Field label="转化率" value="60%" />

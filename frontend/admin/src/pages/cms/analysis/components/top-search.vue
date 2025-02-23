@@ -415,7 +415,7 @@ onMounted(() => {
   <a-card
     :loading="loading"
     :bordered="false"
-    title="线上热门搜索"
+    title="热门搜索"
     :style="{ height: '100%' }"
   >
     <template #extra>

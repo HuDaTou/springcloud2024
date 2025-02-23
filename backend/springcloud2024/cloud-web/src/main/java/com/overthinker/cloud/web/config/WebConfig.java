@@ -19,7 +19,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // redis限流拦截器
-        registry.addInterceptor(accessLimitInterceptor).addPathPatterns("/**");
+//        registry.addInterceptor(accessLimitInterceptor).addPathPatterns("/**");
 
     }
 }

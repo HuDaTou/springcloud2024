@@ -122,9 +122,9 @@ const beforeUpload:UploadProps["beforeUpload"] = file => {
     return false
   }
 
-  const isLt5M = file.size / 1024 / 1024 < 5
+  const isLt5M = file.size / 1024 / 1024 < 10
   if (!isLt5M) {
-    message.error('图片必须小于 3MB')
+    message.error('图片必须小于 10MB')
     return false
   }
 

@@ -88,9 +88,9 @@ function beforeUpload(file: UploadProps['fileList'][number]) {
   if (!isJpgOrPng)
     message.error('文件格式必须是jpg或png或webp')
 
-  const isLt2M = file.size / 1024 / 1024 < 5
+  const isLt2M = file.size / 1024 / 1024 < 10
   if (!isLt2M)
-    message.error('图片必须小于 0.3MB')
+    message.error('图片必须小于 10MB')
 
   return isJpgOrPng && isLt2M
 }
@@ -122,6 +122,7 @@ const env = import.meta.env
             list-type="picture-card"
             class="avatar-uploader"
             :headers="headers"
+            :action="env.VITE_APP_BASE_API + '/websiteInfo/upload/avatar'"
             :show-upload-list="false"
             :before-upload="beforeUpload"
             @change="handleChangeAvatar"
@@ -152,7 +153,7 @@ const env = import.meta.env
               :headers="headers"
               :before-upload="beforeUpload"
               :max-count="1"
-              :action="env.MODE === 'production' ? env.VITE_APP_BASE_URL + env.VITE_APP_BASE_API + '/websiteInfo/upload/background' : env.VITE_APP_BASE_URL + '/websiteInfo/upload/background'"
+              :action="env.VITE_APP_BASE_API + '/websiteInfo/upload/background'"
               @change="handleChangeBack"
           >
             <div style="display: flex;">

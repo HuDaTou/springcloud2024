@@ -11,7 +11,7 @@
                 src="https://image.kuailemao.xyz/blog/background/压缩水狗.png"/>
     </div>
     <div class="welcome-title">
-      <div>欢迎来到我的个人博客</div>
+      <div>欢迎来到overthinker</div>
       <div style="margin-top: 10px">在这里你可以学习如何使用Java，如何搭建网站，如何拥有自己的个人网站</div>
     </div>
     <!-- 右边区域 -->

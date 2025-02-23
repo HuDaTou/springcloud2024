@@ -118,7 +118,7 @@ onBeforeUnmount(() => {
               overthinker
             </span>
             <span class="ant-pro-form-login-desc">
-              欢迎进入个人博客后台
+              欢迎进入overthinker后台
             </span>
           </div>
           <div class="login-lang flex-center relative z-11">
