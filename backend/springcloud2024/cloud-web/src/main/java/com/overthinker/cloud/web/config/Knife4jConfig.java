@@ -14,7 +14,7 @@ public class Knife4jConfig {
                 .info(new Info()
                         .title("API文档")
                         .version("1.0")
-                        .description("基于SpringBoot3 + Vue3开发的博客项目")
+                        .description("基于SpringBoot3 + Vue3开发的项目")
                         .contact(new Contact().name("overthinker").url("http://overthinker.top").email("admin@overthinker.top"))
                 );
     }

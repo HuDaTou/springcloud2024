@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -81,7 +82,7 @@ public class EmailQueueListener {
     @RabbitListener(queues = RabbitConst.MAIL_QUEUE,
             errorHandler = "rabbitListenerErrorHandler",
             containerFactory = "rabbitListenerContainerFactory")
-    public void handlerMapMessage(Map<String, Object> data) {
+    public void handlerMapMessage(@Payload Map<String, Object> data) {
         String email = (String) data.get("email");
         String code = (String) data.get("code");
         String type = (String) data.get("type");
