@@ -73,13 +73,13 @@ export const constantRouter = [
                     }
                 ]
             },
-            // 友链
+            // 精选站点
             {
                 path: '/link',
                 component: () => import('@/views/Link/index.vue'),
                 name: 'link',
                 meta: {
-                    title: '博客友链',
+                    title: '精选站点',
                 }
             },
             // 音乐

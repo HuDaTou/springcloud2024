@@ -46,7 +46,7 @@ const rules = reactive<FormRules<any>>({
     {min: 3, max: 30, message: '长度小3，最大15', trigger: 'blur'},
   ],
   background: [
-    {required: true, message: '请填写友链背景图链接', trigger: 'blur'},
+    {required: true, message: '请填写精选站点背景图链接', trigger: 'blur'},
     {min: 3, max: 100, message: '长度小3，最大100', trigger: 'blur'},
   ],
   email: [
@@ -65,7 +65,7 @@ function applyLinkFunc() {
             title: '成功',
             showClose: false,
             duration: 6000,
-            message: '友链申请提交成功，待通过审核后会通过邮件通知您，请注意查收',
+            message: '精选站点申请提交成功，待通过审核后会通过邮件通知您，请注意查收',
             type: 'success',
           })
           dialogVisible.value = false
@@ -85,7 +85,7 @@ function applyLinkFunc() {
   <div>
     <el-dialog
         v-model="dialogVisible"
-        title="申请友链"
+        title="申请精选站点"
         width="35%"
         style="border-radius: 15px"
         :close-on-click-modal="false"
@@ -138,22 +138,22 @@ function applyLinkFunc() {
     </el-dialog>
     <Main only-father-container>
       <template #banner>
-        <Banner title="友链" subtitle="link"/>
+        <Banner title="精选站点" subtitle="link"/>
       </template>
       <template #content>
         <div class="content">
           <div class="header">
-            <div class="title">友链</div>
-            <el-button type="primary" :icon="Watermelon" plain @click="dialogVisible = true" style="margin-right: 1rem">申请友链</el-button>
+            <div class="title">精选站点</div>
+            <el-button type="primary" :icon="Watermelon" plain @click="dialogVisible = true" style="margin-right: 1rem">申请精选站点</el-button>
           </div>
           <el-divider/>
           <div class="title_content">
-            <span style="font-size: 1rem;color: grey">欢迎访问友链板块！</span>
-            <span>友链板块是一个旨在促进不同系统间相互协作和交流的平台。通过友链板块，您可以：</span>
+            <span style="font-size: 1rem;color: grey">欢迎访问精选站点板块！</span>
+            <span>精选站点板块是一个旨在促进不同系统间相互协作和交流的平台。通过精选站点板块，您可以：</span>
             <span>1、分享自己系统的介绍和链接。</span>
             <span style="font-size: 1rem;color: grey">注意：</span>
-            <span>1、友链申请前必须先登录本网站，申请通过后会通过邮件的形式通知你。</span>
-            <span>2、点击网站的名称进行友链跳转。</span>
+            <span>1、精选站点申请前必须先登录本网站，申请通过后会通过邮件的形式通知你。</span>
+            <span>2、点击网站的名称进行精选站点跳转。</span>
           </div>
           <div class="link">
             <template v-for="link in links" :key="link.id">

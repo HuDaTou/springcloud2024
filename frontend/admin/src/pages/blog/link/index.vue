@@ -125,7 +125,7 @@ async function onFinish(values: any) {
     })
   }
   else {
-    message.warn('没有查询到相关友链内容')
+    message.warn('没有查询到相关精选站点内容')
     tabData.value = []
   }
 
@@ -160,7 +160,7 @@ function onDelete(ids?: string[]) {
     Modal.confirm({
       title: '注意',
       icon: createVNode(ExclamationCircleOutlined),
-      content: `确定删除编号为 【${ids.join(',')}】 的友链吗？`,
+      content: `确定删除编号为 【${ids.join(',')}】 的精选站点吗？`,
       okText: '确认',
       cancelText: '取消',
       onOk: () => {

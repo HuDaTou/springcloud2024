@@ -109,12 +109,31 @@ onUnmounted(() => {
           <a href="/">{{ useWebsite.webInfo?.websiteName }}</a>
         </span>
         <div class="menus_items">
+          <!-- 文章 -->
           <div class="menus_item" @click="router.push('/')">
             <span>
               <el-icon>
                 <HomeFilled/>
               </el-icon>
               <span>首页</span>
+            </span>
+          </div>
+          <!-- 图片 -->
+          <div class="menus_item" @click="router.push('/photo')">
+            <span>
+              <el-icon>
+                <PictureFilled/>
+              </el-icon>
+              <span>相册</span>
+            </span>
+          </div>
+          <!-- 视频 -->
+          <div class="menus_item" @click="router.push('/video')">
+            <span>
+              <el-icon>
+                <VideoCamera />
+              </el-icon>
+              <span>视频</span>
             </span>
           </div>
           <div class="menus_item">
@@ -196,7 +215,7 @@ onUnmounted(() => {
               <el-icon>
                 <Link/>
               </el-icon>
-              <span>友链</span>
+              <span>精选站点</span>
             </span>
           </div>
           <div class="menus_item" @click="router.push('/music')" v-if="env.VITE_MUSIC_FRONTEND_URL">
@@ -207,22 +226,8 @@ onUnmounted(() => {
              <span>音乐</span>
             </span>
           </div>
-          <div class="menus_item" @click="router.push('/photo')">
-            <span>
-              <el-icon>
-                <PictureFilled/>
-              </el-icon>
-              <span>相册</span>
-            </span>
-          </div>
-          <div class="menus_item" @click="router.push('/video')">
-            <span>
-              <el-icon>
-                <VideoCamera />
-              </el-icon>
-              <span>视频</span>
-            </span>
-          </div>
+
+
         </div>
       </div>
     </div>

@@ -47,7 +47,6 @@ onUnmounted(() => {
 
 const loading = ref(false)
 
-const visitData = ref([])
 </script>
 
 <template>

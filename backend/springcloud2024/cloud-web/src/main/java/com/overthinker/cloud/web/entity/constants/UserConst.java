@@ -10,7 +10,7 @@ public class UserConst {
     /**
      * 用户默认头像
      */
-    public static final String DEFAULT_AVATAR = "https://image.overH.xyz/blog/user/avatar/%E9%BB%98%E8%AE%A4%E5%A4%B4%E5%83%8F.svg";
+    public static final String DEFAULT_AVATAR = "http://minioapi.overthinker.top/cloud/logo/Logo%20%E8%AE%BE%E8%AE%A1.png";
 
     /**
      * 用户默认性别

@@ -84,7 +84,7 @@ const env = import.meta.env
       <el-icon>
         <Link/>
       </el-icon>
-      友链
+      精选站点
     </el-menu-item>
     <template v-if="env.VITE_MUSIC_FRONTEND_URL">
       <el-menu-item index="/music">

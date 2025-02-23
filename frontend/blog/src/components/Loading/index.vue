@@ -1,8 +1,8 @@
 <template>
   <div class="loading loading-active" v-show="loadingStore.isLoading">
     <div class="load-box">
-      <img class="loading-img" src="https://image.kuailemao.xyz/blog/loading/loading-gif.gif" alt="Loading">
-      <span>比卡丘正在带着数据走向你~~</span>
+      <img class="loading-img" src="http://minioapi.overthinker.top/cloud/loading/loading.gif" alt="Loading">
+      <span>正在带着数据走向你~~</span>
     </div>
   </div>
 </template>

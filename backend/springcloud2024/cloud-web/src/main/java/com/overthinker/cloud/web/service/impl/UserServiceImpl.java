@@ -273,6 +273,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 .gender(UserConst.DEFAULT_GENDER)
                 .avatar(UserConst.DEFAULT_AVATAR)
                 .intro(UserConst.DEFAULT_INTRODUCTION)
+                .registerAddress(ipAddr)
                 .registerType(RegisterOrLoginTypeEnum.EMAIL.getRegisterType())
                 .isDeleted(UserConst.DEFAULT_STATUS)
                 .email(userRegisterDTO.getEmail())

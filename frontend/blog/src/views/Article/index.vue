@@ -110,7 +110,7 @@ function countWords(count: number) {
 // 分享
 const copyToClipboard = async () => {
   try {
-    const content = `欢迎访问博客文章：${articleDetail.value.articleTitle} \n通往地址：${env.VITE_FRONTEND_URL}${route.path}`;
+    const content = `欢迎访问文章：${articleDetail.value.articleTitle} \n通往地址：${env.VITE_FRONTEND_URL}${route.path}`;
     // 替换为你要分享的实际内容
     await navigator.clipboard.writeText(content);
     ElMessage.success("已复制分享链接");
@@ -342,7 +342,7 @@ function ReadingModeFunc() {
                 effect="light"
                 placement="top"
             >
-              <template #content>
+              <!-- <template #content>
                 <div class="qrCode">
                   <div>
                     支付宝
@@ -350,7 +350,7 @@ function ReadingModeFunc() {
                         src="https://image.kuailemao.xyz/blog/pay/%E6%94%AF%E4%BB%98%E5%AE%9D%E6%94%AF%E4%BB%98%E4%BA%8C%E7%BB%B4%E7%A0%81_.png"/>
                   </div>
                 </div>
-              </template>
+              </template> -->
               <div>
                 <svg-icon name="gift"/>
                 <span class="max-[540px]:hidden">ヾ(≧▽≦*)o！</span>
@@ -513,7 +513,7 @@ function ReadingModeFunc() {
             effect="light"
             placement="top"
         >
-          <template #content>
+          <!-- <template #content>
             <div class="qrCode">
               <div>
                 支付宝
@@ -521,7 +521,7 @@ function ReadingModeFunc() {
                     src="https://image.kuailemao.xyz/blog/pay/%E6%94%AF%E4%BB%98%E5%AE%9D%E6%94%AF%E4%BB%98%E4%BA%8C%E7%BB%B4%E7%A0%81_.png"/>
               </div>
             </div>
-          </template>
+          </template> -->
           <div>
             <svg-icon name="gift"/>
             <span class="max-[540px]:hidden">ヾ(≧▽≦*)o！</span>
