@@ -1,6 +1,7 @@
 package com.overthinker.cloud.web.controller;
 
 import com.overthinker.cloud.resp.ResultData;
+import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.VideoInfoTDO;
 import com.overthinker.cloud.web.entity.VO.VideoInfoVO;
@@ -39,16 +40,12 @@ public class VideoController extends BaseController {
 
 
     @Operation(summary = "上传视频")
-    @RequestMapping("/upload")
+    @RequestMapping("/upload/video")
     @Parameters({
             @Parameter(name = "videoFile", description = "视频文件"),
-            @Parameter(name = "VideoPremissions", description = "视频权限，如果是私有视频则为true，否则为false", required = true),
     })
-    public ResultData<Map<String, Object>> uploadVideo( @NotNull(message = "视频文件不能为空") @RequestParam("VideoFile") MultipartFile videoFile,
-                                                        @RequestParam("VideoPermissions") Boolean VideoPermissions
-
-    ) {
-        return messageHandler(() -> videoService.uploadVideo(videoFile, VideoPermissions));
+    public ResultData<Map<String, Object>> uploadVideo( @NotNull(message = "视频文件不能为空") @RequestParam("VideoFile") MultipartFile videoFile) {
+        return messageHandler(() -> videoService.uploadVideo(videoFile));
     }
 
 
@@ -56,16 +53,15 @@ public class VideoController extends BaseController {
 
 
     @Operation(summary = "上传封面信息")
-    @RequestMapping("/upload/videocover")
+    @RequestMapping("/upload/cover")
     @Parameters({
             @Parameter(name = "videoCover", description = "视频封面"),
-            @Parameter(name = "videoaddress", description = "视频地址", required = true)
     })
     public ResultData<String> uploadVideoCover(
-            @RequestParam("videocover") MultipartFile videoCover , @RequestParam("videoaddress") String videoaddress
+            @RequestParam("videocover") MultipartFile videoCover
     ) {
 //        return messageHandler(() -> videoService.uploadVideoCover(videoCover, videoaddress));
-        return messageHandler(() -> "上传成功");
+        return messageHandler(() -> videoService.uploadVideoCover(videoCover));
     }
 
     @Operation(summary = "添加或更改视频信息")
@@ -89,9 +85,9 @@ public class VideoController extends BaseController {
     }
 
     @Operation(summary = "删除视频")
-    @DeleteMapping("/delete")
-    public ResultData<String> deleteVideo() {
-        return messageHandler(videoService::deleteVideo);
+    @DeleteMapping("/delete/{id}")
+    public ResultData<String> deleteVideo(@PathVariable("id") @NotNull Long id) {
+        return messageHandler(() -> videoService.deleteVideo(id));
     }
 
     @Operation(summary = "修改视频信息")
@@ -116,6 +112,15 @@ public class VideoController extends BaseController {
     @GetMapping("/cachepath")
     public ResultData<String> getVideoCachePath(@RequestParam("videoId") Integer videoId) {
         return messageHandler(() -> videoService.getVideoCachePath());
+    }
+
+    @Operation(summary = "视频访问量+1")
+    @Parameter(name = "id", description = "视频id", required = true)
+    @AccessLimit(seconds = 60, maxCount = 60)
+    @GetMapping("/visit/{id}")
+    public ResultData<Void> visit(@PathVariable("id") @NotNull Long id) {
+        videoService.addVisitCount(id);
+        return messageHandler(() -> null);
     }
 
 }

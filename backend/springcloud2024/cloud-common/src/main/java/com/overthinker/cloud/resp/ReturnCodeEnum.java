@@ -82,10 +82,7 @@ public enum ReturnCodeEnum {
      * 未删除子菜单
      */
     NO_DELETE_CHILD_MENU(1010, "请先删除子菜单"),
-    /**
-     * 文件上传错误
-     */
-    FILE_UPLOAD_ERROR(1011, "文件上传错误"),
+
     /**
      * 账号被封禁
      */
@@ -97,7 +94,28 @@ public enum ReturnCodeEnum {
     SERVER_ERROR(1013, "服务器监控错误"),
     SERVER_SSE_PUSH_ERROR(1014, "服务器SSE推送错误"),
     SERVER_SSE_MONITORING_DATA_COLLECTION_FAILED(1015, "服务器SSE监控数据采集失败"),
-    SERVER_SSE_CONNECTION_TIMEOUT(1016, "服务器SSE连接超时"),;
+    SERVER_SSE_CONNECTION_TIMEOUT(1016, "服务器SSE连接超时"),
+
+
+//    文件错误
+    FILE_ERROR(1001,"文件错误"),
+    FILE_TYPE_ERROR(1002,"文件类型错误"),
+    FILE_SIZE_ERROR(1003,"文件大小错误"),
+    FILE_UPLOAD_ERROR(1004,"文件上传错误"),
+//    视频错误
+    FILE_VIDEO_ERROR(2001,"视频文件错误"),
+    FILE_VIDEO_TYPE_ERROR(2002,"视频文件类型错误"),
+    FILE_VIDEO_SIZE_ERROR(2003,"视频文件大小错误"),
+    FILE_VIDEO_UPLOAD_ERROR(2004,"视频文件上传错误"),
+    FILE_VIDEO_DELETE_ERROR(2005,"视频文件删除错误"),
+//    图片错误
+    FILE_IMAGE_ERROR(3001,"图片文件错误"),
+    FILE_IMAGE_TYPE_ERROR(3002,"图片文件类型错误"),
+    FILE_IMAGE_SIZE_ERROR(3003,"图片文件大小错误"),
+    FILE_IMAGE_UPLOAD_ERROR(3004,"图片文件上传错误"),
+    FILE_IMAGE_DELETE_ERROR(3005,"图片文件删除错误"),
+
+    ;
 
 //    如何定义一个通用的枚举类，对于枚举编写
 //    举值-构造-遍历

@@ -22,6 +22,7 @@ import com.overthinker.cloud.web.utils.SecurityUtils;
 import com.overthinker.cloud.web.utils.StringUtils;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -121,7 +122,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         return new PageVO<>(articleVOS, page.getTotal());
     }
 
-    private void setArticleCount(ArticleVO articleVO, String redisKey, CountTypeEnum articleFieldName) {
+    private void setArticleCount(@NotNull ArticleVO articleVO, String redisKey, CountTypeEnum articleFieldName) {
         String articleId = articleVO.getId().toString();
         Object countObj = myRedisCache.getCacheMap(redisKey).get(articleId);
         long count = 0L;

@@ -108,7 +108,7 @@ function changeToggle({detail}) {
     <!-- 搜索按钮 -->
     <div class="right_nav">
       <div class="search" @click="dialogVisible = true" style="margin-right: 2rem">
-        <SvgIcon name="search" width="30" height="30" color="#409EFF" class="icon"/>
+        <SvgIcon name="search" width="30" height="50" color="#409EFF" class="icon"/>
       </div>
       <div class="user-info">
         <div v-if="userStore.userInfo == undefined">

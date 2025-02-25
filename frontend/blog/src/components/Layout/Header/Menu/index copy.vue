@@ -323,6 +323,14 @@ onUnmounted(() => {
   background: white !important; // 强制白色背景
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1); // 添加轻微阴影提升层次感
   transition: none; // 移除所有过渡动画
+  &.hidden {
+    top: -50px; // 隐藏菜单
+  }
+
+  &.transparent {
+    background-color: transparent; // 顶部时透明
+  }
+
   #menu-left {
     flex: 2;
 

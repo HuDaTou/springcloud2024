@@ -3,6 +3,8 @@ package com.overthinker.cloud.web.entity.VO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Schema(description = "视频信息")
 public class VideoInfoVO {
@@ -10,12 +12,22 @@ public class VideoInfoVO {
     @Schema(description = "视频id")
     private Long id;
 
-    @Schema(description = "用户id")
+    @Schema(description = "上传用户id")
     private Long userId;
 
+    @Schema(description = "上传用户名称")
+    private String userName;
+
+
+    @Schema(description = "视频分类")
+    private int categoryId;
+
+    @Schema(description = "视频分类标签")
+    private String categoryName;
 
     @Schema(description = "视频标签")
-    private int categoryId;
+    private List<String> tagsName;
+
 
     @Schema(description = "视频封面地址")
     private String videoCover;
@@ -29,11 +41,11 @@ public class VideoInfoVO {
     @Schema(description = "视频描述")
     private String description;
 
-    @Schema(description = "视频文件格式")
-    private String videoType;
-
-    @Schema(description = "视频大小")
-    private int videoSize;
+//    @Schema(description = "视频文件格式")
+//    private String videoType;
+//
+//    @Schema(description = "视频大小")
+//    private int videoSize;
 
     @Schema(description = "视频权限")
     private boolean permissions;

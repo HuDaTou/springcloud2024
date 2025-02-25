@@ -28,7 +28,7 @@ export const constantRouter = [
                 component: () => import('@/views/Pigeonhole/Category/index.vue'),
                 name: 'category',
                 meta: {
-                    title: '文章分类',
+                    title: '分类',
                 }
             },
             // 标签
@@ -112,7 +112,7 @@ export const constantRouter = [
             // 视频
             {
                 path: '/video',
-                component: () => import('@/views/Video/index.vue'),
+                component: () => import('@/views/Video//index.vue'),
                 name: 'video',
                 meta: {
                     title: '视频',
@@ -128,6 +128,15 @@ export const constantRouter = [
         name: 'article',
         meta: {
             title: '文章详情',
+        }
+    },
+    // 视频
+    {
+        path: '/video/:id',
+        component: () => import('@/views/Video/watch/index.vue'),
+        name: 'videoDetail',
+        meta: {
+            title: '视频详情',
         }
     },
     // 登录

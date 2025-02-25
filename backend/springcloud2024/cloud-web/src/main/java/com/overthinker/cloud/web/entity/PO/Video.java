@@ -2,6 +2,7 @@ package com.overthinker.cloud.web.entity.PO;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.overthinker.cloud.web.entity.BaseData;
 import lombok.AllArgsConstructor;
@@ -19,36 +20,40 @@ import java.util.Date;
 @TableName("t_video")
 public class Video implements BaseData {
 
-//        主键唯一id
-
+        @TableId
         private Long id;
 
-//        用户id 为0则表示公共的
+
         private Long userId;
 
-//        分类id
-        private Integer categoryId;
 
-//        视频封面
-        private String videoCover;
+        private Long categoryId;
 
-//        视频地址
-        private String video;
 
-//        视频标题
-        private String videoTitle;
+        private String vedioCover;
 
-//        视频介绍
-        private String videoContent;
 
-//        视频的扩展名
-        private String videoType;
+        private String vedio;
 
-//       默认为1 1表示未被审核状态，2表示审核通过 3表示审核未通过
-        private Integer status;
 
-//        视频大小
-        private Integer videoSize;
+        private String vedioTitle;
+
+
+        private String vedioDescription;
+
+
+        private String vedioType;
+
+
+        private Boolean permission;
+
+
+        private Boolean status;
+
+
+        private String vedioSize;
+
+        private Long vedioCount;
 
 
         //文章创建时间

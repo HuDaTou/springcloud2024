@@ -10,8 +10,18 @@ let usePaginationStore = defineStore('pagination', {
             pageSize: 10,
             // 总条数
             total: 0,
-        }
+        },
+        // 视频分页
+        videoPagination: {
+            // 当前页
+            current: 1,
+            // 每页条数
+            pageSize: 10,
+            // 总条数
+            total: 0,
+        },
     }),
 })
+
 
 export default usePaginationStore

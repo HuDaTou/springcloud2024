@@ -4,25 +4,24 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.overthinker.cloud.web.entity.BaseData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+@SuppressWarnings("serial")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @TableName("t_video_tag")
-public class VideoTag implements BaseData {
-
+public class VideoTag {
     //关系表id
     private Long id;
     //文章id
     @TableId
-    private Long articleId;
+    private Long videoId;
     //标签id
     private Long tagId;
     @TableField(fill = FieldFill.INSERT)

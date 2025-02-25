@@ -61,6 +61,12 @@ public class ResultData<T> {
     public static <T> ResultData<T> failure(Integer code, String msg) {
         return ResultData.<T>builder().code(code).msg(msg).data(null).build();
     }
+    public static <T> ResultData<T> failure(Integer code, String msg, T data) {
+        return ResultData.<T>builder().code(code).msg(msg).data(data).build();
+    }
+    public static <T> ResultData<T> failure(ReturnCodeEnum returnCodeEnum) {
+        return ResultData.<T>builder().code(returnCodeEnum.getCode()).msg(returnCodeEnum.getMsg()).data(null).build();
+    }
 
     public String asJsonString() {
         return JSONObject.toJSONString(this, JSONWriter.Feature.WriteNulls);

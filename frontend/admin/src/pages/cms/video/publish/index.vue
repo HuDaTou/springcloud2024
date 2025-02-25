@@ -8,7 +8,7 @@ import { permission } from 'process'
 defineOptions({
   name: 'StepForm',
 })
-const state = reactive({
+const state = ref({
   currentTab: 0,
   form: null,
 })
@@ -31,7 +31,6 @@ function finish() {
 
 function uploudVideoMsgToStep2(data: any) {
   videoInfo.value.video = data.video
-  videoInfo.value.permission  = data.permission
   videoInfo.value.videoSize = data.videoSize
   videoInfo.value.videoTitle = data.videoTitle
   videoInfo.value.videoType   = data.videoType

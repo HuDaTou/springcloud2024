@@ -1,7 +1,9 @@
 package com.overthinker.cloud.web.utils;
 
 import cn.hutool.core.io.FileUtil;
-import com.overthinker.cloud.web.entity.enums.VideoUploadEnum;
+import cn.hutool.core.io.file.FileNameUtil;
+import com.overthinker.cloud.resp.ReturnCodeEnum;
+import com.overthinker.cloud.web.entity.enums.UploadEnum;
 import com.overthinker.cloud.web.exception.FileUploadException;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
@@ -37,55 +39,44 @@ public class VideoUploadUtils {
     /**
      * 统一上传到MinIO
      */
-    public String uploadToMinio(String objectName, InputStream stream,
-                                long size, String contentType) throws Exception {
-        try {
+    public String uploadToMinio(String objectName, MultipartFile file) {
+        try (InputStream inputStream = file.getInputStream()) {
             client.putObject(PutObjectArgs.builder()
                     .bucket(bucketName)
                     .object(objectName)
-                    .stream(stream, size, -1)
-                    .contentType(contentType)
+                    .stream(inputStream, file.getSize(), -1)
+                    .contentType(file.getContentType())
                     .build());
-//            return endpoint + "/" + bucketName + "/" + objectName;
             return objectName;
         } catch (Exception e) {
             log.error("MinIO上传失败: {}", objectName, e);
-            throw e;
+            throw new FileUploadException(ReturnCodeEnum.FILE_UPLOAD_ERROR);
         }
     }
 
     /**
      * 生成用户基础路径如果为公共视频则不需要用户id
      */
-    public String buildUserBasePath(VideoUploadEnum config) {
-        if (config == VideoUploadEnum.VIDEO_PUBLIC) {
-            return String.format("%s/%s/",
-                    config.getDir(),
-                    UUID.randomUUID());
-        }
-        return String.format("%s/user-%d/%s/",
-                config.getDir(),
-                SecurityUtils.getUserId(),
-                UUID.randomUUID());
+    public String buildPath(UploadEnum config, String fileName) {
+        String name = UUID.randomUUID().toString();
+        return config.getDir()+name+ FileNameUtil.extName(fileName);
     }
 
 
     /**
-     * 视频校验
+     * 文件校验
      * @param config 配置
      * @param file 文件
      * @throws FileUploadException 文件上传异常
      */
-    public void validateVideo(VideoUploadEnum config,
-                              MultipartFile file
-                              ) throws FileUploadException {
-        // 视频校验
-        if (file.isEmpty()) throw new FileUploadException("视频文件不能为空");
-        if (file.getSize() > config.getVideoLimitSize() * 1024 * 1024) {
-            throw new FileUploadException("视频大小超过限制");
+    public void validateFile(UploadEnum config, MultipartFile file)  {
+        // 校验
+        if (file.isEmpty()) throw new FileUploadException(ReturnCodeEnum.FILE_VIDEO_ERROR);
+        if (file.getSize() > config.getLimitSize() * 1024 * 1024) {
+            throw new FileUploadException(ReturnCodeEnum.FILE_VIDEO_SIZE_ERROR);
         }
-        if (!isValidFormat(file, config.getVideoFormat())) {
-            throw new FileUploadException("视频格式不支持");
+        if (!isValidFormat(file, config.getFormat())) {
+            throw new FileUploadException(ReturnCodeEnum.FILE_VIDEO_TYPE_ERROR);
         }
 
     }
@@ -96,13 +87,13 @@ public class VideoUploadUtils {
      * @param cover 封面
      * @throws FileUploadException 文件上传异常
      */
-    public void validateVideoCover(VideoUploadEnum config ,MultipartFile cover) throws FileUploadException {
-        if (cover.isEmpty()) throw new FileUploadException("封面文件不能为空");
-        if (cover.getSize() > config.getCoverLimitSize() * 1024 * 1024) {
-            throw new FileUploadException("封面大小超过限制");
+    public void validateVideoCover(UploadEnum config ,MultipartFile cover) throws FileUploadException {
+        if (cover.isEmpty()) throw new FileUploadException(ReturnCodeEnum.FILE_IMAGE_ERROR);
+        if (cover.getSize() > config.getLimitSize() * 1024 * 1024) {
+            throw new FileUploadException(ReturnCodeEnum.FILE_IMAGE_SIZE_ERROR);
         }
-        if (!isValidFormat(cover, config.getCoverFormat())) {
-            throw new FileUploadException("封面格式不支持");
+        if (!isValidFormat(cover, config.getFormat())) {
+            throw new FileUploadException(ReturnCodeEnum.FILE_IMAGE_TYPE_ERROR);
         }
     }
 
@@ -136,12 +127,6 @@ public class VideoUploadUtils {
         });
     }
 
-    /**
-     * 根据文件路径来获取文件
-     */
-    public String getFileByPath(String path) {
-        return endpoint + "/" + bucketName + "/" + path;
-    }
 
     /**
      * 将视频文件大小转换成合适的单位
@@ -175,6 +160,8 @@ public class VideoUploadUtils {
 
         return sizeString + units[unitIndex];
     }
+
+
 
     /**
      * 给地址加上域名

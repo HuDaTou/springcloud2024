@@ -1,5 +1,83 @@
 <script setup lang="ts">
+import {Watermelon} from '@element-plus/icons-vue'
+import {ElMessage, ElNotification, FormInstance, FormRules} from "element-plus";
+import {applyLink, linkList} from "@/apis/link";
 
+const dialogVisible = ref(false)
+
+onMounted(() => {
+  linkListFunc()
+})
+
+const links = ref()
+
+function linkListFunc() {
+  linkList().then(res => {
+    if (res.code === 200) {
+      links.value = res.data
+    } else {
+      ElMessage.error(res.msg)
+    }
+  })
+}
+
+const form = reactive({
+  name: '',
+  url: '',
+  description: '',
+  background: '',
+  email: '',
+  type: '1'
+})
+
+const ruleFormRef = ref<FormInstance>()
+
+const rules = reactive<FormRules<any>>({
+  name: [
+    {required: true, message: '请填写网站名称', trigger: 'blur'},
+    {min: 3, max: 15, message: '长度小3，最大15', trigger: 'blur'},
+  ],
+  url: [
+    {required: true, message: '请填写网站地址', trigger: 'blur'},
+    {min: 3, max: 50, message: '长度小3，最大50', trigger: 'blur'},
+  ],
+  description: [
+    {required: true, message: '请填写网站描述', trigger: 'blur'},
+    {min: 3, max: 30, message: '长度小3，最大15', trigger: 'blur'},
+  ],
+  background: [
+    {required: true, message: '请填写精选站点背景图链接', trigger: 'blur'},
+    {min: 3, max: 100, message: '长度小3，最大100', trigger: 'blur'},
+  ],
+  email: [
+    {required: true, message: '请填写电子邮件地址', trigger: 'blur'},
+    {min: 3, max: 20, message: '长度小3，最大15', trigger: 'blur'},
+  ]
+})
+
+// 申请链接
+function applyLinkFunc() {
+  ruleFormRef.value?.validate(async (valid) => {
+    if (valid) {
+      await applyLink(form).then(res => {
+        if (res.code === 200) {
+          ElNotification({
+            title: '成功',
+            showClose: false,
+            duration: 6000,
+            message: '精选站点申请提交成功，待通过审核后会通过邮件通知您，请注意查收',
+            type: 'success',
+          })
+          dialogVisible.value = false
+        } else {
+          ElMessage.error(res.msg)
+        }
+      })
+    } else {
+      return false
+    }
+  })
+}
 
 </script>
 

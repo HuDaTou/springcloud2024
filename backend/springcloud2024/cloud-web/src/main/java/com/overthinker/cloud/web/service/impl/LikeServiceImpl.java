@@ -77,7 +77,7 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like> implements Li
                         .eq(Like::getType, type)
                         .eq(Like::getTypeId, typeId));
                 if (!like.isEmpty()) return ResultData.success(like);
-                else ResultData.failure(null);
+                else ResultData.failure((String) null);
             }
             if (Objects.equals(type, LikeEnum.LIKE_TYPE_COMMENT.getType()) || Objects.equals(type, LikeEnum.LIKE_TYPE_LEAVE_WORD.getType())) {
                 if (Objects.equals(type, LikeEnum.LIKE_TYPE_LEAVE_WORD.getType())) wrapper.eq(Like::getTypeId, typeId);
@@ -85,11 +85,11 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like> implements Li
                         .eq(Like::getUserId, SecurityUtils.getUserId())
                         .eq(Like::getType, type));
                 if (!like.isEmpty()) return ResultData.success(like);
-                else ResultData.failure(null);
+                else ResultData.failure((String) null);
             }
 
         }
-        return ResultData.failure(null);
+        return ResultData.failure((String) null);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.overthinker.cloud.web.entity.enums;
 
 import com.overthinker.cloud.web.entity.constants.ImageConst;
+import com.overthinker.cloud.web.entity.constants.VideoConst;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -29,6 +30,7 @@ public enum UploadEnum {
 
 
     VEDIO_COVER("video/cover/", "视频封面", Set.of(ImageConst.JPG, ImageConst.JPEG, ImageConst.PNG, ImageConst.WEBP), 10.0),
+    VIDEO_PATH("video/videos/", "视频文件", Set.of(VideoConst.AVI,VideoConst.FLV, VideoConst.MP4, VideoConst.RM), 1024.0),
 
 
 

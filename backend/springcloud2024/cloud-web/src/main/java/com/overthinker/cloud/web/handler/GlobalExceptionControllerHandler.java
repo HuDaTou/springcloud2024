@@ -3,6 +3,7 @@ package com.overthinker.cloud.web.handler;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.resp.ReturnCodeEnum;
 import com.overthinker.cloud.web.exception.BlackListException;
+import com.overthinker.cloud.web.exception.BusinessException;
 import com.overthinker.cloud.web.exception.FileUploadException;
 import com.overthinker.cloud.web.exception.ServerException;
 import jakarta.validation.ConstraintViolationException;
@@ -43,6 +44,11 @@ public class GlobalExceptionControllerHandler {
         String bindingResult = e.getMessage();
 
         return ResultData.failure(ReturnCodeEnum.FILE_UPLOAD_ERROR.getCode(), bindingResult);
+    }
+    @ExceptionHandler(BusinessException.class)
+    public ResultData<Void> handlerBusinessException(BusinessException e){
+        log.error("业务异常:{}({})", e.getMessage(), e.getStackTrace());
+        return ResultData.failure(e.getReturnCodeEnum());
     }
 
     @ExceptionHandler(BlackListException.class)
