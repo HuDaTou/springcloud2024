@@ -1,0 +1,104 @@
+<a-table
+:columns="columns"
+:data-source="tabData"
+:loading="loading"
+:row-selection="{ selectedRowKeys: state.selectedRowKeys, onChange: onSelectChange }"
+:row-key="record => record.id"
+size="small"
+>
+<template #bodyCell="{ column, record }">
+  <template v-if="column.dataIndex === 'videoCover'">
+    <a-image :src="`minioapi.overthinker.top/${record.articleCover}`" style="width: 70px; height: 50px" />
+    </template>
+  <template v-if="column.dataIndex === 'categoryName'">
+    <a-tag>{{ record.categoryName }}</a-tag>
+  </template>
+  <template v-if="column.dataIndex === 'tagsName'">
+    <template v-if="record.tagsName.length <= 2">
+      <a-tag v-for="tag in record.tagsName" :key="tag" color="blue">
+        {{ tag }}
+      </a-tag>
+    </template>
+    <template v-else>
+      <a-popover trigger="hover">
+        <template #content>
+          <a-tag v-for="tag in record.tagsName" :key="tag" color="blue">
+            {{ tag }}
+          </a-tag>
+        </template>
+        <a-tag v-for="tag in record.tagsName.slice(0, 1)" :key="tag" color="blue">
+          {{ tag }}
+        </a-tag>
+        <a-tag>
+          +{{ record.tagsName.length - 1 }}
+        </a-tag>
+      </a-popover>
+    </template>
+  </template>
+  <template v-if="column.dataIndex === 'permission'">
+    <a-space>
+      <a-select
+        v-model:value="record.status"
+        style="width: 6em"
+        size="small"
+        :loading="record.statusLoading"
+        @change="updatevideopermissionFunc(record.id, record.permission, record)"
+      >
+        <a-select-option :value="0">
+          公开
+        </a-select-option>
+        <a-select-option :value="1">
+          私密
+        </a-select-option>
+      </a-select>
+    </a-space>
+  </template>
+  <template v-if="column.dataIndex === 'visitCount'">
+    <span style="color: darkred"><FireFilled /></span>
+    {{ record.visitCount }}
+  </template>
+  <template v-if="column.dataIndex === 'operation'">
+    <a :href="`${domain}article/${record.id}`" target="_blank">
+      <a-button type="link" style="padding: 0">
+        <template #icon>
+          <LinkOutlined />
+        </template>
+        <span style="margin-left: 3px">跳转</span>
+      </a-button>
+    </a>
+    <a-button type="link" style="padding: 0" @click="$router.push({ path: '/blog/essay/publish', query: { id: record.id } })">
+      <template #icon>
+        <FileSyncOutlined />
+      </template>
+      <span style="margin-left: 3px">修改</span>
+    </a-button>
+    <a-popconfirm
+      title="是否确定删除"
+      ok-text="Yes"
+      cancel-text="No"
+      @confirm="onDelete([record.id])"
+    >
+      <a-button type="link" style="padding: 0">
+        <template #icon>
+          <DeleteOutlined />
+        </template>
+        <span style="margin-left: 3px">删除</span>
+      </a-button>
+    </a-popconfirm>
+  </template>
+  <template v-if="column.dataIndex === 'createTime'">
+    <a-tooltip placement="top">
+      <template #title>
+        <span>{{ record.createTime }}</span>
+      </template>
+      {{ record.createTime.split(' ')[0] }}...
+    </a-tooltip>
+  </template>
+  <template v-if="column.dataIndex === 'articleType'">
+    <!--            类型 (1原创 2转载 3翻译) -->
+    <a-tag color="#108ee9">
+      {{ record.articleType === 1 ? '原创' : record.articleType === 2 ? '转载' : '翻译' }}
+    </a-tag>
+  </template>
+</template>
+</a-table>
