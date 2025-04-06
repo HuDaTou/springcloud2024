@@ -52,7 +52,7 @@ logging:
       overthinker:
         cloud:
           apis:
-            PayFeignApi: debug
+            com.overthinker.cloud.api.apis.PayFeignApi: debug
 ##            全是他妈配置，主要是理解这个流程原理
 ## Resilience4j CircuitBreaker 按照次数：COUNT_BASED 的例子
 ##  6次访问中当执行方法的失败率达到50%时CircuitBreaker将进入开启OPEN状态(保险丝跳闸断电)拒绝所有请求。

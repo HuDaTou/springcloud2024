@@ -41,6 +41,9 @@ public class VideoInfoVO {
     @Schema(description = "视频描述")
     private String description;
 
+    @Schema(description = "视频观看数量")
+    private Long videoVisit;
+
 //    @Schema(description = "视频文件格式")
 //    private String videoType;
 //
@@ -48,7 +51,7 @@ public class VideoInfoVO {
 //    private int videoSize;
 
     @Schema(description = "视频权限")
-    private boolean permissions;
+    private boolean permission;
 
 
 }

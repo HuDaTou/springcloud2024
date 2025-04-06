@@ -21,12 +21,9 @@ async function nextStep() {
   }
 }
 
-async function loadVideoInfo(data: any) {
-  data.permission = checked.value.toString()
-  
+async function loadVideoInfo(data: any) {  
   emit('uploudVideoMsgToStep2', data)
 }
-const checked = ref<boolean>(false);
 
 
 const beforeUpload: UploadProps['beforeUpload'] = file => {
@@ -51,7 +48,6 @@ const customRequest = async (file: any) => {
   // message.loading(`视频上传中${file.file.name}`)
   const formData = new FormData()
   formData.append('VideoFile', file.file)
-  formData.append('VideoPermissions', checked.value.toString())
   videoUpload(formData).then(res => {
     if (res.code === 200) {
       fileList.value[0].status = 'done'
@@ -90,10 +86,6 @@ function handleDrop(e: DragEvent) {
 </script>
 
 <template>
-  <div>
-    <a-switch v-model:checked="checked" />
-    默认关闭，为公共视频
-  </div>
   <a-divider dashed />
   <div>
     <a-upload-dragger v-model:fileList="fileList" name="videoFile" :before-upload="beforeUpload"

@@ -48,7 +48,7 @@ public class SseController {
     @Operation(summary = "SSE获取服务监控数据")
     @GetMapping(value = "/data")
     public SseEmitter getSseEmitter()  {
-        SseEmitter emitter = new SseEmitter(30_000L); // 设置30秒超时
+        SseEmitter emitter = new SseEmitter(0L); // 设置30秒超时
 //        为每个连接生成一个uuid
         String uuid = java.util.UUID.randomUUID().toString().replaceAll("-", "");
         if (!SSE_DATA.containsKey(uuid)) {
@@ -105,13 +105,17 @@ public class SseController {
     private void job()  {
 
         if (!SSE_DATA.isEmpty()) {
-            sseDataVO.setOnlineCount(SSE_COUNT.size());
-            sseDataVO.setArticleCount(articleService.count());
-            sseDataVO.setUserCount(userService.count());
-            sseDataVO.setPhotoCount(photoService.count());
+//            sseDataVO.setOnlineCount(SSE_COUNT.size());
+//            sseDataVO.setArticleCount(articleService.count());
+//            sseDataVO.setUserCount(userService.count());
+//            sseDataVO.setPhotoCount(photoService.count());
+            sseDataVO.setOnlineCount(1);
+            sseDataVO.setArticleCount(1L);
+            sseDataVO.setUserCount(1L);
+            sseDataVO.setPhotoCount(1L);
             SSE_DATA.forEach((key, emitter) -> {
                 try {
-                    log.info("SSE推送数据: {}", sseDataVO);
+//                    log.info("SSE推送数据: {}", sseDataVO);
 
                     emitter.send(SseEmitter.event()
                             .id(key)

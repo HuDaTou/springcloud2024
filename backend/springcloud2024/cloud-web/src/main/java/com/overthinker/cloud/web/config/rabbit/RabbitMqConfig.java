@@ -12,7 +12,6 @@ public class RabbitMqConfig {
 
 
     @Bean
-    @SuppressWarnings("all")
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         // 在注入Bean的时候必须将连接工厂装配进来，因为这是自己定义的一个Bean
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);

@@ -1,4 +1,5 @@
 package com.overthinker.cloud.entityDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class PayDTO implements Serializable {
     private Integer id;
     //支付流水号

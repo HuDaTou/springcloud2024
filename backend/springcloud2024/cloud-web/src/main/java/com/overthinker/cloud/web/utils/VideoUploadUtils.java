@@ -59,7 +59,7 @@ public class VideoUploadUtils {
      */
     public String buildPath(UploadEnum config, String fileName) {
         String name = UUID.randomUUID().toString();
-        return config.getDir()+name+ FileNameUtil.extName(fileName);
+        return config.getDir()+name+ "."+FileNameUtil.extName(fileName);
     }
 
 

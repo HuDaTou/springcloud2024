@@ -6,10 +6,11 @@ import {
   videoCategory,
   uploadVideoCover,
   uploadVideoInfo,
+  addTag,
+  videoTag,
 } from "~/api/cms/video";
 import { message, Upload } from "ant-design-vue";
-
-import type { CategoryType, videoInfo } from "../type";
+import type { CategoryType, videoInfo, TagType } from "../type";
 
 const emit = defineEmits(["prevStep", "nextStep"]);
 const formRef = ref<FormInstance>();
@@ -28,20 +29,22 @@ const formData = ref<videoInfo>({
   videoCover: undefined,
   video: undefined,
   videoTitle: undefined,
-  videoDescription: undefined,
+  description: undefined,
   videoType: undefined,
-  permission: undefined,
+  permission: true,
   videoSize: undefined,
+  tagId: [],
 });
 // 在组件挂载时将父组件传递的值复制到 localVideoInfo 中
 onMounted(async () => {
   formData.value.video = props.videoInfo.video;
   formData.value.videoTitle = props.videoInfo.videoTitle;
   formData.value.videoType = props.videoInfo.videoType;
-  formData.value.permission = props.videoInfo.permission;
   formData.value.videoSize = props.videoInfo.videoSize;
-  formData.value.categoryId = 1;
+  formData.value.categoryId = 13
+  formData.value.tagId = [14, 15]
   await getCategory();
+  await getTag();
 });
 
 // 封面图片上传
@@ -55,11 +58,24 @@ async function handleUpload() {
   let videoAddress = formData.value.video;
 
   videocoverFormData.append("videoaddress", videoAddress as string);
-  await uploadVideoCover(videocoverFormData).then((res) => {
+  await uploadVideoCover(videocoverFormData).then(async (res) => {
     if (res.code === 200) {
-      formData.value.videoCover = res.data.value;
+      formData.value.videoCover = res.data;
       message.success("封面上传成功");
+      try {
+      const infoRes = await uploadVideoInfo(formData.value);
+      if (infoRes.code === 200) {
+        message.success(infoRes.msg);
+        emit("nextStep");
+      }
+    } catch (error) {
+      message.error('视频信息提交失败');
+      console.error(error);
     }
+
+
+    }
+
   });
 };
 function getBase64(file: File) {
@@ -135,9 +151,9 @@ const categoryList: Ref<UnwrapRef<CategoryType[]>> = ref([]);
 const categoryName = ref();
 
 async function getCategory() {
-  const { data } = await videoCategory();
-  categoryList.value = data;
-  console.log(categoryList.value);
+  const { data } = await videoCategory()
+  categoryList.value = data
+  console.log(categoryList.value)
 }
 
 const categoryLoading = ref(false);
@@ -158,6 +174,34 @@ function addCategoryFunc(e: MouseEvent) {
     inputRef.value?.focus();
   }, 0);
 }
+
+// 标签
+const tagList: Ref<TagType[]> = ref([])
+
+const tagName = ref()
+const tagLoading = ref(false)
+
+function addTagFunc(e: MouseEvent) {
+  tagLoading.value = true
+  e.preventDefault()
+  const data = { tagName: tagName.value, id: tagList.value[tagList.value.length - 1].id + 1 }
+  addTag(data).then((res) => {
+    if (res.code === 200)
+      tagLoading.value = false
+    tagList.value.push(data)
+  })
+  tagName.value = ''
+  setTimeout(() => {
+    inputRef.value?.focus()
+  }, 0)
+}
+async function getTag() {
+  const { data } = await videoTag()
+  tagList.value = data
+}
+
+
+
 </script>
 
 <template>
@@ -195,14 +239,32 @@ function addCategoryFunc(e: MouseEvent) {
         {{ formData.videoType }}
       </a-form-item>
       <a-form-item
+        label="视频标题"
+        name="videoTitle"
+        :label-col="labelCol"
+        :wrapper-col="wrapperCol"
+        class="stepFormText"
+        :rules="[{ required: true, message: '请输入视频标题' }]"
+      >
+        <a-input
+          v-model:value="formData.videoTitle"
+          placeholder="请输入视频标题"
+        />
+      </a-form-item>
+      <a-form-item
         label="视频权限"
         name="permission"
         :label-col="labelCol"
         :wrapper-col="wrapperCol"
         class="stepFormText"
       >
-        <!-- 三元表达式如果permission是false则展示 公开 -->
-        {{ formData.permission === "false" ? "公开" : "不公开" }}
+        <a-switch 
+          v-model:checked="formData.permission"
+          checked-value="true"
+          un-checked-value="false"
+          :checked-children="'私有'"
+          :un-checked-children="'公开'"
+        />
       </a-form-item>
       <a-divider />
       <a-form-item
@@ -211,7 +273,7 @@ function addCategoryFunc(e: MouseEvent) {
         :label-col="labelCol"
         :wrapper-col="wrapperCol"
         class="stepFormText"
-        :rules="[{ required: false, message: '输入视频介绍' }]"
+        :rules="[{ required: true, message: '输入视频介绍' }]"
       >
         <a-textarea
           v-model:value="formData.videoDescription"
@@ -220,9 +282,7 @@ function addCategoryFunc(e: MouseEvent) {
         />
       </a-form-item>
       <a-form-item label="分类" style="margin-right: 1rem">
-        <a-space>
           <a-select
-            v-if="categoryList"
             v-model:value="formData.categoryId"
             :loading="categoryLoading"
             placeholder="选择分类"
@@ -252,8 +312,33 @@ function addCategoryFunc(e: MouseEvent) {
               </a-space>
             </template>
           </a-select>
-        </a-space>
       </a-form-item>
+
+      <a-form-item label="标签" style="margin-right: 1rem">
+        <a-select
+          v-model:value="formData.tagId"
+          mode="multiple"
+          :loading="tagLoading"
+          placeholder="选择标签"
+          style="width: 15em"
+          :options="tagList.map(item => ({ value: item.id, label: item.tagName }))"
+        >
+          <template #dropdownRender="{ menuNode: menu }">
+            <VNodes :vnodes="menu" />
+            <a-divider style="margin: 4px 0" />
+            <a-space style="padding: 4px 8px">
+              <a-input ref="inputRef" v-model:value="tagName" placeholder="添加标签" />
+              <a-button type="text" @click="addTagFunc">
+                <template #icon>
+                  <plus-outlined />
+                </template>
+                添加
+              </a-button>
+            </a-space>
+          </template>
+        </a-select>
+      </a-form-item>
+
       <a-form-item name="封面选择">
         <div class="clearfix">
           <a-upload
@@ -284,7 +369,6 @@ function addCategoryFunc(e: MouseEvent) {
         <a-button style="margin-left: 8px" @click="prevStep"> 上一步 </a-button>
       </a-form-item>
     </a-form>
-    <a-button type="primary" @click="getCategory">测试获取标签</a-button>
   </div>
 </template>
 

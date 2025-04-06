@@ -2,7 +2,7 @@ spring:
   application:
     name: cloud-bilibili-web
   profiles:
-    active: local
+    active: dev
   ####Spring Cloud Consul for Service Discovery
   cloud:
     consul:

@@ -14,18 +14,18 @@ const state = ref({
 })
 
 function nextStep() {
-  if (state.currentTab < 2)
-    state.currentTab += 1
+  if (state.value.currentTab < 2)
+    state.value.currentTab += 1
 }
 
 
 function prevStep() {
-  if (state.currentTab > 0)
-    state.currentTab -= 1
+  if (state.value.currentTab > 0)
+    state.value.currentTab -= 1
 }
 
 function finish() {
-  state.currentTab = 0
+  state.value.currentTab = 0
 }
 
 

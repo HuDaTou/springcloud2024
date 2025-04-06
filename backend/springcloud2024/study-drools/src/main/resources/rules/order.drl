@@ -1,0 +1,57 @@
+package rules;
+//订单积分规则
+import com.overthinker.cloud.studyDrools.entity.Order
+import com.overthinker.cloud.studyDrools.entity.PointsRule;
+
+
+
+rule "加电_order_rule"
+    when
+        $PointsRule:PointsRule(orderType == "充电")
+        $Order:Order(type == $PointsRule.getOrderType())
+    then
+        if ($PointsRule.getAmountEnabled()) {
+            int base = (int) $Order.getAmout() / $PointsRule.getBaseAmount();
+            int score = base * $PointsRule.getPoints();
+            if ($PointsRule.getOrderEnabled()) {
+                $Order.setScore(score+ $PointsRule.getOrderPoints());
+            }else{
+                $Order.setScore(score);
+            }
+        }
+        delete($Order);
+end
+
+rule "加氢_order_rule"
+    when
+        $PointsRule:PointsRule(orderType == "加氢")
+        $Order:Order(type == $PointsRule.getOrderType())
+    then
+        if ($PointsRule.getAmountEnabled()) {
+            int base = (int) $Order.getAmout() / $PointsRule.getBaseAmount();
+            int score = base * $PointsRule.getPoints();
+            if ($PointsRule.getOrderEnabled()) {
+                $Order.setScore(score+ $PointsRule.getOrderPoints());
+            }else{
+                $Order.setScore(score);
+            }
+        }
+        delete($Order);
+end
+
+rule "换电_order_rule"
+    when
+        $PointsRule:PointsRule(orderType == "换电")
+        $Order:Order(type == $PointsRule.getOrderType())
+    then
+        if ($PointsRule.getAmountEnabled()) {
+            int base = (int) $Order.getAmout() / $PointsRule.getBaseAmount();
+            int score = base * $PointsRule.getPoints();
+            if ($PointsRule.getOrderEnabled()) {
+                $Order.setScore(score+ $PointsRule.getOrderPoints());
+            }else{
+                $Order.setScore(score);
+            }
+        }
+        delete($Order);
+end

@@ -30,19 +30,19 @@ public class Video implements BaseData {
         private Long categoryId;
 
 
-        private String vedioCover;
+        private String videoCover;
 
 
-        private String vedio;
+        private String video;
 
 
-        private String vedioTitle;
+        private String videoTitle;
 
 
-        private String vedioDescription;
+        private String videoDescription;
 
 
-        private String vedioType;
+        private String videoType;
 
 
         private Boolean permission;
@@ -51,9 +51,9 @@ public class Video implements BaseData {
         private Boolean status;
 
 
-        private String vedioSize;
+        private String videoSize;
 
-        private Long vedioCount;
+        private Long videoVisit;
 
 
         //文章创建时间

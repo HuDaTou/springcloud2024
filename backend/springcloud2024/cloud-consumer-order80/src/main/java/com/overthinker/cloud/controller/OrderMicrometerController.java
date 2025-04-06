@@ -1,6 +1,7 @@
 package com.overthinker.cloud.controller;
 
-import com.overthinker.cloud.apis.PayFeignApi;
+
+import com.overthinker.cloud.api.apis.PayFeignApi;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

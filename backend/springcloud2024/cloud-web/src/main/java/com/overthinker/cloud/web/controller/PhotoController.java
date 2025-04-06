@@ -12,12 +12,12 @@ import com.overthinker.cloud.web.entity.constants.LogConst;
 import com.overthinker.cloud.web.service.PhotoService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.Resource;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import org.hibernate.validator.constraints.Length;
 import java.util.List;
 
 @Validated

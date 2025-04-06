@@ -12,3 +12,4 @@ spring:
     url: jdbc:mysql://home.overthinker.top:30970/security-demo?characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
     username: root
     password: DuinxIVa3w
+

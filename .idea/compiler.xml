@@ -5,6 +5,9 @@
       <directory url="file://$PROJECT_DIR$/cloud-web/src/main/resources/archetype-resources" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/backend/springcloud/bilibili-common/src/main/resources/archetype-resources" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/backend/springcloud2024/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/backend/springcloud2024/spring-study/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/backend/springcloud2024/spring-AI/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/backend/springcloud2024/study-drools/src/main/resources/archetype-resources" includeSubdirectories="true" />
     </excludeFromCompile>
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
@@ -13,11 +16,14 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="cloud-getway9527" />
+        <module name="spring-study" />
         <module name="cloud-Media-Asset-Processing" />
         <module name="spring-security-study" />
+        <module name="cloud-api" />
         <module name="cloud-provider-payment8001" />
         <module name="bilibili-common" />
         <module name="cloud-common" />
+        <module name="study-drools" />
         <module name="cloud-web" />
         <module name="cloud-consumer-order80" />
       </profile>
@@ -31,6 +37,7 @@
       <module name="media-service" target="17" />
       <module name="mybatis_generator2024" target="17" />
       <module name="service" target="17" />
+      <module name="spring-AI" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

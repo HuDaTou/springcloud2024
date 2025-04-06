@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>cloud-consumer-order80</artifactId>
+    <packaging>jar</packaging>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -80,11 +81,11 @@
             <groupId>com.overthinker.cloud</groupId>
             <artifactId>cloud-common</artifactId>
         </dependency>
-        <!--openfeign-->
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <groupId>com.overthinker.cloud</groupId>
+            <artifactId>cloud-api</artifactId>
         </dependency>
+
         <!--SpringCloud consul discovery -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>

@@ -12,47 +12,12 @@ function toOrderList() {
 <template>
   <div>
     <a-form>
-      <a-result title="操作成功" :is-success="true" sub-title="预计两小时内到账" style="max-width: 560px; margin: 40px auto 0;">
-        <div class="information">
-          <a-row>
-            <a-col :sm="8" :xs="24">
-              付款账户：
-            </a-col>
-            <a-col :sm="16" :xs="24">
-              antdv@aibayanyu.com
-            </a-col>
-          </a-row>
-          <a-row>
-            <a-col :sm="8" :xs="24">
-              收款账户：
-            </a-col>
-            <a-col :sm="16" :xs="24">
-              test@example.com
-            </a-col>
-          </a-row>
-          <a-row>
-            <a-col :sm="8" :xs="24">
-              收款人姓名：
-            </a-col>
-            <a-col :sm="16" :xs="24">
-              Kirk Lin
-            </a-col>
-          </a-row>
-          <a-row>
-            <a-col :sm="8" :xs="24">
-              转账金额：
-            </a-col>
-            <a-col :sm="16" :xs="24">
-              <span class="money">1,000,000</span> 元
-            </a-col>
-          </a-row>
-        </div>
+      <a-result title="操作成功" :is-success="true" sub-title="已上传视频文件" style="max-width: 560px; margin: 40px auto 0;">
+
         <template #extra>
-          <a-button type="primary" @click="finish">
-            再转一笔
-          </a-button>
-          <a-button style="margin-left: 8px" @click="toOrderList">
-            查看账单
+
+          <a-button style="margin-left: 8px" >
+            返回首页
           </a-button>
         </template>
       </a-result>

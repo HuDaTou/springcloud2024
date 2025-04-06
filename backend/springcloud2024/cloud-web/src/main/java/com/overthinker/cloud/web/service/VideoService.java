@@ -1,6 +1,8 @@
 package com.overthinker.cloud.web.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.overthinker.cloud.resp.ResultData;
+import com.overthinker.cloud.web.entity.DTO.SearchVideoDTO;
 import com.overthinker.cloud.web.entity.DTO.VideoInfoTDO;
 import com.overthinker.cloud.web.entity.PO.Video;
 import com.overthinker.cloud.web.entity.VO.VideoInfoVO;
@@ -26,23 +28,9 @@ public interface VideoService extends IService<Video> {
      * @param videoInfoTDO 视频信息
      * @return String
      */
-    String updateVideoInfo(VideoInfoTDO videoInfoTDO);
+    ResultData<Void> updateVideoInfo(VideoInfoTDO videoInfoTDO);
 
 
-
-
-    /**
-     * 获取公共视频的视频列表
-     * @return List<VideoInfoVO>
-     */
-    List<VideoInfoVO> getPublicVideoList();
-
-    /**
-     * 获取用户的视频列表
-     *
-     * @return List<Video>
-     */
-    List<VideoInfoVO> getUserVideoList(Long userId);
 
     /**
      * 获取用户和公共视频列表
@@ -54,7 +42,7 @@ public interface VideoService extends IService<Video> {
      * 删除视频
      * @return String
      */
-    String  deleteVideo(Long id);
+    ResultData<Void>  deleteVideo(List<Long> ids);
 
 
     /**
@@ -74,4 +62,14 @@ public interface VideoService extends IService<Video> {
     String uploadVideoCover(MultipartFile videoCover);
 
     void addVisitCount(Long videoId);
+
+    List<VideoInfoVO> searchVideoInfo(SearchVideoDTO searchVideoDTO);
+
+
+    List<VideoInfoVO> listVideo();
+
+
+    Void updateVideoPermission(Long videoId, boolean permission);
+
+    String publishVideo(Long videoId);
 }

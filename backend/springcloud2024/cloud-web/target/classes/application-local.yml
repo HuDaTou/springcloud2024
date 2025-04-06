@@ -32,9 +32,10 @@ spring:
     # rabbitmq 端口
     port: 5672
     # rabbitmq 用户名
-    username: guest
+    username: overthinker
     # rabbitmq 密码
-    password: guest
+    password: overH@xlq.159
+    # 虚拟主机
     listener:
       simple:
         retry:
@@ -57,6 +58,8 @@ spring:
       email: email_routing_key
       log-login: log_routing_key_login
       log-system: log_routing_key_system
+    publisher-confirm-type: correlated
+    publisher-returns: true
   mail:
     host: smtp.qq.com
     username:  2262135195@qq.com
@@ -180,7 +183,7 @@ logging:
       overthinker:
         cloud:
           apis:
-            PayFeignApi: debug
+            com.overthinker.cloud.api.apis.PayFeignApi: debug
     root: info
   config: classpath:log4j2-spring.xml
   file:

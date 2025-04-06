@@ -29,9 +29,7 @@ const websiteStore = useWebsiteStore()
             一个好看的cms管理系统
           </div>
           <div class="mt-4 text-center text-gray-500 dark:text-gray-300 max-lg:px-3">
-            千年以前，看见元婴强者自己的小世界，非常羡慕，于是心中立誓，我也要变强，后抛弃世间情爱，终踏上修仙一途，虽一介散修，但亦往，经历千磨万难，
-            炼气百年，四百年筑基，一千年结丹，两千年突破元婴，又一千年后遭遇瓶颈，决心闭死关，四千年后的今日，终于突破<span class="text-red-500 font-bold"> 化神</span>，感叹回首沧桑，
-            道不尽仙凡殊途，尽人间。
+            在信息的海洋中，我们渴望一座灯塔，指引内容的流转，赋予管理的温度。我们的 CMS 管理系统，不只是数据的承载者，更是效率与美学的交汇点。
           </div>
         </div>
         <div class="w-full h-[40vh] flex flex-col justify-center items-center">
