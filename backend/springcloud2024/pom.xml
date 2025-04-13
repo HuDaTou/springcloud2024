@@ -15,7 +15,6 @@
     <module>cloud-getway9527</module>
     <module>cloud-Media-Asset-Processing</module>
     <module>cloud-web</module>
-    <module>bilibili-common</module>
     <module>spring-study</module>
     <module>spring-security-study</module>
     <module>study-drools</module>
@@ -33,10 +32,12 @@
     <spring.boot.version>3.2.0</spring.boot.version>
     <spring.cloud.version>2023.0.0</spring.cloud.version>
     <spring.cloud.alibaba.version>2022.0.0.0-RC2</spring.cloud.alibaba.version>
+    <boot.validation.version>3.2.0</boot.validation.version>
 
 
 
-<!--    数据库-->
+
+    <!--    数据库-->
     <mybatis-plus.version>3.5.5</mybatis-plus.version>
     <mybatis-plus-generator.version>3.5.5</mybatis-plus-generator.version>
     <p6spy.version>1.10.0</p6spy.version>
@@ -64,7 +65,8 @@
     <okhttp.version>4.10.0-RC1</okhttp.version>
     <quartz.version>0.9.5.4</quartz.version>
 
-    <boot.validation.version>3.2.0</boot.validation.version>
+    <xxl-job.version>3.0.0</xxl-job.version>
+
 
 
 
@@ -267,11 +269,7 @@
         <version>${cloud.common.version}</version>
       </dependency>
 
-      <dependency>
-        <groupId>com.overthinker.cloud</groupId>
-        <artifactId>bilibili-common</artifactId>
-        <version>${bilibili-common.version}</version>
-      </dependency>
+
 
       <dependency>
         <groupId>com.overthinker.cloud</groupId>
@@ -362,6 +360,15 @@
         <artifactId>drools-mvel</artifactId>
         <version>${drools.version}</version>
       </dependency>
+
+      <dependency>
+        <groupId>com.xuxueli</groupId>
+        <artifactId>xxl-job-core</artifactId>
+        <version>${xxl-job.version}</version>
+      </dependency>
+
+
+
 
 
 

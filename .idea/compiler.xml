@@ -21,7 +21,6 @@
         <module name="spring-security-study" />
         <module name="cloud-api" />
         <module name="cloud-provider-payment8001" />
-        <module name="bilibili-common" />
         <module name="cloud-common" />
         <module name="study-drools" />
         <module name="cloud-web" />
@@ -29,6 +28,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="bilibili-common" target="17" />
       <module name="cloud-media" target="17" />
       <module name="cloud-provider-payment8002" target="17" />
       <module name="cloud-test" target="17" />
