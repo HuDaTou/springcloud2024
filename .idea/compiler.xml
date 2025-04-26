@@ -23,21 +23,31 @@
         <module name="cloud-provider-payment8001" />
         <module name="cloud-common" />
         <module name="study-drools" />
+        <module name="spring-AI" />
         <module name="cloud-web" />
         <module name="cloud-consumer-order80" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="bilibili-common" target="17" />
+      <module name="cloud-api (1)" target="1.8" />
+      <module name="cloud-common (1)" target="1.8" />
+      <module name="cloud-consumer-order80 (1)" target="1.8" />
+      <module name="cloud-getway9527 (1)" target="1.8" />
       <module name="cloud-media" target="17" />
+      <module name="cloud-Media-Asset-Processing (1)" target="1.8" />
+      <module name="cloud-provider-payment8001 (1)" target="1.8" />
       <module name="cloud-provider-payment8002" target="17" />
       <module name="cloud-test" target="17" />
+      <module name="cloud-web (1)" target="1.8" />
       <module name="media-api" target="17" />
       <module name="media-model" target="17" />
       <module name="media-service" target="17" />
       <module name="mybatis_generator2024" target="17" />
       <module name="service" target="17" />
-      <module name="spring-AI" target="17" />
+      <module name="spring-security-study (1)" target="1.8" />
+      <module name="spring-study (1)" target="1.8" />
+      <module name="study-drools (1)" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

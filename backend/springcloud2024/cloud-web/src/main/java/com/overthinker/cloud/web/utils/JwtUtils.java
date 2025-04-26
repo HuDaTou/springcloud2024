@@ -88,7 +88,7 @@ public class JwtUtils {
      */
     private boolean isInvalidToken(String uuid) {
         // 判断是否在redis中(白名单)
-        return !Boolean.TRUE.equals(myRedisCache.isHasKey(RedisConst.JWT_WHITE_LIST + uuid));
+        return !myRedisCache.isHasKey(RedisConst.JWT_WHITE_LIST + uuid);
     }
 
 

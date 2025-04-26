@@ -47,11 +47,7 @@
             <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
         </dependency>
 
-        <!--        mybatis plus 代码生成器-->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-generator</artifactId>
-        </dependency>
+
 
         <!-- 数据库-->
         <dependency>

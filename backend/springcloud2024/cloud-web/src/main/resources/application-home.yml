@@ -78,24 +78,7 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-  quartz:
-    # 将 Quartz 持久化方式修改为 jdbc
-    job-store-type: memory
-#    properties:
-#      org:
-#        quartz:
-#          scheduler:
-#            # 实例节点 ID 自动生成
-#            instanceId: AUTO
-#          jobStore:
-#            class: org.quartz.impl.jdbcjobstore.JobStoreTX
-#            dataSource: quartz_jobs
-#          dataSource:
-#            quartz_jobs:
-#              driver: com.mysql.cj.jdbc.Driver
-#              url: jdbc:mysql://home.overthinker.top:30970/easybilibili?characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
-#              username: root
-#              password: DuinxIVa3w
+
 mail:
   link:
     apply:
@@ -172,22 +155,6 @@ knife4j:
   setting:
     language: zh_cn
 
-logging:
-  pattern:
-    dateformat: yyyy-MM-dd HH:mm:ss.SSS
-  charset:
-    console: UTF-8
-    file: UTF-8
-  level:
-    com:
-      overthinker:
-        cloud:
-          apis:
-            com.overthinker.cloud.api.apis.PayFeignApi: debug
-    root: info
-  config: classpath:log4j2-spring.xml
-  file:
-    path: /logs/cloud-bilibili-web.log
 server:
   port: 8000
 http_pool:
