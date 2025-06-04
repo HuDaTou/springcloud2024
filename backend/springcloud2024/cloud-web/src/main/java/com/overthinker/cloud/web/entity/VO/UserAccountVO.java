@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.entity.VO;
 
-import com.overthinker.cloud.web.entity.BaseData;
+import com.overthinker.cloud.entity.BaseData;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

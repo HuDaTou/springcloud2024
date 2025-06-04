@@ -1,9 +1,7 @@
 package com.overthinker.cloud.web.entity.PO;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+import com.overthinker.cloud.entity.BaseData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,8 +22,10 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 @TableName("t_article_tag")
-public class ArticleTag {
+public class ArticleTag implements BaseData {
     //关系表id
+
+    @TableId(value = "id" ,type = IdType.ASSIGN_ID)
     private Long id;
     //文章id
     @TableId

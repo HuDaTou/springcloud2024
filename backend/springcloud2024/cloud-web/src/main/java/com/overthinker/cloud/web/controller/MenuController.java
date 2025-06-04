@@ -1,5 +1,6 @@
 package com.overthinker.cloud.web.controller;
 
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
@@ -30,7 +31,7 @@ import java.util.List;
 @RestController
 @Tag(name = "菜单相关接口")
 @RequestMapping("menu")
-public class MenuController {
+public class MenuController extends BaseController {
     /**
      * 服务对象
      */

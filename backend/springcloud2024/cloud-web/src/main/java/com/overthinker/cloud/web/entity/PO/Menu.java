@@ -1,7 +1,7 @@
 package com.overthinker.cloud.web.entity.PO;
 
 import com.baomidou.mybatisplus.annotation.*;
-import com.overthinker.cloud.web.entity.BaseData;
+import com.overthinker.cloud.entity.BaseData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,7 +22,7 @@ import java.util.Date;
 public class Menu implements BaseData {
 
     //唯一id
-    @TableId(value = "id",type = IdType.AUTO)
+    @TableId(value = "id" ,type = IdType.ASSIGN_ID)
     private Long id;
     //标题
     private String title;

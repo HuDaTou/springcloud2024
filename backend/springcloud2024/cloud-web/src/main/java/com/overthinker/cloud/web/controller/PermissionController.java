@@ -2,7 +2,7 @@ package com.overthinker.cloud.web.controller;
 
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.web.controller.base.BaseController;
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.PermissionDTO;
 import com.overthinker.cloud.web.entity.VO.PermissionMenuVO;
 import com.overthinker.cloud.web.entity.VO.PermissionVO;

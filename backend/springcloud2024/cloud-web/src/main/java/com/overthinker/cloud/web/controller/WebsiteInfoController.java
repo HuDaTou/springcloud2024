@@ -1,6 +1,7 @@
 package com.overthinker.cloud.web.controller;
 
 
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
@@ -29,7 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Tag(name = "网站基本信息")
 @RestController
 @RequestMapping("websiteInfo")
-public class WebsiteInfoController {
+public class WebsiteInfoController extends BaseController {
     /**
      * 服务对象
      */

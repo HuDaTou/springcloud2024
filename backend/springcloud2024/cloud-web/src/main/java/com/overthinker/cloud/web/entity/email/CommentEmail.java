@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.entity.email;
 
-import com.overthinker.cloud.web.entity.BaseData;
+import com.overthinker.cloud.entity.BaseData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -3,8 +3,8 @@ package com.overthinker.cloud.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.overthinker.cloud.entity.TPay;
-import com.overthinker.cloud.entityDTO.PayDTO;
-import com.overthinker.cloud.entityVO.PayVO;
+import com.overthinker.cloud.entity.DTO.PayDTO;
+import com.overthinker.cloud.entity.VO.PayVO;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.service.impl.TPayServiceImpl;
 import lombok.RequiredArgsConstructor;

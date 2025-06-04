@@ -1,7 +1,7 @@
 package com.overthinker.cloud.web.entity.PO;
 
 import com.baomidou.mybatisplus.annotation.*;
-import com.overthinker.cloud.web.entity.BaseData;
+import com.overthinker.cloud.entity.BaseData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,11 +22,11 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @TableName("t_article")
-public class Article implements BaseData {
+public class Article  implements BaseData {
 
 
     //文章id
-    @TableId(value = "id" ,type = IdType.AUTO)
+    @TableId(value = "id" ,type = IdType.ASSIGN_ID)
     private Long id;
     //作者id
     private Long userId;

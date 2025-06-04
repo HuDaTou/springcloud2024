@@ -68,6 +68,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     public PageVO<List<ArticleCommentVO>> getComment(Integer type, Integer typeId, Integer pageNum, Integer pageSize) {
         // 查询父评论
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
+
+
         queryWrapper
                 .orderByDesc(Comment::getCreateTime)
                 .eq(Comment::getType, type)

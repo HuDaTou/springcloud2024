@@ -1,5 +1,6 @@
 package com.overthinker.cloud.web.controller;
 
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.entity.enums.RegisterOrLoginTypeEnum;
 import com.overthinker.cloud.web.entity.oauth.GiteeBody;
@@ -33,7 +34,7 @@ import java.io.IOException;
 @Tag(name = "第三方登录")
 @RestController
 @RequestMapping("/oauth")
-public class OauthController {
+public class OauthController extends BaseController {
 
     @Resource
     private GiteeBody giteeBody;

@@ -1,9 +1,7 @@
 package com.overthinker.cloud.web.entity.PO;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.overthinker.cloud.web.entity.BaseData;
+import com.baomidou.mybatisplus.annotation.*;
+import com.overthinker.cloud.entity.BaseData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +23,8 @@ import java.util.Date;
 @TableName("t_banners")
 public class Banners implements BaseData {
     //主键id
+
+    @TableId(value = "id" ,type = IdType.ASSIGN_ID)
     private Long id;
     //图片路径
     private String path;

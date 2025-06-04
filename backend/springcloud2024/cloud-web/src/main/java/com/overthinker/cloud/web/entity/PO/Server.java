@@ -1,6 +1,7 @@
 package com.overthinker.cloud.web.entity.PO;
 
 
+import com.overthinker.cloud.entity.BaseData;
 import com.overthinker.cloud.web.entity.server.*;
 import com.overthinker.cloud.web.utils.Arith;
 import com.overthinker.cloud.web.utils.IpUtils;
@@ -25,7 +26,7 @@ import java.util.Properties;
  * @author ruoyi
  */
 @Data
-public class Server
+public class Server implements BaseData
 {
     private static final int OSHI_WAIT_SECOND = 1000;
     

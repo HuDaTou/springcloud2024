@@ -2,7 +2,7 @@ package com.overthinker.cloud.web.entity.PO;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.overthinker.cloud.web.entity.BaseData;
+import com.overthinker.cloud.entity.BaseData;
 import com.overthinker.cloud.web.entity.ip.BlackListIpInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,7 +25,7 @@ import java.util.Date;
 @TableName(value = "t_black_list", autoResultMap = true)
 public class BlackList implements BaseData{
     //表id
-    @TableId(type = IdType.AUTO)
+    @TableId(value = "id" ,type = IdType.ASSIGN_ID)
     private Long id;
     //用户id
     private Long userId;

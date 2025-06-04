@@ -3,7 +3,7 @@ package com.overthinker.cloud.web.controller;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.web.controller.base.BaseController;
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.RoleUserDTO;
 import com.overthinker.cloud.web.entity.DTO.UserRoleDTO;
 import com.overthinker.cloud.web.entity.VO.RoleAllVO;

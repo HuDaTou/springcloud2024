@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.entity.VO;
 
-import com.overthinker.cloud.web.entity.BaseData;
+import com.overthinker.cloud.entity.BaseData;
 import lombok.Data;
 
 import java.util.Date;

@@ -2,7 +2,7 @@ package com.overthinker.cloud.web.config;
 
 import com.overthinker.cloud.web.entity.constants.SecurityConst;
 import com.overthinker.cloud.web.filter.JwtAuthorizeFilter;
-import com.overthinker.cloud.web.handler.SecurityHandler;
+import com.overthinker.cloud.web.handler.security.SecurityHandler;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -49,21 +49,21 @@ public class SecurityConfiguration {
                         // 登录页面
                         .loginProcessingUrl(SecurityConst.LOGIN_PAGE)
                         // 成功登录处理
-                        .successHandler(securityHandler::onAuthenticationSuccess)
+                        .successHandler(securityHandler)
                         // 失败登录处理
-                        .failureHandler(securityHandler::onAuthenticationFailure)
+                        .failureHandler(securityHandler)
                 )
                 .logout(conf -> conf
                         // 登出页面
                         .logoutUrl(SecurityConst.LOGOUT_PAGE)
                         // 退出登录处理
-                        .logoutSuccessHandler(securityHandler::onLogoutSuccess)
+                        .logoutSuccessHandler(securityHandler)
                 )
                 .exceptionHandling(conf -> conf
                         // 没有登录处理
-                        .authenticationEntryPoint(securityHandler::onUnAuthenticated)
+                        .authenticationEntryPoint(securityHandler)
                         // 没有权限处理
-                        .accessDeniedHandler(securityHandler::onAccessDeny)
+                        .accessDeniedHandler(securityHandler)
                 )
 //                TODO 设置跨域
                 // 禁用 csrf
@@ -75,5 +75,6 @@ public class SecurityConfiguration {
 //                .cors(Customizer.withDefaults())
                 .build();
     }
+
 
 }

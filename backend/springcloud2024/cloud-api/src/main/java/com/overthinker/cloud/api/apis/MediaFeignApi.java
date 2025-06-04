@@ -1,7 +1,7 @@
 package com.overthinker.cloud.api.apis;
 
-import com.overthinker.cloud.entityDTO.PayDTO;
-import com.overthinker.cloud.entityVO.PayVO;
+import com.overthinker.cloud.entity.DTO.PayDTO;
+import com.overthinker.cloud.entity.VO.PayVO;
 import com.overthinker.cloud.resp.ResultData;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;

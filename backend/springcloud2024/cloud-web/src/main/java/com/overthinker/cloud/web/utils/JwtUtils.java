@@ -203,6 +203,7 @@ public class JwtUtils {
     private PermissionMapper permissionMapper;
 
     // 查询jwt角色&权限
+    // TODO在现有代码基础上增加权限缓存
     private List<String> getAuthorities(Long userId) {
         // 查询用户角色
         List<UserRole> userRoles = userRoleMapper.selectList(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, userId));

@@ -1,5 +1,6 @@
 package com.overthinker.cloud.web.controller;
 
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.CheckBlacklist;
@@ -26,7 +27,7 @@ import java.util.List;
 @Tag(name = "点赞相关接口")
 @RequestMapping("/like")
 @Validated
-public class LikeController {
+public class LikeController extends BaseController {
 
     @Resource
     private LikeService likeService;

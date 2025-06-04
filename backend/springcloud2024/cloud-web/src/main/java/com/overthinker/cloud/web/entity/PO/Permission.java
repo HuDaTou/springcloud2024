@@ -1,10 +1,8 @@
 package com.overthinker.cloud.web.entity.PO;
 
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.overthinker.cloud.web.entity.BaseData;
+import com.baomidou.mybatisplus.annotation.*;
+import com.overthinker.cloud.entity.BaseData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,6 +22,7 @@ import java.util.Date;
 @TableName("sys_permission")
 public class Permission implements BaseData {
     //权限表id
+    @TableId(value = "id" ,type = IdType.ASSIGN_ID)
     private Integer id;
     //描述
     private String permissionDesc;

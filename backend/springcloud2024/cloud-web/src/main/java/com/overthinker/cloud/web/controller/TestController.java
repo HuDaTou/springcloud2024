@@ -1,7 +1,7 @@
 package com.overthinker.cloud.web.controller;
 
 import com.overthinker.cloud.resp.ResultData;
-import com.overthinker.cloud.web.controller.base.BaseController;
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.web.utils.SecurityUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

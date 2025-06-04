@@ -1,6 +1,7 @@
 package com.overthinker.cloud.web.controller;
 
 
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.VO.SseDataVO;
 import com.overthinker.cloud.web.service.ArticleService;
 import com.overthinker.cloud.web.service.PhotoService;
@@ -25,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 @Tag(name = "大屏监控")
 @RequestMapping(value = "/sse")
 @Slf4j
-public class SseController {
+public class SseController extends BaseController {
 //    数据量
     private final static Map<String ,SseEmitter> SSE_DATA = new ConcurrentHashMap<>();
 

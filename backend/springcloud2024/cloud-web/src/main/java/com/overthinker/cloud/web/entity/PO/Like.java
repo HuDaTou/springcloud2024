@@ -1,6 +1,7 @@
 package com.overthinker.cloud.web.entity.PO;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.overthinker.cloud.entity.BaseData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,9 +21,9 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 @TableName("t_like")
-public class Like {
+public class Like implements BaseData {
     //点赞表id
-    @TableId(type = IdType.AUTO)
+    @TableId(value = "id" ,type = IdType.ASSIGN_ID)
     private String id;
     //点赞的用户id
     private Long userId;

@@ -1,7 +1,7 @@
 package com.overthinker.cloud.web.entity.PO;
 
 import com.baomidou.mybatisplus.annotation.*;
-import com.overthinker.cloud.web.entity.BaseData;
+import com.overthinker.cloud.entity.BaseData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,7 +23,7 @@ import java.util.Date;
 @TableName("t_comment")
 public class Comment implements BaseData {
     //评论id
-    @TableId(type = IdType.AUTO)
+    @TableId(value = "id" ,type = IdType.ASSIGN_ID)
     private Long id;
     //评论类型 (1文章 2留言板)
     private Integer type;

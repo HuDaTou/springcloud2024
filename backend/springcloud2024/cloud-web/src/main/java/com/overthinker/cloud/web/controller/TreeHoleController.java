@@ -5,7 +5,7 @@ import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.CheckBlacklist;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.web.controller.base.BaseController;
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.SearchTreeHoleDTO;
 import com.overthinker.cloud.web.entity.DTO.TreeHoleIsCheckDTO;
 import com.overthinker.cloud.web.entity.VO.TreeHoleListVO;
