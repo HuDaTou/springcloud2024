@@ -2,50 +2,50 @@ server:
   port: 80
 
 spring:
-    application:
-        name: cloud-consumer-order
+  application:
+    name: cloud-consumer-order
 
   ####Spring Cloud Consul for Service Discovery
-    cloud:
-      consul:
-        host: 192.168.0.100
-        port: 8500
-        discovery:
-          prefer-ip-address: true #优先使用服务ip进行注册
-          service-name: ${spring.application.name}
-          heartbeat:
-            enabled: true
-      openfeign:
-        client:
-          config:
-            default:
-              #连接超时时间
-              connectTimeout: 3000
-              #读取超时时间
-              readTimeout: 3000
-#              TODO:为什么时间这么设置
-
-            cloud-payment-service:
-#              这是指建立网络连接的超时时间，单位是毫秒。
-              connectTimeout: 3000
-#              这是指从连接建立开始，等待服务B处理请求并返回响应的最长时间，单位也是毫秒。
-              readTimeout: 3000
-        #  Apache HttpClient5 配置开启
-        httpclient:
-          hc5:
-            enabled: true
-        compression:
-          request:
-            enabled: true
-            min-request-size: 2048 #最小触发压缩的大小
-            mime-types: text/xml,application/xml,application/json #触发压缩数据类型
-          response:
-            enabled: true
-          # 开启circuitbreaker和分组激活 spring.cloud.openfeign.circuitbreaker.enabled
-        circuitbreaker:
+  cloud:
+    consul:
+      host: 192.168.0.100
+      port: 8500
+      discovery:
+        prefer-ip-address: true #优先使用服务ip进行注册
+        service-name: ${spring.application.name}
+        heartbeat:
           enabled: true
-          group:
-            enabled: true #没开分组永远不用分组的配置。精确优先、分组次之(开了分组)、默认最后
+    openfeign:
+      client:
+        config:
+          default:
+            #连接超时时间
+            connectTimeout: 3000
+            #读取超时时间
+            readTimeout: 3000
+          #              TODO:为什么时间这么设置
+
+          cloud-payment-service:
+            #              这是指建立网络连接的超时时间，单位是毫秒。
+            connectTimeout: 3000
+            #              这是指从连接建立开始，等待服务B处理请求并返回响应的最长时间，单位也是毫秒。
+            readTimeout: 3000
+      #  Apache HttpClient5 配置开启
+      httpclient:
+        hc5:
+          enabled: true
+      compression:
+        request:
+          enabled: true
+          min-request-size: 2048 #最小触发压缩的大小
+          mime-types: text/xml,application/xml,application/json #触发压缩数据类型
+        response:
+          enabled: true
+        # 开启circuitbreaker和分组激活 spring.cloud.openfeign.circuitbreaker.enabled
+      circuitbreaker:
+        enabled: true
+        group:
+          enabled: true #没开分组永远不用分组的配置。精确优先、分组次之(开了分组)、默认最后
 logging:
   level:
     com:
