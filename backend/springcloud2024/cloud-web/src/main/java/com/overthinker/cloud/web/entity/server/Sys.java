@@ -4,12 +4,11 @@ import lombok.Data;
 
 /**
  * 系统相关信息
- * 
+ *
  * @author ruoyi
  */
 @Data
-public class Sys
-{
+public class Sys {
     /**
      * 服务器名称
      */

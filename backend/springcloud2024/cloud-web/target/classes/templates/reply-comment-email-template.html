@@ -72,7 +72,8 @@
             ">
                 <div style="display: flex;flex-direction: column;align-items: center">
                     <span style="color: #ffffff;font-weight: bold;font-size: 25px;margin-bottom: 20px">overthinker</span>
-                    <span style="color: #ffffff;font-weight: bold;font-size: 25px" th:text="${type == 1 ? '文章评论有新的回复' : '留言评论有新的回复'}"></span>
+                    <span style="color: #ffffff;font-weight: bold;font-size: 25px"
+                          th:text="${type == 1 ? '文章评论有新的回复' : '留言评论有新的回复'}"></span>
                 </div>
             </div>
             <div style="margin: 1rem 0; display: flex; flex-direction: column; align-items: start;width: 90%">
@@ -80,7 +81,8 @@
                     <span style="font-weight: bold">文章名称：</span>
                     <span th:text="${title}"></span>
                 </div>
-                <div style="margin-top: .5rem"><span style="font-weight: bold" th:text="${type == 1 ? '文章地址' : '留言地址'}">：</span>
+                <div style="margin-top: .5rem"><span style="font-weight: bold"
+                                                     th:text="${type == 1 ? '文章地址' : '留言地址'}">：</span>
                     <span>
                         <a th:href="${url}" th:text="${url}" style="text-decoration: none"></a>
                     </span>
@@ -112,11 +114,12 @@
                                     <span style="font-size: 13px" th:text="${replyTime}"></span>
                                 </div>
                             </div>
-                            <div style="background: #F2F2F3;padding: .8rem;border-radius: 10px;font-size: 17px" th:text="${replyContent}"></div>
-                                <!-- 内容 -->
+                            <div style="background: #F2F2F3;padding: .8rem;border-radius: 10px;font-size: 17px"
+                                 th:text="${replyContent}"></div>
+                            <!-- 内容 -->
 
-                            </div>
                         </div>
+                    </div>
                     <hr style="margin-left: 50px;background-color: #DCDFE6; height: 1px; border: none;">
 
                     <div style="display: flex;margin-left: 50px;margin-top: 20px">
@@ -136,7 +139,8 @@
                                 </div>
                             </div>
                             <div style="background: #F2F2F3;padding: .8rem;border-radius: 10px;font-size: 17px">
-                                <div style="font-weight: bold;color: #F49494">回复 @<span th:text="${replyNickname}"></span></div>
+                                <div style="font-weight: bold;color: #F49494">回复 @<span
+                                        th:text="${replyNickname}"></span></div>
                                 <!-- 内容 -->
                                 <div style="margin-top: 10px" th:text="${content}"></div>
                             </div>

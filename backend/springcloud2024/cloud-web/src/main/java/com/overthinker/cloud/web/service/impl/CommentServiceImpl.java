@@ -89,7 +89,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 .isNotNull(Comment::getParentId);
         List<Comment> childComment = commentMapper.selectList(childQueryWrapper);
         if (!childComment.isEmpty()) comments.addAll(childComment);
-        List<ArticleCommentVO> commentsVOS = comments.stream().map(comment -> comment.asViewObject(ArticleCommentVO.class)).toList();
+        List<ArticleCommentVO> commentsVOS = comments.stream().map(comment -> comment.copyProperties(ArticleCommentVO.class)).toList();
         List<ArticleCommentVO> parentComments = commentsVOS.stream().filter(comment -> comment.getParentId() == null).toList();
         List<ArticleCommentVO> collect = parentComments.stream().peek(comment -> {
                     comment.setChildComment(getChildComment(commentsVOS, comment.getId()));
@@ -133,7 +133,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     @Override
     public ResultData<String> userComment(UserCommentDTO commentDTO) {
-        Comment comment = commentDTO.asViewObject(Comment.class, commentDto -> commentDto.setCommentUserId(SecurityUtils.getUserId()));
+        Comment comment = commentDTO.copyProperties(Comment.class, commentDto -> commentDto.setCommentUserId(SecurityUtils.getUserId()));
         if (this.save(comment)) {
             // 判断用是否为第三方登录没有邮箱
             User user = userMapper.selectById(SecurityUtils.getUserId());
@@ -230,7 +230,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                     .eq(StringUtils.isNotNull(searchDTO.getIsCheck()), Comment::getIsCheck, searchDTO.getIsCheck());
         }
 
-        return commentMapper.selectList(wrapper.orderByDesc(Comment::getCreateTime)).stream().map(comment -> comment.asViewObject(CommentListVO.class,
+        return commentMapper.selectList(wrapper.orderByDesc(Comment::getCreateTime)).stream().map(comment -> comment.copyProperties(CommentListVO.class,
                 v -> v.setCommentUserName(userMapper.selectById(comment.getCommentUserId()).getUsername()))).collect(Collectors.toList());
     }
 

@@ -32,12 +32,14 @@ public interface CommentService extends IService<Comment> {
 
     /**
      * 后台评论列表
+     *
      * @return 结果
      */
     List<CommentListVO> getBackCommentList(SearchCommentDTO searchDTO);
 
     /**
      * 是否通过评论
+     *
      * @param isCheckDTO 是否通过
      * @return 是否成功
      */
@@ -45,6 +47,7 @@ public interface CommentService extends IService<Comment> {
 
     /**
      * 删除评论
+     *
      * @param id id 列表
      * @return 是否成功
      */

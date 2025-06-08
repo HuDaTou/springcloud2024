@@ -1,10 +1,10 @@
 package com.overthinker.cloud.web.controller;
 
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.CheckBlacklist;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.CommentIsCheckDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchCommentDTO;
 import com.overthinker.cloud.web.entity.DTO.UserCommentDTO;
@@ -70,7 +70,7 @@ public class CommentController extends BaseController {
     @PreAuthorize("hasAnyAuthority('blog:comment:list')")
     @Operation(summary = "后台评论列表")
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="评论管理",operation= LogConst.GET)
+    @LogAnnotation(module = "评论管理", operation = LogConst.GET)
     @GetMapping("/back/list")
     public ResultData<List<CommentListVO>> backList() {
         return messageHandler(() -> commentService.getBackCommentList(null));
@@ -79,7 +79,7 @@ public class CommentController extends BaseController {
     @PreAuthorize("hasAnyAuthority('blog:comment:search')")
     @Operation(summary = "搜索后台评论列表")
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="评论管理",operation= LogConst.SEARCH)
+    @LogAnnotation(module = "评论管理", operation = LogConst.SEARCH)
     @PostMapping("/back/search")
     public ResultData<List<CommentListVO>> backList(@RequestBody SearchCommentDTO searchDTO) {
         return messageHandler(() -> commentService.getBackCommentList(searchDTO));
@@ -88,7 +88,7 @@ public class CommentController extends BaseController {
     @PreAuthorize("hasAnyAuthority('blog:comment:isCheck')")
     @Operation(summary = "修改评论是否通过")
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="评论管理",operation= LogConst.UPDATE)
+    @LogAnnotation(module = "评论管理", operation = LogConst.UPDATE)
     @PostMapping("/back/isCheck")
     public ResultData<Void> isCheck(@RequestBody @Valid CommentIsCheckDTO commentIsCheckDTO) {
         return commentService.isCheckComment(commentIsCheckDTO);
@@ -97,7 +97,7 @@ public class CommentController extends BaseController {
     @PreAuthorize("hasAnyAuthority('blog:comment:delete')")
     @Operation(summary = "删除评论")
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="评论管理",operation= LogConst.DELETE)
+    @LogAnnotation(module = "评论管理", operation = LogConst.DELETE)
     @DeleteMapping("/back/delete/{id}")
     public ResultData<Void> delete(@PathVariable("id") Long id) {
         return commentService.deleteComment(id);

@@ -48,7 +48,7 @@ public class TreeHoleServiceImpl extends ServiceImpl<TreeHoleMapper, TreeHole> i
     public List<TreeHoleVO> getTreeHole() {
         List<TreeHole> treeHoles = treeHoleMapper.selectList(new LambdaQueryWrapper<TreeHole>().eq(TreeHole::getIsCheck, SQLConst.IS_CHECK_YES));
         if (treeHoles.isEmpty()) return null;
-        return treeHoles.stream().map(treeHole -> treeHole.asViewObject(TreeHoleVO.class, treeHoleVO -> {
+        return treeHoles.stream().map(treeHole -> treeHole.copyProperties(TreeHoleVO.class, treeHoleVO -> {
             User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, treeHole.getUserId()));
             treeHoleVO.setNickname(user.getUsername());
             treeHoleVO.setAvatar(user.getAvatar());
@@ -72,7 +72,7 @@ public class TreeHoleServiceImpl extends ServiceImpl<TreeHoleMapper, TreeHole> i
         }
         List<TreeHole> treeHoles = treeHoleMapper.selectList(wrapper);
         if (!treeHoles.isEmpty()) {
-            return treeHoles.stream().map(treeHole -> treeHole.asViewObject(TreeHoleListVO.class,
+            return treeHoles.stream().map(treeHole -> treeHole.copyProperties(TreeHoleListVO.class,
                     v -> v.setUserName(userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, treeHole.getUserId()))
                             .getUsername()))).toList();
         }

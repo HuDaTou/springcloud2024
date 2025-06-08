@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.entity.DTO;
 
-import com.overthinker.cloud.entity.BaseData;
+import com.overthinker.cloud.entity.BasecopyProperties;
 import lombok.Data;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
  * 创建时间：2023/11/23 12:05
  */
 @Data
-public class MenuDTO implements BaseData {
+public class MenuDTO implements BasecopyProperties {
     private Long id;
     private Long parentId;
     private String title;

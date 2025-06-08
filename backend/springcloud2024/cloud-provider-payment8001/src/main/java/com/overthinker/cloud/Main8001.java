@@ -14,7 +14,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 @EnableDiscoveryClient
 @RefreshScope
 public class Main8001 {
-//    当项目启动时控制台输出项目启动成功的日志
+    //    当项目启动时控制台输出项目启动成功的日志
     static {
         log.info("项目启动成功");
     }

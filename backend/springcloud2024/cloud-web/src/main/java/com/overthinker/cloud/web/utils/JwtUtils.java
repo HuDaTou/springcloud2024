@@ -208,9 +208,9 @@ public class JwtUtils {
         // 查询用户角色
         List<UserRole> userRoles = userRoleMapper.selectList(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, userId));
         List<Role> roles = userRoles.stream().map(role -> roleMapper.selectById(role.getRoleId())).toList();
-        if (roles.isEmpty()){
+        if (roles.isEmpty()) {
             return Collections.emptyList();
-        }else{
+        } else {
             // 查询权限关系表
             List<RolePermission> rolePermissions = rolePermissionMapper.selectBatchIds(roles.stream().map(Role::getId).toList());
             // 查询角色权限

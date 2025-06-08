@@ -89,7 +89,7 @@ public class LoginLogServiceImpl extends ServiceImpl<LoginLogMapper, LoginLog> i
             }
         }
         wrapper.orderByDesc(LoginLog::getCreateTime);
-        return loginLogMapper.selectList(wrapper).stream().map(loginLog -> loginLog.asViewObject(LoginLogVO.class,v -> v.setLoginTime(loginLog.getCreateTime()))).toList();
+        return loginLogMapper.selectList(wrapper).stream().map(loginLog -> loginLog.copyProperties(LoginLogVO.class, v -> v.setLoginTime(loginLog.getCreateTime()))).toList();
     }
 
     @Transactional

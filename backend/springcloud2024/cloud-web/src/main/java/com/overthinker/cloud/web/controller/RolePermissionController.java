@@ -1,9 +1,9 @@
 package com.overthinker.cloud.web.controller;
 
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.RolePermissionDTO;
 import com.overthinker.cloud.web.entity.VO.RoleAllVO;
 import com.overthinker.cloud.web.entity.constants.LogConst;
@@ -43,11 +43,11 @@ public class RolePermissionController extends BaseController {
     @Operation(summary = "查询权限的角色列表")
     @GetMapping("/role/list")
     public ResultData<List<RoleAllVO>> selectPermissionIdRole(
-            @NotNull(message = "角色id不能为空")@RequestParam(name = "permissionId") Long permissionId,
+            @NotNull(message = "角色id不能为空") @RequestParam(name = "permissionId") Long permissionId,
             @RequestParam(required = false, name = "roleName") String roleName,
             @RequestParam(required = false, name = "roleKey") String roleKey
     ) {
-        return messageHandler(() -> rolePermissionService.selectRoleByPermissionId(permissionId,roleName,roleKey,0));
+        return messageHandler(() -> rolePermissionService.selectRoleByPermissionId(permissionId, roleName, roleKey, 0));
     }
 
     @PreAuthorize("hasAnyAuthority('system:permission:role:not:list')")
@@ -64,7 +64,7 @@ public class RolePermissionController extends BaseController {
             @RequestParam(required = false, name = "roleName") String roleName,
             @RequestParam(required = false, name = "roleKey") String roleKey
     ) {
-        return messageHandler(() -> rolePermissionService.selectRoleByPermissionId(permissionId,roleName,roleKey,1));
+        return messageHandler(() -> rolePermissionService.selectRoleByPermissionId(permissionId, roleName, roleKey, 1));
     }
 
     @Operation(summary = "添加角色权限关系")
@@ -73,7 +73,7 @@ public class RolePermissionController extends BaseController {
     @Parameters({
             @Parameter(name = "rolePermissionDTO", description = "添加的数据")
     })
-    @LogAnnotation(module="角色权限",operation= LogConst.GRANT)
+    @LogAnnotation(module = "角色权限", operation = LogConst.GRANT)
     @PostMapping("/add")
     public ResultData<Void> addRolePermission(@Valid @RequestBody RolePermissionDTO rolePermissionDTO) {
         return rolePermissionService.addRolePermission(rolePermissionDTO);
@@ -85,7 +85,7 @@ public class RolePermissionController extends BaseController {
     @Parameters({
             @Parameter(name = "rolePermissionDTO", description = "删除的所需数据")
     })
-    @LogAnnotation(module="角色权限",operation= LogConst.DELETE)
+    @LogAnnotation(module = "角色权限", operation = LogConst.DELETE)
     @DeleteMapping("/delete")
     public ResultData<Void> deleteRolePermission(@Valid @RequestBody RolePermissionDTO rolePermissionDTO) {
         return rolePermissionService.deleteRolePermission(rolePermissionDTO);

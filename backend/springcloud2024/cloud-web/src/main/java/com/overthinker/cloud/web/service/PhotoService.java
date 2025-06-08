@@ -15,7 +15,8 @@ public interface PhotoService extends IService<Photo> {
 
     /**
      * 获取后台图片列表
-     * @param pageNum 当前页码
+     *
+     * @param pageNum  当前页码
      * @param pageSize 每页数量
      * @param parentId 父相册id
      * @return 图片列表
@@ -24,6 +25,7 @@ public interface PhotoService extends IService<Photo> {
 
     /**
      * 创建相册
+     *
      * @param albumDTO 相册信息
      * @return 创建结果
      */
@@ -31,8 +33,9 @@ public interface PhotoService extends IService<Photo> {
 
     /**
      * 上传图片
-     * @param file 图片文件
-     * @param name 图片名称
+     *
+     * @param file     图片文件
+     * @param name     图片名称
      * @param parentId 相册id
      * @return 上传结果
      */
@@ -40,6 +43,7 @@ public interface PhotoService extends IService<Photo> {
 
     /**
      * 修改相册
+     *
      * @param albumDTO 相册信息
      * @return 修改结果
      */
@@ -47,6 +51,7 @@ public interface PhotoService extends IService<Photo> {
 
     /**
      * 删除相册或照片
+     *
      * @param deletePhotoOrAlbum 相册或照片信息
      * @return 删除结果
      */

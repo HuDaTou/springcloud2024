@@ -18,5 +18,5 @@ public interface OauthService {
      * @param type         登录类型
      * @return 响应结果
      */
-    String handleLogin(AuthResponse authResponse, HttpServletRequest request,Integer type);
+    String handleLogin(AuthResponse authResponse, HttpServletRequest request, Integer type);
 }

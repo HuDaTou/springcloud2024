@@ -18,34 +18,37 @@ public class OrderController {
     @Resource
     private PayFeignApi payFeignApi;
 
-  /**
-   * 新增一条支付相关流水记录
-   * @param payDTO
-   * @return
-   */
+    /**
+     * 新增一条支付相关流水记录
+     *
+     * @param payDTO
+     * @return
+     */
     @PostMapping("/feign/pay/add")
     public ResultData<String> addPay(@RequestBody PayDTO payDTO) {
 
-    return payFeignApi.addPay(payDTO);
+        return payFeignApi.addPay(payDTO);
     }
 
 
-  /**
-   * 删除支付流水信息
-   * @param id
-   * @return
-   */
+    /**
+     * 删除支付流水信息
+     *
+     * @param id
+     * @return
+     */
     @DeleteMapping("/feign/pay/delete/{id}")
     public ResultData<Integer> deletePay(@PathVariable("id") Long id) {
 
-    return payFeignApi.deletePay(id);
+        return payFeignApi.deletePay(id);
     }
 
-  /**
-   * 修改支付流水信息
-   * @param payDTO
-   * @return
-   */
+    /**
+     * 修改支付流水信息
+     *
+     * @param payDTO
+     * @return
+     */
     @PutMapping("/feign/pay/update")
     public ResultData<Integer> updatePay(@RequestBody PayDTO payDTO) {
         return payFeignApi.updatePay(payDTO);
@@ -74,10 +77,6 @@ public class OrderController {
 //    public ResultData list() {
 //        return payFeignApi.list();
 //    }
-
-
-
-
 
 
 }

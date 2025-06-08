@@ -9,10 +9,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 
  * @TableName mediafile
  */
-@TableName(value ="mediafile")
+@TableName(value = "mediafile")
 @Data
 public class Mediafile implements Serializable {
     /**

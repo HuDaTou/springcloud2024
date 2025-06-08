@@ -39,6 +39,7 @@ public class WebsiteInfoController extends BaseController {
 
     /**
      * 上传头像
+     *
      * @param avatar 头像
      * @return 访问url
      */
@@ -46,14 +47,15 @@ public class WebsiteInfoController extends BaseController {
     @Operation(summary = "上传站长头像")
     @Parameter(name = "avatar", description = "头像")
     @AccessLimit(seconds = 60, maxCount = 5)
-    @LogAnnotation(module="信息管理",operation= LogConst.UPLOAD_IMAGE)
+    @LogAnnotation(module = "信息管理", operation = LogConst.UPLOAD_IMAGE)
     @PostMapping("/upload/avatar")
     public ResultData<String> upload(@RequestParam("avatar") MultipartFile avatar) {
-        return websiteInfoService.uploadImageInsertOrUpdate(UploadEnum.WEBSITE_INFO_AVATAR, avatar,0);
+        return websiteInfoService.uploadImageInsertOrUpdate(UploadEnum.WEBSITE_INFO_AVATAR, avatar, 0);
     }
 
     /**
      * 资料卡背景上传
+     *
      * @param background 背景图
      * @return 访问url
      */
@@ -61,7 +63,7 @@ public class WebsiteInfoController extends BaseController {
     @Operation(summary = "上传站长资料卡背景")
     @Parameter(name = "background", description = "资料卡片背景")
     @AccessLimit(seconds = 60, maxCount = 5)
-    @LogAnnotation(module="信息管理",operation= LogConst.UPLOAD_IMAGE)
+    @LogAnnotation(module = "信息管理", operation = LogConst.UPLOAD_IMAGE)
     @PostMapping("/upload/background")
     public ResultData<String> uploadBackground(@RequestParam("background") MultipartFile background) {
         return websiteInfoService.uploadImageInsertOrUpdate(UploadEnum.WEBSITE_INFO_BACKGROUND, background, 1);
@@ -69,6 +71,7 @@ public class WebsiteInfoController extends BaseController {
 
     /**
      * 查询网站信息
+     *
      * @return 网站信息
      */
     @PreAuthorize("hasAnyAuthority('blog:get:websiteInfo')")
@@ -81,6 +84,7 @@ public class WebsiteInfoController extends BaseController {
 
     /**
      * 查询网站信息
+     *
      * @return 网站信息
      */
     @Operation(summary = "查看网站信息-前端")
@@ -92,6 +96,7 @@ public class WebsiteInfoController extends BaseController {
 
     /**
      * 修改站长信息
+     *
      * @param stationmasterInfoDTO 站长信息
      * @return 是否成功
      */
@@ -105,6 +110,7 @@ public class WebsiteInfoController extends BaseController {
 
     /**
      * 修改或创建网站信息
+     *
      * @param websiteInfoDTO 网站信息
      * @return 是否成功
      */

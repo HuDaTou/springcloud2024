@@ -30,19 +30,13 @@ public enum UploadEnum {
 
 
     VEDIO_COVER("video/cover/", "视频封面", Set.of(ImageConst.JPG, ImageConst.JPEG, ImageConst.PNG, ImageConst.WEBP), 10.0),
-    VIDEO_PATH("video/videos/", "视频文件", Set.of(VideoConst.AVI,VideoConst.FLV, VideoConst.MP4, VideoConst.RM), 1024.0),
-
-
+    VIDEO_PATH("video/videos/", "视频文件", Set.of(VideoConst.AVI, VideoConst.FLV, VideoConst.MP4, VideoConst.RM), 1024.0),
 
 
     // 前台首页Banners图片
     UI_BANNERS("banners/", "前台首页Banners图片", Set.of(ImageConst.JPG, ImageConst.JPEG, ImageConst.PNG, ImageConst.WEBP), 10.0),
     // 相册模块图片
     PHOTO_ALBUM("photoAlbum/", "相册模块图片", Set.of(ImageConst.JPG, ImageConst.JPEG, ImageConst.PNG, ImageConst.WEBP, ImageConst.GIF), 10.0);
-
-
-
-
 
 
     // 上传目录

@@ -1,10 +1,10 @@
 package com.overthinker.cloud.web.controller;
 
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.CheckBlacklist;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.LinkDTO;
 import com.overthinker.cloud.web.entity.DTO.LinkIsCheckDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchLinkDTO;
@@ -96,8 +96,9 @@ public class LinkController extends BaseController {
 
     /**
      * 邮箱审核友链接口
+     *
      * @param verifyCode 校验码
-     * @param response 响应
+     * @param response   响应
      * @return 提示信息
      */
     @Operation(summary = "邮箱审核友链")

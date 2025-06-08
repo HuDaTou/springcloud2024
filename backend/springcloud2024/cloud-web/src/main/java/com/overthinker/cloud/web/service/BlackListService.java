@@ -21,6 +21,7 @@ public interface BlackListService extends IService<BlackList> {
 
     /**
      * 新增数据
+     *
      * @param addBlackListDTO 新增对象
      * @return 新增结果
      */
@@ -28,12 +29,14 @@ public interface BlackListService extends IService<BlackList> {
 
     /**
      * 获取黑名单
+     *
      * @return 黑名单
      */
     List<BlackListVO> getBlackList(SearchBlackListDTO searchBlackListDTO);
 
     /**
      * 修改数据
+     *
      * @param updateBlackListDTO 修改对象
      * @return 修改结果
      */
@@ -41,6 +44,7 @@ public interface BlackListService extends IService<BlackList> {
 
     /**
      * 删除黑名单
+     *
      * @param ids 黑名单id
      * @return 是否成功
      */

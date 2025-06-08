@@ -5,6 +5,7 @@ import lombok.Getter;
 
 /**
  * 黑名单策略
+ *
  * @author overH
  * @since 2024-10-10 18:47:33
  */
@@ -20,7 +21,7 @@ public enum BlackListPolicy {
     private final String message;
     private final String reason;
 
-    BlackListPolicy(int requestThreshold, DateField timeUnit, int duration, String message,String reason) {
+    BlackListPolicy(int requestThreshold, DateField timeUnit, int duration, String message, String reason) {
         this.requestThreshold = requestThreshold;
         this.timeUnit = timeUnit;
         this.duration = duration;

@@ -27,7 +27,7 @@ public class QuartzConfig {
                 .storeDurably()
                 .build();
     }
-    
+
     @Bean
     public Trigger trigger() {
         //创建触发器

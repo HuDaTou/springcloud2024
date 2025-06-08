@@ -13,7 +13,6 @@ import com.overthinker.cloud.web.utils.MyRedisCache;
 import com.overthinker.cloud.web.utils.StringUtils;
 import com.overthinker.cloud.web.utils.WebUtil;
 import jakarta.annotation.Resource;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.AccessDeniedException;
@@ -42,9 +41,7 @@ public class SecurityHandler implements
         AuthenticationFailureHandler,
         LogoutSuccessHandler,
         AuthenticationEntryPoint,
-        AccessDeniedHandler
-
-{
+        AccessDeniedHandler {
 
     @Resource
     private JwtUtils jwtUtils;
@@ -71,7 +68,7 @@ public class SecurityHandler implements
             HttpServletResponse response,
             Authentication authentication
     ) {
-        handlerOnAuthenticationSuccess(request,response,(LoginUser)authentication.getPrincipal());
+        handlerOnAuthenticationSuccess(request, response, (LoginUser) authentication.getPrincipal());
     }
 
     public void handlerOnAuthenticationSuccess(
@@ -80,7 +77,7 @@ public class SecurityHandler implements
             LoginUser user
     ) {
         String typeHeader = request.getHeader(Const.TYPE_HEADER);
-        if ((!StringUtils.matches(typeHeader, List.of(Const.BACKEND_REQUEST, Const.FRONTEND_REQUEST)) )) {
+        if ((!StringUtils.matches(typeHeader, List.of(Const.BACKEND_REQUEST, Const.FRONTEND_REQUEST)))) {
             throw new BadCredentialsException("非法请求");
         }
         Long id = user.getUser().getId();
@@ -91,7 +88,7 @@ public class SecurityHandler implements
         String token = jwtUtils.createJwt(uuid, user, id, name);
 
         // 转换VO
-        AuthorizeVO authorizeVO = user.getUser().asViewObject(AuthorizeVO.class, v -> {
+        AuthorizeVO authorizeVO = user.getUser().copyProperties(AuthorizeVO.class, v -> {
             v.setToken(token);
             v.setExpire(jwtUtils.expireTime());
         });
@@ -148,9 +145,9 @@ public class SecurityHandler implements
      */
 
     @Override
-    public void handle(            HttpServletRequest request,
-                                   HttpServletResponse response,
-                                   AccessDeniedException exception
+    public void handle(HttpServletRequest request,
+                       HttpServletResponse response,
+                       AccessDeniedException exception
     ) {
         WebUtil.renderString(response, ResultData.failure(ReturnCodeEnum.NO_PERMISSION.getCode(), ReturnCodeEnum.NO_PERMISSION.getMsg()).asJsonString());
     }

@@ -12,36 +12,38 @@ public class PayCircuitController {
 
     @GetMapping(value = "/pay/circuit/{id}")
     public String payCircuit(@PathVariable("id") Integer id) {
-        if(id == -4) throw new RuntimeException("id不能为负数");
-        if(id == 9999){
+        if (id == -4) throw new RuntimeException("id不能为负数");
+        if (id == 9999) {
             try {
                 TimeUnit.SECONDS.sleep(5);
-            } catch ( InterruptedException e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
         }
-        return "Hello, circuit! inputId:  "+id+" \t " + IdUtil.simpleUUID();
+        return "Hello, circuit! inputId:  " + id + " \t " + IdUtil.simpleUUID();
     }
 
     //=========Resilience4j bulkhead 的例子
     @GetMapping(value = "/pay/bulkhead/{id}")
-    public String myBulkhead(@PathVariable("id") Integer id)
-    {
-        if(id == -4) throw new RuntimeException("----bulkhead id 不能-4");
+    public String myBulkhead(@PathVariable("id") Integer id) {
+        if (id == -4) throw new RuntimeException("----bulkhead id 不能-4");
 
-        if(id == 9999)
-        {
-            try { TimeUnit.SECONDS.sleep(5); } catch (InterruptedException e) { e.printStackTrace(); }
+        if (id == 9999) {
+            try {
+                TimeUnit.SECONDS.sleep(5);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
-        return "Hello, bulkhead! inputId:  "+id+" \t " + IdUtil.simpleUUID();
+        return "Hello, bulkhead! inputId:  " + id + " \t " + IdUtil.simpleUUID();
     }
+
     //=========Resilience4j ratelimit 的例子
     @GetMapping(value = "/pay/ratelimit/{id}")
-    public String myRatelimit(@PathVariable("id") Integer id)
-    {
-        return "Hello, myRatelimit欢迎到来 inputId:  "+id+" \t " + IdUtil.simpleUUID();
+    public String myRatelimit(@PathVariable("id") Integer id) {
+        return "Hello, myRatelimit欢迎到来 inputId:  " + id + " \t " + IdUtil.simpleUUID();
     }
 
 

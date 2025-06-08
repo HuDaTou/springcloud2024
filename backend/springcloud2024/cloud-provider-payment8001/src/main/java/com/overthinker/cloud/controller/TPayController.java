@@ -2,8 +2,8 @@ package com.overthinker.cloud.controller;
 
 
 import cn.hutool.core.bean.BeanUtil;
-import com.overthinker.cloud.entity.TPay;
 import com.overthinker.cloud.entity.DTO.PayDTO;
+import com.overthinker.cloud.entity.TPay;
 import com.overthinker.cloud.entity.VO.PayVO;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.service.impl.TPayServiceImpl;
@@ -16,9 +16,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- *
  * 支付交易表 前端控制器
- *
  *
  * @author overthinker
  * @since 2024-04-21
@@ -33,6 +31,7 @@ public class TPayController {
 
     /**
      * 新增一条支付相关流水记录
+     *
      * @param payDTO
      * @return
      */
@@ -89,6 +88,7 @@ public class TPayController {
 
     /**
      * 根据ids批量查询
+     *
      * @param ids
      * @return
      */
@@ -120,13 +120,12 @@ public class TPayController {
     }
 
 
-
     @Value("${server.port}")
     private String port;
 
     @GetMapping("/getPort")
     public String getPort(@Value("${user.overthinker}") String user) {
 
-            return "当前端口号：" + port + "  user:" + user;
+        return "当前端口号：" + port + "  user:" + user;
     }
 }

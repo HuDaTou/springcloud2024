@@ -237,7 +237,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
         });
 
-        return user.asViewObject(UserAccountVO.class, role -> {
+        return user.copyProperties(UserAccountVO.class, role -> {
             role.setRoles(roles);
             role.setPermissions(permissions);
         });
@@ -324,7 +324,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 wrapper.gt(User::getCreateTime, userSearchDTO.getCreateTimeStart()).and(a -> a.lt(User::getCreateTime, userSearchDTO.getCreateTimeEnd()));
             }
         }
-        return userMapper.selectList(wrapper).stream().map(user -> user.asViewObject(UserListVO.class)).toList();
+        return userMapper.selectList(wrapper).stream().map(user -> user.copyProperties(UserListVO.class)).toList();
     }
 
     @Override
@@ -346,9 +346,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             List<Long> roleIds = userRoles.stream().map(UserRole::getRoleId).toList();
             if (!roleIds.isEmpty()) {
                 List<Role> roles = roleMapper.selectBatchIds(roleIds);
-                return user.asViewObject(UserDetailsVO.class, v -> v.setRoles(roles.stream().map(Role::getRoleName).toList()));
+                return user.copyProperties(UserDetailsVO.class, v -> v.setRoles(roles.stream().map(Role::getRoleName).toList()));
             } else {
-                return user.asViewObject(UserDetailsVO.class);
+                return user.copyProperties(UserDetailsVO.class);
             }
         }
         return null;
@@ -386,7 +386,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public ResultData<Void> updateUser(UserUpdateDTO userUpdateDTO) {
         Long userId = SecurityUtils.getUserId();
-        User user = userUpdateDTO.asViewObject(User.class, v -> v.setId(userId));
+        User user = userUpdateDTO.copyProperties(User.class, v -> v.setId(userId));
         if (this.updateById(user)) {
             return ResultData.success();
         }
@@ -413,7 +413,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (bCryptPasswordEncoder.matches(updateEmailDTO.getPassword(), user.getPassword())) {
             // 2.验证码是否正确
             ResultData<Void> verifyCode = verifyCode(updateEmailDTO.getEmail(), updateEmailDTO.getCode(), RedisConst.RESET_EMAIL);
-            if (verifyCode == null){
+            if (verifyCode == null) {
                 // 3.修改
                 user.setEmail(updateEmailDTO.getEmail());
                 userMapper.updateById(user);
@@ -428,12 +428,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 1.验证密码是否正确
         User user = userMapper.selectById(SecurityUtils.getUserId());
         // 邮箱是否改变
-        if (user.getEmail() != null && user.getEmail().equals(updateEmailDTO.getEmail())) return ResultData.failure("邮箱未更改");
+        if (user.getEmail() != null && user.getEmail().equals(updateEmailDTO.getEmail()))
+            return ResultData.failure("邮箱未更改");
         // 2.验证码是否正确
         ResultData<Void> verifyCode = verifyCode(updateEmailDTO.getEmail(), updateEmailDTO.getCode(), RedisConst.RESET_EMAIL);
         // 是否已经存在该邮箱
         if (userIsExist(null, updateEmailDTO.getEmail())) return ResultData.failure("该邮箱已被注册");
-        if (verifyCode == null){
+        if (verifyCode == null) {
             // 3.修改
             user.setEmail(updateEmailDTO.getEmail());
             userMapper.updateById(user);

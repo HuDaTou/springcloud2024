@@ -68,6 +68,7 @@ public class LoginUser implements UserDetails {
 
     /**
      * 账号是否过期
+     *
      * @return
      */
     @Override
@@ -77,6 +78,7 @@ public class LoginUser implements UserDetails {
 
     /**
      * 用户是否锁定
+     *
      * @return
      */
     @Override
@@ -86,6 +88,7 @@ public class LoginUser implements UserDetails {
 
     /**
      * 用户凭证是否过期
+     *
      * @return
      */
     @Override
@@ -95,6 +98,7 @@ public class LoginUser implements UserDetails {
 
     /**
      * 账户是否可用
+     *
      * @return
      */
     @Override

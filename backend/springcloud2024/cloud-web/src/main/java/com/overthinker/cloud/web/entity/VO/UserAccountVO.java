@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.entity.VO;
 
-import com.overthinker.cloud.entity.BaseData;
+import com.overthinker.cloud.entity.BasecopyProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Data
 @Schema(name = "UserAccountVO", description = "前台用户账户VO")
-public class UserAccountVO implements BaseData {
+public class UserAccountVO implements BasecopyProperties {
     //用户昵称
     @Schema(description = "用户昵称")
     private String nickname;

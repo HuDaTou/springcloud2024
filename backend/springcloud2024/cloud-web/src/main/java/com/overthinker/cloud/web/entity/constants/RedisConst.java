@@ -60,7 +60,7 @@ public class RedisConst {
      */
     public static final String ARTICLE_VISIT_COUNT = "article:count:visit:";
 
-//    视频访问数量
+    //    视频访问数量
     public static final String VIDEO_VISIT_COUNT = "video:count:visit:";
     /**
      * 邮箱确认友链通过，状态码

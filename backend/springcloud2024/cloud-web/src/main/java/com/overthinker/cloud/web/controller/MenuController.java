@@ -49,7 +49,7 @@ public class MenuController extends BaseController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @GetMapping("/list/{typeId}")
     public ResultData<List<MenuVO>> list(@PathVariable("typeId") Integer typeId) {
-        return menuService.getMenuList(typeId,null,null);
+        return menuService.getMenuList(typeId, null, null);
     }
 
     @PreAuthorize("hasAnyAuthority('system:search:menu:list')")
@@ -59,11 +59,11 @@ public class MenuController extends BaseController {
             @Parameter(name = "username", description = "用户名", required = true),
             @Parameter(name = "status", description = "状态", required = true)
     })
-    @LogAnnotation(module="菜单管理",operation= LogConst.SEARCH)
+    @LogAnnotation(module = "菜单管理", operation = LogConst.SEARCH)
     @AccessLimit(seconds = 60, maxCount = 30)
     @GetMapping("/search/list/{typeId}")
     public ResultData<List<MenuVO>> searchMenu(@PathVariable("typeId") Integer typeId, String username, Integer status) {
-        return menuService.getMenuList(typeId,username,status);
+        return menuService.getMenuList(typeId, username, status);
     }
 
     @PreAuthorize("hasAnyAuthority('system:menu:role:list')")
@@ -81,14 +81,14 @@ public class MenuController extends BaseController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @GetMapping("/router/list/{typeId}")
     public ResultData<List<MenuVO>> routerList(@PathVariable("typeId") Integer typeId) {
-        return menuService.getMenuList(typeId,null,null);
+        return menuService.getMenuList(typeId, null, null);
     }
 
     @PreAuthorize("hasAnyAuthority('system:menu:add')")
     @Operation(summary = "添加菜单")
     @Parameter(name = "menuDTO", description = "菜单信息", required = true)
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="菜单管理",operation= LogConst.INSERT)
+    @LogAnnotation(module = "菜单管理", operation = LogConst.INSERT)
     @PostMapping
     public ResultData<Void> add(@RequestBody MenuDTO menuDTO) {
         return menuService.addMenu(menuDTO);
@@ -107,7 +107,7 @@ public class MenuController extends BaseController {
     @Operation(summary = "修改菜单")
     @Parameter(name = "menuDTO", description = "菜单信息", required = true)
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="菜单管理",operation= LogConst.UPDATE)
+    @LogAnnotation(module = "菜单管理", operation = LogConst.UPDATE)
     @PutMapping
     public ResultData<Void> update(@RequestBody MenuDTO menuDTO) {
         return menuService.updateMenu(menuDTO);
@@ -117,7 +117,7 @@ public class MenuController extends BaseController {
     @Operation(summary = "根据id删除菜单")
     @Parameter(name = "id", description = "菜单id", required = true)
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="菜单管理",operation= LogConst.DELETE)
+    @LogAnnotation(module = "菜单管理", operation = LogConst.DELETE)
     @DeleteMapping("/{id}")
     public ResultData<String> delete(@PathVariable("id") @NotNull Long id) {
         return menuService.deleteMenu(id);

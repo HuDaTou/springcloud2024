@@ -1,12 +1,14 @@
 package com.overthinker.cloud.web.entity.PO;
 
-import com.baomidou.mybatisplus.annotation.*;
-import com.overthinker.cloud.entity.BaseData;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.overthinker.cloud.entity.BasecopyProperties;
+import com.overthinker.cloud.web.entity.PO.base.BaseData;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
 
 
 /**
@@ -20,19 +22,17 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("t_tag")
-public class Tag implements BaseData {
-    //标签id
-    @TableId(value = "id" ,type = IdType.ASSIGN_ID)
+public class Tag extends BaseData implements BasecopyProperties {
+    // 标签id
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @Schema(description = "标签ID", example = "1234567890123456789")
     private Long id;
-    //标签名称
+
+    // 标签名称
+    @Schema(description = "标签名称", example = "技术")
     private String tagName;
-    //标签创建时间
-    @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
-    //标签更新时间
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
-    //是否删除（0：未删除，1：已删除）
+
+    // 是否删除（0：未删除，1：已删除）
+    @Schema(description = "是否删除（0：未删除，1：已删除）", example = "0")
     private Integer isDeleted;
 }
-

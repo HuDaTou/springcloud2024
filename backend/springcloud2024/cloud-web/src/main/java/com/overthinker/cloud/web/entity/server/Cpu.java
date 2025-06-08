@@ -6,12 +6,11 @@ import lombok.Setter;
 
 /**
  * CPU相关信息
- * 
+ *
  * @author ruoyi
  */
 @Setter
-public class Cpu
-{
+public class Cpu {
     /**
      * 核心数
      */
@@ -42,33 +41,27 @@ public class Cpu
      */
     private double free;
 
-    public int getCpuNum()
-    {
+    public int getCpuNum() {
         return cpuNum;
     }
 
-    public double getTotal()
-    {
+    public double getTotal() {
         return Arith.round(Arith.mul(total, 100), 2);
     }
 
-    public double getSys()
-    {
+    public double getSys() {
         return Arith.round(Arith.mul(sys / total, 100), 2);
     }
 
-    public double getUsed()
-    {
+    public double getUsed() {
         return Arith.round(Arith.mul(used / total, 100), 2);
     }
 
-    public double getWait()
-    {
+    public double getWait() {
         return Arith.round(Arith.mul(wait / total, 100), 2);
     }
 
-    public double getFree()
-    {
+    public double getFree() {
         return Arith.round(Arith.mul(free / total, 100), 2);
     }
 

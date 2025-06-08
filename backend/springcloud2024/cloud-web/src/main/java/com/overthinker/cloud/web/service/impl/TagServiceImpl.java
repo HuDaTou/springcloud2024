@@ -36,12 +36,12 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
 
     @Override
     public List<TagVO> listAllTag() {
-        return this.query().list().stream().map(tag -> tag.asViewObject(TagVO.class, item -> item.setArticleCount(articleTagMapper.selectCount(new LambdaQueryWrapper<ArticleTag>().eq(ArticleTag::getTagId, tag.getId()))))).toList();
+        return this.query().list().stream().map(tag -> tag.copyProperties(TagVO.class, item -> item.setArticleCount(articleTagMapper.selectCount(new LambdaQueryWrapper<ArticleTag>().eq(ArticleTag::getTagId, tag.getId()))))).toList();
     }
 
     @Override
     public ResultData<Void> addTag(TagDTO tagDTO) {
-        if (this.save(tagDTO.asViewObject(Tag.class))) return ResultData.success();
+        if (this.save(tagDTO.copyProperties(Tag.class))) return ResultData.success();
         return ResultData.failure();
     }
 
@@ -55,7 +55,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         return tagMapper.selectList(queryWrapper)
                 .stream()
                 .map(tag ->
-                        tag.asViewObject(TagVO.class, item ->
+                        tag.copyProperties(TagVO.class, item ->
                                 item.setArticleCount(articleTagMapper.selectCount(new LambdaQueryWrapper<ArticleTag>()
                                         .eq(ArticleTag::getTagId, tag.getId())))))
                 .toList();
@@ -63,13 +63,13 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
 
     @Override
     public TagVO getTagById(Long id) {
-        return tagMapper.selectById(id).asViewObject(TagVO.class);
+        return tagMapper.selectById(id).copyProperties(TagVO.class);
     }
 
     @Transactional
     @Override
     public ResultData<Void> addOrUpdateTag(TagDTO tagDTO) {
-        if (this.saveOrUpdate(tagDTO.asViewObject(Tag.class))) return ResultData.success();
+        if (this.saveOrUpdate(tagDTO.copyProperties(Tag.class))) return ResultData.success();
         return ResultData.failure();
     }
 

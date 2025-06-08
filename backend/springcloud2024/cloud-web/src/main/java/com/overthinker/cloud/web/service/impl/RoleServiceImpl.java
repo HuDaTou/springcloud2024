@@ -43,7 +43,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public ResultData<List<RoleVO>> selectAll() {
         List<Role> roles = roleMapper.selectList(new LambdaQueryWrapper<Role>().eq(Role::getStatus, 0));
-        List<RoleVO> vos = roles.stream().map(role -> role.asViewObject(RoleVO.class)).toList();
+        List<RoleVO> vos = roles.stream().map(role -> role.copyProperties(RoleVO.class)).toList();
         if (!vos.isEmpty()) return ResultData.success(vos);
         return ResultData.failure();
     }
@@ -51,7 +51,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public List<RoleAllVO> selectRole(RoleSearchDTO roleSearchDTO) {
         LambdaQueryWrapper<Role> wrapper = new LambdaQueryWrapper<>();
-        if (Objects.nonNull(roleSearchDTO)){
+        if (Objects.nonNull(roleSearchDTO)) {
             wrapper.like(Objects.nonNull(roleSearchDTO.getRoleName()), Role::getRoleName, roleSearchDTO.getRoleName())
                     .like(Objects.nonNull(roleSearchDTO.getRoleKey()), Role::getRoleKey, roleSearchDTO.getRoleKey())
                     .eq(Objects.nonNull(roleSearchDTO.getStatus()), Role::getStatus, roleSearchDTO.getStatus());
@@ -60,7 +60,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
             }
         }
         wrapper.orderByAsc(Role::getOrderNum);
-        return roleMapper.selectList(wrapper).stream().map(role -> role.asViewObject(RoleAllVO.class)).toList();
+        return roleMapper.selectList(wrapper).stream().map(role -> role.copyProperties(RoleAllVO.class)).toList();
     }
 
     @Override
@@ -78,7 +78,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
                 .stream().map(RoleMenu::getMenuId).toList();
         Role role = roleMapper.selectById(id);
         if (role != null) {
-            RoleByIdVO vo = role.asViewObject(RoleByIdVO.class, v -> v.setMenuIds(menuIds));
+            RoleByIdVO vo = role.copyProperties(RoleByIdVO.class, v -> v.setMenuIds(menuIds));
             return ResultData.success(vo);
         }
         return ResultData.failure();
@@ -87,7 +87,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Transactional
     @Override
     public ResultData<Void> updateOrInsertRole(RoleDTO roleDTO) {
-        Role role = roleDTO.asViewObject(Role.class);
+        Role role = roleDTO.copyProperties(Role.class);
         // 角色字符是否重复
         Role isRole = roleMapper.selectOne(new LambdaQueryWrapper<Role>().eq(Role::getRoleKey, role.getRoleKey().trim()));
         if (StringUtils.isNotNull(isRole) && !isRole.getId().equals(role.getId())) {

@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.overthinker.cloud.web.entity.PO.ChatGpt;
 
 
-
 public interface ChatGptMapper extends BaseMapper<ChatGpt> {
 
 }

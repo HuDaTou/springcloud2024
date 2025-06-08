@@ -1,10 +1,10 @@
 package com.overthinker.cloud.web.entity.DTO;
 
-import com.overthinker.cloud.entity.BaseData;
+import com.overthinker.cloud.entity.BasecopyProperties;
 import lombok.Data;
 
 @Data
-public class SearchVideoDTO implements BaseData {
+public class SearchVideoDTO implements BasecopyProperties {
     // 分类id
     private Long categoryId;
     //视频标题

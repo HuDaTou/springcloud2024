@@ -69,7 +69,7 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
             }
         }
 
-        List<PhotoAndAlbumListVO> photoAndAlbumListVOS = page.getRecords().stream().map(photo -> photo.asViewObject(PhotoAndAlbumListVO.class)).toList();
+        List<PhotoAndAlbumListVO> photoAndAlbumListVOS = page.getRecords().stream().map(photo -> photo.copyProperties(PhotoAndAlbumListVO.class)).toList();
         return new PageVO<>(photoAndAlbumListVOS, page.getTotal());
     }
 

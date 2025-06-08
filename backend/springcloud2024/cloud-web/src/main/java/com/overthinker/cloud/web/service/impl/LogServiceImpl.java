@@ -36,18 +36,18 @@ public class LogServiceImpl extends ServiceImpl<LogMapper, Log> implements LogSe
         LambdaQueryWrapper<Log> wrapper = new LambdaQueryWrapper<>();
         if (Objects.nonNull(logDTO)) {
             wrapper.like(StringUtils.isNotEmpty(logDTO.getIp()), Log::getIp, logDTO.getIp())
-                    .like(StringUtils.isNotEmpty(logDTO.getModule()),Log::getModule, logDTO.getModule())
-                    .like(StringUtils.isNotEmpty(logDTO.getUserName()),Log::getUserName, logDTO.getUserName())
-                    .like(StringUtils.isNotEmpty(logDTO.getOperation()),Log::getOperation, logDTO.getOperation())
-                    .eq(StringUtils.isNotNull(logDTO.getState()),Log::getState, logDTO.getState());
+                    .like(StringUtils.isNotEmpty(logDTO.getModule()), Log::getModule, logDTO.getModule())
+                    .like(StringUtils.isNotEmpty(logDTO.getUserName()), Log::getUserName, logDTO.getUserName())
+                    .like(StringUtils.isNotEmpty(logDTO.getOperation()), Log::getOperation, logDTO.getOperation())
+                    .eq(StringUtils.isNotNull(logDTO.getState()), Log::getState, logDTO.getState());
             if (StringUtils.isNotNull(logDTO.getLogTimeStart()) && StringUtils.isNotNull(logDTO.getLogTimeEnd())) {
                 wrapper.gt(Log::getCreateTime, logDTO.getLogTimeStart()).and(a -> a.lt(Log::getCreateTime, logDTO.getLogTimeEnd()));
             }
         }
         wrapper.orderByDesc(Log::getCreateTime);
         Page<Log> page = new Page<>(current, pageSize);
-        logMapper.selectPage(page,wrapper);
-        List<LogVO> logVOS = page.getRecords().stream().map(log -> log.asViewObject(LogVO.class, v -> v.setLoginTime(log.getCreateTime()))).toList();
+        logMapper.selectPage(page, wrapper);
+        List<LogVO> logVOS = page.getRecords().stream().map(log -> log.copyProperties(LogVO.class, v -> v.setLoginTime(log.getCreateTime()))).toList();
 
         return PageVO.builder().page(logVOS).total(page.getTotal()).build();
     }

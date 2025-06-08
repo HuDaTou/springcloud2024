@@ -1,4 +1,3 @@
-
 spring:
   security:
     jwt:
@@ -13,16 +12,16 @@ spring:
     password: 123456
   data:
     redis:
-        # redis 端口
+      # redis 端口
       port: 6379
-        # redis 地址
+      # redis 地址
       host: localhost
         # redis 密码
-#      password: overH@xlq.159
-        # redis连接超时时间（毫秒）
+        #      password: overH@xlq.159
+      # redis连接超时时间（毫秒）
       timeout: 10000
-        # 数据库索引，默认为0
-#      database: 1
+      # 数据库索引，默认为0
+  #      database: 1
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
@@ -62,8 +61,8 @@ spring:
     publisher-returns: true
   mail:
     host: smtp.qq.com
-    username:  2262135195@qq.com
-    password:  mjmhinuiyqtsebaf
+    username: 2262135195@qq.com
+    password: mjmhinuiyqtsebaf
     properties:
       mail:
         smtp:
@@ -116,7 +115,7 @@ mail:
   data:
     redis:
       database: 0
-      host:  home.overthinker.top
+      host: home.overthinker.top
       port: 31605
       lettuce:
         pool:

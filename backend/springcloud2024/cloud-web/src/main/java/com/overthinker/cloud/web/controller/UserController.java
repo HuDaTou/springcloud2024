@@ -1,9 +1,9 @@
 package com.overthinker.cloud.web.controller;
 
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.*;
 import com.overthinker.cloud.web.entity.VO.UserAccountVO;
 import com.overthinker.cloud.web.entity.VO.UserDetailsVO;
@@ -59,8 +59,9 @@ public class UserController extends BaseController {
     }
 
     /**
-     *  上传用户头像
-     * @param avatarFile  头像
+     * 上传用户头像
+     *
+     * @param avatarFile 头像
      * @return 是否成功, 头像地址
      */
     @Operation(summary = "用户头像上传")
@@ -72,6 +73,7 @@ public class UserController extends BaseController {
 
     /**
      * 修改用户绑定邮箱
+     *
      * @param updateEmailDTO 所需参数
      * @return 是否成功
      */

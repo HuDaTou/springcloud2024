@@ -18,7 +18,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 public @interface FileFormat {
     String message() default "文件格式不合法";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
+
     String[] allowedExtensions();
 }

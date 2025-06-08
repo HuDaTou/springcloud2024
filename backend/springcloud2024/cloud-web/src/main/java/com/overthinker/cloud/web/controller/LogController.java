@@ -1,10 +1,10 @@
 package com.overthinker.cloud.web.controller;
 
 
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.LogDTO;
 import com.overthinker.cloud.web.entity.DTO.LogDeleteDTO;
 import com.overthinker.cloud.web.entity.VO.PageVO;
@@ -42,7 +42,7 @@ public class LogController extends BaseController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @GetMapping("/list/{current}/{pageSize}")
     public ResultData<PageVO> getLogList(@PathVariable("current") @NotNull Long current, @PathVariable("pageSize") @NotNull Long pageSize) {
-        return messageHandler(() -> logService.searchLog(null, current,pageSize));
+        return messageHandler(() -> logService.searchLog(null, current, pageSize));
     }
 
     @PreAuthorize("hasAnyAuthority('system:log:search')")
@@ -51,7 +51,7 @@ public class LogController extends BaseController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @PostMapping("/search")
     public ResultData<PageVO> getLogSearch(@RequestBody @Valid LogDTO logDTO) {
-        return messageHandler(() -> logService.searchLog(logDTO, logDTO.getCurrent(),logDTO.getPageSize()));
+        return messageHandler(() -> logService.searchLog(logDTO, logDTO.getCurrent(), logDTO.getPageSize()));
     }
 
     @PreAuthorize("hasAnyAuthority('system:log:delete')")

@@ -114,7 +114,7 @@ public class FavoriteServiceImpl extends ServiceImpl<FavoriteMapper, Favorite> i
         }
         List<Favorite> favorites = favoriteMapper.selectList(wrapper);
         if (!favorites.isEmpty()) {
-            return favorites.stream().map(favorite -> favorite.asViewObject(FavoriteListVO.class,
+            return favorites.stream().map(favorite -> favorite.copyProperties(FavoriteListVO.class,
                     v -> {
                         v.setUserName(userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, favorite.getUserId())).getUsername());
                         switch (favorite.getType()) {

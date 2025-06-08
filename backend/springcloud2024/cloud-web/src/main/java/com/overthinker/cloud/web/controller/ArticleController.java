@@ -1,9 +1,9 @@
 package com.overthinker.cloud.web.controller;
 
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.ArticleDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchArticleDTO;
 import com.overthinker.cloud.web.entity.VO.*;
@@ -279,6 +279,6 @@ public class ArticleController extends BaseController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @DeleteMapping("/back/delete")
     public ResultData<Void> deleteArticle(@RequestBody List<Long> ids) {
-        return articleService.deleteArticle(ids);
+        return messageHandler(() -> articleService.deleteArticle(ids));
     }
 }

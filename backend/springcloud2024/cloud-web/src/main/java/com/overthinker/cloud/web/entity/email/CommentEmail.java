@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.entity.email;
 
-import com.overthinker.cloud.entity.BaseData;
+import com.overthinker.cloud.entity.BasecopyProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentEmail implements Serializable, BaseData {
+public class CommentEmail implements Serializable, BasecopyProperties {
     // id
     private Long id;
     // 类型 1:文章评论 2:友链评论

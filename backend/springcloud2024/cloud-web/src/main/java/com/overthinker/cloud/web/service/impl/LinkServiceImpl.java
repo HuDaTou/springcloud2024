@@ -64,7 +64,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
 
     @Override
     public ResultData<Void> applyLink(LinkDTO linkDTO) {
-        Link link = linkDTO.asViewObject(Link.class);
+        Link link = linkDTO.copyProperties(Link.class);
         link.setUserId(SecurityUtils.getUserId());
         // 1.数据库添加
         if (this.save(link)) {
@@ -89,7 +89,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
     public List<LinkVO> getLinkList() {
         List<Link> links = linkMapper.selectList(new LambdaQueryWrapper<Link>().eq(Link::getIsCheck, SQLConst.STATUS_PUBLIC));
 
-        return links.stream().map(link -> link.asViewObject(LinkVO.class, v -> v.setAvatar(userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, link.getUserId())).getAvatar()))).toList();
+        return links.stream().map(link -> link.copyProperties(LinkVO.class, v -> v.setAvatar(userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, link.getUserId())).getAvatar()))).toList();
     }
 
     @Override
@@ -110,7 +110,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
         }
         List<Link> links = linkMapper.selectList(wrapper);
         if (!links.isEmpty()) {
-            return links.stream().map(link -> link.asViewObject(LinkListVO.class,
+            return links.stream().map(link -> link.copyProperties(LinkListVO.class,
                     v -> v.setUserName(userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, link.getUserId()))
                             .getUsername()))).toList();
         }

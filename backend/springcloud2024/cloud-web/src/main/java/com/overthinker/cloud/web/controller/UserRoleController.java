@@ -1,9 +1,9 @@
 package com.overthinker.cloud.web.controller;
 
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.RoleUserDTO;
 import com.overthinker.cloud.web.entity.DTO.UserRoleDTO;
 import com.overthinker.cloud.web.entity.VO.RoleAllVO;
@@ -47,11 +47,11 @@ public class UserRoleController extends BaseController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @GetMapping("/user/list")
     public ResultData<List<RoleUserVO>> selectUser(
-            @NotNull(message = "角色id不能为空")@RequestParam(name = "roleId") Long roleId,
-            @RequestParam(required = false,name = "username") String username,
-            @RequestParam(required = false,name = "email") String email
+            @NotNull(message = "角色id不能为空") @RequestParam(name = "roleId") Long roleId,
+            @RequestParam(required = false, name = "username") String username,
+            @RequestParam(required = false, name = "email") String email
     ) {
-        return messageHandler(() -> userRoleService.selectRoleUser(roleId,username,email,0));
+        return messageHandler(() -> userRoleService.selectRoleUser(roleId, username, email, 0));
     }
 
     @PreAuthorize("hasAnyAuthority('system:not:role:user:list')")
@@ -64,18 +64,18 @@ public class UserRoleController extends BaseController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @GetMapping("/not/user/list")
     public ResultData<List<RoleUserVO>> selectNotUserByRole(
-            @NotNull(message = "角色id不能为空")@RequestParam(name = "roleId") Long roleId,
-            @RequestParam(required = false,name = "username") String username,
-            @RequestParam(required = false,name = "email") String email
+            @NotNull(message = "角色id不能为空") @RequestParam(name = "roleId") Long roleId,
+            @RequestParam(required = false, name = "username") String username,
+            @RequestParam(required = false, name = "email") String email
     ) {
-        return messageHandler(() -> userRoleService.selectRoleUser(roleId,username,email,1));
+        return messageHandler(() -> userRoleService.selectRoleUser(roleId, username, email, 1));
     }
 
     @PreAuthorize("hasAnyAuthority('system:user:role:add')")
     @Operation(summary = "添加用户角色关系")
     @Parameter(name = "userRoleDTO", description = "添加的数据")
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="用户角色",operation= LogConst.GRANT)
+    @LogAnnotation(module = "用户角色", operation = LogConst.GRANT)
     @PostMapping("/add")
     public ResultData<Void> addUserRole(@Valid @RequestBody UserRoleDTO userRoleDTO) {
         return userRoleService.addUserRole(userRoleDTO);
@@ -85,11 +85,12 @@ public class UserRoleController extends BaseController {
     @Operation(summary = "删除用户角色关系")
     @Parameter(name = "userRoleDTO", description = "删除的所需数据")
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="用户角色",operation= LogConst.DELETE)
+    @LogAnnotation(module = "用户角色", operation = LogConst.DELETE)
     @DeleteMapping("/delete")
     public ResultData<Void> deleteUserRole(@Valid @RequestBody UserRoleDTO userRoleDTO) {
         return userRoleService.deleteUserRole(userRoleDTO);
     }
+
     @PreAuthorize("hasAnyAuthority('system:role:user:list')")
     @Parameters({
             @Parameter(name = "permissionId", description = "权限id"),
@@ -100,11 +101,11 @@ public class UserRoleController extends BaseController {
     @Operation(summary = "查询拥有用户的角色列表")
     @GetMapping("/role/list")
     public ResultData<List<RoleAllVO>> selectPermissionIdRole(
-            @NotNull(message = "用户id不能为空") @RequestParam(name = "userId")  Long userId,
+            @NotNull(message = "用户id不能为空") @RequestParam(name = "userId") Long userId,
             @RequestParam(required = false, name = "roleName") String roleName,
             @RequestParam(required = false, name = "roleKey") String roleKey
     ) {
-        return messageHandler(() -> userRoleService.selectRoleByUserId(userId,roleName,roleKey,0));
+        return messageHandler(() -> userRoleService.selectRoleByUserId(userId, roleName, roleKey, 0));
     }
 
     @PreAuthorize("hasAnyAuthority('system:user:role:not:list')")
@@ -117,11 +118,11 @@ public class UserRoleController extends BaseController {
     @Operation(summary = "查询没有该用户的角色列表")
     @GetMapping("/not/role/list")
     public ResultData<List<RoleAllVO>> selectUserNotRole(
-            @NotNull(message = "用户id不能为空")@RequestParam(name = "userId") Long userId,
+            @NotNull(message = "用户id不能为空") @RequestParam(name = "userId") Long userId,
             @RequestParam(required = false, name = "roleName") String roleName,
             @RequestParam(required = false, name = "roleKey") String roleKey
     ) {
-        return messageHandler(() -> userRoleService.selectRoleByUserId(userId,roleName,roleKey,1));
+        return messageHandler(() -> userRoleService.selectRoleByUserId(userId, roleName, roleKey, 1));
     }
 
     @Operation(summary = "添加角色用户关系")
@@ -130,7 +131,7 @@ public class UserRoleController extends BaseController {
     @Parameters({
             @Parameter(name = "roleUserDTO", description = "添加的数据")
     })
-    @LogAnnotation(module="角色用户",operation= LogConst.GRANT)
+    @LogAnnotation(module = "角色用户", operation = LogConst.GRANT)
     @PostMapping("/user/add")
     public ResultData<Void> addRoleUser(@Valid @RequestBody RoleUserDTO roleUserDTO) {
         return userRoleService.addRoleUser(roleUserDTO);
@@ -142,7 +143,7 @@ public class UserRoleController extends BaseController {
     @Parameters({
             @Parameter(name = "roleUserDTO", description = "删除的所需数据")
     })
-    @LogAnnotation(module="角色用户",operation= LogConst.DELETE)
+    @LogAnnotation(module = "角色用户", operation = LogConst.DELETE)
     @DeleteMapping("/user/delete")
     public ResultData<Void> deleteRoleUser(@Valid @RequestBody RoleUserDTO roleUserDTO) {
         return userRoleService.deleteRoleUser(roleUserDTO);

@@ -6,7 +6,6 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
 
 
-
 /**
  * (BlackList)表数据库访问层
  *

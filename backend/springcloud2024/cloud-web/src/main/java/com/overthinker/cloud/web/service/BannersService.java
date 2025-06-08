@@ -18,6 +18,7 @@ public interface BannersService extends IService<Banners> {
 
     /**
      * 后台获取所有前台首页Banner图片
+     *
      * @return banners Entity（List）
      */
     List<Banners> backGetBanners();
@@ -40,7 +41,8 @@ public interface BannersService extends IService<Banners> {
 
     /**
      * 更新Banner顺序
-     * @param updateBannerSortOrderDTO  更新Banner顺序
+     *
+     * @param updateBannerSortOrderDTO 更新Banner顺序
      * @return ResultData
      */
     ResultData<String> updateSortOrder(List<Banners> updateBannerSortOrderDTO);

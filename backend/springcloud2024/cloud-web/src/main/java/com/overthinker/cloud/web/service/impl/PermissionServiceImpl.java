@@ -51,7 +51,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
 
         if (!permissions.isEmpty()) {
             List<Menu> menus = menuMapper.selectBatchIds(permissions.stream().map(Permission::getMenuId).toList());
-            return permissions.stream().map(permission -> permission.asViewObject(PermissionVO.class, v -> {
+            return permissions.stream().map(permission -> permission.copyProperties(PermissionVO.class, v -> {
                 Optional<Menu> menu = menus.stream().filter(m -> m.getId().equals(permission.getMenuId())).findFirst();
                 menu.ifPresent(m -> v.setMenuName(m.getTitle()));
             })).toList();
@@ -64,7 +64,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         List<Permission> permissions = permissionMapper.selectList(null);
         if (!permissions.isEmpty()) {
             List<Menu> menus = menuMapper.selectBatchIds(permissions.stream().map(Permission::getMenuId).toList());
-            List<PermissionMenuVO> vos = permissions.stream().map(permission -> permission.asViewObject(PermissionMenuVO.class, v -> {
+            List<PermissionMenuVO> vos = permissions.stream().map(permission -> permission.copyProperties(PermissionMenuVO.class, v -> {
                 Optional<Menu> menu = menus.stream().filter(m -> m.getId().equals(permission.getMenuId())).findFirst();
                 menu.ifPresent(m -> {
                     v.setMenuName(m.getTitle());
@@ -84,7 +84,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         if (StringUtils.isNotNull(isPermission) && !isPermission.getId().equals(permissionDTO.getId())) {
             return ResultData.failure("权限字符不可重复");
         }
-        Permission permission = permissionDTO.asViewObject(Permission.class, v -> v.setMenuId(permissionDTO.getPermissionMenuId()));
+        Permission permission = permissionDTO.copyProperties(Permission.class, v -> v.setMenuId(permissionDTO.getPermissionMenuId()));
         if (this.saveOrUpdate(permission)) {
             return ResultData.success();
         }
@@ -94,7 +94,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     @Override
     public PermissionDTO getPermission(Long id) {
         Permission permission = getById(id);
-        return permission.asViewObject(PermissionDTO.class, v -> v.setPermissionMenuId(permission.getMenuId()));
+        return permission.copyProperties(PermissionDTO.class, v -> v.setPermissionMenuId(permission.getMenuId()));
     }
 
     @Transactional

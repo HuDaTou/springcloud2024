@@ -1,7 +1,7 @@
 package com.overthinker.cloud.web.entity.PO;
 
 
-import com.overthinker.cloud.entity.BaseData;
+import com.overthinker.cloud.entity.BasecopyProperties;
 import com.overthinker.cloud.web.entity.server.*;
 import com.overthinker.cloud.web.utils.Arith;
 import com.overthinker.cloud.web.utils.IpUtils;
@@ -22,14 +22,13 @@ import java.util.Properties;
 
 /**
  * 服务器相关信息
- * 
+ *
  * @author ruoyi
  */
 @Data
-public class Server implements BaseData
-{
+public class Server implements BasecopyProperties {
     private static final int OSHI_WAIT_SECOND = 1000;
-    
+
     /**
      * CPU相关信息
      */
@@ -55,8 +54,7 @@ public class Server implements BaseData
      */
     private List<SysFile> sysFiles = new LinkedList<SysFile>();
 
-    public void copyTo() throws Exception
-    {
+    public void copyTo() throws Exception {
         SystemInfo si = new SystemInfo();
         HardwareAbstractionLayer hal = si.getHardware();
 
@@ -74,8 +72,7 @@ public class Server implements BaseData
     /**
      * 设置CPU信息
      */
-    private void setCpuInfo(CentralProcessor processor)
-    {
+    private void setCpuInfo(CentralProcessor processor) {
         // CPU信息
         long[] prevTicks = processor.getSystemCpuLoadTicks();
         Util.sleep(OSHI_WAIT_SECOND);
@@ -100,8 +97,7 @@ public class Server implements BaseData
     /**
      * 设置内存信息
      */
-    private void setMemInfo(GlobalMemory memory)
-    {
+    private void setMemInfo(GlobalMemory memory) {
         mem.setTotal(memory.getTotal());
         mem.setUsed(memory.getTotal() - memory.getAvailable());
         mem.setFree(memory.getAvailable());
@@ -110,8 +106,7 @@ public class Server implements BaseData
     /**
      * 设置服务器信息
      */
-    private void setSysInfo()
-    {
+    private void setSysInfo() {
         Properties props = System.getProperties();
         sys.setComputerName(IpUtils.getHostName());
         sys.setComputerIp(IpUtils.getHostIp());
@@ -135,12 +130,10 @@ public class Server implements BaseData
     /**
      * 设置磁盘信息
      */
-    private void setSysFiles(OperatingSystem os)
-    {
+    private void setSysFiles(OperatingSystem os) {
         FileSystem fileSystem = os.getFileSystem();
         List<OSFileStore> fsArray = fileSystem.getFileStores();
-        for (OSFileStore fs : fsArray)
-        {
+        for (OSFileStore fs : fsArray) {
             long free = fs.getUsableSpace();
             long total = fs.getTotalSpace();
             long used = total - free;
@@ -158,31 +151,23 @@ public class Server implements BaseData
 
     /**
      * 字节转换
-     * 
+     *
      * @param size 字节大小
      * @return 转换后值
      */
-    public String convertFileSize(long size)
-    {
+    public String convertFileSize(long size) {
         long kb = 1024;
         long mb = kb * 1024;
         long gb = mb * 1024;
-        if (size >= gb)
-        {
+        if (size >= gb) {
             return String.format("%.1f GB", (float) size / gb);
-        }
-        else if (size >= mb)
-        {
+        } else if (size >= mb) {
             float f = (float) size / mb;
             return String.format(f > 100 ? "%.0f MB" : "%.1f MB", f);
-        }
-        else if (size >= kb)
-        {
+        } else if (size >= kb) {
             float f = (float) size / kb;
             return String.format(f > 100 ? "%.0f KB" : "%.1f KB", f);
-        }
-        else
-        {
+        } else {
             return String.format("%d B", size);
         }
     }

@@ -23,6 +23,7 @@ public interface ArticleService extends IService<Article> {
      * 查询所有文章列表
      */
     PageVO<List<ArticleVO>> listAllArticle(Integer pageNum, Integer pageSize);
+
     /**
      * 查询推荐文章
      */
@@ -35,6 +36,7 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 获取文章详情
+     *
      * @param id 文章id
      * @return 文章相关数据
      */
@@ -44,7 +46,7 @@ public interface ArticleService extends IService<Article> {
      * 相关文章信息
      *
      * @param categoryId 文章分类id
-     * @param articleId 文章id
+     * @param articleId  文章id
      * @return 文章相关数据
      */
     List<RelatedArticleVO> relatedArticleList(Integer categoryId, Integer articleId);
@@ -65,6 +67,7 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 增加文章访问量
+     *
      * @param id 文章id
      */
     void addVisitCount(Long id);
@@ -87,6 +90,7 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 发布错误删除封面
+     *
      * @param articleCoverUrl 文章封面
      * @return 是否成功
      */
@@ -94,6 +98,7 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 文章图片上传
+     *
      * @param articleImage 文章图片
      * @return url
      */
@@ -101,12 +106,14 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 后台文章列表
+     *
      * @return 文章列表
      */
     List<ArticleListVO> listArticle();
 
     /**
      * 搜索文章列表
+     *
      * @param searchArticleDTO 搜索条件
      * @return 结果
      */
@@ -114,7 +121,8 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 修改文章状态
-     * @param id 文章id
+     *
+     * @param id     文章id
      * @param status 状态
      * @return 是否成功
      */
@@ -122,7 +130,8 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 修改文章是否顶置
-     * @param id 文章id
+     *
+     * @param id    文章id
      * @param isTop 是否顶置
      * @return 是否成功
      */
@@ -130,6 +139,7 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 回显文章数据
+     *
      * @param id 文章id
      * @return 数据
      */
@@ -137,25 +147,29 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 删除文章
+     *
      * @param id 文章id
      * @return 是否成功
      */
-    ResultData<Void> deleteArticle(List<Long> id);
+    Void deleteArticle(List<Long> id);
 
     /**
      * 初始化搜索文章标题
+     *
      * @return 文章数据
      */
     List<InitSearchTitleVO> initSearchByTitle();
 
     /**
      * 热门推荐
+     *
      * @return 热门推荐前5
      */
     List<HotArticleVO> listHotArticle();
 
     /**
      * 根据内容搜索文章
+     *
      * @param content 文章内容
      * @return 文章
      */
@@ -163,6 +177,7 @@ public interface ArticleService extends IService<Article> {
 
     /**
      * 获取文章总数量
+     *
      * @return 文章数量
      */
     SseEmitter getArticleCount();

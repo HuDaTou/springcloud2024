@@ -1,13 +1,15 @@
 package com.overthinker.cloud.web.entity.PO;
 
-import com.baomidou.mybatisplus.annotation.*;
-import com.overthinker.cloud.entity.BaseData;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.overthinker.cloud.entity.BasecopyProperties;
+import com.overthinker.cloud.web.entity.PO.base.BaseData;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
 
 
 /**
@@ -22,37 +24,40 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @TableName("t_article")
-public class Article  implements BaseData {
+public class Article extends BaseData implements BasecopyProperties {
 
-
-    //文章id
-    @TableId(value = "id" ,type = IdType.ASSIGN_ID)
+    @Schema(description = "文章ID", example = "123456789012345678")
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
-    //作者id
+
+    @Schema(description = "作者ID", example = "10001")
     private Long userId;
-    //分类id
+
+    @Schema(description = "分类ID", example = "2001")
     private Long categoryId;
-    //文章缩略图
+
+    @Schema(description = "文章缩略图", example = "https://example.com/article-cover.jpg")
     private String articleCover;
-    //文章标题
+
+    @Schema(description = "文章标题", example = "Spring Boot实战教程")
     private String articleTitle;
-    //文章内容
+
+    @Schema(description = "文章内容", example = "本文将详细介绍Spring Boot的使用...")
     private String articleContent;
-    //类型 (1原创 2转载 3翻译)
+
+    @Schema(description = "文章类型(1原创 2转载 3翻译)", example = "1")
     private Integer articleType;
-    //是否置顶 (0否 1是）
+
+    @Schema(description = "是否置顶(0否 1是)", example = "0")
     private Integer isTop;
-    //文章状态 (1公开 2私密 3草稿)
+
+    @Schema(description = "文章状态(1公开 2私密 3草稿)", example = "1")
     private Integer status;
-    //访问量
+
+    @Schema(description = "访问量", example = "128")
     private Long visitCount;
-    //文章创建时间
-    @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
-    //文章更新时间
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
-    //是否删除（0：未删除，1：已删除）
+
+
+    @Schema(description = "是否删除(0：未删除，1：已删除)", example = "0")
     private Integer isDeleted;
 }
-

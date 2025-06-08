@@ -27,11 +27,11 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping(value = "/sse")
 @Slf4j
 public class SseController extends BaseController {
-//    数据量
-    private final static Map<String ,SseEmitter> SSE_DATA = new ConcurrentHashMap<>();
+    //    数据量
+    private final static Map<String, SseEmitter> SSE_DATA = new ConcurrentHashMap<>();
 
     //    在线人数
-    private final static Map<String,SseEmitter> SSE_COUNT = new  ConcurrentHashMap<>();
+    private final static Map<String, SseEmitter> SSE_COUNT = new ConcurrentHashMap<>();
 
     private final static SseDataVO sseDataVO = new SseDataVO();
 
@@ -48,7 +48,7 @@ public class SseController extends BaseController {
 //    @PreAuthorize("hasAnyAuthority('monitor:server:list')")
     @Operation(summary = "SSE获取服务监控数据")
     @GetMapping(value = "/data")
-    public SseEmitter getSseEmitter()  {
+    public SseEmitter getSseEmitter() {
         SseEmitter emitter = new SseEmitter(0L); // 设置30秒超时
 //        为每个连接生成一个uuid
         String uuid = java.util.UUID.randomUUID().toString().replaceAll("-", "");
@@ -77,7 +77,7 @@ public class SseController extends BaseController {
 //    @PreAuthorize("hasAnyAuthority('monitor:server:list')")
     @Operation(summary = "SSE统计在线人数")
     @GetMapping(value = "/user/count")
-    public SseEmitter getCountEmitter()  {
+    public SseEmitter getCountEmitter() {
         SseEmitter emitter = new SseEmitter(0L); // 设置30秒超时
 //        为每个连接生成一个uuid
         String uuid = java.util.UUID.randomUUID().toString().replaceAll("-", "");
@@ -102,8 +102,8 @@ public class SseController extends BaseController {
     }
 
 
-    @Scheduled(fixedDelay = 3, initialDelay = 1,timeUnit = TimeUnit.SECONDS)
-    private void job()  {
+    @Scheduled(fixedDelay = 3, initialDelay = 1, timeUnit = TimeUnit.SECONDS)
+    private void job() {
 
         if (!SSE_DATA.isEmpty()) {
 //            sseDataVO.setOnlineCount(SSE_COUNT.size());
@@ -131,8 +131,9 @@ public class SseController extends BaseController {
 
         }
     }
-    @Scheduled(fixedDelay = 3, initialDelay = 1,timeUnit = TimeUnit.SECONDS)
-    private void jobCount()  {
+
+    @Scheduled(fixedDelay = 3, initialDelay = 1, timeUnit = TimeUnit.SECONDS)
+    private void jobCount() {
 
         if (!SSE_COUNT.isEmpty()) {
             SSE_COUNT.forEach((key, emitter) -> {
@@ -144,9 +145,8 @@ public class SseController extends BaseController {
                     );
                 } catch (IOException e) {
                     SSE_COUNT.remove(key);
-                    log.info("已经删除：{}",key);
+                    log.info("已经删除：{}", key);
                     emitter.completeWithError(e);
-
 
 
                 }

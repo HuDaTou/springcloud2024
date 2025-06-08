@@ -20,6 +20,7 @@ import java.util.List;
 public interface TreeHoleService extends IService<TreeHole> {
     /**
      * 新增树洞
+     *
      * @param content 树洞内容
      * @return 是否成功
      */
@@ -27,18 +28,21 @@ public interface TreeHoleService extends IService<TreeHole> {
 
     /**
      * 查看树洞
+     *
      * @return 树洞列表
      */
     List<TreeHoleVO> getTreeHole();
 
     /**
      * 后台树洞列表
+     *
      * @return 结果
      */
     List<TreeHoleListVO> getBackTreeHoleList(SearchTreeHoleDTO searchDTO);
 
     /**
      * 是否通过树洞
+     *
      * @param isCheckDTO 是否通过
      * @return 是否成功
      */
@@ -46,6 +50,7 @@ public interface TreeHoleService extends IService<TreeHole> {
 
     /**
      * 删除树洞
+     *
      * @param ids id 列表
      * @return 是否成功
      */

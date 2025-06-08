@@ -10,10 +10,10 @@ import java.util.Set;
 @Getter
 @AllArgsConstructor
 public enum VideoUploadEnum {
-//    文件信息
-    VIDEO_PRIVATE("video/", "个人视频", Set.of(ImageConst.JPG, ImageConst.JPEG, ImageConst.PNG, ImageConst.WEBP),50.0 , Set.of(VideoConst.AVI,VideoConst.FLV, VideoConst.MP4, VideoConst.RM), 1024.0),
-    VIDEO_PUBLIC("video/public", "公共视频", Set.of(ImageConst.JPG, ImageConst.JPEG, ImageConst.PNG, ImageConst.WEBP),50.0 , Set.of(VideoConst.AVI,VideoConst.FLV, VideoConst.MP4, VideoConst.RM), 1024.0),
-    VIDEO_TEMP("video/temp", "临时视频", Set.of(ImageConst.JPG, ImageConst.JPEG, ImageConst.PNG, ImageConst.WEBP),50.0 , Set.of(VideoConst.AVI,VideoConst.FLV, VideoConst.MP4, VideoConst.RM), 1024.0);
+    //    文件信息
+    VIDEO_PRIVATE("video/", "个人视频", Set.of(ImageConst.JPG, ImageConst.JPEG, ImageConst.PNG, ImageConst.WEBP), 50.0, Set.of(VideoConst.AVI, VideoConst.FLV, VideoConst.MP4, VideoConst.RM), 1024.0),
+    VIDEO_PUBLIC("video/public", "公共视频", Set.of(ImageConst.JPG, ImageConst.JPEG, ImageConst.PNG, ImageConst.WEBP), 50.0, Set.of(VideoConst.AVI, VideoConst.FLV, VideoConst.MP4, VideoConst.RM), 1024.0),
+    VIDEO_TEMP("video/temp", "临时视频", Set.of(ImageConst.JPG, ImageConst.JPEG, ImageConst.PNG, ImageConst.WEBP), 50.0, Set.of(VideoConst.AVI, VideoConst.FLV, VideoConst.MP4, VideoConst.RM), 1024.0);
     private final String dir;
 
     private final String description;
@@ -25,7 +25,6 @@ public enum VideoUploadEnum {
     private final Set<String> videoFormat;
 
     private final Double videoLimitSize;
-
 
 
 }

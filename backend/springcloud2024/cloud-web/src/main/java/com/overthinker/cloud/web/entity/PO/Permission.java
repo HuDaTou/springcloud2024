@@ -1,13 +1,15 @@
 package com.overthinker.cloud.web.entity.PO;
 
 
-import com.baomidou.mybatisplus.annotation.*;
-import com.overthinker.cloud.entity.BaseData;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.overthinker.cloud.entity.BasecopyProperties;
+import com.overthinker.cloud.web.entity.PO.base.BaseData;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
 
 
 /**
@@ -20,23 +22,26 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("sys_permission")
-public class Permission implements BaseData {
-    //权限表id
-    @TableId(value = "id" ,type = IdType.ASSIGN_ID)
+public class Permission extends BaseData implements BasecopyProperties {
+    // 权限表id
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @Schema(description = "权限ID", example = "1")
     private Integer id;
-    //描述
+
+    // 描述
+    @Schema(description = "权限描述", example = "用户管理查看权限")
     private String permissionDesc;
-    //权限字符
+
+    // 权限字符
+    @Schema(description = "权限标识", example = "system:user:view")
     private String permissionKey;
+
     // 菜单id
+    @Schema(description = "关联菜单ID", example = "1001")
     private Long menuId;
-    //创建时间
-    @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
-    //更新时间
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
-    //是否删除（0：未删除，1：已删除）
+
+    // 是否删除（0：未删除，1：已删除）
+    @Schema(description = "是否删除（0：未删除，1：已删除）", example = "0")
     private Integer isDeleted;
 }
 

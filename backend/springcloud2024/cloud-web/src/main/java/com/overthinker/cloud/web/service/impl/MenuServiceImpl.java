@@ -80,7 +80,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
             wrapper.eq(Menu::getIsDisable, 0);
         }
         if (typeId == 1 && (username != null || status != null)) {
-            wrapper.eq(status!= null,Menu::getIsDisable, status).and(o -> o.like(Menu::getTitle, username));
+            wrapper.eq(status != null, Menu::getIsDisable, status).and(o -> o.like(Menu::getTitle, username));
         }
         List<Menu> menus = menuMapper.selectList(wrapper);
         List<MenuVO> list = menus.stream().map(menu -> MenuVO.builder()
@@ -114,7 +114,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         List<Long> roles;
         if (!roleIds.isEmpty()) roles = roleMapper.selectBatchIds(roleIds).stream().map(Role::getId).toList();
         else roles = null;
-        MenuByIdVO vo = menu.asViewObject(MenuByIdVO.class, v -> {
+        MenuByIdVO vo = menu.copyProperties(MenuByIdVO.class, v -> {
             if (v.getComponent() == null) v.setRouterType(2L);
             else if (v.getComponent().equals("Iframe")) v.setRouterType(1L);
             else v.setRouterType(0L);
@@ -157,7 +157,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
             // 父菜单
             menuDTO.setComponent("RouteView");
         }
-        if (menuDTO.getRouterType() == 0) wrapper.set(Menu::getRedirect,null);
+        if (menuDTO.getRouterType() == 0) wrapper.set(Menu::getRedirect, null);
         if (menuDTO.getRouterType() == 0 || menuDTO.getRouterType() == 3) {
             wrapper.set(Menu::getUrl, null);
         }
@@ -169,9 +169,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
             wrapper.set(Menu::getComponent, null);
             wrapper.set(Menu::getRedirect, null);
         }
-        if (menuDTO.getParentId() == null) wrapper.set(Menu::getParentId,null);
+        if (menuDTO.getParentId() == null) wrapper.set(Menu::getParentId, null);
 
-        Menu menu = menuDTO.asViewObject(Menu.class);
+        Menu menu = menuDTO.copyProperties(Menu.class);
 
         // 是否有关联关系
         Long count = roleMenuMapper.selectCount(new LambdaQueryWrapper<RoleMenu>().eq(RoleMenu::getMenuId, menu.getId()));
@@ -194,7 +194,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
     public ResultData<String> deleteMenu(Long id) {
         // 判断是否有未删除的子目录
         if (menuMapper.selectCount(new LambdaQueryWrapper<Menu>().eq(Menu::getParentId, id)) > 0) {
-            return ResultData.failure(ReturnCodeEnum.NO_DELETE_CHILD_MENU.getCode(),ReturnCodeEnum.NO_DELETE_CHILD_MENU.getMsg());
+            return ResultData.failure(ReturnCodeEnum.NO_DELETE_CHILD_MENU.getCode(), ReturnCodeEnum.NO_DELETE_CHILD_MENU.getMsg());
         }
         if (this.removeById(id)) {
             // 删除相关菜单角色关系

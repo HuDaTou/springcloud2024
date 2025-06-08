@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.overthinker.cloud.resp.ResultData;
+import com.overthinker.cloud.resp.ReturnCodeEnum;
 import com.overthinker.cloud.web.entity.DTO.ArticleDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchArticleDTO;
 import com.overthinker.cloud.web.entity.PO.*;
@@ -13,6 +14,7 @@ import com.overthinker.cloud.web.entity.VO.*;
 import com.overthinker.cloud.web.entity.constants.RedisConst;
 import com.overthinker.cloud.web.entity.constants.SQLConst;
 import com.overthinker.cloud.web.entity.enums.*;
+import com.overthinker.cloud.web.exception.BusinessException;
 import com.overthinker.cloud.web.exception.FileUploadException;
 import com.overthinker.cloud.web.mapper.*;
 import com.overthinker.cloud.web.service.*;
@@ -101,7 +103,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 .stream().collect(Collectors.toMap(Tag::getId, Tag::getTagName));
 
         List<ArticleVO> articleVOS = list.stream().map(article -> {
-            ArticleVO articleVO = article.asViewObject(ArticleVO.class);
+            ArticleVO articleVO = article.copyProperties(ArticleVO.class);
             // 2. 优化：使用 Map 获取分类和标签信息
             articleVO.setCategoryName(categoryMap.get(article.getCategoryId()));
             articleVO.setTags(articleTags.stream()
@@ -147,14 +149,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Article::getIsTop, SQLConst.RECOMMEND_ARTICLE).and(i -> i.eq(Article::getStatus, SQLConst.PUBLIC_STATUS));
         List<Article> articles = articleMapper.selectList(wrapper);
-        return articles.stream().map(article -> article.asViewObject(RecommendArticleVO.class)).toList();
+        return articles.stream().map(article -> article.copyProperties(RecommendArticleVO.class)).toList();
     }
 
     @Override
     public List<RandomArticleVO> listRandomArticle() {
         List<Article> randomArticles = articleMapper.selectRandomArticles(SQLConst.PUBLIC_STATUS, SQLConst.RANDOM_ARTICLE_COUNT);
         return randomArticles.stream()
-                .map(article -> article.asViewObject(RandomArticleVO.class))
+                .map(article -> article.copyProperties(RandomArticleVO.class))
                 .toList();
     }
 
@@ -176,10 +178,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         preAndNextWrapper.gt(Article::getId, id);
         Article nextArticle = articleMapper.selectOne(preAndNextWrapper.orderByAsc(Article::getId).last(SQLConst.LIMIT_ONE_SQL));
 
-        return article.asViewObject(ArticleDetailVO.class, vo -> {
+        return article.copyProperties(ArticleDetailVO.class, vo -> {
             vo.setCategoryName(category.getCategoryName());
             vo.setCategoryId(category.getId());
-            vo.setTags(tags.stream().map(tag -> tag.asViewObject(TagVO.class)).toList());
+            vo.setTags(tags.stream().map(tag -> tag.copyProperties(TagVO.class)).toList());
             vo.setCommentCount(commentService.count(new LambdaQueryWrapper<Comment>().eq(Comment::getTypeId, article.getId()).eq(Comment::getType, CommentEnum.COMMENT_TYPE_ARTICLE.getType())));
             vo.setLikeCount(likeService.count(new LambdaQueryWrapper<Like>().eq(Like::getTypeId, article.getId()).eq(Like::getType, LikeEnum.LIKE_TYPE_ARTICLE.getType())));
             vo.setFavoriteCount(favoriteService.count(new LambdaQueryWrapper<Favorite>().eq(Favorite::getTypeId, article.getId()).eq(Favorite::getType, FavoriteEnum.FAVORITE_TYPE_ARTICLE.getType())));
@@ -200,13 +202,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                         .ne(Article::getId, articleId)
         );
         List<Article> articlesLimit5 = articles.stream().limit(SQLConst.RELATED_ARTICLE_COUNT).toList();
-        return articlesLimit5.stream().map(article -> article.asViewObject(RelatedArticleVO.class)).toList();
+        return articlesLimit5.stream().map(article -> article.copyProperties(RelatedArticleVO.class)).toList();
     }
 
     @Override
     public List<TimeLineVO> listTimeLine() {
         List<Article> list = this.query().list();
-        return list.stream().map(article -> article.asViewObject(TimeLineVO.class)).toList();
+        return list.stream().map(article -> article.copyProperties(TimeLineVO.class)).toList();
     }
 
     @Override
@@ -224,9 +226,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         List<ArticleTag> articleTags = articleTagMapper.selectBatchIds(articles.stream().map(Article::getId).toList());
         List<Tag> tags = tagMapper.selectBatchIds(articleTags.stream().map(ArticleTag::getTagId).toList());
 
-        return articles.stream().map(article -> article.asViewObject(CategoryArticleVO.class, item -> {
+        return articles.stream().map(article -> article.copyProperties(CategoryArticleVO.class, item -> {
             item.setCategoryId(articles.stream().filter(art -> Objects.equals(art.getId(), article.getId())).findFirst().orElseThrow().getCategoryId());
-            item.setTags(tags.stream().filter(tag -> articleTags.stream().anyMatch(articleTag -> Objects.equals(articleTag.getArticleId(), article.getId()) && Objects.equals(articleTag.getTagId(), tag.getId()))).map(tag -> tag.asViewObject(TagVO.class)).toList());
+            item.setTags(tags.stream().filter(tag -> articleTags.stream().anyMatch(articleTag -> Objects.equals(articleTag.getArticleId(), article.getId()) && Objects.equals(articleTag.getTagId(), tag.getId()))).map(tag -> tag.copyProperties(TagVO.class)).toList());
         })).toList();
     }
 
@@ -265,7 +267,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 //        Article article = articleDTO.asViewObject(Article.class, v -> v.setUserId(SecurityUtils.getUserId()));
         Article article = BeanUtil.copyProperties(articleDTO, Article.class);
         article.setUserId(SecurityUtils.getUserId());
-
 
 
         if (this.saveOrUpdate(article)) {
@@ -312,7 +313,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public List<ArticleListVO> listArticle() {
         List<ArticleListVO> articleListVOS = articleMapper.selectList(new LambdaQueryWrapper<Article>()
-                .orderByDesc(Article::getCreateTime)).stream().map(article -> article.asViewObject(ArticleListVO.class)).toList();
+                .orderByDesc(Article::getCreateTime)).stream().map(article -> article.copyProperties(ArticleListVO.class)).toList();
 
         if (!articleListVOS.isEmpty()) {
             articleListVOS.forEach(articleListVO -> {
@@ -334,7 +335,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 .eq(StringUtils.isNotNull(searchArticleDTO.getCategoryId()), Article::getCategoryId, searchArticleDTO.getCategoryId())
                 .eq(StringUtils.isNotNull(searchArticleDTO.getStatus()), Article::getStatus, searchArticleDTO.getStatus())
                 .eq(StringUtils.isNotNull(searchArticleDTO.getIsTop()), Article::getIsTop, searchArticleDTO.getIsTop());
-        List<ArticleListVO> articleListVOS = articleMapper.selectList(wrapper).stream().map(article -> article.asViewObject(ArticleListVO.class)).toList();
+        List<ArticleListVO> articleListVOS = articleMapper.selectList(wrapper).stream().map(article -> article.copyProperties(ArticleListVO.class)).toList();
         if (!articleListVOS.isEmpty()) {
             articleListVOS.forEach(articleListVO -> {
                 articleListVO.setCategoryName(categoryMapper.selectById(articleListVO.getCategoryId()).getCategoryName());
@@ -366,7 +367,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public ArticleDTO getArticleDTO(Long id) {
-        ArticleDTO articleDTO = articleMapper.selectById(id).asViewObject(ArticleDTO.class);
+        ArticleDTO articleDTO = articleMapper.selectById(id).copyProperties(ArticleDTO.class);
         if (StringUtils.isNotNull(articleDTO)) {
             // 查询文章标签
             List<Long> tagIds = articleTagMapper.selectList(new LambdaQueryWrapper<ArticleTag>().eq(ArticleTag::getArticleId, articleDTO.getId())).stream().map(ArticleTag::getTagId).toList();
@@ -378,17 +379,21 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Transactional
     @Override
-    public ResultData<Void> deleteArticle(List<Long> ids) {
-        if (this.removeByIds(ids)) {
+    public Void deleteArticle(List<Long> ids) {
+
+        if (removeByIds(ids)) {
             // 删除标签关系
             articleTagMapper.delete(new LambdaQueryWrapper<ArticleTag>().in(ArticleTag::getArticleId, ids));
             // 删除点赞、收藏、评论
             likeMapper.delete(new LambdaQueryWrapper<Like>().eq(Like::getType, LikeEnum.LIKE_TYPE_ARTICLE.getType()).and(a -> a.in(Like::getTypeId, ids)));
             favoriteMapper.delete(new LambdaQueryWrapper<Favorite>().eq(Favorite::getType, FavoriteEnum.FAVORITE_TYPE_ARTICLE.getType()).and(a -> a.in(Favorite::getTypeId, ids)));
             commentMapper.delete(new LambdaQueryWrapper<Comment>().eq(Comment::getType, CommentEnum.COMMENT_TYPE_ARTICLE.getType()).and(a -> a.in(Comment::getTypeId, ids)));
-            return ResultData.success();
+
+        } else {
+            throw new BusinessException(ReturnCodeEnum.RC999);
         }
-        return ResultData.failure();
+        return null;
+
     }
 
     @Override
@@ -398,14 +403,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (articles.isEmpty()) {
             return List.of();
         }
-        return articles.stream().map(article -> article.asViewObject(InitSearchTitleVO.class, item -> item.setCategoryName(categoryMap.get(article.getCategoryId())))).toList();
+        return articles.stream().map(article -> article.copyProperties(InitSearchTitleVO.class, item -> item.setCategoryName(categoryMap.get(article.getCategoryId())))).toList();
     }
 
     @Override
     public List<HotArticleVO> listHotArticle() {
         List<Article> articles = articleMapper.selectList(new LambdaQueryWrapper<Article>().eq(Article::getStatus, SQLConst.PUBLIC_STATUS).orderByDesc(Article::getVisitCount).last("LIMIT 5"));
         if (!articles.isEmpty()) {
-            return articles.stream().map(article -> article.asViewObject(HotArticleVO.class)).toList();
+            return articles.stream().map(article -> article.copyProperties(HotArticleVO.class)).toList();
         }
         return List.of();
     }
@@ -415,7 +420,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         List<Article> articles = articleMapper.selectList(new LambdaQueryWrapper<Article>().like(Article::getArticleContent, keyword).eq(Article::getStatus, SQLConst.PUBLIC_STATUS));
         Map<Long, String> categoryMap = categoryMapper.selectList(null).stream().collect(Collectors.toMap(Category::getId, Category::getCategoryName));
         if (!articles.isEmpty()) {
-            List<SearchArticleByContentVO> listVos = articles.stream().map(article -> article.asViewObject(SearchArticleByContentVO.class, vo -> {
+            List<SearchArticleByContentVO> listVos = articles.stream().map(article -> article.copyProperties(SearchArticleByContentVO.class, vo -> {
                 vo.setCategoryName(categoryMap.get(article.getCategoryId()));
             })).toList();
             int index = -1;

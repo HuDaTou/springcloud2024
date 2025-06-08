@@ -1,10 +1,10 @@
 package com.overthinker.cloud.web.controller;
 
 
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.LoginLogDTO;
 import com.overthinker.cloud.web.entity.DTO.LoginLogDeleteDTO;
 import com.overthinker.cloud.web.entity.VO.LoginLogVO;
@@ -48,7 +48,7 @@ public class LoginLogController extends BaseController {
     @Operation(summary = "搜索登录日志")
     @Parameter(name = "loginLogDTO", description = "搜索条件")
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="登录日志",operation= LogConst.SEARCH)
+    @LogAnnotation(module = "登录日志", operation = LogConst.SEARCH)
     @PostMapping("/search")
     public ResultData<List<LoginLogVO>> getLoginLogSearch(@RequestBody LoginLogDTO loginLogDTO) {
         return messageHandler(() -> loginLogService.searchLoginLog(loginLogDTO));
@@ -58,7 +58,7 @@ public class LoginLogController extends BaseController {
     @Operation(summary = "删除/清空登录日志")
     @Parameter(name = "deleteLoginLogDTO", description = "删除的id数组")
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="登录日志",operation= LogConst.DELETE)
+    @LogAnnotation(module = "登录日志", operation = LogConst.DELETE)
     @DeleteMapping("/delete")
     public ResultData<Void> deleteLoginLog(@RequestBody @Valid LoginLogDeleteDTO deleteLoginLogDTO) {
         return loginLogService.deleteLoginLog(deleteLoginLogDTO);

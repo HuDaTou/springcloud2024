@@ -1,7 +1,11 @@
 package com.overthinker.cloud.web.entity.PO;
 
-import com.baomidou.mybatisplus.annotation.*;
-import com.overthinker.cloud.entity.BaseData;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.overthinker.cloud.entity.BasecopyProperties;
+import com.overthinker.cloud.web.entity.PO.base.BaseData;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,38 +25,44 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @TableName("sys_website_info")
-public class WebsiteInfo implements BaseData {
-    @TableId(value = "id" ,type = IdType.ASSIGN_ID)
+public class WebsiteInfo extends BaseData implements BasecopyProperties {
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @Schema(description = "配置ID", example = "1234567890123456789")
     private Long id;
-    //站长头像
+
+    @Schema(description = "站长头像URL", example = "https://example.com/avatar.jpg")
     private String webmasterAvatar;
-    //站长名称
+
+    @Schema(description = "站长名称", example = "张三")
     private String webmasterName;
-    //站长文案
+
+    @Schema(description = "站长个性签名", example = "热爱技术，分享生活")
     private String webmasterCopy;
-    //站长资料卡背景图
+
+    @Schema(description = "资料卡背景图URL", example = "https://example.com/background.jpg")
     private String webmasterProfileBackground;
-    //gitee链接
+
+    @Schema(description = "Gitee链接", example = "https://gitee.com/username")
     private String giteeLink;
-    //github链接
+
+    @Schema(description = "GitHub链接", example = "https://github.com/username")
     private String githubLink;
-    //网站名称
+
+    @Schema(description = "网站名称", example = "我的个人网站")
     private String websiteName;
-    //头部通知
+
+    @Schema(description = "顶部通知栏内容", example = "欢迎访问我的网站！")
     private String headerNotification;
-    //侧面公告
+
+    @Schema(description = "侧边栏公告", example = "网站正在进行优化，如有问题请联系管理员")
     private String sidebarAnnouncement;
-    //备案信息
+
+    @Schema(description = "备案信息", example = "粤ICP备123456号")
     private String recordInfo;
-    //开始运行时间
+
+    @Schema(description = "网站开始运行时间", example = "2023-01-01T00:00:00Z")
     private Date startTime;
-    //用户创建时间
-    @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
-    //用户更新时间
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
-    //是否删除（0：未删除，1：已删除）
+
+    @Schema(description = "是否删除（0：未删除，1：已删除）", example = "0")
     private Integer isDeleted;
 }
-

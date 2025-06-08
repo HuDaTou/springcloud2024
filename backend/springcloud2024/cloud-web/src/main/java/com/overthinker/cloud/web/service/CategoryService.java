@@ -26,6 +26,7 @@ public interface CategoryService extends IService<Category> {
 
     /**
      * 添加分类
+     *
      * @param categoryDTO 分类
      * @return 是否成功
      */
@@ -33,6 +34,7 @@ public interface CategoryService extends IService<Category> {
 
     /**
      * 搜索分类
+     *
      * @param searchCategoryDTO 搜索标签DTO
      * @return 分类列表
      */
@@ -40,6 +42,7 @@ public interface CategoryService extends IService<Category> {
 
     /**
      * 根据id查询
+     *
      * @param id id
      * @return 标签
      */
@@ -47,6 +50,7 @@ public interface CategoryService extends IService<Category> {
 
     /**
      * 新增或修改标签
+     *
      * @param categoryDTO 标签DTO
      * @return 是否成功
      */
@@ -54,6 +58,7 @@ public interface CategoryService extends IService<Category> {
 
     /**
      * 根据id删除
+     *
      * @param ids id
      * @return 是否成功
      */

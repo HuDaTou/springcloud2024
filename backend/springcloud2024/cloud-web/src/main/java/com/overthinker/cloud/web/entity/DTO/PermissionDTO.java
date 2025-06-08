@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.entity.DTO;
 
-import com.overthinker.cloud.entity.BaseData;
+import com.overthinker.cloud.entity.BasecopyProperties;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
  */
 @Accessors(chain = true)
 @Data
-public class PermissionDTO implements BaseData {
+public class PermissionDTO implements BasecopyProperties {
     //权限表id
     private Integer id;
     //描述

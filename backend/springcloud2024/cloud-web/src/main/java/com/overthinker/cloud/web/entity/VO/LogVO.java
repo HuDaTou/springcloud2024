@@ -12,7 +12,7 @@ import java.util.Date;
  * @since 2023-12-12 09:12:31
  */
 @Data
-public class LogVO  {
+public class LogVO {
     //编号
     private Long id;
     //模块名称

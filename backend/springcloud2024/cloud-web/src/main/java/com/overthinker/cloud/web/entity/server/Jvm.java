@@ -8,12 +8,11 @@ import java.lang.management.ManagementFactory;
 
 /**
  * JVM相关信息
- * 
+ *
  * @author ruoyi
  */
 @Setter
-public class Jvm
-{
+public class Jvm {
     /**
      * 当前JVM占用的内存总数(M)
      */
@@ -39,70 +38,59 @@ public class Jvm
      */
     private String home;
 
-    public double getTotal()
-    {
+    public double getTotal() {
         return Arith.div(total, (1024 * 1024), 2);
     }
 
-    public double getMax()
-    {
+    public double getMax() {
         return Arith.div(max, (1024 * 1024), 2);
     }
 
-    public double getFree()
-    {
+    public double getFree() {
         return Arith.div(free, (1024 * 1024), 2);
     }
 
-    public double getUsed()
-    {
+    public double getUsed() {
         return Arith.div(total - free, (1024 * 1024), 2);
     }
 
-    public double getUsage()
-    {
+    public double getUsage() {
         return Arith.mul(Arith.div(total - free, total, 4), 100);
     }
 
     /**
      * 获取JDK名称
      */
-    public String getName()
-    {
+    public String getName() {
         return ManagementFactory.getRuntimeMXBean().getVmName();
     }
 
-    public String getVersion()
-    {
+    public String getVersion() {
         return version;
     }
 
-    public String getHome()
-    {
+    public String getHome() {
         return home;
     }
 
     /**
      * JDK启动时间
      */
-    public String getStartTime()
-    {
+    public String getStartTime() {
         return DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS, DateUtils.getServerStartDate());
     }
 
     /**
      * JDK运行时间
      */
-    public String getRunTime()
-    {
+    public String getRunTime() {
         return DateUtils.timeDistance(DateUtils.getNowDate(), DateUtils.getServerStartDate());
     }
 
     /**
      * 运行参数
      */
-    public String getInputArgs()
-    {
+    public String getInputArgs() {
         return ManagementFactory.getRuntimeMXBean().getInputArguments().toString();
     }
 }

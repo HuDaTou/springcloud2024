@@ -4,12 +4,11 @@ import lombok.Data;
 
 /**
  * 系统文件相关信息
- * 
+ *
  * @author ruoyi
  */
 @Data
-public class SysFile
-{
+public class SysFile {
     /**
      * 盘符路径
      */

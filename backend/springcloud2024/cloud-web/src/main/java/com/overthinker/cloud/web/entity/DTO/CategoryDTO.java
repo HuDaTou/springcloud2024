@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.entity.DTO;
 
-import com.overthinker.cloud.entity.BaseData;
+import com.overthinker.cloud.entity.BasecopyProperties;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -14,7 +14,7 @@ import org.hibernate.validator.constraints.Length;
  */
 @Accessors(chain = true)
 @Data
-public class CategoryDTO implements BaseData {
+public class CategoryDTO implements BasecopyProperties {
     //分类id
     private Long id;
     //分类名

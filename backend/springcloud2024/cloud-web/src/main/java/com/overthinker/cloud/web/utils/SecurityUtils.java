@@ -16,13 +16,14 @@ import java.util.stream.Collectors;
  * @author overH
  * <p>
  * 创建时间：2023/10/12 0:01
- *
+ * <p>
  * Security获取相关信息工具类
  */
 public class SecurityUtils {
 
     /**
      * 获取当前登录用户id
+     *
      * @return 用户id
      */
     public static Long getUserId() {
@@ -35,6 +36,7 @@ public class SecurityUtils {
 
     /**
      * 判断用户是否登录
+     *
      * @return 是否登录
      */
     public static boolean isLogin() {
@@ -44,6 +46,7 @@ public class SecurityUtils {
 
     /**
      * 获取当前登录用户的角色
+     *
      * @return 角色列表
      */
     public static List<String> getUserRoles() {
@@ -58,6 +61,7 @@ public class SecurityUtils {
 
     /**
      * 获取request
+     *
      * @return request
      */
     public static HttpServletRequest getCurrentHttpRequest() {

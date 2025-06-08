@@ -1,11 +1,11 @@
 package com.overthinker.cloud.web.controller;
 
 
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.CheckBlacklist;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.LeaveWordIsCheckDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchLeaveWordDTO;
 import com.overthinker.cloud.web.entity.VO.LeaveWordListVO;
@@ -47,7 +47,7 @@ public class LeaveWordController extends BaseController {
     })
     @GetMapping("/list")
     @AccessLimit(seconds = 60, maxCount = 10)
-    public ResultData<List<LeaveWordVO>> list(@RequestParam(value = "id",required = false) String id) {
+    public ResultData<List<LeaveWordVO>> list(@RequestParam(value = "id", required = false) String id) {
         return messageHandler(() -> leaveWordService.getLeaveWordList(id));
     }
 
@@ -62,7 +62,7 @@ public class LeaveWordController extends BaseController {
     @PreAuthorize("hasAnyAuthority('blog:leaveword:list')")
     @Operation(summary = "后台留言列表")
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="留言管理",operation= LogConst.GET)
+    @LogAnnotation(module = "留言管理", operation = LogConst.GET)
     @GetMapping("/back/list")
     public ResultData<List<LeaveWordListVO>> backList() {
         return messageHandler(() -> leaveWordService.getBackLeaveWordList(null));
@@ -71,7 +71,7 @@ public class LeaveWordController extends BaseController {
     @PreAuthorize("hasAnyAuthority('blog:leaveword:search')")
     @Operation(summary = "搜索后台留言列表")
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="留言管理",operation= LogConst.SEARCH)
+    @LogAnnotation(module = "留言管理", operation = LogConst.SEARCH)
     @PostMapping("/back/search")
     public ResultData<List<LeaveWordListVO>> backList(@RequestBody SearchLeaveWordDTO searchDTO) {
         return messageHandler(() -> leaveWordService.getBackLeaveWordList(searchDTO));
@@ -80,7 +80,7 @@ public class LeaveWordController extends BaseController {
     @PreAuthorize("hasAnyAuthority('blog:leaveword:isCheck')")
     @Operation(summary = "修改留言是否通过")
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="留言管理",operation= LogConst.UPDATE)
+    @LogAnnotation(module = "留言管理", operation = LogConst.UPDATE)
     @PostMapping("/back/isCheck")
     public ResultData<Void> isCheck(@RequestBody @Valid LeaveWordIsCheckDTO leaveWordIsCheckDTO) {
         return leaveWordService.isCheckLeaveWord(leaveWordIsCheckDTO);
@@ -89,7 +89,7 @@ public class LeaveWordController extends BaseController {
     @PreAuthorize("hasAnyAuthority('blog:leaveword:delete')")
     @Operation(summary = "删除留言")
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="留言管理",operation= LogConst.DELETE)
+    @LogAnnotation(module = "留言管理", operation = LogConst.DELETE)
     @DeleteMapping("/back/delete")
     public ResultData<Void> delete(@RequestBody List<Long> ids) {
         return leaveWordService.deleteLeaveWord(ids);

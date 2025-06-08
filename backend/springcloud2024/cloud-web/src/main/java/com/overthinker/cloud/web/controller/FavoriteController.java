@@ -1,10 +1,10 @@
 package com.overthinker.cloud.web.controller;
 
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.CheckBlacklist;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.FavoriteIsCheckDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchFavoriteDTO;
 import com.overthinker.cloud.web.entity.VO.FavoriteListVO;
@@ -84,7 +84,7 @@ public class FavoriteController extends BaseController {
     @PreAuthorize("hasAnyAuthority('blog:favorite:list')")
     @Operation(summary = "后台收藏列表")
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="收藏管理",operation= LogConst.GET)
+    @LogAnnotation(module = "收藏管理", operation = LogConst.GET)
     @GetMapping("/back/list")
     public ResultData<List<FavoriteListVO>> backList() {
         return messageHandler(() -> favoriteService.getBackFavoriteList(null));
@@ -93,7 +93,7 @@ public class FavoriteController extends BaseController {
     @PreAuthorize("hasAnyAuthority('blog:favorite:search')")
     @Operation(summary = "搜索后台收藏列表")
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="收藏管理",operation= LogConst.SEARCH)
+    @LogAnnotation(module = "收藏管理", operation = LogConst.SEARCH)
     @PostMapping("/back/search")
     public ResultData<List<FavoriteListVO>> backList(@RequestBody SearchFavoriteDTO searchDTO) {
         return messageHandler(() -> favoriteService.getBackFavoriteList(searchDTO));
@@ -102,7 +102,7 @@ public class FavoriteController extends BaseController {
     @PreAuthorize("hasAnyAuthority('blog:favorite:isCheck')")
     @Operation(summary = "修改收藏是否通过")
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="收藏管理",operation= LogConst.UPDATE)
+    @LogAnnotation(module = "收藏管理", operation = LogConst.UPDATE)
     @PostMapping("/back/isCheck")
     public ResultData<Void> isCheck(@RequestBody @Valid FavoriteIsCheckDTO favoriteIsCheckDTO) {
         return favoriteService.isCheckFavorite(favoriteIsCheckDTO);
@@ -111,7 +111,7 @@ public class FavoriteController extends BaseController {
     @PreAuthorize("hasAnyAuthority('blog:favorite:delete')")
     @Operation(summary = "删除收藏")
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="收藏管理",operation= LogConst.DELETE)
+    @LogAnnotation(module = "收藏管理", operation = LogConst.DELETE)
     @DeleteMapping("/back/delete")
     public ResultData<Void> delete(@RequestBody List<Long> ids) {
         return favoriteService.deleteFavorite(ids);

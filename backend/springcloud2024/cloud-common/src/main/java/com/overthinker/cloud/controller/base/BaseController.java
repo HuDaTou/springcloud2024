@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 //TODO 配置基础统一
 public class BaseController {
 
-    public static  <T> ResultData<T> messageHandler(Supplier<T> supplier) {
+    public static <T> ResultData<T> messageHandler(Supplier<T> supplier) {
         return ResultData.success(supplier.get());
     }
 

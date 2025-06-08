@@ -38,8 +38,8 @@ public class LogQueueListener {
     /**
      * 监听登录日志队列
      */
-    @RabbitListener(queues = RabbitConst.LOG_LOGIN_QUEUE,concurrency = "5-10")
-    public void handlerLoginLog(@Payload  LoginLog loginLog,@Payload Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) {
+    @RabbitListener(queues = RabbitConst.LOG_LOGIN_QUEUE, concurrency = "5-10")
+    public void handlerLoginLog(@Payload LoginLog loginLog, @Payload Channel channel, @Header(AmqpHeaders.DELIVERY_TAG) long tag) {
         log.info("监听登录日志队列,标识:{},数据：{}", tag, loginLog);
         if (loginLog.getBrowser().startsWith("Unknown")) {
             loginLog.setBrowser("未知");
@@ -60,7 +60,7 @@ public class LogQueueListener {
      * 监听系统操作日志队列
      * 开启手动确认
      */
-    @RabbitListener(queues = RabbitConst.LOG_SYSTEM_QUEUE,concurrency = "5-10")
+    @RabbitListener(queues = RabbitConst.LOG_SYSTEM_QUEUE, concurrency = "5-10")
     public void handlerSystemLog(Log logEntity) {
         log.info("--------------消费系统操作日志--------------");
         if (logMapper.insert(logEntity) > 0) {

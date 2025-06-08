@@ -38,7 +38,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     public List<CategoryVO> listAllCategory() {
         List<Category> categories = this.query().list();
 
-        return categories.stream().map(category -> category.asViewObject(CategoryVO.class, item -> {
+        return categories.stream().map(category -> category.copyProperties(CategoryVO.class, item -> {
             item.setArticleCount(articleMapper.selectCount(new LambdaQueryWrapper<Article>().eq(Article::getCategoryId, category.getId())));
         })).toList();
     }
@@ -46,7 +46,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     @Override
     public ResultData<Void> addCategory(CategoryDTO categoryDTO) {
         categoryDTO.setId(null);
-        if (this.save(categoryDTO.asViewObject(Category.class))) return ResultData.success();
+        if (this.save(categoryDTO.copyProperties(Category.class))) return ResultData.success();
         return ResultData.failure();
     }
 
@@ -60,7 +60,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         return categoryMapper.selectList(queryWrapper)
                 .stream()
                 .map(category ->
-                        category.asViewObject(CategoryVO.class, item ->
+                        category.copyProperties(CategoryVO.class, item ->
                                 item.setArticleCount(articleMapper.selectCount(new LambdaQueryWrapper<Article>()
                                         .eq(Article::getCategoryId, category.getId())))))
                 .toList();
@@ -68,13 +68,13 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Override
     public CategoryVO getCategoryById(Long id) {
-        return categoryMapper.selectById(id).asViewObject(CategoryVO.class);
+        return categoryMapper.selectById(id).copyProperties(CategoryVO.class);
     }
 
     @Transactional
     @Override
     public ResultData<Void> addOrUpdateCategory(CategoryDTO categoryDTO) {
-        if (this.saveOrUpdate(categoryDTO.asViewObject(Category.class))) return ResultData.success();
+        if (this.saveOrUpdate(categoryDTO.copyProperties(Category.class))) return ResultData.success();
         return ResultData.failure();
     }
 

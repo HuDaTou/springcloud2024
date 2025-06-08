@@ -1,8 +1,8 @@
 package com.overthinker.cloud.web.controller;
 
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
-import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.SearchVideoDTO;
 import com.overthinker.cloud.web.entity.DTO.VideoInfoTDO;
 import com.overthinker.cloud.web.entity.VO.VideoInfoVO;
@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 
-
-
 /**
  * @author overH
  * <p>
@@ -37,15 +35,12 @@ public class VideoController extends BaseController {
     VideoService videoService;
 
 
-
-
-
     @Operation(summary = "上传视频")
     @RequestMapping("/upload/video")
     @Parameters({
             @Parameter(name = "videoFile", description = "视频文件"),
     })
-    public ResultData<Map<String, Object>> uploadVideo( @NotNull(message = "视频文件不能为空") @RequestParam("VideoFile") MultipartFile videoFile) {
+    public ResultData<Map<String, Object>> uploadVideo(@NotNull(message = "视频文件不能为空") @RequestParam("VideoFile") MultipartFile videoFile) {
         return messageHandler(() -> videoService.uploadVideo(videoFile));
     }
 
@@ -64,7 +59,9 @@ public class VideoController extends BaseController {
 
     @Operation(summary = "添加或更改视频信息")
     @PostMapping("/upload/videoInfo")
-    public ResultData<Void> saveVideoInfo(@Valid @RequestBody VideoInfoTDO videoInfoTDO){return  videoService.updateVideoInfo(videoInfoTDO);}
+    public ResultData<Void> saveVideoInfo(@Valid @RequestBody VideoInfoTDO videoInfoTDO) {
+        return videoService.updateVideoInfo(videoInfoTDO);
+    }
 
 
     @Operation(summary = "获取视频列表")
@@ -88,7 +85,6 @@ public class VideoController extends BaseController {
     }
 
 
-
     @Operation(summary = "发布视频")
     @PostMapping("/publish")
     public ResultData<String> publishVideo(@RequestParam("videoId") Long videoId) {
@@ -96,13 +92,11 @@ public class VideoController extends BaseController {
     }
 
 
-
     @Operation(summary = "获取视频的缓存地址")
     @GetMapping("/cachepath")
     public ResultData<String> getVideoCachePath(@RequestParam("videoId") Integer videoId) {
         return messageHandler(() -> videoService.getVideoCachePath());
     }
-
 
 
     @Operation(summary = "视频访问量+1")
@@ -115,7 +109,7 @@ public class VideoController extends BaseController {
     }
 
 
-//    @PreAuthorize("hasAnyAuthority('blog:video:list')")
+    //    @PreAuthorize("hasAnyAuthority('blog:video:list')")
     @Operation(summary = "获取所有的视频列表")
 //    @LogAnnotation(module = "视频管理", operation = LogConst.GET)
     @AccessLimit(seconds = 60, maxCount = 30)

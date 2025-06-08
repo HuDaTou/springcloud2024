@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.entity.DTO;
 
-import com.overthinker.cloud.entity.BaseData;
+import com.overthinker.cloud.entity.BasecopyProperties;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -12,7 +12,7 @@ import java.util.List;
  * 创建时间：2024/1/4 14:11
  */
 @Data
-public class ArticleDTO implements BaseData {
+public class ArticleDTO implements BasecopyProperties {
     // 文章id
     private Long id;
     //分类id

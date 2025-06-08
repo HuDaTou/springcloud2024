@@ -44,11 +44,11 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
 
     public List<RoleUserVO> selectRoleUser(Long roleId, String username, String email, Integer type) {
         LambdaQueryWrapper<UserRole> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(UserRole::getRoleId,roleId);
+        wrapper.eq(UserRole::getRoleId, roleId);
         List<Long> userIds;
-        if(type == 0){
+        if (type == 0) {
             userIds = userRoleMapper.selectList(wrapper).stream().map(UserRole::getUserId).toList();
-        }else{
+        } else {
             // 查询存在角色的用户id
             userIds = userRoleMapper.selectList(wrapper).stream().map(UserRole::getUserId).toList();
             // 查询没有该角色的用户
@@ -64,7 +64,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
                 userList.addAll(userMapper.selectList(queryWrapper));
                 queryWrapper.clear();
             });
-            return userList.stream().map(user -> user.asViewObject(RoleUserVO.class)).toList();
+            return userList.stream().map(user -> user.copyProperties(RoleUserVO.class)).toList();
         }
         return null;
     }
@@ -124,7 +124,7 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
                 roleList.addAll(roleMapper.selectList(queryWrapper));
                 queryWrapper.clear();
             });
-            return roleList.stream().map(role -> role.asViewObject(RoleAllVO.class)).toList();
+            return roleList.stream().map(role -> role.copyProperties(RoleAllVO.class)).toList();
         }
         return null;
     }

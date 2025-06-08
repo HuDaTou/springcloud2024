@@ -13,6 +13,7 @@ import java.util.List;
 public interface PayFeignApi {
     /**
      * 新增一条支付相关流水记录
+     *
      * @param payDTO
      * @return
      */
@@ -21,6 +22,7 @@ public interface PayFeignApi {
 
     /**
      * 根据id删除
+     *
      * @param id
      * @return
      */
@@ -30,6 +32,7 @@ public interface PayFeignApi {
 
     /**
      * 修改支付流水信息
+     *
      * @param payDTO
      * @return
      */
@@ -38,6 +41,7 @@ public interface PayFeignApi {
 
     /**
      * 按照主键记录查询支付流水信息
+     *
      * @param id
      * @return
      */
@@ -47,6 +51,7 @@ public interface PayFeignApi {
 
     /**
      * 按照主键记录批量查询支付流水信息
+     *
      * @param ids
      * @return
      */
@@ -55,15 +60,16 @@ public interface PayFeignApi {
 
     /**
      * 查询所有支付流水信息
+     *
      * @return
      */
     @GetMapping("/t-pay/list")
     ResultData<List<PayVO>> listPayInfo();
 
 
-
     /**
      * 服务熔断降级接口测试
+     *
      * @param id
      * @return
      */
@@ -73,6 +79,7 @@ public interface PayFeignApi {
 
     /**
      * Resilience4j Bulkhead 的例子
+     *
      * @param id
      * @return
      */
@@ -81,6 +88,7 @@ public interface PayFeignApi {
 
     /**
      * Resilience4j Ratelimit 的例子
+     *
      * @param id
      * @return
      */
@@ -89,12 +97,12 @@ public interface PayFeignApi {
 
     /**
      * Micrometer(Sleuth)进行链路监控的例子
+     *
      * @param id
      * @return
      */
     @GetMapping(value = "/pay/micrometer/{id}")
     public String myMicrometer(@PathVariable("id") Integer id);
-
 
 
 }

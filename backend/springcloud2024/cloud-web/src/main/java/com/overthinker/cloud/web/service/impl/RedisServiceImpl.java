@@ -87,7 +87,7 @@ public class RedisServiceImpl implements RedisService {
     public void initCount() {
         log.info("--------开始执行缓存文章点赞数量，评论数量，收藏数量--------");
         // 文章收藏量
-        List<ArticleVO> articleVOS = articleMapper.selectList(null).stream().map(article -> article.asViewObject(ArticleVO.class)).toList();
+        List<ArticleVO> articleVOS = articleMapper.selectList(null).stream().map(article -> article.copyProperties(ArticleVO.class)).toList();
         articleVOS.forEach(articleVO -> {
             // 文章收藏量
             articleVO.setFavoriteCount(favoriteMapper.selectCount(new LambdaQueryWrapper<Favorite>().eq(Favorite::getTypeId, articleVO.getId()).eq(Favorite::getType, FavoriteEnum.FAVORITE_TYPE_ARTICLE.getType())));

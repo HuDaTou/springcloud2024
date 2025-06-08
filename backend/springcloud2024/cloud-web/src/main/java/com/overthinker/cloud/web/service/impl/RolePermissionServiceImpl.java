@@ -60,7 +60,7 @@ public class RolePermissionServiceImpl extends ServiceImpl<RolePermissionMapper,
                 roleList.addAll(roleMapper.selectList(queryWrapper));
                 queryWrapper.clear();
             });
-            return roleList.stream().map(role -> role.asViewObject(RoleAllVO.class)).toList();
+            return roleList.stream().map(role -> role.copyProperties(RoleAllVO.class)).toList();
         }
         return null;
     }

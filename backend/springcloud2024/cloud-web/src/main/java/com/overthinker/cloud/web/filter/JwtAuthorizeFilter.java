@@ -37,7 +37,7 @@ public class JwtAuthorizeFilter extends OncePerRequestFilter {
         // 解析jwt
         DecodedJWT jwt = jwtUtils.resolveJwt(authorization);
 
-         if (!ObjectUtils.isEmpty(jwt)) {
+        if (!ObjectUtils.isEmpty(jwt)) {
             // 获取UserDetails
             LoginUser user = (LoginUser) jwtUtils.toUser(jwt);
             // 创建认证对象

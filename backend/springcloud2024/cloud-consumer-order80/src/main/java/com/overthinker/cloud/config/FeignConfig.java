@@ -13,13 +13,13 @@ public class FeignConfig {
      * 自定义重试策略
      */
     @Bean
-    public Retryer myRetryer()
-    {
+    public Retryer myRetryer() {
         //return Retryer.NEVER_RETRY; //Feign默认配置是不走重试策略的
 
         //最大请求次数为3(1+2)，初始间隔时间为100ms，重试间最大间隔时间为1s
-        return new Retryer.Default(100,1,3);
+        return new Retryer.Default(100, 1, 3);
     }
+
     /**
      * 配置feign日志级别
      */

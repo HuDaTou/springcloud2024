@@ -4,17 +4,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.overthinker.cloud.web.mapper.ArticleMapper">
     <select id="selectRandomArticles" resultType="com.overthinker.cloud.web.entity.PO.Article">
-            select * from t_article as a
-                     where a.status = #{status}
-                     and a.is_deleted = 0
-            order by rand()
-            limit #{limit}
+        select *
+        from t_article as a
+        where a.status = #{status}
+          and a.is_deleted = 0
+        order by rand()
+        limit #{limit}
 
-            </select>
-
-
-
-
+    </select>
 
 
 </mapper>

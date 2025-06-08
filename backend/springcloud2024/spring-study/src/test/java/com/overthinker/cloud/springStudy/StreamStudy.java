@@ -1,6 +1,5 @@
 package com.overthinker.cloud.springStudy;
 
-import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,31 +12,29 @@ import java.util.List;
 public class StreamStudy {
 
 
-
-
-//    统计每门课的人数
+    //    统计每门课的人数
     @Data
     class TestClass {
         private String name;
-        private Long Count ;
+        private Long Count;
     }
 
 
-//    学生和选课
+    //    学生和选课
     @Data
     class Student {
 
         private Long id;
         private String name;
-        private  Integer age ;
+        private Integer age;
         private List<Schoolclass> schoolclasses;
     }
 
-//    学生和选课对应的关系表
+    //    学生和选课对应的关系表
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-     static class StudentSchoolclass {
+    static class StudentSchoolclass {
         private Long studentId;
         private Long schoolclassId;
         private Integer sort;
@@ -45,7 +42,7 @@ public class StreamStudy {
     }
 
 
-//    课表
+    //    课表
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
@@ -75,21 +72,21 @@ public class StreamStudy {
     public static void main(String[] args) {
 //创建一个所有课程的list
         List<Schoolclass> school = new ArrayList<>(Arrays.asList(
-                new Schoolclass(1L,"语文"),
-                new Schoolclass(2L,"数学"),
-                new Schoolclass(3L,"英语"),
-                new Schoolclass(4L,"物理"),
-                new Schoolclass(5L,"化学"),
-                new Schoolclass(6L,"生物"),
-                new Schoolclass(7L,"历史"),
-                new Schoolclass(8L,"地理"),
-                new Schoolclass(9L,"政治"),
-                new Schoolclass(10L,"体育"),
-                new Schoolclass(11L,"音乐"),
-                new Schoolclass(12L,"美术"),
-                new Schoolclass(13L,"计算机"),
-                new Schoolclass(14L,"电子"),
-                new Schoolclass(15L,"机械")
+                new Schoolclass(1L, "语文"),
+                new Schoolclass(2L, "数学"),
+                new Schoolclass(3L, "英语"),
+                new Schoolclass(4L, "物理"),
+                new Schoolclass(5L, "化学"),
+                new Schoolclass(6L, "生物"),
+                new Schoolclass(7L, "历史"),
+                new Schoolclass(8L, "地理"),
+                new Schoolclass(9L, "政治"),
+                new Schoolclass(10L, "体育"),
+                new Schoolclass(11L, "音乐"),
+                new Schoolclass(12L, "美术"),
+                new Schoolclass(13L, "计算机"),
+                new Schoolclass(14L, "电子"),
+                new Schoolclass(15L, "机械")
         ));
 //        这个时候我要把Schoolclass转换成Schools类型
         List<Schools> schools = school.stream().map(s -> new Schools(s.getId().toString(), s.getName())).toList();
@@ -97,51 +94,50 @@ public class StreamStudy {
         List<Schools> schools1 = school.parallelStream()
                 .map(Schools::changeSchoolclass).toList();
         List<StudentSchoolclass> studentSchoolclasses = new ArrayList<>(Arrays.asList(
-                new StudentSchoolclass(1L,1L,1),
-                new StudentSchoolclass(1L,2L,2),
-                new StudentSchoolclass(1L,3L,3),
-                new StudentSchoolclass(1L,4L,4),
-                new StudentSchoolclass(1L,5L,5),
-                new StudentSchoolclass(1L,6L,6),
-                new StudentSchoolclass(2L,7L,7),
-                new StudentSchoolclass(2L,8L,8),
-                new StudentSchoolclass(2L,9L,9),
-                new StudentSchoolclass(2L,10L,1),
-                new StudentSchoolclass(2L,11L,2),
-                new StudentSchoolclass(2L,12L,3),
-                new StudentSchoolclass(3L,1L,1),
-                new StudentSchoolclass(3L,2L,2),
-                new StudentSchoolclass(3L,3L,3),
-                new StudentSchoolclass(3L,4L,4),
-                new StudentSchoolclass(3L,5L,5),
-                new StudentSchoolclass(3L,6L,6),
-                new StudentSchoolclass(4L,7L,7),
-                new StudentSchoolclass(4L,8L,8),
-                new StudentSchoolclass(4L,9L,9),
-                new StudentSchoolclass(4L,10L,10),
-                new StudentSchoolclass(4L,11L,11),
-                new StudentSchoolclass(4L,12L,12),
-                new StudentSchoolclass(4L,13L,13),
-                new StudentSchoolclass(4L,14L,14),
-                new StudentSchoolclass(4L,15L,15),
-                new StudentSchoolclass(5L,1L,1),
-                new StudentSchoolclass(5L,2L,2),
-                new StudentSchoolclass(5L,3L,3),
-                new StudentSchoolclass(5L,4L,4),
-                new StudentSchoolclass(5L,5L,5),
-                new StudentSchoolclass(5L,6L,6),
-                new StudentSchoolclass(6L,7L,7),
-                new StudentSchoolclass(6L,8L,8),
-                new StudentSchoolclass(6L,9L,9),
-                new StudentSchoolclass(6L,10L,10),
-                new StudentSchoolclass(6L,11L,11),
-                new StudentSchoolclass(6L,12L,12),
-                new StudentSchoolclass(6L,13L,13),
-                new StudentSchoolclass(6L,14L,14),
-                new StudentSchoolclass(6L,15L,15)
+                new StudentSchoolclass(1L, 1L, 1),
+                new StudentSchoolclass(1L, 2L, 2),
+                new StudentSchoolclass(1L, 3L, 3),
+                new StudentSchoolclass(1L, 4L, 4),
+                new StudentSchoolclass(1L, 5L, 5),
+                new StudentSchoolclass(1L, 6L, 6),
+                new StudentSchoolclass(2L, 7L, 7),
+                new StudentSchoolclass(2L, 8L, 8),
+                new StudentSchoolclass(2L, 9L, 9),
+                new StudentSchoolclass(2L, 10L, 1),
+                new StudentSchoolclass(2L, 11L, 2),
+                new StudentSchoolclass(2L, 12L, 3),
+                new StudentSchoolclass(3L, 1L, 1),
+                new StudentSchoolclass(3L, 2L, 2),
+                new StudentSchoolclass(3L, 3L, 3),
+                new StudentSchoolclass(3L, 4L, 4),
+                new StudentSchoolclass(3L, 5L, 5),
+                new StudentSchoolclass(3L, 6L, 6),
+                new StudentSchoolclass(4L, 7L, 7),
+                new StudentSchoolclass(4L, 8L, 8),
+                new StudentSchoolclass(4L, 9L, 9),
+                new StudentSchoolclass(4L, 10L, 10),
+                new StudentSchoolclass(4L, 11L, 11),
+                new StudentSchoolclass(4L, 12L, 12),
+                new StudentSchoolclass(4L, 13L, 13),
+                new StudentSchoolclass(4L, 14L, 14),
+                new StudentSchoolclass(4L, 15L, 15),
+                new StudentSchoolclass(5L, 1L, 1),
+                new StudentSchoolclass(5L, 2L, 2),
+                new StudentSchoolclass(5L, 3L, 3),
+                new StudentSchoolclass(5L, 4L, 4),
+                new StudentSchoolclass(5L, 5L, 5),
+                new StudentSchoolclass(5L, 6L, 6),
+                new StudentSchoolclass(6L, 7L, 7),
+                new StudentSchoolclass(6L, 8L, 8),
+                new StudentSchoolclass(6L, 9L, 9),
+                new StudentSchoolclass(6L, 10L, 10),
+                new StudentSchoolclass(6L, 11L, 11),
+                new StudentSchoolclass(6L, 12L, 12),
+                new StudentSchoolclass(6L, 13L, 13),
+                new StudentSchoolclass(6L, 14L, 14),
+                new StudentSchoolclass(6L, 15L, 15)
         )
         );
-
 
 
         List<Student> students = new ArrayList<>();

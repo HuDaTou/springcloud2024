@@ -59,17 +59,18 @@ public class VideoUploadUtils {
      */
     public String buildPath(UploadEnum config, String fileName) {
         String name = UUID.randomUUID().toString();
-        return config.getDir()+name+ "."+FileNameUtil.extName(fileName);
+        return config.getDir() + name + "." + FileNameUtil.extName(fileName);
     }
 
 
     /**
      * 文件校验
+     *
      * @param config 配置
-     * @param file 文件
+     * @param file   文件
      * @throws FileUploadException 文件上传异常
      */
-    public void validateFile(UploadEnum config, MultipartFile file)  {
+    public void validateFile(UploadEnum config, MultipartFile file) {
         // 校验
         if (file.isEmpty()) throw new FileUploadException(ReturnCodeEnum.FILE_VIDEO_ERROR);
         if (file.getSize() > config.getLimitSize() * 1024 * 1024) {
@@ -83,11 +84,12 @@ public class VideoUploadUtils {
 
     /**
      * 封面校验
+     *
      * @param config 配置
-     * @param cover 封面
+     * @param cover  封面
      * @throws FileUploadException 文件上传异常
      */
-    public void validateVideoCover(UploadEnum config ,MultipartFile cover) throws FileUploadException {
+    public void validateVideoCover(UploadEnum config, MultipartFile cover) throws FileUploadException {
         if (cover.isEmpty()) throw new FileUploadException(ReturnCodeEnum.FILE_IMAGE_ERROR);
         if (cover.getSize() > config.getLimitSize() * 1024 * 1024) {
             throw new FileUploadException(ReturnCodeEnum.FILE_IMAGE_SIZE_ERROR);
@@ -99,6 +101,7 @@ public class VideoUploadUtils {
 
     /**
      * 增强格式校验 校验文件格式是否合法 合法返回true 不合法返回false
+     *
      * @param file 文件
      */
     private boolean isValidFormat(MultipartFile file, Set<String> allowedExtensions) {
@@ -160,7 +163,6 @@ public class VideoUploadUtils {
 
         return sizeString + units[unitIndex];
     }
-
 
 
     /**

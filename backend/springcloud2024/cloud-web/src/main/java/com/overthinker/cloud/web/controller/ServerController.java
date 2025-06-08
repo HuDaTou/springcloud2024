@@ -1,9 +1,9 @@
 package com.overthinker.cloud.web.controller;
 
 
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
-import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.PO.Server;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,28 +27,22 @@ import java.util.concurrent.ConcurrentHashMap;
 @Tag(name = "服务监控")
 @RequestMapping(value = "/monitor/server")
 @Slf4j
-public class ServerController extends BaseController
-{
+public class ServerController extends BaseController {
 
     private final static Server server = new Server();
-
 
 
     @PreAuthorize("hasAnyAuthority('monitor:server:list')")
     @AccessLimit(seconds = 60, maxCount = 30)
     @Operation(summary = "获取服务监控数据")
     @GetMapping()
-    public ResultData<Server> getInfo() throws Exception
-    {
+    public ResultData<Server> getInfo() throws Exception {
 
         server.copyTo();
         return messageHandler(() -> server);
     }
 
-    private final static Map<String ,SseEmitter> SSE_CACHE = new  ConcurrentHashMap<>();
-
-
-
+    private final static Map<String, SseEmitter> SSE_CACHE = new ConcurrentHashMap<>();
 
 
 //    @CrossOrigin(origins = "*", maxAge = 3600)
@@ -113,11 +107,6 @@ public class ServerController extends BaseController
 //
 //            }
 //        });
-
-
-
-
-
 
 
 //    }

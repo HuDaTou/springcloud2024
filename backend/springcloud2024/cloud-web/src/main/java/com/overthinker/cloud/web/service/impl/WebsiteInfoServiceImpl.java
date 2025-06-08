@@ -81,7 +81,7 @@ public class WebsiteInfoServiceImpl extends ServiceImpl<WebsiteInfoMapper, Websi
 
     @Override
     public WebsiteInfoVO selectWebsiteInfo() {
-        WebsiteInfoVO websiteInfoVO = this.getById(WebsiteInfoConst.WEBSITE_INFO_ID).asViewObject(WebsiteInfoVO.class);
+        WebsiteInfoVO websiteInfoVO = this.getById(WebsiteInfoConst.WEBSITE_INFO_ID).copyProperties(WebsiteInfoVO.class);
         // 运行时长
         if (StringUtils.isNotNull(websiteInfoVO)) {
             LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
@@ -105,7 +105,7 @@ public class WebsiteInfoServiceImpl extends ServiceImpl<WebsiteInfoMapper, Websi
     @Transactional
     @Override
     public ResultData<Void> updateStationmasterInfo(StationmasterInfoDTO stationmasterInfoDTO) {
-        WebsiteInfo websiteInfo = stationmasterInfoDTO.asViewObject(WebsiteInfo.class, v -> v.setId(WebsiteInfoConst.WEBSITE_INFO_ID));
+        WebsiteInfo websiteInfo = stationmasterInfoDTO.copyProperties(WebsiteInfo.class, v -> v.setId(WebsiteInfoConst.WEBSITE_INFO_ID));
         if (StringUtils.isNotNull(websiteInfo)) {
             this.saveOrUpdate(websiteInfo);
             return ResultData.success();
@@ -116,7 +116,7 @@ public class WebsiteInfoServiceImpl extends ServiceImpl<WebsiteInfoMapper, Websi
     @Transactional
     @Override
     public ResultData<Void> updateWebsiteInfo(WebsiteInfoDTO websiteInfoDTO) {
-        WebsiteInfo websiteInfo = websiteInfoDTO.asViewObject(WebsiteInfo.class, v -> v.setId(WebsiteInfoConst.WEBSITE_INFO_ID));
+        WebsiteInfo websiteInfo = websiteInfoDTO.copyProperties(WebsiteInfo.class, v -> v.setId(WebsiteInfoConst.WEBSITE_INFO_ID));
         if (StringUtils.isNotNull(websiteInfo)) {
             this.saveOrUpdate(websiteInfo);
             return ResultData.success();

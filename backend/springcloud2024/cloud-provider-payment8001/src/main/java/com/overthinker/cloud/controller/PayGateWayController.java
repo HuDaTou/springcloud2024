@@ -14,13 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class PayGateWayController {
     @Resource
     ITPayService payService;
+
     @GetMapping(value = "/pay/gateway/{id}")
     public ResultData<TPay> getById(@PathVariable("id") Integer id) {
         TPay tPay = payService.getById(id);
         return ResultData.success(tPay);
     }
 
-    public ResultData<String> getGatewayInfo(){
-        return ResultData.success("gateway info"+ IdUtil.fastSimpleUUID());
+    public ResultData<String> getGatewayInfo() {
+        return ResultData.success("gateway info" + IdUtil.fastSimpleUUID());
     }
 }

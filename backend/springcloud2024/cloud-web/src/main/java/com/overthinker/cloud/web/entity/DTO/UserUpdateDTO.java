@@ -1,12 +1,12 @@
 package com.overthinker.cloud.web.entity.DTO;
 
-import com.overthinker.cloud.entity.BaseData;
+import com.overthinker.cloud.entity.BasecopyProperties;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 
 @Data
-public class UserUpdateDTO implements BaseData {
+public class UserUpdateDTO implements BasecopyProperties {
     //用户昵称
     @NotNull
     private String nickname;

@@ -11,10 +11,12 @@ public class FileUploadException extends RuntimeException {
         super(message);
         this.returnCodeEnum = ReturnCodeEnum.FILE_UPLOAD_ERROR;
     }
+
     public FileUploadException(String message, ReturnCodeEnum returnCodeEnum) {
         super(message);
         this.returnCodeEnum = returnCodeEnum;
     }
+
     public FileUploadException(ReturnCodeEnum returnCodeEnum) {
         super(returnCodeEnum.getMsg());
         this.returnCodeEnum = returnCodeEnum;

@@ -40,8 +40,6 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
     VideoUploadUtils videoUploadUtils;
 
 
-
-
     @Resource
     MyRedisCache myRedisCache;
 
@@ -67,21 +65,21 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
     private VideoTagService videoTagService;
 
     @Override
-    public Map<String, Object> uploadVideo( MultipartFile videoFile)  {
+    public Map<String, Object> uploadVideo(MultipartFile videoFile) {
 
 //        参数校验
         videoUploadUtils.validateFile(videoUploadEnum, videoFile);
         // 生成统一存储路径
         String Path = videoUploadUtils.buildPath(videoUploadEnum, videoFile.getOriginalFilename());
         String s = videoUploadUtils.uploadToMinio(Path, videoFile);
-        return Map.of("video", s,"videoSize",videoUploadUtils.convertVideoSize(videoFile.getSize()),"videoType",videoFile.getContentType());
+        return Map.of("video", s, "videoSize", videoUploadUtils.convertVideoSize(videoFile.getSize()), "videoType", videoFile.getContentType());
     }
 
     @Override
     @Transactional
     public ResultData<Void> updateVideoInfo(VideoInfoTDO videoInfoTDO) {
         Video video = BeanUtil.copyProperties(videoInfoTDO, Video.class);
-        if (video.getId()==null) {
+        if (video.getId() == null) {
             video.setUserId(SecurityUtils.getUserId());
         }
         if (this.saveOrUpdate(video)) {
@@ -94,7 +92,6 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         }
         return ResultData.failure();
     }
-
 
 
     @Override
@@ -176,29 +173,30 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
 
     @Override
     public List<VideoInfoVO> searchVideoInfo(SearchVideoDTO searchVideoDTO) {
-            LambdaQueryWrapper<Video> wrapper = new LambdaQueryWrapper<>();
-            wrapper.like(StringUtils.isNotNull(searchVideoDTO.getVideoTitle()), Video::getVideoTitle, searchVideoDTO.getVideoTitle())
-                    .eq(StringUtils.isNotNull(searchVideoDTO.getCategoryId()), Video::getCategoryId, searchVideoDTO.getCategoryId())
-                    .eq(StringUtils.isNotNull(searchVideoDTO.getPermission()), Video::getPermission, searchVideoDTO.getPermission());
-            List<VideoInfoVO> videoInfoVOS = videoMapper.selectList(wrapper).stream().map(video -> video.asViewObject(VideoInfoVO.class)).toList();
-            if (!videoInfoVOS.isEmpty()) {
-                videoInfoVOS.forEach(videoInfoVO -> {
-                    videoInfoVO.setCategoryName(categoryMapper.selectById(videoInfoVO.getCategoryId()).getCategoryName());
-                    videoInfoVO.setUserName(userMapper.selectById(videoInfoVO.getUserId()).getUsername());
-                    // 查询视频标签
-                    List<Long> tagIds = videoTagMapper.selectList(new LambdaQueryWrapper<VideoTag>().eq(VideoTag::getVideoId, videoInfoVO.getId())).stream().map(VideoTag::getTagId).toList();
-                    videoInfoVO.setTagsName(tagMapper.selectBatchIds(tagIds).stream().map(Tag::getTagName).toList());
-                });
-                return videoInfoVOS;
-            }
-            return null;
+        LambdaQueryWrapper<Video> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(StringUtils.isNotNull(searchVideoDTO.getVideoTitle()), Video::getVideoTitle, searchVideoDTO.getVideoTitle())
+                .eq(StringUtils.isNotNull(searchVideoDTO.getCategoryId()), Video::getCategoryId, searchVideoDTO.getCategoryId())
+                .eq(StringUtils.isNotNull(searchVideoDTO.getPermission()), Video::getPermission, searchVideoDTO.getPermission());
+        List<VideoInfoVO> videoInfoVOS = videoMapper.selectList(wrapper).stream().map(video -> video.copyProperties(VideoInfoVO.class)).toList();
+        if (!videoInfoVOS.isEmpty()) {
+            videoInfoVOS.forEach(videoInfoVO -> {
+                videoInfoVO.setCategoryName(categoryMapper.selectById(videoInfoVO.getCategoryId()).getCategoryName());
+                videoInfoVO.setUserName(userMapper.selectById(videoInfoVO.getUserId()).getUsername());
+                // 查询视频标签
+                List<Long> tagIds = videoTagMapper.selectList(new LambdaQueryWrapper<VideoTag>().eq(VideoTag::getVideoId, videoInfoVO.getId())).stream().map(VideoTag::getTagId).toList();
+                videoInfoVO.setTagsName(tagMapper.selectBatchIds(tagIds).stream().map(Tag::getTagName).toList());
+            });
+            return videoInfoVOS;
         }
+        return null;
+    }
+
     @Override
     public List<VideoInfoVO> listVideo() {
         List<VideoInfoVO> videoInfoVOS = videoMapper.selectList(new LambdaQueryWrapper<Video>()
                 .orderByDesc(Video::getCreateTime)).stream().map(video ->
 //                video.asViewObject(VideoInfoVO.class
-                BeanUtil.copyProperties(video, VideoInfoVO.class)
+                        BeanUtil.copyProperties(video, VideoInfoVO.class)
         ).toList();
 
         if (!videoInfoVOS.isEmpty()) {

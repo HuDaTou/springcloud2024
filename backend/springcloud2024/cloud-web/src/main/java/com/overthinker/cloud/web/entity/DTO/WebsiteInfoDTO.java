@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.entity.DTO;
 
-import com.overthinker.cloud.entity.BaseData;
+import com.overthinker.cloud.entity.BasecopyProperties;
 import lombok.Data;
 
 import java.util.Date;
@@ -11,7 +11,7 @@ import java.util.Date;
  * 创建时间：2024/1/3 15:05
  */
 @Data
-public class WebsiteInfoDTO implements BaseData {
+public class WebsiteInfoDTO implements BasecopyProperties {
     //网站名称
     private String websiteName;
     //头部通知

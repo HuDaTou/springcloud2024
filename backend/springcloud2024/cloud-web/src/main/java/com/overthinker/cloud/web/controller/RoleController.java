@@ -1,9 +1,9 @@
 package com.overthinker.cloud.web.controller;
 
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.RoleDTO;
 import com.overthinker.cloud.web.entity.DTO.RoleDeleteDTO;
 import com.overthinker.cloud.web.entity.DTO.RoleSearchDTO;
@@ -46,14 +46,15 @@ public class RoleController extends BaseController {
     public ResultData<List<RoleAllVO>> selectAllRole() {
         return messageHandler(() -> roleService.selectRole(null));
     }
+
     @PreAuthorize("hasAnyAuthority('system:role:status:update')")
     @Operation(summary = "更新角色状态")
     @Parameter(name = "roleDeleteDTO", description = "修改角色状态")
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="角色管理",operation= LogConst.UPDATE)
+    @LogAnnotation(module = "角色管理", operation = LogConst.UPDATE)
     @PostMapping("/update/status")
     public ResultData<Void> updateStatus(@RequestBody @Valid UpdateRoleStatusDTO updateRoleStatusDTO) {
-        return roleService.updateStatus(updateRoleStatusDTO.getId(),updateRoleStatusDTO.getStatus());
+        return roleService.updateStatus(updateRoleStatusDTO.getId(), updateRoleStatusDTO.getStatus());
     }
 
     @PreAuthorize("hasAnyAuthority('system:role:get')")
@@ -69,7 +70,7 @@ public class RoleController extends BaseController {
     @Operation(summary = "修改角色信息")
     @Parameter(name = "roleDTO", description = "修改角色所需数据")
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="角色管理",operation= LogConst.UPDATE)
+    @LogAnnotation(module = "角色管理", operation = LogConst.UPDATE)
     @PutMapping("/update")
     public ResultData<Void> updateRole(@RequestBody @Valid RoleDTO roleDTO) {
         return roleService.updateOrInsertRole(roleDTO);
@@ -79,7 +80,7 @@ public class RoleController extends BaseController {
     @Operation(summary = "添加角色信息")
     @Parameter(name = "roleDTO", description = "添加角色所需数据")
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="角色管理",operation= LogConst.INSERT)
+    @LogAnnotation(module = "角色管理", operation = LogConst.INSERT)
     @PutMapping("/add")
     public ResultData<Void> addRole(@RequestBody @Valid RoleDTO roleDTO) {
         return roleService.updateOrInsertRole(roleDTO.setId(null));
@@ -89,7 +90,7 @@ public class RoleController extends BaseController {
     @Operation(summary = "根据id删除角色")
     @Parameter(name = "roleDeleteDTO", description = "id数组")
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="角色管理",operation=LogConst.DELETE)
+    @LogAnnotation(module = "角色管理", operation = LogConst.DELETE)
     @DeleteMapping("/delete")
     public ResultData<Void> deleteRole(@RequestBody @Valid RoleDeleteDTO roleDeleteDTO) {
         return roleService.deleteRole(roleDeleteDTO.getIds());
@@ -99,7 +100,7 @@ public class RoleController extends BaseController {
     @Operation(summary = "根据条件搜索角色")
     @Parameter(name = "roleSearchDTO", description = "搜索条件")
     @AccessLimit(seconds = 60, maxCount = 30)
-    @LogAnnotation(module="角色管理",operation=LogConst.SEARCH)
+    @LogAnnotation(module = "角色管理", operation = LogConst.SEARCH)
     @PostMapping("/search")
     public ResultData<List<RoleAllVO>> searchRole(@RequestBody RoleSearchDTO roleSearchDTO) {
         return messageHandler(() -> roleService.selectRole(roleSearchDTO));

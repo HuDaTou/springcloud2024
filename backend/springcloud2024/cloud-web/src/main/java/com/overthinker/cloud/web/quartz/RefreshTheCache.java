@@ -27,6 +27,7 @@ public class RefreshTheCache extends QuartzJobBean {
 
     @Resource
     private MyRedisCache redisCache;
+
     @Override
     protected void executeInternal(@NonNull JobExecutionContext context) {
         log.info("-------------------------------开始同步文章浏览量到数据库-------------------------------");
@@ -36,13 +37,13 @@ public class RefreshTheCache extends QuartzJobBean {
             // 通过id从redis中获取缓存的访问量
             articleIds.forEach(id -> {
                 // 把访问量设置到mysql数据库中
-                Long cacheObject = Long.valueOf((Integer)redisCache.getCacheObject(RedisConst.ARTICLE_VISIT_COUNT + id));
+                Long cacheObject = Long.valueOf((Integer) redisCache.getCacheObject(RedisConst.ARTICLE_VISIT_COUNT + id));
                 // 不会触发自动填充
-                articleMapper.update(null,new LambdaUpdateWrapper<Article>().eq(Article::getId,id).set(Article::getVisitCount,cacheObject));
+                articleMapper.update(null, new LambdaUpdateWrapper<Article>().eq(Article::getId, id).set(Article::getVisitCount, cacheObject));
             });
             log.info("-------------------------------同步文章浏览量成功-------------------------------");
         } catch (Exception e) {
-            log.error("同步文章浏览量失败",e);
+            log.error("同步文章浏览量失败", e);
         }
     }
 }

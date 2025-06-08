@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.entity.DTO;
 
-import com.overthinker.cloud.entity.BaseData;
+import com.overthinker.cloud.entity.BasecopyProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -13,7 +13,7 @@ import lombok.Data;
  * 用户评论DTO
  */
 @Data
-public class UserCommentDTO implements BaseData {
+public class UserCommentDTO implements BasecopyProperties {
     //评论类型 (1文章 2留言板)
     @Schema(description = "评论类型 (1文章 2留言板)")
     @NotNull

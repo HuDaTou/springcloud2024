@@ -5,6 +5,7 @@ import eu.bitwalker.useragentutils.Browser;
 import eu.bitwalker.useragentutils.OperatingSystem;
 import eu.bitwalker.useragentutils.UserAgent;
 import jakarta.servlet.http.HttpServletRequest;
+
 /**
  * @author overH
  * <p>
@@ -15,10 +16,11 @@ public class BrowserUtil {
 
     /**
      * 获取浏览器名称及版本
+     *
      * @param request request
      * @return 名称 - 版本号
      */
-    public static String browserName(HttpServletRequest request){
+    public static String browserName(HttpServletRequest request) {
         String userAgent = request.getHeader("User-Agent");
         UserAgent ua = UserAgent.parseUserAgentString(userAgent);
         Browser browser = ua.getBrowser();
@@ -27,10 +29,11 @@ public class BrowserUtil {
 
     /**
      * 获取操作系统名称
+     *
      * @param request request
      * @return 名称
      */
-    public static String osName(HttpServletRequest request){
+    public static String osName(HttpServletRequest request) {
         String userAgent = request.getHeader("User-Agent");
         UserAgent ua = UserAgent.parseUserAgentString(userAgent);
         OperatingSystem os = ua.getOperatingSystem();

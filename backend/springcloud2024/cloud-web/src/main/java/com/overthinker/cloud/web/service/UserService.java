@@ -38,13 +38,15 @@ public interface UserService extends IService<User>, UserDetailsService {
 
     /**
      * 用户登录状态
-     * @param id 用户id
+     *
+     * @param id   用户id
      * @param type 登录类型
      */
     void userLoginStatus(Long id, Integer type);
 
     /**
      * 用户注册
+     *
      * @param userRegisterDTO 参数
      * @return 是否成功
      */
@@ -52,6 +54,7 @@ public interface UserService extends IService<User>, UserDetailsService {
 
     /**
      * 用户重置密码，步骤一
+     *
      * @param userResetDTO 参数
      * @return 是否成功
      */
@@ -59,6 +62,7 @@ public interface UserService extends IService<User>, UserDetailsService {
 
     /**
      * 重置密码，已经确认邮箱
+     *
      * @param userResetDTO 参数
      * @return 是否成功
      */
@@ -66,6 +70,7 @@ public interface UserService extends IService<User>, UserDetailsService {
 
     /**
      * 获取所有的用户
+     *
      * @param userSearchDTO 查询条件
      * @return 用户列表
      */
@@ -73,7 +78,8 @@ public interface UserService extends IService<User>, UserDetailsService {
 
     /**
      * 修改用户状态
-     * @param id 用户id
+     *
+     * @param id     用户id
      * @param status 状态
      * @return 是否成功
      */
@@ -81,6 +87,7 @@ public interface UserService extends IService<User>, UserDetailsService {
 
     /**
      * 查看用户详情
+     *
      * @param id 用户id
      * @return 用户信息
      */
@@ -88,13 +95,15 @@ public interface UserService extends IService<User>, UserDetailsService {
 
     /**
      * 删除用户
+     *
      * @param ids 用户id
      * @return 是否成功
      */
     ResultData<Void> deleteUser(List<Long> ids);
 
     /**
-     *  修改用户信息
+     * 修改用户信息
+     *
      * @param userUpdateDTO 参数
      * @return 是否成功
      */
@@ -109,7 +118,8 @@ public interface UserService extends IService<User>, UserDetailsService {
     ResultData<String> uploadAvatar(MultipartFile avatarFile) throws Exception;
 
     /**
-     *  修改邮箱
+     * 修改邮箱
+     *
      * @param updateEmailDTO 参数
      * @return 是否成功
      */
@@ -117,6 +127,7 @@ public interface UserService extends IService<User>, UserDetailsService {
 
     /**
      * 第三方登录修改用户邮箱
+     *
      * @param updateEmailDTO 参数
      * @return 是否成功
      */

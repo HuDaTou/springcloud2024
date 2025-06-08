@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.entity.VO;
 
-import com.overthinker.cloud.entity.BaseData;
+import com.overthinker.cloud.entity.BasecopyProperties;
 import lombok.Data;
 
 import java.util.Date;
@@ -11,7 +11,7 @@ import java.util.List;
  * 后台文章列表VO
  */
 @Data
-public class ArticleListVO implements BaseData {
+public class ArticleListVO implements BasecopyProperties {
     //文章id
     private Long id;
     // 分类id

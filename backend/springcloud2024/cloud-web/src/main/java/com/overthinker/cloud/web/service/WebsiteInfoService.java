@@ -10,7 +10,6 @@ import com.overthinker.cloud.web.entity.enums.UploadEnum;
 import org.springframework.web.multipart.MultipartFile;
 
 
-
 /**
  * (WebsiteInfo)表服务接口
  *
@@ -31,12 +30,14 @@ public interface WebsiteInfoService extends IService<WebsiteInfo> {
 
     /**
      * 查询网站信息
+     *
      * @return 网站信息
      */
     WebsiteInfoVO selectWebsiteInfo();
 
     /**
      * 修改站长信息
+     *
      * @param stationmasterInfoDTO 站长信息
      * @return 是否成功
      */
@@ -44,6 +45,7 @@ public interface WebsiteInfoService extends IService<WebsiteInfo> {
 
     /**
      * 修改网站信息
+     *
      * @param websiteInfoDTO 网站信息
      * @return 是否成功
      */

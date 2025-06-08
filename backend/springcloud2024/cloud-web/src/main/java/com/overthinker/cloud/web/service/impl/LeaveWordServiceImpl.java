@@ -62,7 +62,7 @@ public class LeaveWordServiceImpl extends ServiceImpl<LeaveWordMapper, LeaveWord
                 .orderByDesc(SQLConst.CREATE_TIME)
                 .list().stream().map(leaveWord -> {
                     User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, leaveWord.getUserId()));
-                    return leaveWord.asViewObject(LeaveWordVO.class, leaveWordVO -> leaveWordVO.setNickname(user.getNickname())
+                    return leaveWord.copyProperties(LeaveWordVO.class, leaveWordVO -> leaveWordVO.setNickname(user.getNickname())
                             .setAvatar(user.getAvatar())
                             .setCommentCount(commentMapper.selectCount(new LambdaQueryWrapper<Comment>().eq(Comment::getType, CommentEnum.COMMENT_TYPE_LEAVE_WORD.getType()).eq(Comment::getIsCheck, SQLConst.IS_CHECK_YES).eq(Comment::getTypeId, leaveWord.getId())))
                             .setLikeCount(likeMapper.selectCount(new LambdaQueryWrapper<Like>().eq(Like::getType, LikeEnum.LIKE_TYPE_LEAVE_WORD.getType()).eq(Like::getTypeId, leaveWord.getId())))
@@ -88,14 +88,14 @@ public class LeaveWordServiceImpl extends ServiceImpl<LeaveWordMapper, LeaveWord
         LeaveWord build = LeaveWord.builder().content(parse)
                 .userId(SecurityUtils.getUserId()).build();
 
-        if (this.save(build)){
+        if (this.save(build)) {
             // 是否是站长本人留言
             User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, SecurityUtils.getUserId()));
             if (Objects.equals(user.getEmail(), email) || !messageNewNotice) return ResultData.success();
 
             // 留言成功，发送邮箱提醒给站长
             Map<String, Object> map = new HashMap<>();
-            map.put("messageId",build.getId());
+            map.put("messageId", build.getId());
             publicService.sendEmail(MailboxAlertsEnum.MESSAGE_NOTIFICATION_EMAIL.getCodeStr(), email, map);
 
             return ResultData.success();
@@ -120,7 +120,7 @@ public class LeaveWordServiceImpl extends ServiceImpl<LeaveWordMapper, LeaveWord
         }
         List<LeaveWord> leaveWords = leaveWordMapper.selectList(wrapper);
         if (!leaveWords.isEmpty()) {
-            return leaveWords.stream().map(leaveWord -> leaveWord.asViewObject(LeaveWordListVO.class,
+            return leaveWords.stream().map(leaveWord -> leaveWord.copyProperties(LeaveWordListVO.class,
                     v -> v.setUserName(userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, leaveWord.getUserId()))
                             .getUsername()))).toList();
         }

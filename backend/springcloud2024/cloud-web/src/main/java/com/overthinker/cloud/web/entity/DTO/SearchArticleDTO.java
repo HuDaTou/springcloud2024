@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.entity.DTO;
 
-import com.overthinker.cloud.entity.BaseData;
+import com.overthinker.cloud.entity.BasecopyProperties;
 import lombok.Data;
 
 /**
@@ -9,7 +9,7 @@ import lombok.Data;
  * 创建时间：2024/1/7 19:22
  */
 @Data
-public class SearchArticleDTO implements BaseData {
+public class SearchArticleDTO implements BasecopyProperties {
     // 分类id
     private Long categoryId;
     //文章标题

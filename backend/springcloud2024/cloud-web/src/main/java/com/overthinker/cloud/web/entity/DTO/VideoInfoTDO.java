@@ -50,16 +50,4 @@ public class VideoInfoTDO {
     private boolean permission;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 }

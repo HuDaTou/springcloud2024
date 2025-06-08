@@ -1,13 +1,15 @@
 package com.overthinker.cloud.web.entity.PO;
 
-import com.baomidou.mybatisplus.annotation.*;
-import com.overthinker.cloud.entity.BaseData;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.overthinker.cloud.entity.BasecopyProperties;
+import com.overthinker.cloud.web.entity.PO.base.BaseData;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
 
 
 /**
@@ -21,23 +23,30 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 @TableName("t_banners")
-public class Banners implements BaseData {
-    //主键id
+public class Banners extends BaseData implements BasecopyProperties {
 
-    @TableId(value = "id" ,type = IdType.ASSIGN_ID)
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @Schema(description = "图片主键ID", example = "1234567890123456789")
     private Long id;
-    //图片路径
+
+    // 图片路径
+    @Schema(description = "图片存储路径", example = "/upload/images/2023/06/12345.jpg")
     private String path;
-    //图片大小 (字节)
+
+    // 图片大小 (字节)
+    @Schema(description = "图片大小（字节）", example = "204800")
     private Long size;
-    //图片类型 (MIME)
+
+    // 图片类型 (MIME)
+    @Schema(description = "图片MIME类型", example = "image/jpeg")
     private String type;
-    //上传人id
+
+    // 上传人id
+    @Schema(description = "上传用户ID", example = "10001")
     private Long userId;
-    //图片顺序
+
+    // 图片顺序
+    @Schema(description = "图片显示顺序", example = "1")
     private Integer sortOrder;
-    //创建时间
-    @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
 }
 

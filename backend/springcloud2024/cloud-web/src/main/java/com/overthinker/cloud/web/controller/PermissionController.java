@@ -1,8 +1,8 @@
 package com.overthinker.cloud.web.controller;
 
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.DTO.PermissionDTO;
 import com.overthinker.cloud.web.entity.VO.PermissionMenuVO;
 import com.overthinker.cloud.web.entity.VO.PermissionVO;
@@ -49,7 +49,7 @@ public class PermissionController extends BaseController {
             @Parameter(name = "permissionKey", description = "权限字符键"),
             @Parameter(name = "permissionMenuId", description = "权限字符所属菜单")
     })
-    @LogAnnotation(module="权限管理",operation= LogConst.SEARCH)
+    @LogAnnotation(module = "权限管理", operation = LogConst.SEARCH)
     @GetMapping("/search")
     public ResultData<List<PermissionVO>> searchPermission(
             @RequestParam(value = "permissionDesc", required = false) String permissionDesc,
@@ -69,7 +69,7 @@ public class PermissionController extends BaseController {
     @Operation(summary = "添加权限字符")
     @Parameter(name = "permissionDTO", description = "权限字符信息")
     @PreAuthorize("hasAnyAuthority('system:permission:add')")
-    @LogAnnotation(module="权限管理",operation= LogConst.INSERT)
+    @LogAnnotation(module = "权限管理", operation = LogConst.INSERT)
     @PostMapping("/add")
     public ResultData<Void> addPermission(@RequestBody @Valid PermissionDTO permissionDTO) {
         return permissionService.updateOrInsertPermission(permissionDTO.setId(null));
@@ -78,7 +78,7 @@ public class PermissionController extends BaseController {
     @Operation(summary = "修改权限字符")
     @Parameter(name = "permissionDTO", description = "权限字符信息")
     @PreAuthorize("hasAnyAuthority('system:permission:update')")
-    @LogAnnotation(module="权限管理",operation= LogConst.UPDATE)
+    @LogAnnotation(module = "权限管理", operation = LogConst.UPDATE)
     @PostMapping("/update")
     public ResultData<Void> updatePermission(@RequestBody @Valid PermissionDTO permissionDTO) {
         return permissionService.updateOrInsertPermission(permissionDTO);
@@ -97,7 +97,7 @@ public class PermissionController extends BaseController {
     @Operation(summary = "删除权限字符")
     @Parameter(name = "id", description = "权限字符id")
     @PreAuthorize("hasAnyAuthority('system:permission:delete')")
-    @LogAnnotation(module="权限管理",operation= LogConst.DELETE)
+    @LogAnnotation(module = "权限管理", operation = LogConst.DELETE)
     @DeleteMapping("/delete/{id}")
     public ResultData<Void> deletePermission(
             @PathVariable("id") @NotNull(message = "权限id不能为空") Long id

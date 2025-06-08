@@ -120,7 +120,7 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
 
         return this.list(queryWrapper).stream()
                 .map(blackList ->
-                        blackList.asViewObject(
+                        blackList.copyProperties(
                                 BlackListVO.class, (black) ->
                                 {
                                     if (blackList.getUserId() != null) {

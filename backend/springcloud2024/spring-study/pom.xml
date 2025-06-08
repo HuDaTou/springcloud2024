@@ -42,24 +42,21 @@
         </dependency>
 
 
-        <!--        mybatis plus-->
+
+        <!-- R2DBC 响应式数据访问 -->
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-r2dbc</artifactId>
+        </dependency>
+        <!-- MySQL 数据库驱动 -->
+        <!-- MySQL R2DBC驱动（使用mysql-r2dbc驱动） -->
+        <!-- https://mvnrepository.com/artifact/io.asyncer/r2dbc-mysql -->
+        <dependency>
+            <groupId>io.asyncer</groupId>
+            <artifactId>r2dbc-mysql</artifactId>wqq
         </dependency>
 
 
-        <!-- 数据库-->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-
-        <!--SpringBoot集成druid连接池-->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-starter</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>

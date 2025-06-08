@@ -38,7 +38,8 @@ public class PayTest {
         tPayMapper.update(tPay, wrapper);
 
     }
-//    使用lamdba表达式
+
+    //    使用lamdba表达式
     @Test
     public void lambdaSelect() {
 

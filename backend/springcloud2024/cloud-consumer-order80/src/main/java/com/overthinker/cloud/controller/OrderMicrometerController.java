@@ -11,8 +11,7 @@ public class OrderMicrometerController {
     private PayFeignApi payFeignApi;
 
     @GetMapping(value = "/feign/micrometer/{id}")
-    public String myMicrometer(@PathVariable("id") Integer id)
-    {
+    public String myMicrometer(@PathVariable("id") Integer id) {
         return payFeignApi.myMicrometer(id);
     }
 }

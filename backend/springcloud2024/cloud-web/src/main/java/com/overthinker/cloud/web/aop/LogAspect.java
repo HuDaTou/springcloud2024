@@ -65,7 +65,7 @@ public class LogAspect {
             Object result = joinPoint.proceed();
             // 执行时长
             long time = System.currentTimeMillis() - beginTime;
-            recordLog(joinPoint, time,result);
+            recordLog(joinPoint, time, result);
             // 打印日志
             log.info("【{}】执行方法【{}】，耗时【{}】毫秒", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName(), time);
             return result;
@@ -79,7 +79,7 @@ public class LogAspect {
             // 请求的方法名
             String className = joinPoint.getTarget().getClass().getName();
             String methodName = signature.getName();
-             assert request != null;
+            assert request != null;
             // 是否前台
             String ipAddr = IpUtils.getIpAddr(request);
             User user = userMapper.selectById(SecurityUtils.getUserId());
@@ -107,7 +107,7 @@ public class LogAspect {
                     .reqAddress(request.getRequestURI())
                     .time(time)
                     .build();
-            rabbitTemplate.convertAndSend(exchange,routingKey,logEntity);
+            rabbitTemplate.convertAndSend(exchange, routingKey, logEntity);
             log.error("【{}】执行方法【{}】异常", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName(), e);
         }
 
@@ -120,7 +120,7 @@ public class LogAspect {
      * @param joinPoint 切点
      * @param time      耗时
      */
-    private void recordLog(ProceedingJoinPoint joinPoint, long time,Object result) {
+    private void recordLog(ProceedingJoinPoint joinPoint, long time, Object result) {
         // 获取方法签名
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();
@@ -161,14 +161,14 @@ public class LogAspect {
                 .time(time)
                 .build();
         // TODO ResultData为null
-        ResultData ResultData = (ResultData)result;
-        if ( ResultData != null && ResultData.getCode() == 200) {
+        ResultData ResultData = (ResultData) result;
+        if (ResultData != null && ResultData.getCode() == 200) {
             log.setState(0);
-        }else{
+        } else {
             log.setState(1);
         }
 
-        rabbitTemplate.convertAndSend(exchange,routingKey,log);
+        rabbitTemplate.convertAndSend(exchange, routingKey, log);
         LogAspect.log.info("耗时：{}毫秒", time);
         LogAspect.log.info("操作时间：{}", new Date());
         LogAspect.log.info("================日志结束=========================");

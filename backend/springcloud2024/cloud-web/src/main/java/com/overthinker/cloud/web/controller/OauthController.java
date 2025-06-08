@@ -63,8 +63,9 @@ public class OauthController extends BaseController {
     public void giteeLogin(AuthCallback callback, HttpServletRequest request, HttpServletResponse response) throws IOException {
         AuthRequest authRequest = getGiteeAuthRequest();
         String parameter = oauthService.handleLogin(authRequest.login(callback), request, RegisterOrLoginTypeEnum.GITEE.getRegisterType());
-        response.sendRedirect(path+parameter);
+        response.sendRedirect(path + parameter);
     }
+
     // github登录
     @Operation(summary = "Github登录")
     @AccessLimit(seconds = 60, maxCount = 5)
@@ -80,11 +81,12 @@ public class OauthController extends BaseController {
     public void githubLogin(AuthCallback callback, HttpServletRequest request, HttpServletResponse response) throws IOException {
         AuthRequest authRequest = getGithubAuthRequest();
         String parameter = oauthService.handleLogin(authRequest.login(callback), request, RegisterOrLoginTypeEnum.GITHUB.getRegisterType());
-        response.sendRedirect(path+parameter);
+        response.sendRedirect(path + parameter);
     }
 
     /**
      * 获取gitee授权请求
+     *
      * @return gitee授权请求
      */
     private AuthRequest getGiteeAuthRequest() {
@@ -97,6 +99,7 @@ public class OauthController extends BaseController {
 
     /**
      * 获取github授权请求
+     *
      * @return github授权请求
      */
     private AuthRequest getGithubAuthRequest() {

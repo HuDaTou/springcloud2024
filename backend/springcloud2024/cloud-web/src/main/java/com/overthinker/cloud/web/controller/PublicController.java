@@ -1,9 +1,9 @@
 package com.overthinker.cloud.web.controller;
 
+import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
 import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.constants.LogConst;
 import com.overthinker.cloud.web.service.PublicService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,11 +44,11 @@ public class PublicController extends BaseController {
             @Parameter(name = "type", description = "邮箱类型", required = true)
     })
     @AccessLimit(seconds = 60, maxCount = 1)
-    @LogAnnotation(module="邮件发送",operation= LogConst.EMAIL_SEND)
+    @LogAnnotation(module = "邮件发送", operation = LogConst.EMAIL_SEND)
     @GetMapping("/ask-code")
     public ResultData<String> askVerifyCode(
             @RequestParam(name = "email") @Email @NotNull String email,
-            @RequestParam(name = "type") @Pattern(regexp = "(register|reset|resetEmail)",message = "邮箱类型错误" ) @NotNull String type
+            @RequestParam(name = "type") @Pattern(regexp = "(register|reset|resetEmail)", message = "邮箱类型错误") @NotNull String type
     ) {
         return messageHandler(() -> publicService.registerEmailVerifyCode(type, email));
     }

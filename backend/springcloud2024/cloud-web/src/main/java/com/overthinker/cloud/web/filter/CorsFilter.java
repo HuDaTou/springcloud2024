@@ -18,17 +18,18 @@ import org.springframework.core.annotation.Order;
 
 import java.io.IOException;
 
-//// 优先级
+/// / 优先级
 @Order(Const.ORDER_CORS)
 public class CorsFilter extends HttpFilter {
 
-//    cors预检请求OPTIONS 请求
+    //    cors预检请求OPTIONS 请求
     @Override
     protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         this.addCorsHeader(request, response);
-        chain.doFilter(request,response);
+        chain.doFilter(request, response);
     }
-    private void addCorsHeader(HttpServletRequest request, HttpServletResponse response){
+
+    private void addCorsHeader(HttpServletRequest request, HttpServletResponse response) {
         response.addHeader("Access-Control-Allow-Origin", request.getHeader("Origin"));
         response.addHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
         response.addHeader("Access-Control-Allow-Headers", "Authorization,Content-Type,X-Client-Type,x-requested-with");

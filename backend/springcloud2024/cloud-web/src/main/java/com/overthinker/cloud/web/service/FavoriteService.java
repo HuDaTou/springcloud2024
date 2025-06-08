@@ -47,12 +47,14 @@ public interface FavoriteService extends IService<Favorite> {
 
     /**
      * 后台收藏列表
+     *
      * @return 结果
      */
     List<FavoriteListVO> getBackFavoriteList(SearchFavoriteDTO searchDTO);
 
     /**
      * 是否通过收藏
+     *
      * @param isCheckDTO 是否通过
      * @return 是否成功
      */
@@ -60,6 +62,7 @@ public interface FavoriteService extends IService<Favorite> {
 
     /**
      * 删除收藏
+     *
      * @param ids id 列表
      * @return 是否成功
      */

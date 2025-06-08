@@ -4,10 +4,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
- *  @author overH
- * 
+ * @author overH
+ * <p>
  * 创建时间：2024/1/22 12:47
- *
  */
 @Data
 public class CommentIsCheckDTO {

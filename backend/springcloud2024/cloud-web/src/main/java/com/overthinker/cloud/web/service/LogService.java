@@ -26,9 +26,10 @@ public interface LogService extends IService<Log> {
     PageVO searchLog(LogDTO LogDTO, Long aLong, Long current);
 
     /**
-     *  删除/清空操作日志
+     * 删除/清空操作日志
+     *
      * @param logDeleteDTO id集合
-     * @return  响应结果
+     * @return 响应结果
      */
     ResultData<Void> deleteLog(LogDeleteDTO logDeleteDTO);
 

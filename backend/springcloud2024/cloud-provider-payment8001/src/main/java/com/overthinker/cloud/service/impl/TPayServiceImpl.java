@@ -18,6 +18,4 @@ import org.springframework.stereotype.Service;
 public class TPayServiceImpl extends ServiceImpl<TPayMapper, TPay> implements ITPayService {
 
 
-
-
 }

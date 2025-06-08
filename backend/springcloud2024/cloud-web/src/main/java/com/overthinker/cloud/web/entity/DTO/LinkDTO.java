@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.entity.DTO;
 
-import com.overthinker.cloud.entity.BaseData;
+import com.overthinker.cloud.entity.BasecopyProperties;
 import jakarta.validation.constraints.Email;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -12,7 +12,7 @@ import org.hibernate.validator.constraints.Length;
  * 创建时间：2023/11/14 8:52
  */
 @Data
-public class LinkDTO implements BaseData {
+public class LinkDTO implements BasecopyProperties {
     //网站名称
     @Length(max = 15, message = "网站名称不能超过15个字符")
     private String name;

@@ -193,8 +193,9 @@ public class IpServiceImpl implements IpService, DisposableBean {
 
     /**
      * 构建地址
-     * @param region 区域
-     * @param city 城市
+     *
+     * @param region  区域
+     * @param city    城市
      * @param country 国家
      * @return 地址
      */
@@ -212,11 +213,11 @@ public class IpServiceImpl implements IpService, DisposableBean {
             return "未知";
         }
 
-        if ("XX".equals(region)){
+        if ("XX".equals(region)) {
             return city;
         }
 
-        if ("XX".equals(city)){
+        if ("XX".equals(city)) {
             return region;
         }
 

@@ -9,6 +9,7 @@ import lombok.Data;
 
 /**
  * 通用结果类型
+ *
  * @param <T>
  */
 @Data
@@ -26,7 +27,6 @@ public class ResultData<T> {
     }
 
 
-
     /**
      * 成功响应，不需要返回数据
      */
@@ -38,11 +38,10 @@ public class ResultData<T> {
     public static <T> ResultData<T> success(T data) {
         return ResultData.<T>builder().code(ReturnCodeEnum.RC200.getCode()).msg(ReturnCodeEnum.RC200.getMsg()).data(data).build();
     }
-    public static <T> ResultData<T> success(T data , String message) {
+
+    public static <T> ResultData<T> success(T data, String message) {
         return ResultData.<T>builder().code(ReturnCodeEnum.RC200.getCode()).msg(message).data(data).build();
     }
-
-
 
 
     /**
@@ -51,24 +50,28 @@ public class ResultData<T> {
     public static <T> ResultData<T> failure() {
         return ResultData.<T>builder().code(ReturnCodeEnum.FAILURE.getCode()).msg(ReturnCodeEnum.FAILURE.getMsg()).data(null).build();
     }
+
     public static <T> ResultData<T> failure(String msg) {
         return ResultData.<T>builder().code(ReturnCodeEnum.FAILURE.getCode()).msg(msg).data(null).build();
     }
-    public static <T> ResultData<T> failure(T data)  {
+
+    public static <T> ResultData<T> failure(T data) {
         return ResultData.<T>builder().code(ReturnCodeEnum.FAILURE.getCode()).msg(ReturnCodeEnum.FAILURE.getMsg()).data(data).build();
     }
 
     public static <T> ResultData<T> failure(Integer code, String msg) {
         return ResultData.<T>builder().code(code).msg(msg).data(null).build();
     }
+
     public static <T> ResultData<T> failure(Integer code, String msg, T data) {
         return ResultData.<T>builder().code(code).msg(msg).data(data).build();
     }
+
     public static <T> ResultData<T> failure(ReturnCodeEnum returnCodeEnum) {
         return ResultData.<T>builder().code(returnCodeEnum.getCode()).msg(returnCodeEnum.getMsg()).data(null).build();
     }
 
-    public static <T> ResultData<T> failure(ReturnCodeEnum returnCodeEnum,String msg) {
+    public static <T> ResultData<T> failure(ReturnCodeEnum returnCodeEnum, String msg) {
         return ResultData.<T>builder().code(returnCodeEnum.getCode()).msg(msg).data(null).build();
     }
 

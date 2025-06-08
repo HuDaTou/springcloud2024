@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.entity.DTO;
 
-import com.overthinker.cloud.entity.BaseData;
+import com.overthinker.cloud.entity.BasecopyProperties;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Accessors(chain = true)
 @Data
-public class RoleDTO implements BaseData {
+public class RoleDTO implements BasecopyProperties {
     //角色id
     private Long id;
     // 角色名称

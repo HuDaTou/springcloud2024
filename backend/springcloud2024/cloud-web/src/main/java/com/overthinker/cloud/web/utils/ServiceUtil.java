@@ -8,6 +8,7 @@ package com.overthinker.cloud.web.utils;
 public class ServiceUtil {
     /**
      * 是否是
+     *
      * @param key 1 0
      * @return true false
      */

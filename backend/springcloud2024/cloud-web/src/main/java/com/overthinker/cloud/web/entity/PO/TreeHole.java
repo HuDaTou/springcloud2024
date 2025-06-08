@@ -1,13 +1,15 @@
 package com.overthinker.cloud.web.entity.PO;
 
-import com.baomidou.mybatisplus.annotation.*;
-import com.overthinker.cloud.entity.BaseData;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.overthinker.cloud.entity.BasecopyProperties;
+import com.overthinker.cloud.web.entity.PO.base.BaseData;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
 
 
 /**
@@ -21,23 +23,26 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 @TableName("t_tree_hole")
-public class TreeHole implements BaseData {
-    //树洞表id
-    @TableId(value = "id" ,type = IdType.ASSIGN_ID)
+public class TreeHole extends BaseData implements BasecopyProperties {
+
+    // 树洞表id
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @Schema(description = "树洞ID", example = "1234567890123456789")
     private Long id;
-    //用户id
+
+    // 用户id
+    @Schema(description = "发布用户ID", example = "10001")
     private Long userId;
-    //内容
+
+    // 内容
+    @Schema(description = "树洞内容", example = "今天天气真好！")
     private String content;
+
     // 是否通过
+    @Schema(description = "审核状态：0-未通过 1-通过", allowableValues = {"0", "1"}, example = "1")
     private Integer isCheck;
-    //创建时间
-    @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
-    //修改时间
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
-    //是否删除（0：未删除，1：已删除）
+
+    // 是否删除（0：未删除，1：已删除）
+    @Schema(description = "是否删除（0：未删除，1：已删除）", example = "0")
     private Integer isDeleted;
 }
-

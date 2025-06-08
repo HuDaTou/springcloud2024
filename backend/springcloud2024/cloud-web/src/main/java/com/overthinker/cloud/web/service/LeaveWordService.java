@@ -21,6 +21,7 @@ public interface LeaveWordService extends IService<LeaveWord> {
 
     /**
      * 查询留言板
+     *
      * @return 留言板列表
      */
     List<LeaveWordVO> getLeaveWordList(String id);
@@ -35,12 +36,14 @@ public interface LeaveWordService extends IService<LeaveWord> {
 
     /**
      * 后台留言列表
+     *
      * @return 结果
      */
     List<LeaveWordListVO> getBackLeaveWordList(SearchLeaveWordDTO searchDTO);
 
     /**
      * 是否通过留言
+     *
      * @param isCheckDTO 是否通过
      * @return 是否成功
      */
@@ -48,6 +51,7 @@ public interface LeaveWordService extends IService<LeaveWord> {
 
     /**
      * 删除留言
+     *
      * @param ids id 列表
      * @return 是否成功
      */

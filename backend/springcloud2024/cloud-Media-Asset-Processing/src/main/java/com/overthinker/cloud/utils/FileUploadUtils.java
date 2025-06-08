@@ -43,14 +43,15 @@ public class FileUploadUtils {
      * 上传文件
      *
      * @param uploadEnum 文件枚举
-     * @param file      文件
+     * @param file       文件
      * @return 上传后的文件地址
      * @throws Exception 异常
      */
     public String upload(UploadEnum uploadEnum, MultipartFile file) throws Exception {
         // 验证文件大小
-        if (verifyTheFileSize(file.getSize(), uploadEnum.getLimitSize())) throw new FileUploadException("上传文件大小超过限制");
-        if (isFormatFile(file.getOriginalFilename(),uploadEnum.getFormat())){
+        if (verifyTheFileSize(file.getSize(), uploadEnum.getLimitSize()))
+            throw new FileUploadException("上传文件大小超过限制");
+        if (isFormatFile(file.getOriginalFilename(), uploadEnum.getFormat())) {
             InputStream stream = file.getInputStream();
             String name = UUID.randomUUID().toString();
             String originalFilename = file.getOriginalFilename();
@@ -125,6 +126,7 @@ public class FileUploadUtils {
 
     /**
      * 批量删除
+     *
      * @param fileNames 文件名称
      * @return 是否成功
      * @throws Exception 异常
@@ -146,11 +148,12 @@ public class FileUploadUtils {
 
     /**
      * 文件格式校验
+     *
      * @param fileName 文件名称
-     * @param format 支持的后辍
+     * @param format   支持的后辍
      * @return 是否支持
      */
-    public boolean isFormatFile(String fileName,List<String> format) {
+    public boolean isFormatFile(String fileName, List<String> format) {
         for (String s : format) {
             if (fileName.endsWith(s)) {
                 return true;

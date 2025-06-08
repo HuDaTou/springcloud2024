@@ -76,7 +76,7 @@ public class EmailQueueListener {
     private String webIndexPath;
 
     @Value("${web.index.path}")
-    private  String overthinker;
+    private String overthinker;
 
 
     /**
@@ -121,7 +121,7 @@ public class EmailQueueListener {
             // 被回复评论数据
             Comment replyComment = commentMapper.selectOne(new LambdaQueryWrapper<Comment>().eq(Comment::getId, data.get("replyCommentId")));
             User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, replyComment.getCommentUserId()));
-            replyCommentEmail = commentEmailOne.asViewObject(ReplyCommentEmail.class, reply -> {
+            replyCommentEmail = commentEmailOne.copyProperties(ReplyCommentEmail.class, reply -> {
                 reply.setReplyAvatar(user.getAvatar());
                 reply.setReplyNickname(user.getNickname());
                 reply.setReplyContent(replyComment.getCommentContent());
@@ -139,7 +139,7 @@ public class EmailQueueListener {
         if (type.equals(MailboxAlertsEnum.MESSAGE_NOTIFICATION_EMAIL.getCodeStr())) {
             LeaveWord messageUser = leaveWordMapper.selectOne(new LambdaQueryWrapper<LeaveWord>().eq(LeaveWord::getId, data.get("messageId")));
             User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, messageUser.getUserId()));
-            leaveWordEmail = messageUser.asViewObject(LeaveWordEmail.class, message -> {
+            leaveWordEmail = messageUser.copyProperties(LeaveWordEmail.class, message -> {
                 message.setUrl(webIndexPath + "message/detail/" + messageUser.getId());
                 message.setAvatar(user.getAvatar());
                 message.setNickname(user.getNickname());
@@ -198,7 +198,7 @@ public class EmailQueueListener {
             ));
         } else if (MailboxAlertsEnum.REPLY_COMMENT_NOTIFICATION_EMAIL.getCodeStr().equals(type)) {
             mimeMessage = sendHtmlMail(email, MailboxAlertsEnum.REPLY_COMMENT_NOTIFICATION_EMAIL.getSubject(), MailboxAlertsEnum.REPLY_COMMENT_NOTIFICATION_EMAIL.getTemplateName(), toReplyMap(replyCommentEmail));
-        }else if (MailboxAlertsEnum.MESSAGE_NOTIFICATION_EMAIL.getCodeStr().equals(type)) {
+        } else if (MailboxAlertsEnum.MESSAGE_NOTIFICATION_EMAIL.getCodeStr().equals(type)) {
             mimeMessage = sendHtmlMail(email, MailboxAlertsEnum.MESSAGE_NOTIFICATION_EMAIL.getSubject(), MailboxAlertsEnum.MESSAGE_NOTIFICATION_EMAIL.getTemplateName(), Map.of(
                     "toUrl", leaveWordEmail.getUrl(),
                     "avatar", leaveWordEmail.getAvatar(),

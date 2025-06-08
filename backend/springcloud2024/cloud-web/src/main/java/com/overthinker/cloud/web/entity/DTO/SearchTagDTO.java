@@ -8,7 +8,7 @@ import lombok.Data;
  * 创建时间：2024/1/18 14:38
  */
 @Data
-public class SearchTagDTO{
+public class SearchTagDTO {
     //标签名称
     private String tagName;
     // 开始时间

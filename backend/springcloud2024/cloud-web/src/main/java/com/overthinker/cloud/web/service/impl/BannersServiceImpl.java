@@ -45,7 +45,7 @@ public class BannersServiceImpl extends ServiceImpl<BannersMapper, Banners> impl
     @Override
     public List<Banners> backGetBanners() {
         List<Banners> banners = bannersMapper.selectList(new LambdaQueryWrapper<Banners>().orderByAsc(Banners::getSortOrder));
-        if (!banners.isEmpty()){
+        if (!banners.isEmpty()) {
             return banners;
         }
         return List.of();

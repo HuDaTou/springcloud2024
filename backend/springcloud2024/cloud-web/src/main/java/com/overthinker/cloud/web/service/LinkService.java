@@ -23,6 +23,7 @@ public interface LinkService extends IService<Link> {
 
     /**
      * 申请友链
+     *
      * @param linkDTO 友链信息
      * @return 是否成功
      */
@@ -36,12 +37,14 @@ public interface LinkService extends IService<Link> {
 
     /**
      * 后台友链列表
+     *
      * @return 结果
      */
     List<LinkListVO> getBackLinkList(SearchLinkDTO searchDTO);
 
     /**
      * 是否通过友链
+     *
      * @param isCheckDTO 是否通过
      * @return 是否成功
      */
@@ -49,6 +52,7 @@ public interface LinkService extends IService<Link> {
 
     /**
      * 删除友链
+     *
      * @param ids id 列表
      * @return 是否成功
      */
@@ -56,6 +60,7 @@ public interface LinkService extends IService<Link> {
 
     /**
      * 邮箱审核友链申请
+     *
      * @param verifyCode 校验码
      * @return 是否成功
      */
