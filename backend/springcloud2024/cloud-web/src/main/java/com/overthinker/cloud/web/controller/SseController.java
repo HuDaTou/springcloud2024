@@ -1,6 +1,5 @@
 package com.overthinker.cloud.web.controller;
 
-
 import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.web.entity.VO.SseDataVO;
 import com.overthinker.cloud.web.service.ArticleService;
@@ -8,151 +7,68 @@ import com.overthinker.cloud.web.service.PhotoService;
 import com.overthinker.cloud.web.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.http.MediaType;
+import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
+import reactor.core.publisher.*;
+
+import java.time.Duration;
+import java.util.UUID;
 
 @RestController
 @Tag(name = "大屏监控")
 @RequestMapping(value = "/sse")
+@RequiredArgsConstructor
 @Slf4j
 public class SseController extends BaseController {
-    //    数据量
-    private final static Map<String, SseEmitter> SSE_DATA = new ConcurrentHashMap<>();
 
-    //    在线人数
-    private final static Map<String, SseEmitter> SSE_COUNT = new ConcurrentHashMap<>();
+    private final ArticleService articleService;
+    private final UserService userService;
+    private final PhotoService photoService;
 
-    private final static SseDataVO sseDataVO = new SseDataVO();
+    // 缓存数据的 Flux
+    private final Flux<SseDataVO> dataFlux = Flux.interval(Duration.ofSeconds(3))
+            .map(seq -> {
+                SseDataVO vo = new SseDataVO();
+                vo.setOnlineCount(1);
+                vo.setArticleCount(1L);
+                vo.setUserCount(1L);
+                vo.setPhotoCount(1L);
+                return vo;
+            })
+            .share(); // 使用 share() 实现多播
 
-    @Resource
-    private ArticleService articleService;
-
-    @Resource
-    private UserService userService;
-
-    @Resource
-    private PhotoService photoService;
+    // 在线人数的 Flux
+    private final Flux<String> countFlux = Flux.interval(Duration.ofSeconds(3))
+            .map(seq -> UUID.randomUUID().toString().replaceAll("-", ""))
+            .share();
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-//    @PreAuthorize("hasAnyAuthority('monitor:server:list')")
     @Operation(summary = "SSE获取服务监控数据")
-    @GetMapping(value = "/data")
-    public SseEmitter getSseEmitter() {
-        SseEmitter emitter = new SseEmitter(0L); // 设置30秒超时
-//        为每个连接生成一个uuid
-        String uuid = java.util.UUID.randomUUID().toString().replaceAll("-", "");
-        if (!SSE_DATA.containsKey(uuid)) {
-            SSE_DATA.put(uuid, emitter);
-        }
-        emitter.onTimeout(() -> {
-            emitter.complete();
-            log.info("SSE连接超时");
-        });
-        emitter.onError((e) -> {
-            emitter.complete();
-            log.info("SSE连接异常: {}", e.getMessage());
-            SSE_DATA.remove(uuid);
-
-        });
-        emitter.onCompletion(() -> {
-            log.info("SSE连接正常关闭");
-            SSE_DATA.remove(uuid);
-        });
-        return emitter;
+    @GetMapping(value = "/data", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<ServerSentEvent<SseDataVO>> streamData() {
+        return dataFlux.map(data -> ServerSentEvent.<SseDataVO>builder()
+                        .id(UUID.randomUUID().toString())
+                        .data(data)
+                        .build())
+                .doOnSubscribe(subscription -> log.info("Data subscription started"))
+                .doOnTerminate(() -> log.info("Data subscription terminated"));
     }
-
 
     @CrossOrigin(origins = "*", maxAge = 3600)
-//    @PreAuthorize("hasAnyAuthority('monitor:server:list')")
     @Operation(summary = "SSE统计在线人数")
-    @GetMapping(value = "/user/count")
-    public SseEmitter getCountEmitter() {
-        SseEmitter emitter = new SseEmitter(0L); // 设置30秒超时
-//        为每个连接生成一个uuid
-        String uuid = java.util.UUID.randomUUID().toString().replaceAll("-", "");
-        if (!SSE_COUNT.containsKey(uuid)) {
-            SSE_COUNT.put(uuid, emitter);
-        }
-        emitter.onTimeout(() -> {
-            emitter.complete();
-            log.info("SSEUSERCOUNT连接超时");
-        });
-        emitter.onError((e) -> {
-            emitter.complete();
-            log.info("SSEUSERCOUNT: {}", e.getMessage());
-            SSE_COUNT.remove(uuid);
-
-        });
-        emitter.onCompletion(() -> {
-            log.info("SSE连接正常关闭");
-            SSE_COUNT.remove(uuid);
-        });
-        return emitter;
+    @GetMapping(value = "/user/count", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<ServerSentEvent<String>> streamCount() {
+        return countFlux.map(id -> ServerSentEvent.<String>builder()
+                        .id(id)
+                        .build())
+                .doOnSubscribe(subscription -> log.info("Count subscription started"))
+                .doOnTerminate(() -> log.info("Count subscription terminated"));
     }
-
-
-    @Scheduled(fixedDelay = 3, initialDelay = 1, timeUnit = TimeUnit.SECONDS)
-    private void job() {
-
-        if (!SSE_DATA.isEmpty()) {
-//            sseDataVO.setOnlineCount(SSE_COUNT.size());
-//            sseDataVO.setArticleCount(articleService.count());
-//            sseDataVO.setUserCount(userService.count());
-//            sseDataVO.setPhotoCount(photoService.count());
-            sseDataVO.setOnlineCount(1);
-            sseDataVO.setArticleCount(1L);
-            sseDataVO.setUserCount(1L);
-            sseDataVO.setPhotoCount(1L);
-            SSE_DATA.forEach((key, emitter) -> {
-                try {
-//                    log.info("SSE推送数据: {}", sseDataVO);
-
-                    emitter.send(SseEmitter.event()
-                            .id(key)
-                            .data(sseDataVO)
-                    );
-                } catch (IOException e) {
-                    emitter.completeWithError(e);
-                    SSE_DATA.remove(key);
-
-                }
-            });
-
-        }
-    }
-
-    @Scheduled(fixedDelay = 3, initialDelay = 1, timeUnit = TimeUnit.SECONDS)
-    private void jobCount() {
-
-        if (!SSE_COUNT.isEmpty()) {
-            SSE_COUNT.forEach((key, emitter) -> {
-                try {
-//                    log.info("SSEUSERCOUNT推送数据: {}", key);
-
-                    emitter.send(SseEmitter.event()
-                            .id(key)
-                    );
-                } catch (IOException e) {
-                    SSE_COUNT.remove(key);
-                    log.info("已经删除：{}", key);
-                    emitter.completeWithError(e);
-
-
-                }
-            });
-
-        }
-    }
-
 }
