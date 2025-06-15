@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
  * @since 2023-10-15 02:29:13
  */
 @Slf4j
-@Service("articleService")
+@Service
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
 
     @Resource

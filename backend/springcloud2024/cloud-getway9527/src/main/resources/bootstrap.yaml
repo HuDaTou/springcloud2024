@@ -1,8 +1,8 @@
 spring:
   application:
-    name: cloud-web
-  profiles:
-    active: home
+    name: cloud-gateway
+#  profiles:
+#    active: home
   ####Spring Cloud Consul for Service Discovery
   cloud:
     consul:
@@ -20,5 +20,5 @@ spring:
         format: YAML
 baseserveraddress:
   homeaddress: 192.168.0.100
-  address: home.overthinker.top
   dockerdesktop: localhost
+  address: home.overthinker.top

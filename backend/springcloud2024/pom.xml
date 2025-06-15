@@ -21,6 +21,7 @@
         <module>cloud-api</module>
         <module>cloud-system</module>
         <module>cloud-AI</module>
+        <module>cloud-doc</module>
     </modules>
 
     <repositories>
@@ -55,7 +56,7 @@
 
         <!--    依赖集中管理信息-->
         <spring.boot.version>3.4.3</spring.boot.version>
-        <spring.cloud.version>2023.0.0</spring.cloud.version>
+        <spring.cloud.version>2024.0.0</spring.cloud.version>
         <spring.cloud.alibaba.version>2022.0.0.0-RC2</spring.cloud.alibaba.version>
         <boot.validation.version>3.2.0</boot.validation.version>
         <spring.ai.version>1.0.0-SNAPSHOT</spring.ai.version>
@@ -65,7 +66,7 @@
         <!--    数据库-->
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <p6spy.version>1.10.0</p6spy.version>
-        <druid.version>1.1.20</druid.version>
+        <druid.version>1.2.20</druid.version>
         <mysql.version>8.0.11</mysql.version>
         <postgreSQL.version>42.7.5</postgreSQL.version>
         <milvus.version>2.5.7</milvus.version>
@@ -250,6 +251,17 @@
                 <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
                 <version>${knife4j.version}</version>
             </dependency>
+<!--            微服务版本-->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-gateway-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
+            </dependency>
+
+
+
+
+
             <!--hutool-->
             <dependency>
                 <groupId>cn.hutool</groupId>

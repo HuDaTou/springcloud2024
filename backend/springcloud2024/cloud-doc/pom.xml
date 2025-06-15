@@ -6,19 +6,7 @@
         <artifactId>springcloud2024</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>cloud-system</artifactId>
-    <packaging>jar</packaging>
-    <version>1.0</version>
-    <name>cloud-system</name>
-    <dependencies>
-
-        <dependency>
-            <groupId>com.overthinker.cloud</groupId>
-            <artifactId>cloud-common</artifactId>
-        </dependency>
-
-
-
-    </dependencies>
-
+    <artifactId>cloud-doc</artifactId>
+    <name>Archetype - cloud-doc</name>
+    <url>http://maven.apache.org</url>
 </project>

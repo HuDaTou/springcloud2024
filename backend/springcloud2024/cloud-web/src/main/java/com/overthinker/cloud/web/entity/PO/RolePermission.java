@@ -29,7 +29,7 @@ public class RolePermission extends BaseData implements BasecopyProperties {
     private Integer id;
 
     // 角色id
-    @TableId
+//    @TableId
     @Schema(description = "角色ID", example = "1001")
     private Long roleId;
 

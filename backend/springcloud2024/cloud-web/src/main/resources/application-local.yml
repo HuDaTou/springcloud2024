@@ -37,6 +37,8 @@ spring:
     # 虚拟主机
     listener:
       simple:
+
+        auto-startup: false
         retry:
           enabled: true #是否开启消费者重试
           max-attempts: 3 #最大重试次数

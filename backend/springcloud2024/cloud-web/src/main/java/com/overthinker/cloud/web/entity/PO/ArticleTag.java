@@ -30,7 +30,7 @@ public class ArticleTag extends BaseData implements BasecopyProperties {
     @Schema(description = "主键ID", example = "1234567890123456789")
     private Long id;
 
-    @TableId
+//    @TableId
     @Schema(description = "文章ID", example = "9876543210987654321")
     private Long articleId;
 

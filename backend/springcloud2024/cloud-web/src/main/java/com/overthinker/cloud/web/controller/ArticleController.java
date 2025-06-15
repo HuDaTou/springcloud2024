@@ -9,6 +9,7 @@ import com.overthinker.cloud.web.entity.DTO.SearchArticleDTO;
 import com.overthinker.cloud.web.entity.VO.*;
 import com.overthinker.cloud.web.entity.constants.LogConst;
 import com.overthinker.cloud.web.service.ArticleService;
+import com.overthinker.cloud.web.service.impl.ArticleServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -17,6 +18,7 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -34,10 +36,13 @@ import java.util.List;
 @Tag(name = "文章相关接口")
 @RequestMapping("/article")
 @Validated
+
+@RequiredArgsConstructor
+
 public class ArticleController extends BaseController {
 
-    @Resource
-    private ArticleService articleService;
+
+    private final ArticleService articleService;
 
     /**
      * 初始化标题搜索文章数据

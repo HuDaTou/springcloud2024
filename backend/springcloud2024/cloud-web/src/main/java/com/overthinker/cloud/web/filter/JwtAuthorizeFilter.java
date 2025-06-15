@@ -7,6 +7,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,10 +25,11 @@ import java.io.IOException;
  * 创建时间：2023/10/11 20:32
  */
 @Component
+@RequiredArgsConstructor
 public class JwtAuthorizeFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JwtUtils jwtUtils;
+
+    private final JwtUtils jwtUtils;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
@@ -36,6 +38,7 @@ public class JwtAuthorizeFilter extends OncePerRequestFilter {
         String authorization = request.getHeader("Authorization");
         // 解析jwt
         DecodedJWT jwt = jwtUtils.resolveJwt(authorization);
+
 
         if (!ObjectUtils.isEmpty(jwt)) {
             // 获取UserDetails

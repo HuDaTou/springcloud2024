@@ -23,7 +23,7 @@ public class VideoTag implements BasecopyProperties {
     private Long id;
 
     // 文章id
-    @TableId
+//    @TableId
     @Schema(description = "视频ID", example = "10001")
     private Long videoId;
 
