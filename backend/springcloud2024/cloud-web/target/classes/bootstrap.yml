@@ -2,22 +2,25 @@ spring:
   application:
     name: cloud-web
   profiles:
-    active: home
+    active: local
   ####Spring Cloud Consul for Service Discovery
   cloud:
     consul:
-      enabled: false
-      host: ${baseserveraddress.address}
+      enabled: true
+      host: ${baseserveraddress.dockerdesktop}
       port: 8500
       discovery:
         service-name: ${spring.application.name}
         heartbeat:
-          enabled: false
+          enabled: true
       config:
-        enabled: false
+
+#        启动试一下
+        enabled: true
         profile-separator: '-'
         # default value is ","，we update '-'
         format: YAML
 baseserveraddress:
   homeaddress: 192.168.0.100
   address: home.overthinker.top
+  dockerdesktop: localhost

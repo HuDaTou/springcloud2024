@@ -1,20 +1,24 @@
 spring:
   application:
     name: cloud-gateway
-#  profiles:
-#    active: home
-  ####Spring Cloud Consul for Service Discovery
+  profiles:
+    active: local
+
+
+  ###Spring Cloud Consul for Service Discovery
   cloud:
     consul:
-      enabled: false
+      enabled: true
       host: ${baseserveraddress.dockerdesktop}
       port: 8500
       discovery:
         service-name: ${spring.application.name}
         heartbeat:
-          enabled: false
+          enabled: true
       config:
         enabled: false
+        import-check:
+          enabled: false  # 关键：禁用 Consul Config 的检查
         profile-separator: '-'
         # default value is ","，we update '-'
         format: YAML
