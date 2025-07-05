@@ -4,31 +4,16 @@ server:
 spring:
   application:
     name: cloud-Media-Asset-Processing-service
-  profiles:
-    active: dev
-  datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://home.overthinker.top:30970/cloud_2024?characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8&rewriteBatchedStatements=true&allowPublicKeyRetrieval=true
-    username: root
-    password: DuinxIVa3w
 
-# ========================mybatis===================
 
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.
-    map-underscore-to-camel-case: true
-  mapper-locations: classpath*:/mapper/**/*.xml
-  type-aliases-package: com.overthinker.cloud.entities
 
 
 ## 连接 minio
-#minio:
-#  endpoint: http://home.overthinker.top:30373
-#  accessKey: 8bSiCQK1SGLjmcsZdcVF
-#  secretKey: MKML4yqHVqK5oHrHf06nzDX1xRrHz2EqJZVINjuX
-#  bucketName: cloud
+minio:
+  endpoint: http://localhost:9000
+  accessKey: minioadmin
+  secretKey: minioadmin
+  bucketName: cloud
 ## springdoc-openapi项目配置
 #springdoc:
 #  swagger-ui:

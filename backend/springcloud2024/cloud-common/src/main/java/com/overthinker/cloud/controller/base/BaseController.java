@@ -1,7 +1,10 @@
 package com.overthinker.cloud.controller.base;
 
 import com.overthinker.cloud.resp.ResultData;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 /**
@@ -16,6 +19,19 @@ public class BaseController {
 
     public static <T> ResultData<T> messageHandler(Supplier<T> supplier) {
         return ResultData.success(supplier.get());
+    }
+
+    // 处理 Mono<T>
+    public static <T> Mono<ResultData<T>> messageHandler(Mono<T> mono) {
+        return mono.map(ResultData::success)
+                .onErrorResume(e -> Mono.just(ResultData.failure("请求失败: " + e.getMessage())));
+    }
+
+    // 处理 Flux<T> → List<T>
+    public static <T> Mono<ResultData<List<T>>> messageHandler(Flux<T> flux) {
+        return flux.collectList()
+                .map(ResultData::success)
+                .onErrorResume(e -> Mono.just(ResultData.failure("流式请求失败: " + e.getMessage())));
     }
 
 }

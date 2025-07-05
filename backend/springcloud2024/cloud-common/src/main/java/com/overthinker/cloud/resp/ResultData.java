@@ -71,6 +71,10 @@ public class ResultData<T> {
         return ResultData.<T>builder().code(returnCodeEnum.getCode()).msg(returnCodeEnum.getMsg()).data(null).build();
     }
 
+    public static <T> ResultData<T> failure(ReturnCodeEnum returnCodeEnum, T data) {
+        return ResultData.<T>builder().code(returnCodeEnum.getCode()).msg(returnCodeEnum.getMsg()).data(data).build();
+    }
+
     public static <T> ResultData<T> failure(ReturnCodeEnum returnCodeEnum, String msg) {
         return ResultData.<T>builder().code(returnCodeEnum.getCode()).msg(msg).data(null).build();
     }

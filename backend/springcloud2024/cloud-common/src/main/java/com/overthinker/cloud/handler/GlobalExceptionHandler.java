@@ -1,5 +1,6 @@
 package com.overthinker.cloud.handler;
 
+import com.overthinker.cloud.exceptions.FileUploadException;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.resp.ReturnCodeEnum;
 import lombok.extern.log4j.Log4j2;
@@ -22,5 +23,12 @@ public class GlobalExceptionHandler {
 
         return ResultData.failure(ReturnCodeEnum.RC500, e.getMessage());
     }
+    @ExceptionHandler(FileUploadException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResultData<Object> handleFileUploadException(FileUploadException e) {
+        log.error("文件上传异常：{}", e.getMessage(), e);
+        return ResultData.failure(e.getReturnCodeEnum(),e.getData());
+    }
+
 
 }

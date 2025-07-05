@@ -1,10 +1,5 @@
 package com.overthinker.cloud.ai.clientTools;
 
-import io.swagger.v3.oas.annotations.Parameter;
-//import org.springframework.ai.chat.annotation.Tool;
-import org.springframework.ai.tool.annotation.Tool;
-import reactor.core.publisher.Mono;
-
 public class UserTools {
 
 //    private final R2dbcDatabaseClient databaseClient; // R2DBC 客户端

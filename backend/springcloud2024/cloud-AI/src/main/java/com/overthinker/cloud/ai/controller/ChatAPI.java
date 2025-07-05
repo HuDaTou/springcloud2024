@@ -4,15 +4,10 @@ package com.overthinker.cloud.ai.controller;
 import com.overthinker.cloud.ai.clientTools.DateTimeTools;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.document.Document;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -71,5 +66,7 @@ public class ChatAPI {
                         .content()
         );
     }
+
+//    获取ollma的模型列表
 
 }

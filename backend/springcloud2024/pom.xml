@@ -21,7 +21,7 @@
         <module>cloud-api</module>
         <module>cloud-system</module>
         <module>cloud-AI</module>
-        <module>cloud-doc</module>
+        <module>cloud-auth</module>
     </modules>
 
     <repositories>
@@ -77,11 +77,12 @@
         <fastjson2.version>2.0.25</fastjson2.version>
         <hutool.version>5.8.24</hutool.version>
         <knife4j.version>4.5.0</knife4j.version>
+        <springdoc-openapi.version>2.8.9</springdoc-openapi.version>
 
 
         <feign-micrometer.version>12.5</feign-micrometer.version>
         <zipkin-reporter-brave.version>2.17.0</zipkin-reporter-brave.version>
-        <minio.version>8.5.7</minio.version>
+        <minio.version>8.5.17</minio.version>
         <okhttp.version>4.10.0-RC1</okhttp.version>
         <quartz.version>0.9.5.4</quartz.version>
 
@@ -238,6 +239,8 @@
             </dependency>
 
 
+
+<!--            knife4j现在还不支持这个版本-->
             <!--knife4j-->
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
@@ -250,6 +253,12 @@
                 <artifactId>knife4j-gateway-spring-boot-starter</artifactId>
                 <version>${knife4j.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc-openapi.version}</version>
+            </dependency>
+
 
 
 

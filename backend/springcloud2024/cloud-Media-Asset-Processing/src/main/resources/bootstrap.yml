@@ -2,15 +2,24 @@ spring:
   application:
     name: cloud-Media-Asset-Processing-service
     ####Spring Cloud Consul for Service Discovery
+  ####Spring Cloud Consul for Service Discovery
   cloud:
     consul:
-      host: home.overthinker.top
+      enabled: true
+      host: ${baseserveraddress.dockerdesktop}
       port: 8500
       discovery:
         service-name: ${spring.application.name}
         heartbeat:
           enabled: true
       config:
+
+        #        启动试一下
+        enabled: false
         profile-separator: '-'
         # default value is ","，we update '-'
         format: YAML
+baseserveraddress:
+  homeaddress: 192.168.0.100
+  address: home.overthinker.top
+  dockerdesktop: localhost

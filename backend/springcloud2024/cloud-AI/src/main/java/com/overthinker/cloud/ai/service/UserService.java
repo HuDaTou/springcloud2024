@@ -1,8 +1,6 @@
 package com.overthinker.cloud.ai.service;
 
 import com.overthinker.cloud.ai.entity.User;
-import com.overthinker.cloud.ai.repository.UserRepository;
-import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
