@@ -6,7 +6,7 @@
         <artifactId>cloud-system</artifactId>
         <version>1.0</version>
     </parent>
-    <artifactId>system-auth</artifactId>
-    <name>Archetype - system-auth</name>
+    <artifactId>system-log-starter</artifactId>
+    <name>Archetype - system-log-starter</name>
     <url>http://maven.apache.org</url>
 </project>

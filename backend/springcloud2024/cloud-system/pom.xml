@@ -9,28 +9,12 @@
     <artifactId>cloud-system</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>system-auth</module>
-        <module>system-rabbitMQ</module>
+        <module>system-log-starter</module>
     </modules>
+
     <version>1.0</version>
     <name>cloud-system</name>
     <dependencies>
-
-        <dependency>
-            <groupId>com.overthinker.cloud</groupId>
-            <artifactId>cloud-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-        </dependency>
-
-
-        <!-- RabbitMQ -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
-        </dependency>
 
 
     </dependencies>
