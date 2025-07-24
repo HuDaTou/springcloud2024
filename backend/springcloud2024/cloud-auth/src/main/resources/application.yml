@@ -1,0 +1,10 @@
+spring:
+  rabbitmq:
+    listener:
+      simple:
+        retry:
+          enabled: true # Enable retry mechanism
+          initial-interval: 1000ms
+          max-attempts: 3
+    queue:
+      audit-log: audit.log.queue # The queue to listen to

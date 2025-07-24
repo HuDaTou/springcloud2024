@@ -52,10 +52,11 @@
             <artifactId>p6spy-spring-boot-starter</artifactId>
         </dependency>
 
-        <!-- 集成redis依赖  -->
+        <!-- Redis Starter -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <groupId>com.overthinker.cloud</groupId>
+            <artifactId>system-redis-starter</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
 
@@ -81,28 +82,7 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-        <!--SpringCloud consul config-->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-consul-config</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-bootstrap</artifactId>
-        </dependency>
 
-        <!--        注册中心-->
-        <!--SpringCloud consul discovery -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-consul-discovery</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
 
 
 <!--        <dependency>-->
@@ -112,18 +92,8 @@
 
 
         <dependency>
-            <groupId>com.auth0</groupId>
-            <artifactId>java-jwt</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
         <!--        依赖cloud-common-->
@@ -143,10 +113,11 @@
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
 
-        <!-- RabbitMQ -->
+        <!-- RabbitMQ Starter -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
+            <groupId>com.overthinker.cloud</groupId>
+            <artifactId>system-rabbitmq-starter</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <!-- 邮件发送与解析 -->
@@ -215,10 +186,11 @@
         </dependency>
 
 
-        <!-- aop -->
+        <!-- Audit Log Starter -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
+            <groupId>com.overthinker.cloud</groupId>
+            <artifactId>system-audit-log-starter</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

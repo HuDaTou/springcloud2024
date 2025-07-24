@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.overthinker.cloud</groupId>
+        <artifactId>cloud-system</artifactId>
+        <version>1.0</version>
+    </parent>
+
+    <artifactId>system-audit-log-starter</artifactId>
+    <name>system-audit-log-starter</name>
+    <description>A starter for global, automatic audit logging of all controller methods.</description>
+
+    <dependencies>
+        <!-- AOP for creating aspects -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <!-- RabbitMQ for sending log messages asynchronously -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
+        <!-- Provides @Operation and @Tag annotations -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-common</artifactId>
+            <version>${springdoc-openapi.version}</version>
+        </dependency>
+
+        <!-- Required for HttpServletRequest, etc. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Common module -->
+        <dependency>
+            <groupId>com.overthinker.cloud</groupId>
+            <artifactId>cloud-common</artifactId>
+
+        </dependency>
+    </dependencies>
+
+</project>

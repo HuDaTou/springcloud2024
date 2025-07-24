@@ -20,6 +20,11 @@
     <dependencies>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.overthinker.cloud</groupId>
             <artifactId>cloud-common</artifactId>
         </dependency>
@@ -98,6 +103,32 @@
         <dependency>
             <groupId>io.minio</groupId>
             <artifactId>minio</artifactId>
+        </dependency>
+
+        <!-- Auth Starter for permission scanning -->
+        <dependency>
+            <groupId>com.overthinker.cloud</groupId>
+            <artifactId>system-auth-starter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- SpringDoc for API documentation -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+        </dependency>
+
+        <!-- MyBatisPlus for database operations -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+        </dependency>
+
+        <!-- PostgreSQL Driver -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 

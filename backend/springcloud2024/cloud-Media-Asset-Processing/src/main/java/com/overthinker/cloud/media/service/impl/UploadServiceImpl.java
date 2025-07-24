@@ -1,79 +1,158 @@
 package com.overthinker.cloud.media.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.overthinker.cloud.media.config.MinioProperties;
+import com.overthinker.cloud.media.constants.MediaStatus;
+import com.overthinker.cloud.media.entity.MediaAsset;
+import com.overthinker.cloud.media.mapper.MediaAssetMapper;
 import com.overthinker.cloud.media.service.UploadService;
-import io.minio.CreateMultipartUploadResponse;
-import io.minio.GetPresignedObjectUrlArgs;
-import io.minio.MinioAsyncClient;
+import com.overthinker.cloud.utils.MyRedisCache;
+import io.minio.*;
 import io.minio.errors.*;
 import io.minio.http.Method;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-
 
 @Slf4j
 @Service
-
 @RequiredArgsConstructor
 public class UploadServiceImpl implements UploadService {
 
-    private final MinioProperties minioProperties;
+    private final MinioClient minioClient;
     private final MinioAsyncClient minioAsyncClient;
+    private final MinioProperties minioProperties;
+    private final MediaAssetMapper mediaAssetMapper;
+    private final MyRedisCache redisCache;
 
-    public Map<String, Object> handleFirstPartAndGenerateUrls(String filename, int totalParts) throws InsufficientDataException, IOException, NoSuchAlgorithmException, InvalidKeyException, XmlParserException, InternalException, ServerException, ErrorResponseException, InvalidResponseException {
+    private static final String UPLOAD_ID_CACHE_PREFIX = "media:uploadId:";
 
+    @Override
+    @Transactional
+    public Map<String, Object> handleFirstPartAndGenerateUrls(String filename, int totalParts) throws Exception {
+        String fileExtension = filename.substring(filename.lastIndexOf("."));
+        String objectName = UUID.randomUUID().toString().replace("-", "") + fileExtension;
 
+        MediaAsset asset = new MediaAsset()
+                .setFileName(filename)
+                .setObjectName(objectName)
+                .setBucketName(minioProperties.getBucketName())
+                .setStatus(MediaStatus.UPLOADING)
+                .setCreatedAt(LocalDateTime.now())
+                .setUpdatedAt(LocalDateTime.now());
+        mediaAssetMapper.insert(asset);
 
-        // Step 1: 异步初始化分片上传
-        CompletableFuture<CreateMultipartUploadResponse> future = minioAsyncClient.createMultipartUploadAsync(minioProperties.getBucketName(),null, filename,null, null);
-
-        // 阻塞等待结果（或者也可以用 thenApply/thenAccept 处理异步）
-        CreateMultipartUploadResponse response = future.join();
+        CreateMultipartUploadResponse response = minioAsyncClient.createMultipartUploadAsync(
+                minioProperties.getBucketName(), null, objectName, null, null).join();
         String uploadId = response.result().uploadId();
+        log.info("生成分片上传任务ID: {} for object: {}", uploadId, objectName);
 
-        log.info("uploadId: {}", uploadId);
+        redisCache.setCacheObject(UPLOAD_ID_CACHE_PREFIX + uploadId, objectName, 2, TimeUnit.HOURS);
 
-        // Step 2: 为每个分片生成预签名 URL
         Map<Integer, String> presignedUrls = new LinkedHashMap<>();
-
         for (int partNumber = 1; partNumber <= totalParts; partNumber++) {
-            String baseurl = minioAsyncClient.getPresignedObjectUrl(
+            String url = minioClient.getPresignedObjectUrl(
                     GetPresignedObjectUrlArgs.builder()
                             .method(Method.PUT)
                             .bucket(minioProperties.getBucketName())
-                            .object(filename)
+                            .object(objectName)
                             .expiry(2, TimeUnit.HOURS)
-                            .build()
-            );
-
-            String signedUrl = UriComponentsBuilder.fromUriString(baseurl)
-                    .queryParam("uploadId", uploadId)
-                    .queryParam("partNumber", partNumber)
-                    .toUriString();
-
-            presignedUrls.put(partNumber, signedUrl);
+                            .extraQueryParam("uploadId", uploadId)
+                            .extraQueryParam("partNumber", String.valueOf(partNumber))
+                            .build());
+            presignedUrls.put(partNumber, url);
         }
 
-        // Step 3: 构造返回值
         Map<String, Object> result = new HashMap<>();
         result.put("uploadId", uploadId);
+        result.put("objectName", objectName);
         result.put("presignedUrls", presignedUrls);
-        result.put("filename", filename);
-        result.put("totalParts", totalParts);
-
         return result;
     }
 
+    @Override
+    @Transactional
+    public void completeMultipartUpload(String uploadId) {
+        String objectName = redisCache.getCacheObject(UPLOAD_ID_CACHE_PREFIX + uploadId);
+        if (objectName == null) {
+            throw new RuntimeException("上传会话已过期或uploadId无效: " + uploadId);
+        }
 
+        try {
+            minioClient.completeMultipartUpload(minioProperties.getBucketName(), null, objectName, uploadId, null, null, null);
+
+            MediaAsset assetUpdate = new MediaAsset()
+                    .setStatus(MediaStatus.UPLOADED)
+                    .setUpdatedAt(LocalDateTime.now());
+            mediaAssetMapper.update(assetUpdate, new QueryWrapper<MediaAsset>().eq("object_name", objectName));
+
+            log.info("成功完成文件分片上传: objectName: {}, uploadId: {}", objectName, uploadId);
+
+        } catch (Exception e) {
+            log.error("完成文件分片上传失败: objectName: {}, uploadId: {}", objectName, uploadId, e);
+            MediaAsset assetUpdate = new MediaAsset().setStatus(MediaStatus.FAILED);
+            mediaAssetMapper.update(assetUpdate, new QueryWrapper<MediaAsset>().eq("object_name", objectName));
+            throw new RuntimeException("完成分片上传失败", e);
+        }
+    }
+
+    @Override
+    public Page<MediaAsset> listFiles(int pageNum, int pageSize) {
+        return mediaAssetMapper.selectPage(new Page<>(pageNum, pageSize), new QueryWrapper<MediaAsset>().orderByDesc("created_at"));
+    }
+
+    @Override
+    public String getPresignedFileUrl(String objectName) {
+        MediaAsset asset = mediaAssetMapper.selectOne(new QueryWrapper<MediaAsset>().eq("object_name", objectName));
+        if (asset == null) {
+            throw new RuntimeException("文件不存在: " + objectName);
+        }
+
+        try {
+            return minioClient.getPresignedObjectUrl(
+                    GetPresignedObjectUrlArgs.builder()
+                            .method(Method.GET)
+                            .bucket(asset.getBucketName())
+                            .object(asset.getObjectName())
+                            .expiry(1, TimeUnit.HOURS)
+                            .build());
+        } catch (Exception e) {
+            log.error("获取文件预签名URL失败: {}", objectName, e);
+            throw new RuntimeException("获取文件预签名URL失败", e);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void deleteFile(String objectName) {
+        MediaAsset asset = mediaAssetMapper.selectOne(new QueryWrapper<MediaAsset>().eq("object_name", objectName));
+        if (asset == null) {
+            log.warn("尝试删除一个不存在的媒体资产记录: {}", objectName);
+            return;
+        }
+
+        try {
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder()
+                            .bucket(asset.getBucketName())
+                            .object(asset.getObjectName())
+                            .build());
+            log.info("成功从MinIO删除文件: {}", objectName);
+        } catch (Exception e) {
+            log.error("从MinIO删除文件失败: {}", objectName, e);
+            throw new RuntimeException("从MinIO删除文件失败", e);
+        }
+
+        mediaAssetMapper.deleteById(asset.getId());
+        log.info("成功删除媒体资产数据库记录: {}", objectName);
+    }
 }

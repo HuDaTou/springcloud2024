@@ -3,12 +3,12 @@ spring:
     name: cloud-ai
   ai:
     ollama:
-      base-url: http://localhost:11434
+      base-url: http://localhost:11434 # Your Ollama server address
       chat:
-        model: deepseek-r1:8b
-      embedding:
+        model: llama3.1:8b # We are using Llama 3.1 8B model
         options:
-          model: nomic-embed-text:latest
+          temperature: 0.7
+
 #    vectorstore:
 #      milvus:
 #        client:

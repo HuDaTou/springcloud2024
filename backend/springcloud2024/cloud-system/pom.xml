@@ -10,6 +10,11 @@
     <packaging>pom</packaging>
     <modules>
         <module>system-log-starter</module>
+        <module>system-consul-starter</module>
+        <module>system-auth-starter</module>
+        <module>system-redis-starter</module>
+        <module>system-RabbitMQ-starter</module>
+        <module>system-audit-log-starter</module>
     </modules>
 
     <version>1.0</version>
@@ -18,5 +23,44 @@
 
 
     </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+
+    <profiles>
+        <!-- Local Environment -->
+        <profile>
+            <id>local</id>
+            <properties>
+                <consul.host>localhost</consul.host>
+                <!-- Add other local-specific properties here -->
+            </properties>
+        </profile>
+
+        <!-- Production Environment -->
+        <profile>
+            <id>prod</id>
+            <properties>
+                <consul.host>home.overthinker.top</consul.host>
+                <!-- Add other prod-specific properties here -->
+            </properties>
+        </profile>
+
+        <!-- Kubernetes Environment -->
+        <profile>
+            <id>k8s</id>
+            <properties>
+                <consul.host>consul-server</consul.host>
+                <minio.host>minio-server</minio.host>
+                <!-- Add other k8s-specific properties here -->
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

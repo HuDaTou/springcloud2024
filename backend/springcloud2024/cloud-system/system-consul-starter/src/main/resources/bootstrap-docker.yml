@@ -1,0 +1,2 @@
+address:
+  consul-host: ${address.docker.host}

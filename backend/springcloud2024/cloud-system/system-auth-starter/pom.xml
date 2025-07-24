@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.overthinker.cloud</groupId>
+        <artifactId>cloud-system</artifactId>
+        <version>1.0</version>
+    </parent>
+
+    <artifactId>system-auth-starter</artifactId>
+    <name>system-auth-starter</name>
+    <description>Auth starter for automatic permission discovery and registration</description>
+
+    <dependencies>
+        <!-- Feign client for type-safe REST calls -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+
+        <!-- API module which contains the Feign client interface -->
+        <dependency>
+            <groupId>com.overthinker.cloud</groupId>
+            <artifactId>cloud-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Provides @Operation and @Tag annotations from swagger-annotations-v3 -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-common</artifactId>
+            <version>${springdoc-openapi.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>

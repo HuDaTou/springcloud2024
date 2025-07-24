@@ -11,9 +11,49 @@
     <url>http://maven.apache.org</url>
 
     <dependencies>
+        <!-- Web support for creating controllers -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <!-- Spring Security -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!-- MyBatisPlus for database operations -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+        </dependency>
+
+        <!-- Common module -->
+        <dependency>
+            <groupId>com.overthinker.cloud</groupId>
+            <artifactId>cloud-common</artifactId>
+        </dependency>
+
+        <!-- PostgreSQL Driver -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Auth Starter for DTOs -->
+        <dependency>
+            <groupId>com.overthinker.cloud</groupId>
+            <artifactId>system-auth-starter</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- RabbitMQ Starter -->
+        <dependency>
+            <groupId>com.overthinker.cloud</groupId>
+            <artifactId>system-rabbitmq-starter</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

@@ -18,4 +18,36 @@ public interface UploadService {
      * @return
      */
     Map<String, Object> handleFirstPartAndGenerateUrls(String filename, int totalParts) throws InsufficientDataException, IOException, NoSuchAlgorithmException, InvalidKeyException, XmlParserException, InternalException, ServerException, ErrorResponseException, InvalidResponseException;
+
+    /**
+     * 合并所有分片
+     *
+     * @param filename a {@link java.lang.String} object.
+     * @param uploadId a {@link java.lang.String} object.
+     */
+    void completeMultipartUpload(String filename, String uploadId);
+
+    /**
+     * List files in the bucket with pagination.
+     *
+     * @param pageSize the number of items to return.
+     * @param nextMarker the marker for the next page.
+     * @return a map containing the list of files and the next marker.
+     */
+    Map<String, Object> listFiles(int pageSize, String nextMarker);
+
+    /**
+     * Delete a file from the bucket.
+     *
+     * @param filename the name of the file to delete.
+     */
+    void deleteFile(String filename);
+
+    /**
+     * Get a presigned URL for downloading a file.
+     *
+     * @param filename the name of the file.
+     * @return the presigned URL for downloading.
+     */
+    String getPresignedFileUrl(String filename);
 }

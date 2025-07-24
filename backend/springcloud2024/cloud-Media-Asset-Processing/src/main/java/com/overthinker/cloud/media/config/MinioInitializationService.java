@@ -1,39 +1,41 @@
 package com.overthinker.cloud.media.config;
 
-
-
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.stereotype.Component;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.stereotype.Service;
 
-@Component
+/**
+ * 在应用程序启动时初始化MinIO存储桶。
+ */
+@Slf4j
+@Service
 @RequiredArgsConstructor
-@Log4j2
-public class MinioInitializationService {
+public class MinioInitializationService implements ApplicationRunner {
 
     private final MinioClient minioClient;
     private final MinioProperties minioProperties;
 
-    @PostConstruct
-    public void ensureBucketExists() {
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        String bucketName = minioProperties.getBucketName();
         try {
-            boolean found = minioClient.bucketExists(BucketExistsArgs.builder()
-                    .bucket(minioProperties.getBucketName())
-                    .build());
-            if (!found) {
-                minioClient.makeBucket(MakeBucketArgs.builder()
-                        .bucket(minioProperties.getBucketName())
-                        .build());
-                log.warn("Bucket '{}' created successfully.", minioProperties.getBucketName());
+            log.info("检查MinIO存储桶'{}'是否存在...", bucketName);
+            boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
+            if (found) {
+                log.info("MinIO存储桶'{}'已存在。", bucketName);
+            } else {
+                log.warn("未找到MinIO存储桶'{}'。正在尝试创建...", bucketName);
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+                log.info("成功创建MinIO存储桶'{}'。", bucketName);
             }
-
-            log.info("Bucket '{}' already exists.", minioProperties.getBucketName());
         } catch (Exception e) {
-            throw new RuntimeException("Failed to create bucket: " + minioProperties.getBucketName(), e);
+            log.error("检查或创建MinIO存储桶'{}'失败。请检查您的MinIO服务器连接和配置。", bucketName, e);
+            throw new RuntimeException("MinIO存储桶初始化失败", e);
         }
     }
 }

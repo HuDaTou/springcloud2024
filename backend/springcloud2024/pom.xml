@@ -22,6 +22,7 @@
         <module>cloud-system</module>
         <module>cloud-AI</module>
         <module>cloud-auth</module>
+        
     </modules>
 
     <repositories>
@@ -59,7 +60,7 @@
         <spring.cloud.version>2024.0.0</spring.cloud.version>
         <spring.cloud.alibaba.version>2022.0.0.0-RC2</spring.cloud.alibaba.version>
         <boot.validation.version>3.2.0</boot.validation.version>
-        <spring.ai.version>1.0.0-SNAPSHOT</spring.ai.version>
+        <spring.ai.version>1.1.0-SNAPSHOT</spring.ai.version>
         <micrometer-tracing.version>1.2.0</micrometer-tracing.version>
 
 
@@ -369,6 +370,35 @@
         </dependencies>
 
     </dependencyManagement>
+
+    <profiles>
+        <!-- Local Environment (Default) -->
+        <profile>
+            <id>local</id>
+            <properties>
+                <spring.profiles.active>local</spring.profiles.active>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+
+        <!-- Production Environment -->
+        <profile>
+            <id>prod</id>
+            <properties>
+                <spring.profiles.active>prod</spring.profiles.active>
+            </properties>
+        </profile>
+
+        <!-- Kubernetes Environment -->
+        <profile>
+            <id>k8s</id>
+            <properties>
+                <spring.profiles.active>k8s</spring.profiles.active>
+            </properties>
+        </profile>
+    </profiles>
 
     <dependencies>
 

@@ -1,11 +1,15 @@
 package com.overthinker.cloud.ai.repository;
 
+
 import com.overthinker.cloud.ai.entity.User;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
-import reactor.core.publisher.Flux;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
+import org.springframework.stereotype.Repository;
 
-public interface UserRepository extends ReactiveCrudRepository<User,Long> {
-
-    // 自定义查询方法（可选）
-    Flux<User> findByName(String name);
+/**
+ * Spring Data R2DBC repository for the User entity.
+ */
+@Repository
+public interface UserRepository extends R2dbcRepository<User, Long> {
+    // Spring Data will automatically implement basic CRUD operations like save, findById, etc.
+    // All methods will return reactive types (Mono or Flux).
 }
