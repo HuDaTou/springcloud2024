@@ -2,8 +2,8 @@ package com.overthinker.cloud.auth.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.overthinker.cloud.auth.dto.PermissionDTO; // This DTO will be from the starter
-import com.overthinker.cloud.auth.entity.SysPermission;
+import com.overthinker.cloud.api.dto.PermissionDTO;
+import com.overthinker.cloud.auth.entity.PO.SysPermission;
 import com.overthinker.cloud.auth.mapper.SysPermissionMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

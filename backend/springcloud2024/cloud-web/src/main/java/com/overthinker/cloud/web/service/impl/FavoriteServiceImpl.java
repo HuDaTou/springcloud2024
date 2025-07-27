@@ -8,7 +8,7 @@ import com.overthinker.cloud.web.entity.DTO.SearchFavoriteDTO;
 import com.overthinker.cloud.web.entity.PO.Favorite;
 import com.overthinker.cloud.web.entity.PO.User;
 import com.overthinker.cloud.web.entity.VO.FavoriteListVO;
-import com.overthinker.cloud.web.entity.constants.RedisConst;
+import com.overthinker.cloud.redis.constants.RedisConst;
 import com.overthinker.cloud.web.mapper.ArticleMapper;
 import com.overthinker.cloud.web.mapper.FavoriteMapper;
 import com.overthinker.cloud.web.mapper.LeaveWordMapper;

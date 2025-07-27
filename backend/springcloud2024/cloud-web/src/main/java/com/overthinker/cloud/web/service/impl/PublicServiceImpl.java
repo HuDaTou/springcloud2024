@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.service.impl;
 
-import com.overthinker.cloud.web.entity.constants.RedisConst;
+import com.overthinker.cloud.redis.constants.RedisConst;
 import com.overthinker.cloud.web.service.PublicService;
 import com.overthinker.cloud.web.utils.MyRedisCache;
 import jakarta.annotation.Resource;

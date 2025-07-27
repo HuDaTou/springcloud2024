@@ -16,7 +16,7 @@ import com.overthinker.cloud.web.entity.PO.User;
 import com.overthinker.cloud.web.entity.VO.ArticleCommentVO;
 import com.overthinker.cloud.web.entity.VO.CommentListVO;
 import com.overthinker.cloud.web.entity.VO.PageVO;
-import com.overthinker.cloud.web.entity.constants.RedisConst;
+import com.overthinker.cloud.redis.constants.RedisConst;
 import com.overthinker.cloud.web.entity.constants.SQLConst;
 import com.overthinker.cloud.web.entity.enums.CommentEnum;
 import com.overthinker.cloud.web.entity.enums.LikeEnum;

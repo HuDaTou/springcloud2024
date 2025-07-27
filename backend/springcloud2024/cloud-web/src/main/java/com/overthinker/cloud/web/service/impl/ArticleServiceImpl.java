@@ -11,7 +11,7 @@ import com.overthinker.cloud.web.entity.DTO.ArticleDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchArticleDTO;
 import com.overthinker.cloud.web.entity.PO.*;
 import com.overthinker.cloud.web.entity.VO.*;
-import com.overthinker.cloud.web.entity.constants.RedisConst;
+import com.overthinker.cloud.redis.constants.RedisConst;
 import com.overthinker.cloud.web.entity.constants.SQLConst;
 import com.overthinker.cloud.web.entity.enums.*;
 import com.overthinker.cloud.web.exception.BusinessException;

@@ -17,50 +17,44 @@
         <module>system-audit-log-starter</module>
     </modules>
 
-    <version>1.0</version>
+
     <name>cloud-system</name>
-    <dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.overthinker.cloud</groupId>
+                <artifactId>system-consul-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.overthinker.cloud</groupId>
+                <artifactId>system-log-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.overthinker.cloud</groupId>
+                <artifactId>system-redis-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.overthinker.cloud</groupId>
+                <artifactId>system-auth-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.overthinker.cloud</groupId>
+                <artifactId>system-audit-log-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.overthinker.cloud</groupId>
+                <artifactId>system-rabbitmq-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 
-    </dependencies>
-
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-    </build>
-
-    <profiles>
-        <!-- Local Environment -->
-        <profile>
-            <id>local</id>
-            <properties>
-                <consul.host>localhost</consul.host>
-                <!-- Add other local-specific properties here -->
-            </properties>
-        </profile>
-
-        <!-- Production Environment -->
-        <profile>
-            <id>prod</id>
-            <properties>
-                <consul.host>home.overthinker.top</consul.host>
-                <!-- Add other prod-specific properties here -->
-            </properties>
-        </profile>
-
-        <!-- Kubernetes Environment -->
-        <profile>
-            <id>k8s</id>
-            <properties>
-                <consul.host>consul-server</consul.host>
-                <minio.host>minio-server</minio.host>
-                <!-- Add other k8s-specific properties here -->
-            </properties>
-        </profile>
-    </profiles>
 
 </project>

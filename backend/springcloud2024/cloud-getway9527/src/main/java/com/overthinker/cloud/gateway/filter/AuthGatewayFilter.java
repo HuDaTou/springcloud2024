@@ -1,5 +1,6 @@
 package com.overthinker.cloud.gateway.filter;
 
+
 import com.overthinker.cloud.api.dto.VerifyRequest;
 import com.overthinker.cloud.api.dto.VerifyResponse;
 import com.overthinker.cloud.gateway.config.GatewayAuthProperties;
@@ -12,8 +13,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
 
 /**
  * Global authentication and authorization filter.
@@ -53,14 +52,15 @@ public class AuthGatewayFilter implements GlobalFilter, Ordered {
                 .retrieve()
                 .bodyToMono(VerifyResponse.class)
                 .flatMap(response -> {
-                    if (response.success()) {
+                    if (response.success() && response.userId() != null) {
                         // Add user info to headers for downstream services
                         ServerWebExchange modifiedExchange = exchange.mutate()
                                 .request(r -> r.header("X-User-Id", response.userId()))
                                 .build();
                         return chain.filter(modifiedExchange);
                     } else {
-                        return unauthorized(exchange, response.message());
+                        // Even if success is true, if userId is null, it's an invalid state
+                        return unauthorized(exchange, response.message() != null ? response.message() : "Unauthorized");
                     }
                 })
                 .onErrorResume(e -> unauthorized(exchange, "Auth service call failed: " + e.getMessage()));

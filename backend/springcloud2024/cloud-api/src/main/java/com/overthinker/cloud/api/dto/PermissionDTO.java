@@ -1,4 +1,4 @@
-package com.overthinker.cloud.system.auth.dto;
+package com.overthinker.cloud.api.dto;
 
 /**
  * Data Transfer Object for transporting permission information.

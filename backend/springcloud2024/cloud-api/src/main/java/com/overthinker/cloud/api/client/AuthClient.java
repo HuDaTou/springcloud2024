@@ -1,6 +1,6 @@
 package com.overthinker.cloud.api.client;
 
-import com.overthinker.cloud.api.dto.PermissionDTO; // Assuming this DTO is also in cloud-api
+import com.overthinker.cloud.api.dto.PermissionDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

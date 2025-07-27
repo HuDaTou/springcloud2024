@@ -1,6 +1,7 @@
 package com.overthinker.cloud.auth.controller;
 
-import com.overthinker.cloud.auth.dto.PermissionDTO;
+
+import com.overthinker.cloud.api.dto.PermissionDTO;
 import com.overthinker.cloud.auth.service.PermissionService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

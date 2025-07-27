@@ -1,9 +1,10 @@
 package com.overthinker.cloud.auth.controller;
 
-import com.overthinker.cloud.auth.dto.LoginRequest;
+import com.overthinker.cloud.auth.entity.DTO.LoginRequest;
 import com.overthinker.cloud.auth.service.impl.UserServiceImpl;
 import com.overthinker.cloud.auth.utils.JwtUtils;
 
+import com.overthinker.cloud.resp.ResultData;
 import jakarta.annotation.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,13 +40,11 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password())
         );
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        // Assuming LoginUser contains the user ID
-        // This part needs to be adapted based on your LoginUser implementation
-        Long userId = 1L; // Placeholder, you need to get the real user ID
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        Long userId = loginUser.getUser().getId();
 
         // Create JWT
-        String jwt = jwtUtils.createJwt(userDetails, userId, userDetails.getUsername());
+        String jwt = jwtUtils.createJwt(loginUser, userId, loginUser.getUsername());
 
         return ResultData.success(jwt);
     }

@@ -1,11 +1,10 @@
 package com.overthinker.cloud.system.auth.service;
 
-import com.overthinker.cloud.system.auth.dto.PermissionDTO;
+import com.overthinker.cloud.api.dto.PermissionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Method;
@@ -82,11 +81,27 @@ public class PermissionScanner {
     }
 
     private String getMethodPath(Method method) {
-        if (method.isAnnotationPresent(GetMapping.class)) return method.getAnnotation(GetMapping.class).value()[0];
-        if (method.isAnnotationPresent(PostMapping.class)) return method.getAnnotation(PostMapping.class).value()[0];
-        if (method.isAnnotationPresent(PutMapping.class)) return method.getAnnotation(PutMapping.class).value()[0];
-        if (method.isAnnotationPresent(DeleteMapping.class)) return method.getAnnotation(DeleteMapping.class).value()[0];
-        if (method.isAnnotationPresent(PatchMapping.class)) return method.getAnnotation(PatchMapping.class).value()[0];
+        String[] path;
+        if (method.isAnnotationPresent(GetMapping.class)) {
+            path = method.getAnnotation(GetMapping.class).value();
+            return (path.length > 0) ? path[0] : "";
+        }
+        if (method.isAnnotationPresent(PostMapping.class)) {
+            path = method.getAnnotation(PostMapping.class).value();
+            return (path.length > 0) ? path[0] : "";
+        }
+        if (method.isAnnotationPresent(PutMapping.class)) {
+            path = method.getAnnotation(PutMapping.class).value();
+            return (path.length > 0) ? path[0] : "";
+        }
+        if (method.isAnnotationPresent(DeleteMapping.class)) {
+            path = method.getAnnotation(DeleteMapping.class).value();
+            return (path.length > 0) ? path[0] : "";
+        }
+        if (method.isAnnotationPresent(PatchMapping.class)) {
+            path = method.getAnnotation(PatchMapping.class).value();
+            return (path.length > 0) ? path[0] : "";
+        }
         RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
         if (requestMapping != null && requestMapping.value().length > 0) {
             return requestMapping.value()[0];

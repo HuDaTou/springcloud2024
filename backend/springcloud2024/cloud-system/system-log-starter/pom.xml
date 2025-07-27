@@ -4,11 +4,12 @@
     <parent>
         <groupId>com.overthinker.cloud</groupId>
         <artifactId>cloud-system</artifactId>
-        <version>1.0</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
+
     <artifactId>system-log-starter</artifactId>
-    <name>Archetype - system-log-starter</name>
-    <url>http://maven.apache.org</url>
+    <name>system-log-starter</name>
+
 
     <dependencies>
 

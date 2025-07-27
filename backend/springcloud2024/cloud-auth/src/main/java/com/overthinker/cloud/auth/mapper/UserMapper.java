@@ -1,7 +1,7 @@
-package com.overthinker.cloud.web.mapper;
+package com.overthinker.cloud.auth.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.overthinker.cloud.web.entity.PO.User;
+import com.overthinker.cloud.auth.entity.PO.User;
 
 
 /**

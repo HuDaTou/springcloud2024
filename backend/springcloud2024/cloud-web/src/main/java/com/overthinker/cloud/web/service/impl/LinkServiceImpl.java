@@ -10,7 +10,7 @@ import com.overthinker.cloud.web.entity.PO.Link;
 import com.overthinker.cloud.web.entity.PO.User;
 import com.overthinker.cloud.web.entity.VO.LinkListVO;
 import com.overthinker.cloud.web.entity.VO.LinkVO;
-import com.overthinker.cloud.web.entity.constants.RedisConst;
+import com.overthinker.cloud.redis.constants.RedisConst;
 import com.overthinker.cloud.web.entity.constants.SQLConst;
 import com.overthinker.cloud.web.entity.enums.MailboxAlertsEnum;
 import com.overthinker.cloud.web.mapper.LinkMapper;

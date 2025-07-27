@@ -2,18 +2,14 @@ package com.overthinker.cloud.auth.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.overthinker.cloud.auth.entity.LoginUser;
-import com.overthinker.cloud.auth.entity.User;
-import com.overthinker.cloud.auth.entity.Role;
-import com.overthinker.cloud.auth.entity.Permission;
-import com.overthinker.cloud.auth.entity.UserRole;
-import com.overthinker.cloud.auth.entity.RolePermission;
+
+import com.overthinker.cloud.auth.entity.PO.*;
 import com.overthinker.cloud.auth.mapper.UserMapper;
 import com.overthinker.cloud.auth.mapper.RoleMapper;
 import com.overthinker.cloud.auth.mapper.PermissionMapper;
 import com.overthinker.cloud.auth.mapper.UserRoleMapper;
 import com.overthinker.cloud.auth.mapper.RolePermissionMapper;
-import com.overthinker.cloud.common.constant.SecurityConst;
+
 import jakarta.annotation.Resource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

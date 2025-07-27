@@ -1,6 +1,5 @@
 package com.overthinker.cloud.web.entity.PO;
 
-import com.baomidou.mybatisplus.annotation.*;
 import com.overthinker.cloud.entity.BasecopyProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

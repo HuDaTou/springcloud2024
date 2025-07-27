@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This is a standardized Log4j2 configuration for Spring Boot microservices.
+Key features:
+- Dynamically names log files based on the application name.
+- Separates general logs (INFO and above) from error logs (ERROR and above).
+- Provides clean console output for development and robust rolling file logging for production.
+-->
+<Configuration status="WARN" monitorInterval="30">
+
+    <!-- Properties for log configuration -->
+    <Properties>
+        <!-- Dynamic properties from Spring Environment -->
+        <Property name="LOG_PATH" value="${sys:logging.file.path:-logs}"/>
+        <Property name="APP_NAME" value="${spring:spring.application.name:-application}"/>
+        <Property name="LOG_FILE_BASE_NAME" value="${LOG_PATH}/${APP_NAME}"/>
+
+        <!-- Log Patterns -->
+        <Property name="CONSOLE_PATTERN" value="%clr{%d{yyyy-MM-dd HH:mm:ss.SSS}}{faint} %clr{%5p} %clr{%pid}{magenta} %clr{---}{faint} %clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n%xwEx"/>
+        <Property name="FILE_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5p %pid --- [%t] %-40.40c{1.} : %m%n%xwEx"/>
+    </Properties>
+
+    <Appenders>
+        <!-- Console Appender -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${CONSOLE_PATTERN}" charset="UTF-8"/>
+        </Console>
+
+        <!-- General Rolling File Appender (for INFO level and above) -->
+        <RollingFile name="RollingFileInfo"
+                     fileName="${LOG_FILE_BASE_NAME}.log"
+                     filePattern="${LOG_FILE_BASE_NAME}-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="${FILE_PATTERN}" charset="UTF-8"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+        <!-- Error Rolling File Appender (for ERROR level and above) -->
+        <RollingFile name="RollingFileError"
+                     fileName="${LOG_FILE_BASE_NAME}_error.log"
+                     filePattern="${LOG_FILE_BASE_NAME}_error-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="${FILE_PATTERN}" charset="UTF-8"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="7"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <!-- Application specific logger -->
+        <Logger name="com.overthinker.cloud" level="INFO"/>
+
+        <!-- Framework loggers -->
+        <Logger name="org.springframework" level="WARN"/>
+        <Logger name="org.mybatis" level="WARN"/>
+
+        <!-- Root logger defines the base logging configuration -->
+        <Root level="INFO">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFileInfo"/>
+            <!-- Route only ERROR level logs to the error appender -->
+            <AppenderRef ref="RollingFileError" level="ERROR"/>
+        </Root>
+    </Loggers>
+
+</Configuration>

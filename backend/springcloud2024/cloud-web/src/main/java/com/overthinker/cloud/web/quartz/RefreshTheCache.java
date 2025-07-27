@@ -2,7 +2,7 @@ package com.overthinker.cloud.web.quartz;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.overthinker.cloud.web.entity.PO.Article;
-import com.overthinker.cloud.web.entity.constants.RedisConst;
+import com.overthinker.cloud.redis.constants.RedisConst;
 import com.overthinker.cloud.web.mapper.ArticleMapper;
 import com.overthinker.cloud.web.utils.MyRedisCache;
 import jakarta.annotation.Resource;

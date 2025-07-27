@@ -1,22 +1,15 @@
 package com.overthinker.cloud.auth.utils;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.interfaces.Claim;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.overthinker.cloud.auth.entity.LoginUser; // Assuming LoginUser will be moved here
-import com.overthinker.cloud.auth.entity.User; // Assuming User will be moved here
-import com.overthinker.cloud.auth.mapper.PermissionMapper;
-import com.overthinker.cloud.auth.mapper.RoleMapper;
-import com.overthinker.cloud.auth.mapper.RolePermissionMapper;
-import com.overthinker.cloud.auth.mapper.UserRoleMapper;
-import com.overthinker.cloud.common.constant.RedisConst;
-import com.overthinker.cloud.common.constant.SecurityConst;
-import com.overthinker.cloud.common.util.MyRedisCache;
+
+import cn.hutool.jwt.JWT;
+
+import com.overthinker.cloud.auth.entity.PO.LoginUser;
+
+import com.overthinker.cloud.redis.utils.MyRedisCache;
 import jakarta.annotation.Resource;
+import org.bouncycastle.math.ec.rfc8032.Ed25519;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -43,7 +36,7 @@ public class JwtUtils {
     public boolean invalidateJwt(String headerToken) {
         String token = this.convertToken(headerToken);
         if (token == null) return false;
-        Algorithm algorithm = Algorithm.HMAC256(key);
+        Ed25519.Algorithm algorithm = Algorithm.HMAC256(key);
         JWTVerifier jwtVerifier = JWT.require(algorithm).build();
         try {
             DecodedJWT jwt = jwtVerifier.verify(token);
@@ -67,7 +60,7 @@ public class JwtUtils {
     public DecodedJWT resolveJwt(String headerToken) {
         String token = this.convertToken(headerToken);
         if (token == null) return null;
-        Algorithm algorithm = Algorithm.HMAC256(key);
+        Ed25519.Algorithm algorithm = Algorithm.HMAC256(key);
         JWTVerifier jwtVerifier = JWT.require(algorithm).build();
         try {
             DecodedJWT verify = jwtVerifier.verify(token);

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.overthinker.cloud.resp.ResultData;
-import com.overthinker.cloud.web.entity.DTO.LogDTO;
+import com.overthinker.cloud.auditlog.entity.DTO.LogDTO;
 import com.overthinker.cloud.web.entity.DTO.LogDeleteDTO;
 import com.overthinker.cloud.web.entity.PO.Log;
 import com.overthinker.cloud.web.entity.VO.LogVO;

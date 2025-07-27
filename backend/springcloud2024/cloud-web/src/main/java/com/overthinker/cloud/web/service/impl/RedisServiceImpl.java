@@ -6,7 +6,7 @@ import com.overthinker.cloud.web.entity.PO.Comment;
 import com.overthinker.cloud.web.entity.PO.Favorite;
 import com.overthinker.cloud.web.entity.PO.Like;
 import com.overthinker.cloud.web.entity.VO.ArticleVO;
-import com.overthinker.cloud.web.entity.constants.RedisConst;
+import com.overthinker.cloud.redis.constants.RedisConst;
 import com.overthinker.cloud.web.entity.constants.SQLConst;
 import com.overthinker.cloud.web.entity.enums.CommentEnum;
 import com.overthinker.cloud.web.entity.enums.FavoriteEnum;

@@ -12,7 +12,7 @@ import com.overthinker.cloud.web.entity.PO.Tag;
 import com.overthinker.cloud.web.entity.PO.Video;
 import com.overthinker.cloud.web.entity.PO.VideoTag;
 import com.overthinker.cloud.web.entity.VO.VideoInfoVO;
-import com.overthinker.cloud.web.entity.constants.RedisConst;
+import com.overthinker.cloud.redis.constants.RedisConst;
 import com.overthinker.cloud.web.entity.enums.UploadEnum;
 import com.overthinker.cloud.web.mapper.*;
 import com.overthinker.cloud.web.service.VideoService;

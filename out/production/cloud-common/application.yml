@@ -1,0 +1,15 @@
+logging:
+  pattern:
+    dateformat: yyyy-MM-dd HH:mm:ss.SSS
+  charset:
+    console: UTF-8
+    file: UTF-8
+  config: classpath:log4j2-spring.xml
+  file:
+    path: ./logs/${spring.application.name}.log
+  level:
+    com:
+      overthinker:
+        cloud:
+          apis:
+            com.overthinker.cloud.api.apis.PayFeignApi: debug

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.entity.PO.Like;
-import com.overthinker.cloud.web.entity.constants.RedisConst;
+import com.overthinker.cloud.redis.constants.RedisConst;
 import com.overthinker.cloud.web.entity.enums.LikeEnum;
 import com.overthinker.cloud.web.mapper.LikeMapper;
 import com.overthinker.cloud.web.service.LikeService;
