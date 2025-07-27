@@ -7,7 +7,8 @@ import com.overthinker.cloud.media.constants.MediaStatus;
 import com.overthinker.cloud.media.entity.MediaAsset;
 import com.overthinker.cloud.media.mapper.MediaAssetMapper;
 import com.overthinker.cloud.media.service.UploadService;
-import com.overthinker.cloud.utils.MyRedisCache;
+
+import com.overthinker.cloud.redis.utils.MyRedisCache;
 import io.minio.*;
 import io.minio.errors.*;
 import io.minio.http.Method;

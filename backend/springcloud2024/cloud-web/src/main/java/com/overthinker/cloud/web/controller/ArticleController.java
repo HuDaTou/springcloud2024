@@ -1,5 +1,6 @@
 package com.overthinker.cloud.web.controller;
 
+import com.overthinker.cloud.auditlog.annotation.LogAnnotation;
 import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;

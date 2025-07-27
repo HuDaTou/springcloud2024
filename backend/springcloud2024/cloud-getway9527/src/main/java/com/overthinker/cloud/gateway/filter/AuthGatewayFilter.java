@@ -14,6 +14,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 /**
  * Global authentication and authorization filter.
  */
@@ -23,10 +25,12 @@ public class AuthGatewayFilter implements GlobalFilter, Ordered {
 
     private final WebClient.Builder webClientBuilder;
     private final GatewayAuthProperties authProperties;
+    private final List<String> whitelist;
 
     public AuthGatewayFilter(WebClient.Builder webClientBuilder, GatewayAuthProperties authProperties) {
         this.webClientBuilder = webClientBuilder;
         this.authProperties = authProperties;
+        this.whitelist = authProperties.getWhitelist();
     }
 
     @Override

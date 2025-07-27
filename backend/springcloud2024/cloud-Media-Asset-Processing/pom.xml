@@ -131,6 +131,10 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>com.overthinker.cloud</groupId>
+            <artifactId>system-redis-starter</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

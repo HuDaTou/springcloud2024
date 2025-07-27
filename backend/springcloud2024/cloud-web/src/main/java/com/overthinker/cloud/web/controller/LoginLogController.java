@@ -1,10 +1,11 @@
 package com.overthinker.cloud.web.controller;
 
 
+import com.overthinker.cloud.auditlog.annotation.LogAnnotation;
 import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.web.annotation.AccessLimit;
-import com.overthinker.cloud.web.annotation.LogAnnotation;
+
 import com.overthinker.cloud.web.entity.DTO.LoginLogDTO;
 import com.overthinker.cloud.web.entity.DTO.LoginLogDeleteDTO;
 import com.overthinker.cloud.web.entity.VO.LoginLogVO;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
