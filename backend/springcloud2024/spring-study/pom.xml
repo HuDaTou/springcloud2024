@@ -53,7 +53,7 @@
         <!-- https://mvnrepository.com/artifact/io.asyncer/r2dbc-mysql -->
         <dependency>
             <groupId>io.asyncer</groupId>
-            <artifactId>r2dbc-mysql</artifactId>wqq
+            <artifactId>r2dbc-mysql</artifactId>
         </dependency>
 
 
@@ -70,7 +70,7 @@
 
         <dependency>
             <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <artifactId>springdoc-openapi-starter-common</artifactId>
         </dependency>
 
         <dependency>

@@ -1,13 +1,13 @@
 package com.overthinker.cloud.web.controller;
 
 
-import com.overthinker.cloud.auditlog.annotation.LogAnnotation;
+import com.overthinker.cloud.annotation.LogAnnotation;
 import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
-import com.overthinker.cloud.web.annotation.AccessLimit;
+import com.overthinker.cloud.annotation.AccessLimit;
 
 import com.overthinker.cloud.web.entity.PO.Banners;
-import com.overthinker.cloud.web.entity.constants.LogConst;
+import com.overthinker.cloud.annotation.LogConst;
 import com.overthinker.cloud.web.service.BannersService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,6 +26,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("banners")
+
 public class BannersController extends BaseController {
     /**
      * 服务对象

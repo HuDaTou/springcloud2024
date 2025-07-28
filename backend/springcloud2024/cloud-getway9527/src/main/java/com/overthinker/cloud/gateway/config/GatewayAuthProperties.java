@@ -1,5 +1,7 @@
 package com.overthinker.cloud.gateway.config;
 
+
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.List;

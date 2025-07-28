@@ -3,11 +3,12 @@ package com.overthinker.cloud.web.controller;
 
 import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
-import com.overthinker.cloud.web.annotation.AccessLimit;
+import com.overthinker.cloud.annotation.AccessLimit;
 import com.overthinker.cloud.web.entity.PO.Server;
+import groovy.util.logging.Slf4j;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

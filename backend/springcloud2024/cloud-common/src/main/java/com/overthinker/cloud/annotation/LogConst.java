@@ -1,4 +1,4 @@
-package com.overthinker.cloud.web.entity.constants;
+package com.overthinker.cloud.annotation;
 
 /**
  * @author overH

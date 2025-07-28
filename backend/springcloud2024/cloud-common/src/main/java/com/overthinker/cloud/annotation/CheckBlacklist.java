@@ -1,4 +1,4 @@
-package com.overthinker.cloud.web.annotation;
+package com.overthinker.cloud.annotation;
 
 import java.lang.annotation.*;
 

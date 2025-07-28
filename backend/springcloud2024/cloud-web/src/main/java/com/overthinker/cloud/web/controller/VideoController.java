@@ -2,7 +2,7 @@ package com.overthinker.cloud.web.controller;
 
 import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
-import com.overthinker.cloud.web.annotation.AccessLimit;
+import com.overthinker.cloud.annotation.AccessLimit;
 import com.overthinker.cloud.web.entity.DTO.SearchVideoDTO;
 import com.overthinker.cloud.web.entity.DTO.VideoInfoTDO;
 import com.overthinker.cloud.web.entity.VO.VideoInfoVO;
@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

@@ -25,14 +25,17 @@
         <dependency>
             <groupId>com.overthinker.cloud</groupId>
             <artifactId>cloud-api</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <!-- Provides @Operation and @Tag annotations from swagger-annotations-v3 -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-common</artifactId>
-            <version>${springdoc-openapi.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
     </dependencies>
 

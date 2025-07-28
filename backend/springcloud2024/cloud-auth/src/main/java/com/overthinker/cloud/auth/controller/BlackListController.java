@@ -1,21 +1,22 @@
-package com.overthinker.cloud.web.controller;
+package com.overthinker.cloud.auth.controller;
 
+import com.overthinker.cloud.annotation.AccessLimit;
+import com.overthinker.cloud.annotation.LogAnnotation;
+import com.overthinker.cloud.annotation.LogConst;
+import com.overthinker.cloud.auth.entity.DTO.AddBlackListDTO;
+import com.overthinker.cloud.auth.entity.DTO.SearchBlackListDTO;
+import com.overthinker.cloud.auth.entity.DTO.UpdateBlackListDTO;
+import com.overthinker.cloud.auth.entity.VO.BlackListVO;
+import com.overthinker.cloud.auth.service.BlackListService;
 import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
-import com.overthinker.cloud.web.annotation.AccessLimit;
-import com.overthinker.cloud.web.annotation.LogAnnotation;
-import com.overthinker.cloud.web.entity.DTO.AddBlackListDTO;
-import com.overthinker.cloud.web.entity.DTO.SearchBlackListDTO;
-import com.overthinker.cloud.web.entity.DTO.UpdateBlackListDTO;
-import com.overthinker.cloud.web.entity.VO.BlackListVO;
-import com.overthinker.cloud.web.entity.constants.LogConst;
-import com.overthinker.cloud.web.exception.BlackListException;
-import com.overthinker.cloud.web.service.BlackListService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 

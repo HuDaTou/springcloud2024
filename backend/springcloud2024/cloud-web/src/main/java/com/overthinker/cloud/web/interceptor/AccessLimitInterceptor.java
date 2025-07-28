@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.overthinker.cloud.redis.utils.MyRedisCache;
 import com.overthinker.cloud.resp.ResultData;
 import com.overthinker.cloud.resp.ReturnCodeEnum;
-import com.overthinker.cloud.web.annotation.AccessLimit;
+import com.overthinker.cloud.annotation.AccessLimit;
 import com.overthinker.cloud.web.entity.DTO.AddBlackListDTO;
 import com.overthinker.cloud.web.entity.PO.BlackList;
 import com.overthinker.cloud.redis.constants.RedisConst;

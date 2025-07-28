@@ -1,14 +1,15 @@
 package com.overthinker.cloud.web.controller;
 
+import com.overthinker.cloud.annotation.LogAnnotation;
 import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
-import com.overthinker.cloud.web.annotation.AccessLimit;
-import com.overthinker.cloud.web.annotation.LogAnnotation;
+import com.overthinker.cloud.annotation.AccessLimit;
+
 import com.overthinker.cloud.web.entity.DTO.MenuDTO;
 import com.overthinker.cloud.web.entity.VO.MenuByIdVO;
 import com.overthinker.cloud.web.entity.VO.MenuVO;
 import com.overthinker.cloud.web.entity.VO.RoleVO;
-import com.overthinker.cloud.web.entity.constants.LogConst;
+import com.overthinker.cloud.annotation.LogConst;
 import com.overthinker.cloud.web.service.MenuService;
 import com.overthinker.cloud.web.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,6 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 

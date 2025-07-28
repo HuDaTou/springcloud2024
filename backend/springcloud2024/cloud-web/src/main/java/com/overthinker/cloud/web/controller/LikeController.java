@@ -2,8 +2,8 @@ package com.overthinker.cloud.web.controller;
 
 import com.overthinker.cloud.controller.base.BaseController;
 import com.overthinker.cloud.resp.ResultData;
-import com.overthinker.cloud.web.annotation.AccessLimit;
-import com.overthinker.cloud.web.annotation.CheckBlacklist;
+import com.overthinker.cloud.annotation.AccessLimit;
+import com.overthinker.cloud.annotation.CheckBlacklist;
 import com.overthinker.cloud.web.entity.PO.Like;
 import com.overthinker.cloud.web.service.LikeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +14,7 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
