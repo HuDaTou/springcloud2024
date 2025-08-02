@@ -1,24 +1,31 @@
-# 系统 Redis Starter (system-redis-starter)
+# System Redis 启动器
 
-本微服务启动器 (starter) 为项目中的所有服务提供了一个统一的、自动配置的、开箱即用的 Redis 集成方案。
+## 1. 模块概述
 
-## 核心功能
+`system-redis-starter` 是一个 Spring Boot 启动器，为 `springcloud2024` 项目提供预配置且易于使用的 [Redis](https://redis.io/) 集成。它简化了缓存、会话管理和其他基于 Redis 的功能。
 
-1.  **自动配置**: 任何微服务只需在 `pom.xml` 中添加此 starter 作为依赖，即可自动获得与 Redis 的连接能力，无需任何手动配置（默认连接 `localhost:6379`）。
+该启动器使用适当的序列化器（例如，键使用 `StringRedisSerializer`，值使用 `GenericJackson2JsonRedisSerializer`）自动配置 `RedisTemplate`，从而允许在不进行手动序列化的情况下存储和检索 Java 对象。
 
-2.  **优化的 `RedisTemplate`**: 本 starter 预先配置了一个 `RedisTemplate` 的 Bean。它解决了 Spring Boot 默认 `RedisTemplate` 的主要痛点：
-    -   **Key 序列化**: 使用 `StringRedisSerializer`，确保您在 Redis 客户端中看到的 key 是可读的字符串，而不是乱码。
-    -   **Value 序列化**: 使用 `GenericJackson2JsonRedisSerializer`，将存入的 Java 对象自动序列化为易于阅读和调试的 JSON 格式。
+## 2. 核心功能
 
-3.  **便捷工具类 `MyRedisCache`**: 本 starter 包含了一个强大的工具类 `MyRedisCache`，它封装了对 `RedisTemplate` 的常用操作，提供了大量语义化的便捷方法。
+- **自动配置的 `RedisTemplate`：** 提供一个即用型的 `RedisTemplate` bean，用于直接与 Redis 交互。
+- **JSON 序列化：** 配置序列化器以人类可读的 JSON 格式存储对象数据，提高了互操作性和可调试性。
+- **连接池：** 利用 `commons-pool2` 为 Lettuce Redis 客户端启用高效的连接池。
+- **缓存工具：** 通常包含一个 `CacheService` 或类似的工具类，该类包装 `RedisTemplate` 以提供方便、高级的缓存操作。
 
-## 使用方法
+## 3. 关键依赖
 
-在任何需要使用 Redis 的微服务中（例如 `cloud-web` 或 `cloud-auth`），请执行以下两个步骤：
+- **Spring Data Redis Starter:** `org.springframework.boot:spring-boot-starter-data-redis`
+- **Apache Commons Pool2:** `org.apache.commons:commons-pool2`
+- **Cloud Common:** `com.overthinker.cloud:cloud-common`
 
-### 1. 添加 Maven 依赖
+## 4. 如何使用
 
-在您的微服务的 `pom.xml` 文件中，添加对此 starter 的依赖：
+要在微服务中启用 Redis，请按照以下步骤操作：
+
+### 第 1 步：添加依赖
+
+将此启动器添加到目标微服务的 `pom.xml` 中：
 
 ```xml
 <dependency>
@@ -28,36 +35,38 @@
 </dependency>
 ```
 
-### 2. 注入并使用 `MyRedisCache`
+### 第 2 步：配置连接
 
-在您的 Service 或 Component 类中，直接通过 `@Resource` 或 `@Autowired` 注入 `MyRedisCache` 即可使用。
+在服务的 `application.yaml` 文件中，提供 Redis 服务器的连接详细信息：
 
-**代码示例：**
-
-```java
-@Service
-public class YourService {
-
-    @Resource
-    private MyRedisCache redisCache;
-
-    public void someMethod() {
-        // 缓存一个字符串，有效期为5分钟
-        redisCache.setCacheObject("myKey", "myValue", 5, TimeUnit.MINUTES);
-
-        // 获取缓存的对象
-        String value = redisCache.getCacheObject("myKey");
-
-        // ... 其他操作
-        User user = new User();
-        user.setId(1L);
-        user.setUsername("testUser");
-        redisCache.setCacheObject("user:1", user);
-    }
-}
+```yaml
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:  # 可选：您的 Redis 密码
+      database: 0
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
 ```
 
-通过使用此 starter，您可以极大地简化 Redis 在各个微服务中的集成工作，并确保整个项目使用一套统一、高效、可读的缓存标准。
+### 第 3 步：使用 RedisTemplate
 
----
-*本文档最后更新于 2025-07-25。*
+将 `RedisTemplate` 或自定义的 `CacheService` 注入到您的组件中以与 Redis 交互。
+
+```java
+@Autowired
+private RedisTemplate<String, Object> redisTemplate;
+
+public void cacheUser(User user) {
+    redisTemplate.opsForValue().set("user:" + user.getId(), user, 1, TimeUnit.HOURS);
+}
+
+public User getUser(String userId) {
+    return (User) redisTemplate.opsForValue().get("user:" + userId);
+}
+```

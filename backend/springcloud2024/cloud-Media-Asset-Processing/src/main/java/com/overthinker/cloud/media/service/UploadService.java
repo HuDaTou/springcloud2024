@@ -1,53 +1,55 @@
 package com.overthinker.cloud.media.service;
 
-import io.minio.errors.*;
+import com.overthinker.cloud.media.entity.PO.MediaAsset;
 
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 public interface UploadService {
 
 
     /**
-     * 上传第一个分片 初始化分片上传任务，并返回剩余分片的 Presigned URL
+     * 初始化分片上传任务，并返回所有分片的预签名URL。
      *
-     * @param filename
-     * @param totalParts
-     * @return
+     * @param filetype        上传类型
+     * @param userId      上传用户ID
+     * @param filename    原始文件名
+     * @param totalParts  总分片数
+     * @param fileSize    文件总大小（字节）
+     * @param contentType 文件的MIME类型
+     * @param fileMd5     文件的MD5哈希值
+     * @return 包含uploadId、objectName和预签名URL映射的Map
      */
-    Map<String, Object> handleFirstPartAndGenerateUrls(String filename, int totalParts) throws InsufficientDataException, IOException, NoSuchAlgorithmException, InvalidKeyException, XmlParserException, InternalException, ServerException, ErrorResponseException, InvalidResponseException;
+    Map<String, Object> handleFirstPartAndGenerateUrls(Long userId,String filetype, String filename, int totalParts, long fileSize, String contentType, String fileMd5) throws Exception;
 
     /**
-     * 合并所有分片
+     * 完成分片上传。
      *
-     * @param filename a {@link java.lang.String} object.
-     * @param uploadId a {@link java.lang.String} object.
+     * @param uploadId 初始化时获取的上传ID
      */
-    void completeMultipartUpload(String filename, String uploadId);
+    void completeMultipartUpload(String uploadId);
 
     /**
-     * List files in the bucket with pagination.
+     * 分页列出存储桶中的文件。
      *
-     * @param pageSize the number of items to return.
-     * @param nextMarker the marker for the next page.
-     * @return a map containing the list of files and the next marker.
+     * @param pageNum  页码
+     * @param pageSize 每页数量
+     * @return 文件资产的分页列表
      */
-    Map<String, Object> listFiles(int pageSize, String nextMarker);
+    com.baomidou.mybatisplus.extension.plugins.pagination.Page<MediaAsset> listFiles(int pageNum, int pageSize);
 
     /**
-     * Delete a file from the bucket.
+     * 从存储桶中删除一个文件。
      *
-     * @param filename the name of the file to delete.
+     * @param userId     执行删除操作的用户ID
+     * @param objectName 要删除的文件的唯一对象名
      */
-    void deleteFile(String filename);
+    void deleteFile(Long userId, String objectName);
 
     /**
-     * Get a presigned URL for downloading a file.
+     * 获取用于下载文件的预签名URL。
      *
-     * @param filename the name of the file.
-     * @return the presigned URL for downloading.
+     * @param objectName 文件的唯一对象名
+     * @return 用于下载的预签名URL
      */
-    String getPresignedFileUrl(String filename);
+    String getPresignedFileUrl(String objectName);
 }

@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 /**
- * Global authentication and authorization filter.
+ * 全局认证和授权过滤器。
  */
 @Component
 @EnableConfigurationProperties(GatewayAuthProperties.class)
@@ -37,19 +37,19 @@ public class AuthGatewayFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String path = exchange.getRequest().getURI().getPath();
 
-        // Check if the request path is in the whitelist
+        // 检查请求路径是否在白名单中
         if (isWhitelisted(path)) {
             return chain.filter(exchange);
         }
 
-        // Get the token from the header
+        // 从请求头中获取令牌
         String token = exchange.getRequest().getHeaders().getFirst("Authorization");
 
         if (token == null || !token.startsWith("Bearer ")) {
-            return unauthorized(exchange, "Missing or invalid Authorization header");
+            return unauthorized(exchange, "缺失或无效的Authorization请求头");
         }
 
-        // Call the auth service to verify the token and permission
+        // 调用认证服务以验证令牌和权限
         return webClientBuilder.build().post()
                 .uri("http://cloud-auth/internal/api/v1/auth/verify")
                 .bodyValue(new VerifyRequest(token, path))
@@ -57,17 +57,17 @@ public class AuthGatewayFilter implements GlobalFilter, Ordered {
                 .bodyToMono(VerifyResponse.class)
                 .flatMap(response -> {
                     if (response.success() && response.userId() != null) {
-                        // Add user info to headers for downstream services
+                        // 将用户信息添加到请求头中，供下游服务使用
                         ServerWebExchange modifiedExchange = exchange.mutate()
                                 .request(r -> r.header("X-User-Id", response.userId()))
                                 .build();
                         return chain.filter(modifiedExchange);
                     } else {
-                        // Even if success is true, if userId is null, it's an invalid state
-                        return unauthorized(exchange, response.message() != null ? response.message() : "Unauthorized");
+                        // 即使success为true，如果userId为null，也是无效状态
+                        return unauthorized(exchange, response.message() != null ? response.message() : "未授权");
                     }
                 })
-                .onErrorResume(e -> unauthorized(exchange, "Auth service call failed: " + e.getMessage()));
+                .onErrorResume(e -> unauthorized(exchange, "认证服务调用失败: " + e.getMessage()));
     }
 
     private boolean isWhitelisted(String path) {
@@ -76,13 +76,13 @@ public class AuthGatewayFilter implements GlobalFilter, Ordered {
 
     private Mono<Void> unauthorized(ServerWebExchange exchange, String message) {
         exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-        // You can customize the response body here if needed
+        // 如果需要，可以在此处自定义响应体
         return exchange.getResponse().setComplete();
     }
 
     @Override
     public int getOrder() {
-        // This filter should run before any other filters
+        // 此过滤器应在任何其他过滤器之前运行
         return -1;
     }
 }

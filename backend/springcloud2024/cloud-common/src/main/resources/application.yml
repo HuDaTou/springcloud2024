@@ -13,3 +13,25 @@ logging:
         cloud:
           apis:
             com.overthinker.cloud.api.apis.PayFeignApi: debug
+
+#mybatis-plus:
+#  configuration:
+#  log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#  global-config:
+#  db-config:
+#    id-type: auto
+#    table-prefix: tbl_
+#    logic-delete-field: is_deleted
+#    logic-delete-value: 1
+#    logic-not-delete-value: 0
+
+mybatis-plus:
+  check-config-location: true
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  global-config:
+    db-config:
+      id-type: assign_id
+      logic-delete-field: is_deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0

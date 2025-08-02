@@ -1,5 +1,6 @@
 package com.overthinker.cloud.controller.base;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.overthinker.cloud.resp.ResultData;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -33,5 +34,12 @@ public class BaseController {
                 .map(ResultData::success)
                 .onErrorResume(e -> Mono.just(ResultData.failure("流式请求失败: " + e.getMessage())));
     }
+
+
+    public static <T> Page pageBuilder(String pageNum, String pageSize) {
+        return new Page<>(Long.parseLong(pageNum), Long.parseLong(pageSize));
+    }
+
+
 
 }

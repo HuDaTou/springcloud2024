@@ -1,50 +1,35 @@
-# 系统认证 Starter (system-auth-starter)
+# 系统认证启动器
 
-本启动器 (starter) 提供了一套强大的**自动化权限发现与注册**机制。当任何微服务引入此 starter 后，它会在应用启动时自动扫描其所有 REST 接口，提取元数据，并将其作为权限注册到统一的 `cloud-auth` 认证中心。
+## 1. 模块概述
 
-## 核心特性
+`system-auth-starter` 是一个 Spring Boot 启动器，旨在为 `springcloud2024` 项目中的其他微服务提供集中化、可重用的身份验证和授权功能。
 
--   **零配置**: 只需添加依赖即可，无需额外配置。
--   **自动发现**: 在应用启动时，starter 会自动扫描所有的 `@RestController` Bean。
--   **元数据提取**: 从标准的 API 注解 (`@Tag`, `@Operation`, `@GetMapping` 等) 中提取权限的详细信息。
--   **集中化注册**: 所有发现的权限都会通过 REST API 调用发送到 `cloud-auth` 服务，确保您的权限表始终与代码保持同步。
+其主要职责是在任何将其作为依赖项的服务中自动扫描与权限相关的注解。然后，它与中央 `cloud-auth` 服务通信以注册这些权限，确保系统的访问控制列表始终保持最新。
 
-## 工作原理
+## 2. 核心功能
 
-本 starter 会根据以下信息，构建一条唯一的权限记录：
+- **自动权限发现：** 在应用程序启动时，扫描控制器方法上的 `@Operation` 和其他与安全相关的注解。
+- **权限注册：** 使用 Feign 客户端将发现的权限发送到 `cloud-auth` 服务进行存储和管理。
+- **简化的安全配置：** 提供一个预配置的 `SecurityFilterChain`，其他服务可以导入该配置以保护其端点。
+- **解耦的认证逻辑：** 抽象了权限处理的细节，使服务开发人员能够专注于业务逻辑。
 
-1.  **权限分类**: 从类级别的 `@Tag(name = "文章管理")` 注解的 `name` 属性中提取。
+## 3. 关键依赖
 
-2.  **权限名称**: 从方法级别的 `@Operation(summary = "按标题搜索文章")` 注解的 `summary` 属性中提取。
+- **Spring Cloud OpenFeign:** `org.springframework.cloud:spring-cloud-starter-openfeign`
+- **Spring Boot Security:** `org.springframework.boot:spring-boot-starter-security`
+- **SpringDoc OpenAPI:** `org.springdoc:springdoc-openapi-starter-common`
+- **Cloud API:** `com.overthinker.cloud:cloud-api`（包含认证服务的 Feign 客户端接口）
 
-3.  **HTTP 方法**: 根据映射注解自动判断 (例如, `@GetMapping` 变为 `GET`)。
+## 4. 如何使用
 
-4.  **完整路径**: 通过拼接以下三部分构成：
-    -   **服务路径前缀**: 从 `spring.application.name` 派生 (例如, `/cloud-web`)。
-    -   **控制器基础路径**: 从类上的 `@RequestMapping` 注解获取。
-    -   **方法路径**: 从方法上的 `@GetMapping` 等注解获取。
-    -   *示例*: `/cloud-web/article/search/init/title`
+要在另一个微服务（例如 `cloud-web`）中启用自动权限发现和注册，只需将其 `pom.xml` 文件中的此启动器添加为依赖项即可：
 
-## 开发者约定
-
-为了确保您的接口能被正确地发现和注册，您**必须**遵守以下约定：
-
--   **控制器层面**: 每个 `@RestController` 类都必须有一个 `@Tag` 注解来定义其权限分类。
--   **方法层面**: 每个您希望注册为权限的公开接口方法 (`@GetMapping`, `@PostMapping` 等) **必须**有一个带有描述性 `summary` 的 `@Operation` 注解。
-
-不符合这些标准的接口将被扫描器忽略。
-
-## 配置
-
-本 starter 被设计为零配置。但是，您也可以通过在 `application.yml` 或 `bootstrap.yml` 中设置以下属性，来覆盖默认的 `cloud-auth` 服务注册地址：
-
-```yaml
-cloud-auth:
-  registration:
-    url: http://你的认证服务地址/internal/api/v1/permissions/register
+```xml
+<dependency>
+    <groupId>com.overthinker.cloud</groupId>
+    <artifactId>system-auth-starter</artifactId>
+    <version>${project.version}</version>
+</dependency>
 ```
 
-如果未指定，它将默认为 `http://cloud-auth/internal/api/v1/permissions/register`，这适用于已启用服务发现的环境。
-
----
-*本文档最后更新于 2025-07-25。*
+应用程序启动后，启动器将自动处理其余部分。请确保 `cloud-auth` 服务正在运行，并且可以通过服务发现机制（例如 Nacos）进行访问。

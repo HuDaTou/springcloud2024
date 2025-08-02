@@ -1,7 +1,8 @@
 package com.overthinker.cloud.media.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.overthinker.cloud.media.entity.MediaAsset;
+import com.overthinker.cloud.controller.base.BaseController;
+import com.overthinker.cloud.media.entity.PO.MediaAsset;
 import com.overthinker.cloud.media.service.UploadService;
 import com.overthinker.cloud.resp.ResultData;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -17,20 +19,29 @@ import java.util.Map;
 @RestController
 @RequestMapping("/media")
 @RequiredArgsConstructor
-@Log4j2
+@Slf4j
 @Tag(name = "媒体服务", description = "提供文件上传、下载和管理的API接口")
-public class MediaController {
+public class MediaController extends BaseController {
 
     private final UploadService uploadService;
 
     @Operation(summary = "初始化分片上传")
     @PostMapping("/initiate")
     public ResultData<Map<String, Object>> initiateMultipartUpload(
+            @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId,
+            @Parameter(name = "fileType", description = "文件类型", required = true, in = ParameterIn.QUERY)
+            @RequestParam("fileType") String fileType,
             @Parameter(name = "filename", description = "要上传的原始文件名", required = true, in = ParameterIn.QUERY)
             @RequestParam("filename") String filename,
             @Parameter(name = "totalParts", description = "文件被分割的总块数", required = true, in = ParameterIn.QUERY)
-            @RequestParam("totalParts") int totalParts) throws Exception {
-        return ResultData.success(uploadService.handleFirstPartAndGenerateUrls(filename, totalParts));
+            @RequestParam("totalParts") int totalParts,
+            @Parameter(name = "fileSize", description = "文件总大小（以字节为单位）", required = true, in = ParameterIn.QUERY)
+            @RequestParam("fileSize") long fileSize,
+            @Parameter(name = "contentType", description = "文件的MIME类型", required = true, in = ParameterIn.QUERY)
+            @RequestParam("contentType") String contentType,
+            @Parameter(name = "fileMd5", description = "文件的MD5哈希值", required = true, in = ParameterIn.QUERY)
+            @RequestParam("fileMd5") String fileMd5) throws Exception {
+        return ResultData.success(uploadService.handleFirstPartAndGenerateUrls( userId, fileType, filename, totalParts, fileSize, contentType, fileMd5));
     }
 
     @Operation(summary = "完成分片上传")
@@ -55,9 +66,10 @@ public class MediaController {
     @Operation(summary = "删除文件")
     @DeleteMapping("/delete/{objectName}")
     public ResultData<Void> deleteFile(
+            @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId,
             @Parameter(name = "objectName", description = "文件的唯一对象名", required = true, in = ParameterIn.PATH)
             @PathVariable String objectName) {
-        uploadService.deleteFile(objectName);
+        uploadService.deleteFile(userId, objectName);
         return ResultData.success();
     }
 

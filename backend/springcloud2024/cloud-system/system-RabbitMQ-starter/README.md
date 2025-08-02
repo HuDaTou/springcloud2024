@@ -1,24 +1,29 @@
-# 系统 RabbitMQ Starter (system-rabbitmq-starter)
+# System RabbitMQ 启动器
 
-本微服务启动器 (starter) 为项目中的所有服务提供了一个统一的、自动配置的、开箱即用的 RabbitMQ 集成方案。
+## 1. 模块概述
 
-## 核心功能
+`system-rabbitmq-starter` 是一个 Spring Boot 启动器，旨在简化 `springcloud2024` 项目中 [RabbitMQ](https://www.rabbitmq.com/) 的集成。它为常见的 RabbitMQ 使用场景提供自动配置，确保所有微服务之间消息传递的一致性和可靠性。
 
-1.  **自动配置**: 任何微服务只需在 `pom.xml` 中添加此 starter 作为依赖，即可自动获得与 RabbitMQ 的连接能力，并应用一套优良的默认配置。
+该启动器使用 JSON 消息转换器预配置了 `RabbitTemplate`，从而简化了将 Java 对象作为消息发送和接收的过程，无需手动序列化。
 
-2.  **JSON序列化**: 本 starter 的核心价值在于，它会自动配置一个 `Jackson2JsonMessageConverter` 作为全局的消息转换器。这解决了 Spring AMQP 默认使用 Java 序列化的两大痛点：
-    -   **可读性**: 存入队列中的消息将是易于阅读和调试的 JSON 字符串，而不是二进制乱码。
-    -   **互操作性**: JSON 是一种通用数据格式，便于未来可能出现的、由其他语言（如 Python, Node.js）编写的服务来消费队列中的消息。
+## 2. 核心功能
 
-3.  **通用组件声明 (可选)**: 本 starter 可以在内部预先声明一些在整个系统中通用的交换机（Exchange）、队列（Queue）和绑定（Binding），以进一步减少各个业务模块的重复配置代码。 (此功能已在代码中注释，可按需启用)。
+- **简化配置：** 为 RabbitMQ 连接提供合理的默认值。
+- **JSON 消息转换：** 自动配置 `Jackson2JsonMessageConverter`，允许将 Java 对象无缝序列化为 JSON 或从 JSON 反序列化。
+- **自动配置的 RabbitTemplate：** 提供一个预配置的 `RabbitTemplate` bean，可立即在生产者服务中使用。
+- **监听器支持：** 完全兼容 Spring AMQP 的 `@RabbitListener` 注解，用于创建消息消费者。
 
-## 使用方法
+## 3. 关键依赖
 
-在任何需要使用 RabbitMQ 的微服务中（例如 `cloud-web` 或 `cloud-auth`），请执行以下步骤：
+- **Spring AMQP Starter:** `org.springframework.boot:spring-boot-starter-amqp`
 
-### 1. 添加 Maven 依赖
+## 4. 如何使用
 
-在您的微服务的 `pom.xml` 文件中，添加对此 starter 的依赖。（请确保已移除旧的 `spring-boot-starter-amqp` 依赖，以避免冲突）。
+要在微服务中启用 RabbitMQ，请按照以下步骤操作：
+
+### 第 1 步：添加依赖
+
+将此启动器添加到目标微服务的 `pom.xml` 中：
 
 ```xml
 <dependency>
@@ -28,41 +33,46 @@
 </dependency>
 ```
 
-### 2. 直接注入并使用
+### 第 2 步：配置连接
 
-完成依赖添加后，您无需任何额外配置。可以直接在您的代码中注入并使用 `RabbitTemplate` 或通过 `@RabbitListener` 注解来创建消费者。
+在服务的 `application.yaml` 文件中，提供 RabbitMQ 代理的连接详细信息：
 
-**生产者示例：**
+```yaml
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+```
+
+### 第 3 步：发送和接收消息
+
+**发送消息：**
+
+将 `RabbitTemplate` 注入到您的服务中，并使用它来发送消息。对象将自动转换为 JSON。
 
 ```java
-@Service
-@RequiredArgsConstructor
-public class MyProducerService {
+@Autowired
+private RabbitTemplate rabbitTemplate;
 
-    private final RabbitTemplate rabbitTemplate;
-
-    public void sendSomeMessage(AuditLogDTO logDto) {
-        // 由于自动配置了JSON转换器，您可以直接发送一个POJO对象
-        rabbitTemplate.convertAndSend("audit.log.exchange", "audit.log.routingKey", logDto);
-    }
+public void sendMessage(MyObject myObject) {
+    rabbitTemplate.convertAndSend("myExchange", "myRoutingKey", myObject);
 }
 ```
 
-**消费者示例：**
+**接收消息：**
+
+创建一个监听器组件并使用 `@RabbitListener` 注解。JSON 消息将自动转换回 Java 对象。
 
 ```java
 @Component
-public class MyConsumerService {
+public class MyMessageListener {
 
-    @RabbitListener(queues = "audit.log.queue")
-    public void receiveMessage(AuditLogDTO logDto) {
-        // Spring会自动将JSON消息反序列化为POJO对象
-        System.out.println("Received log: " + logDto.getOperation());
+    @RabbitListener(queues = "myQueue")
+    public void handleMessage(MyObject myObject) {
+        // 处理消息
     }
 }
 ```
-
-通过使用此 starter，您可以极大地简化 RabbitMQ 在各个微服务中的集成工作，并确保整个项目使用一套统一、高效、可读的消息传输标准。
-
----
-*本文档最后更新于 2025-07-25。*

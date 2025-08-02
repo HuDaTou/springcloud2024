@@ -4,7 +4,7 @@ package com.overthinker.cloud.web.entity.PO;
 import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.overthinker.cloud.entity.BasecopyProperties;
-import com.overthinker.cloud.web.entity.PO.base.BaseData;
+import com.overthinker.cloud.entity.PO.BaseData;
 import com.overthinker.cloud.web.entity.ip.BlackListIpInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

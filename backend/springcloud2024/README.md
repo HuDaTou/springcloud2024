@@ -1,55 +1,84 @@
-# SpringCloud 2024 微服务项目
+# Spring Cloud 2024 微服务项目
 
-这是一个基于 Spring Cloud 和 Spring Boot 3.x 构建的现代化、功能完善的微服务应用程序。项目核心是一个强大的内容管理与博客系统，并集成了认证、支付、AI、媒体处理等多个独立的微服务模块。
+## 1. 项目概述
 
----
+`springcloud2024` 是一个基于最新的 Spring Cloud、Spring Boot 和 Spring Cloud Alibaba 规范的综合性微服务项目。它可作为现代分布式应用程序的强大后端架构，集成了各种基本服务和中间件。
 
-## ✨ 项目简介
+该项目旨在成为一个学习和生产就绪的样板，展示了微服务开发的最佳实践，包括服务发现、配置管理、网关路由、身份验证和可观察性。
 
-本项目的目标是打造一个技术先进、高内聚、低耦合的微服务实践平台。核心业务是一个功能丰富的博客系统，支持文章发布、分类、标签、评论和邮件通知等功能。围绕此核心，项目扩展了多个高级服务，形成了一个完整的、可扩展的微服务生态系统。
+## 2. 技术栈
 
-## 🚀 主要技术栈
+- **核心框架：** Spring Boot 3.x、Spring Cloud 2024.0.0
+- **服务治理：** Spring Cloud Alibaba（Nacos 用于服务发现和配置）
+- **API 网关：** Spring Cloud Gateway
+- **身份验证：** Spring Security、JWT
+- **数据库：** MySQL、PostgreSQL、MyBatis-Plus
+- **缓存：** Redis
+- **消息队列：** RabbitMQ
+- **人工智能：** Spring AI
+- **规则引擎：** Drools
+- **分布式作业调度：** XXL-Job
+- **对象存储：** Minio
+- **可观察性：** Micrometer、Zipkin
+- **API 文档：** SpringDoc、Knife4j
 
--   **核心框架:** Spring Boot 3.x, Spring Cloud 2023.x
--   **服务治理:** Spring Cloud Consul
--   **API 网关:** Spring Cloud Gateway
--   **数据持久化:** MyBatis-Plus, PostgreSQL, Redis
--   **人工智能:** Spring AI, Ollama
--   **认证授权:** Spring Security, JWT (推测)
--   **规则引擎:** Drools
--   **其他:** MinIO, XXL-Job, R2DBC, WebFlux 等
+## 3. 模块分解
 
-## 📚 模块划分
+该项目由以下模块组成：
 
-项目遵循微服务架构思想，将不同的业务功能拆分到独立的模块中：
+| 模块 | 描述 |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `cloud-api` | 定义要在服务之间共享的通用 API 接口和 DTO。 |
+| `cloud-auth` | 负责用户登录和令牌颁发的集中式身份验证服务。 |
+| `cloud-common` | 包含共享类、枚举和帮助函数的通用实用程序模块。 |
+| `cloud-getway9527` | 将所有传入请求路由到相应微服务的中央 API 网关。 |
+| `cloud-AI` | 一个用于使用 Spring AI 集成人工智能功能的实验模块。 |
+| `cloud-drools` | 一个用于集成 Drools 规则引擎以动态管理和执行业务规则的模块。 |
+| `cloud-Media-Asset-Processing` | 专门用于处理媒体资产处理（例如视频转码或图像大小调整）的服务。 |
+| `cloud-web` | 包含核心应用程序逻辑和面向 Web 的控制器的主要业务模块。 |
+| `cloud-system` | 各种系统级启动器组件的父模块。 |
+| `system-auth-starter` | 一个用于向其他服务提供可重用身份验证和授权逻辑的启动器。 |
+| `system-consul-starter` | 一个用于将 Consul 集成为服务发现客户端的启动器。 |
+| `system-log-starter` | 一个用于集中式和结构化日志记录的启动器。 |
+| `system-RabbitMQ-starter` | 一个用于轻松与 RabbitMQ 集成的启动器。 |
+| `system-redis-starter` | 一个用于简化 Redis 集成和配置的启动器。 |
+| `spring-study` | 一个用于试验和学习新 Spring 功能的沙箱模块。 |
 
-| 模块名                         | 端口   | 核心功能                                       |
-| ------------------------------ | ------ | ---------------------------------------------- |
-| `cloud-web`                    | (未指定) | **核心业务**：博客、内容管理、网站配置等。       |
-| `cloud-getway9527`             | `9527` | **API 网关**：统一入口，负责路由、鉴权、限流。   |
-| `cloud-auth`                   | (未指定) | **认证中心**：处理用户登录、注册、Token 生成。   |
-| `cloud-provider-payment8001`   | `8001` | **支付服务**：提供支付处理能力。               |
-| `cloud-AI`                     | `8788` | **AI 服务**：集成大语言模型，提供函数调用等功能。|
-| `cloud-Media-Asset-Processing` | (未指定) | **媒体处理**：负责文件上传、存储（如 MinIO）。   |
-| `cloud-drools`                 | (未指定) | **规则引擎**：执行复杂的业务规则。             |
-| `cloud-common`                 | -      | **公共模块**：存放通用实体、工具类、DTO 等。     |
-| `cloud-api`                    | -      | **API 存根**：定义服务间的 Feign 客户端接口。    |
+## 4. 环境设置
 
-## 核心功能概览
+要运行此项目，您需要在系统上安装以下软件：
 
--   **内容管理**: 支持文章的 Markdown 编辑、发布、分类、标签管理。
--   **用户互动**: 支持文章评论、回复以及相应的邮件通知。
--   **系统配置**: 可通过后台管理网站的基本信息和 SEO 设置。
--   **统一认证**: 所有需要保护的路由均通过网关和认证中心进行统一鉴权。
--   **AI 助手**: 通过 AI 模块提供智能问答和工具调用能力。
+- **Java 17+**
+- **Maven 3.6+**
+- **Docker 和 Docker Compose**（用于运行 Nacos、Redis、RabbitMQ 等中间件）
+- **IDE**（推荐使用 IntelliJ IDEA 或 VS Code）
 
-## 启动与部署 (示例)
+在启动应用程序之前，请确保所有必需的中间件服务（Nacos、Redis、RabbitMQ、MySQL）都已运行。您通常可以使用 Docker Compose 启动它们。
 
-*（此部分可在后续完善）*
+## 5. 如何运行
 
-1.  **启动基础服务**: Consul, Redis, PostgreSQL, Ollama 等。
-2.  **依次启动微服务**: 建议按 `cloud-auth` -> `cloud-provider-*` -> `cloud-web` -> `cloud-getway9527` 的顺序启动。
-3.  **访问网关地址**: `http://localhost:9527` 即可访问整个应用。
+1. **克隆存储库：**
+    ```bash
+    git clone <your-repository-url>
+    cd springcloud2024
+    ```
 
----
-*本文档旨在提供项目的宏观概览，具体模块的细节请参考其内部的 README 文件。*
+2. **启动中间件：**
+    使用 Docker 或您首选的方法启动所有必要的服务（Nacos、Redis 等）。确保可以从本地计算机访问它们。
+
+3. **配置应用程序：**
+    更新每个模块中的 `bootstrap.yaml` 和 `application.yaml` 文件，以匹配您的环境设置（例如，数据库凭据、Nacos 地址）。
+
+4. **构建项目：**
+    ```bash
+    mvn clean install
+    ```
+
+5. **运行服务：**
+    按以下顺序启动微服务：
+    - `cloud-getway9527`
+    - `cloud-auth`
+    - `cloud-web`
+    - 任何其他所需的服务。
+
+您可以从 IDE 运行每个服务，也可以对已编译的 JAR 文件使用 `java -jar` 命令。

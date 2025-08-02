@@ -1,61 +1,61 @@
-# 媒体资产处理服务 (Cloud Media Asset Processing Service)
+# 媒体资产处理服务
 
-本微服务负责管理所有媒体资产，并使用 MinIO 提供一个健壮、高性能的文件上传解决方案。
+## 1. 模块概述
 
-## 核心功能：基于预签名URL的分片上传
+`cloud-Media-Asset-Processing` 模块是一个专门的微服务，旨在处理 `springcloud2024` 项目中媒体资产的完整生命周期。它为上传、存储、检索和管理文件提供了集中式解决方案。
 
-本服务实现了一种专为大文件设计的先进上传策略。服务器不直接接收文件内容，而是扮演一个协调者的角色，协调客户端（如浏览器）将文件直接上传到 MinIO 对象存储中。
+该服务直接与 [MinIO](https://min.io/)（一个高性能、与 S3 兼容的对象存储服务器）集成。它抽象了文件存储的复杂性，为其他服务提供了一套简单而安全的 API 端点。
 
-### 上传流程
+## 2. 核心功能
 
-1.  **初始化**: 客户端（例如Web前端）首先调用本服务的一个接口来发起上传请求。
-2.  **协调**: 本服务与 MinIO 通信，创建一个新的分片上传任务，并获取一个唯一的 `uploadId`。
-3.  **URL生成**: 随后，服务会为文件的每一个分片生成一个唯一的、预签名的URL。这些URL为客户端提供了临时的、安全的许可，允许其将特定的文件分片直接上传到 MinIO。
-4.  **返回信息**: 服务将 `uploadId` 和预签名URL列表返回给客户端。
-5.  **客户端上传**: 客户端浏览器使用这个列表，通过向预签名URL发送PUT请求，将每个文件块直接上传到 MinIO。
-6.  **完成上传**: 所有分片上传完毕后，客户端需要调用另一个接口（`/media/complete`），并提供 `uploadId`，以通知服务器完成文件合并。
+- **分片上传：** 支持大文件的高效、可续传的分片上传机制。
+- **文件下载与访问：** 提供文件的临时访问URL和直接下载功能。
+- **对象存储集成：** 从 MinIO 存储桶中无缝存储和检索文件。
+- **资产管理：** 管理所有媒体资产的元数据，并将信息存储在 PostgreSQL 数据库中。
+- **安全访问：** 与 `system-auth-starter` 集成，以确保只有授权用户才能访问或修改媒体资产。
+- **上传前校验：** 在上传初始化阶段对文件大小和类型进行校验，确保系统稳定性和安全性。
 
-这种方法显著降低了应用服务器的负载，节省了带宽和内存，并充分利用了 MinIO 集群的可伸缩性。
+## 3. API 概览
 
-## API 接口
+该服务提供以下主要的 RESTful API 端点：
 
-### `POST /media/initiate`
+- `POST /media/initiate`: 初始化一个分片上传任务。客户端需提供文件名、总分片数、文件大小和类型。服务器返回一个唯一的 `uploadId` 和所有分片的预签名上传URL。
+- `POST /media/complete`: 在所有分片上传完成后，通知服务器合并分片以完成整个文件的上传。
+- `GET /media/list`: 分页列出已上传的媒体资产。
+- `DELETE /media/delete/{objectName}`: 删除指定的媒体文件及其元数据。
+- `GET /media/url/{objectName}`: 获取指定文件的一个临时的、有时效性的下载URL。
 
-初始化一个分片上传任务。
+## 4. 关键依赖
 
-**查询参数:**
+- **MinIO 客户端：** `io.minio:minio`
+- **Spring Web：** `org.springframework.boot:spring-boot-starter-web`
+- **MyBatis-Plus：** `com.baomidou:mybatis-plus-spring-boot3-starter`
+- **PostgreSQL 驱动程序：** `org.postgresql:postgresql`
+- **系统启动器：** `system-consul-starter`、`system-auth-starter`、`system-redis-starter`
 
--   `filename` (字符串, 必需): 要上传的文件的名称 (例如, `我的大视频.mp4`)。
--   `totalParts` (整数, 必需): 文件被客户端分割的总块数。
+## 5. 配置
 
-**成功响应 (200 OK):**
+要运行此模块，您必须在 `application.yml` 文件中配置与 MinIO 和 PostgreSQL 数据库的连接。
 
-一个包含客户端执行上传所需信息的JSON对象。
-
-```json
-{
-  "uploadId": "从minio获取的唯一上传ID",
-  "presignedUrls": {
-    "1": "http://minio地址/桶/对象?partNumber=1&uploadId=...&X-Amz-Signature=...",
-    "2": "http://minio地址/桶/对象?partNumber=2&uploadId=...&X-Amz-Signature=...",
-    "3": "..."
-  },
-  "filename": "我的大视频.mp4",
-  "totalParts": 3
-}
-```
-
-## 配置
-
-要运行此服务，您需要在 `application.yml` 中配置 MinIO 的连接详细信息：
+### MinIO 配置
 
 ```yaml
 minio:
-  endpoint: http://你的minio地址:9000
-  accessKey: 你的minio-access-key
-  secretKey: 你的minio-secret-key
-  bucketName: 你的目标存储桶名称
+  endpoint: http://localhost:9000
+  accessKey: minioadmin
+  secretKey: minioadmin
+  bucketName: media
 ```
 
----
-*本文档最后更新于 2025-07-25。*
+### 数据库配置
+
+```yaml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/media_db
+    username: user
+    password: password
+    driver-class-name: org.postgresql.Driver
+```
+
+在启动服务之前，请确保 MinIO 服务器和 PostgreSQL 数据库正在运行且可访问。

@@ -44,48 +44,7 @@
 
 
 
-<!--        &lt;!&ndash;        jpa和springboot整合&ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>jakarta.persistence</groupId>-->
-<!--            <artifactId>jakarta.persistence-api</artifactId>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash;mybatis-plus&ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>com.baomidou</groupId>-->
-<!--            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>-->
-<!--        </dependency>-->
 
-
-
-<!--        <dependency>-->
-<!--            <groupId>com.overthinker.cloud</groupId>-->
-<!--            <artifactId>cloud-api</artifactId>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash;micrometer-tracing指标追踪  1&ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>io.micrometer</groupId>-->
-<!--            <artifactId>micrometer-tracing</artifactId>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash;micrometer-tracing-bridge-brave适配zipkin的桥接包 2&ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>io.micrometer</groupId>-->
-<!--            <artifactId>micrometer-tracing-bridge-brave</artifactId>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash;micrometer-observation 3&ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>io.micrometer</groupId>-->
-<!--            <artifactId>micrometer-observation</artifactId>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash;feign-micrometer 4&ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>io.github.openfeign</groupId>-->
-<!--            <artifactId>feign-micrometer</artifactId>-->
-<!--        </dependency>-->
-<!--        &lt;!&ndash;zipkin-reporter-brave 5&ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>io.zipkin.reporter2</groupId>-->
-<!--            <artifactId>zipkin-reporter-brave</artifactId>-->
-<!--        </dependency>-->
         <!-- minio -->
         <dependency>
             <groupId>io.minio</groupId>
@@ -105,11 +64,7 @@
             <artifactId>springdoc-openapi-starter-common</artifactId>
         </dependency>
 
-        <!-- MyBatisPlus for database operations -->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-        </dependency>
+
 
         <!-- PostgreSQL Driver -->
         <dependency>

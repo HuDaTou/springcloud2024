@@ -1,32 +1,53 @@
-# 系统日志 Starter (system-log-starter)
+# 系统日志启动器
 
-本启动器 (starter) 基于 SLF4J 和 Log4j2，为项目中的所有微服务提供了一个集中的、自动配置的日志解决方案。
+## 1. 模块概述
 
-## 核心功能
+`system-log-starter` 是一个 Spring Boot 启动器，为 `springcloud2024` 项目中的所有微服务提供统一且预配置的日志记录解决方案。它将默认的 Logback 日志记录替换为 [Log4j2](https.logging.apache.org/log4j/2.x/)，从而实现更高级、性能更强的日志记录功能。
 
-1.  **自动化配置**: 任何微服务只需在 `pom.xml` 中添加此 starter 作为依赖，就会自动完成以下配置：
-    -   排除 Spring Boot 默认的 `spring-boot-starter-logging` (它使用 Logback)。
-    -   引入 `spring-boot-starter-log4j2` 作为新的日志框架。
+通过包含此启动器，服务将自动继承标准化的日志记录配置，确保在整个应用程序中使用一致的日志格式、结构化日志记录（例如 JSON）和可配置的日志级别。
 
-2.  **集中化配置**: 本 starter 内置了一个默认的 `log4j2-spring.xml` 配置文件。任何使用此 starter 的服务都将自动采纳这套日志配置，无需在自己的模块中放置任何日志配置文件。
+## 2. 核心功能
 
-## 默认日志行为
+- **Log4j2 集成：** 无缝地将默认日志记录框架替换为 Log4j2。
+- **集中化配置：** 提供一个可自定义的默认 `log4j2-spring.xml` 配置文件。
+- **结构化日志记录：** 预先配置为以 JSON 等结构化格式输出日志，这对于日志聚合和分析工具（例如 ELK Stack、Splunk）非常理想。
+- **性能：** 利用 Log4j2 异步日志记录功能的性能优势。
 
-内置的 `log4j2-spring.xml` 已被配置为同时适用于开发和生产环境：
+## 3. 关键依赖
 
--   **控制台输出**: 日志会输出到控制台，便于在本地开发时进行调试。
--   **文件输出**: 日志会被写入到一个滚动文件中。
-    -   **日志文件名**: 日志文件会根据服务名自动命名 (例如 `logs/cloud-web.log`)。这是通过在配置中引用 `${spring:spring.application.name}` 属性来实现的。
-    -   **日志滚动策略**: 当日志文件达到 10MB 或每天开始时，会自动进行滚动（归档）。
-    -   **日志路径**: 默认情况下，日志文件存储在应用程序根目录下的 `logs` 文件夹中。您可以通过在服务的 `application.yml` 中设置 `logging.file.path` 属性来更改此路径。
+- **Log4j2 Starter:** `org.springframework.boot:spring-boot-starter-log4j2`
 
-## 如何覆盖默认配置
+## 4. 如何使用
 
-如果默认的日志行为不满足某个微服务的特定需求，您可以轻松地覆盖它。
+要在微服务中启用集中式日志记录配置，请按照以下步骤操作：
 
-只需在您的微服务的 `src/main/resources` 目录下放置一个您自己的 `log4j2-spring.xml` 文件。根据 Spring Boot 的类加载优先级，这个本地的配置文件将会优先于本 starter 中提供的配置文件被加载。
+### 第 1 步：排除默认日志记录
 
-例如，`cloud-web` 模块当前就保留了自己的 `log4j2-spring.xml`，这正是覆盖机制的一个实际例子。
+在微服务的 `pom.xml` 文件中，从 `spring-boot-starter` 或任何其他包含它的启动器中排除默认的 `spring-boot-starter-logging`。
 
----
-*本文档最后更新于 2025-07-25。*
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+    <exclusions>
+        <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+```
+
+### 第 2 步：添加日志启动器
+
+将 `system-log-starter` 添加为依赖项：
+
+```xml
+<dependency>
+    <groupId>com.overthinker.cloud</groupId>
+    <artifactId>system-log-starter</artifactId>
+    <version>${project.version}</version>
+</dependency>
+```
+
+现在，该服务将自动使用此启动器提供的 Log4j2 配置。您可以通过在服务的 `src/main/resources` 目录中覆盖 `log4j2-spring.xml` 文件来进一步自定义日志记录行为。
