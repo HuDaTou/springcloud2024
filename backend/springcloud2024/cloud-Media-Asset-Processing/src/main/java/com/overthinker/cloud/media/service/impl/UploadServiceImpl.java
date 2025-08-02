@@ -28,11 +28,10 @@ import org.springframework.util.DigestUtils;
 
 import java.io.InputStream;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -119,6 +118,7 @@ public class UploadServiceImpl implements UploadService {
                 .setStatus(MediaStatus.UPLOADING);
         mediaAssetMapper.insert(asset);
 
+//        初始化分片上传任务
         CreateMultipartUploadResponse response = minioAsyncClient.createMultipartUploadAsync(
                 minioProperties.getBucketName(),
                 null,
@@ -127,14 +127,14 @@ public class UploadServiceImpl implements UploadService {
                 null
         ).join();
 
-        minioAsyncClient.composeObject(
-                ComposeObjectArgs.builder()
-                        .bucket(minioProperties.getBucketName())
-                        .object(objectName)
-                        .uploadId(uploadId)
-                        .parts(new Part(1, objectName))
-                        .build()
-        ).join();
+//        minioAsyncClient.composeObject(
+//                ComposeObjectArgs.builder()
+//                        .bucket(minioProperties.getBucketName())
+//                        .object(objectName)
+//                        .uploadId(uploadId)
+//                        .parts(new Part(1, objectName))
+//                        .build()
+//        ).join();
         String uploadId = response.result().uploadId();
         log.info("为文件 {} 生成分片上传任务ID: {} for object: {}", filename, uploadId, objectName);
 
@@ -147,16 +147,18 @@ public class UploadServiceImpl implements UploadService {
         Map<Integer, String> presignedUrls = new LinkedHashMap<>();
         for (int partNumber = 1; partNumber <= totalParts; partNumber++) {
             String url = null;
+            Map<String, String> queryParams = new HashMap<>();
+            queryParams.put("uploadId", uploadId);
+            queryParams.put("partNumber", String.valueOf(partNumber));
             try {
-                url = minioAsyncClient.getPresignedObjectUrlAsync(
+                url = minioAsyncClient.getPresignedObjectUrl(
                         GetPresignedObjectUrlArgs.builder()
                                 .method(Method.PUT)
                                 .bucket(minioProperties.getBucketName())
                                 .object(objectName)
                                 .expiry(2, TimeUnit.HOURS)
-                                .extraQueryParam("uploadId", uploadId)
-                                .extraQueryParam("partNumber", String.valueOf(partNumber))
-                                .build()).join();
+                                .extraQueryParams(queryParams)
+                                .build());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -182,22 +184,42 @@ public class UploadServiceImpl implements UploadService {
         String originalMd5 = cacheValue.get("fileMd5");
 
         try {
-            // 1. 合并分片
-            ListPartsResponse listPartsResponse = minioClient.listParts(minioProperties.getBucketName(), null, objectName, 1000, 0, uploadId, null, null);
-            Part[] parts = new Part[listPartsResponse.result().partList().size()];
-            int partNumber = 0;
-            for (io.minio.messages.Part part : listPartsResponse.result().partList()) {
-                parts[partNumber++] = new Part(part.partNumber(), part.etag());
-            }
-            minioClient.completeMultipartUpload(
-                    CompleteMultipartUploadArgs.builder()
-                            .bucket(minioProperties.getBucketName())
-                            .object(objectName)
-                            .uploadId(uploadId)
-                            .parts(parts)
-                            .build()
+            // 1. 查询已上传的分片
+            CompletableFuture<ListPartsResponse> future = minioAsyncClient.listPartsAsync(
+                    minioProperties.getBucketName(),
+                    null,
+                    objectName,
+                    1000,
+                    0,
+                    uploadId,
+                    null,
+                    null
             );
 
+            // ✅ 调用 .join() 获取结果
+            ListPartsResponse listPartsResponse = future.join();
+
+            // 2. 提取 partNumber 和 ETag
+            List<Part> completeParts = listPartsResponse.result().partList().stream()
+                    .map(part -> new Part(part.partNumber(), part.etag()))
+                    .collect(Collectors.toList());
+
+
+            // 3. 使用 completeMultipartUploadAsync（不是 completeMultipartUpload）
+            CompletableFuture<ObjectWriteResponse> completeFuture = minioAsyncClient.completeMultipartUploadAsync(
+                    minioProperties.getBucketName(),  // bucketName
+                    null,                            // region - 一般为 null
+                    objectName,                      // objectName
+                    uploadId,                        // uploadId
+                    completeParts.toArray(new Part[0]), // parts 数组
+                    null,                            // extraHeaders
+                    null                             // extraQueryParams
+            );
+            // ✅ 关键：调用 .join() 获取结果
+            ObjectWriteResponse completeResponse = completeFuture.join();
+
+
+            System.out.println("✅ 分片合并成功，文件已生成：" + completeResponse.object());
             // 2. 完整性校验
             // 从MinIO获取刚上传完成的文件并计算其MD5
             String serverSideMd5 = calculateMinioObjectMd5(objectName);
@@ -206,15 +228,14 @@ public class UploadServiceImpl implements UploadService {
                 log.error("文件完整性校验失败！客户端MD5: {}, 服务端MD5: {}. 文件: {}", originalMd5, serverSideMd5, objectName);
                 // 校验失败，删除MinIO中刚上传的文件，并将数据库状态更新为FAILED
                 minioClient.removeObject(RemoveObjectArgs.builder().bucket(minioProperties.getBucketName()).object(objectName).build());
-                MediaAsset assetUpdate = new MediaAsset().setStatus(MediaStatus.FAILED).setUpdatedAt(LocalDateTime.now());
+                MediaAsset assetUpdate = new MediaAsset().setStatus(MediaStatus.FAILED);
                 mediaAssetMapper.update(assetUpdate, new QueryWrapper<MediaAsset>().eq("object_name", objectName));
                 throw new RuntimeException("文件完整性校验失败");
             }
 
             // 3. 更新数据库状态
             MediaAsset assetUpdate = new MediaAsset()
-                    .setStatus(MediaStatus.UPLOADED)
-                    .setUpdatedAt(LocalDateTime.now());
+                    .setStatus(MediaStatus.UPLOADED);
             mediaAssetMapper.update(assetUpdate, new QueryWrapper<MediaAsset>().eq("object_name", objectName));
 
             log.info("成功完成文件分片上传并校验通过: objectName: {}, uploadId: {}", objectName, uploadId);
