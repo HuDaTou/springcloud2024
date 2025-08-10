@@ -52,6 +52,12 @@
 <!--            <artifactId>system-auth-starter</artifactId>-->
 <!--        </dependency>-->
 
+
+<!--        <dependency>-->
+<!--            <groupId>com.overthinker.cloud</groupId>-->
+<!--            <artifactId>system-audit-log-starter</artifactId>-->
+<!--        </dependency>-->
+
         <!-- SpringDoc for API documentation -->
         <dependency>
             <groupId>org.springdoc</groupId>

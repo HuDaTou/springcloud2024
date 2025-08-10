@@ -5,22 +5,21 @@ import lombok.Data;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.util.List;
+
 
 @Data
 @Schema(name = "FileUploadRulesInfoDTO", description = "文件上传规则信息数据传输对象")
 public class FileUploadRulesInfoDTO {
 
-    @Schema(description = "规则唯一标识", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
-    private Integer id;
-
     @Schema(description = "规则名称", example = "通用文档上传规则", requiredMode = Schema.RequiredMode.REQUIRED)
     private String ruleName;
 
     @Schema(description = "文件类别", example = "document", allowableValues = {"image", "document", "video", "audio"})
-    private String fileCategory;
+    private List<String> fileCategory;
 
     @Schema(description = "允许的文件扩展名（逗号分隔）", example = ".pdf,.doc,.docx")
-    private String allowedExtensions;
+    private List<String> allowedExtensions;
 
     @Schema(description = "单个文件的最大大小（单位：KB）", example = "10240", minimum = "1")
     private Integer maxSizeKb;
