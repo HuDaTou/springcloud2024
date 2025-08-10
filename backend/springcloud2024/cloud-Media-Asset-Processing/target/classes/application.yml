@@ -5,11 +5,18 @@ spring:
   application:
     name: cloud-Media-Asset-Processing-service
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:your_db}
-    username: ${DB_USER:your_user}
-    password: ${DB_PASS:your_password}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:cloud}?currentSchema=minio
+    username: ${DB_USER:root}
+    password: ${DB_PASS:123456}
     driver-class-name: org.postgresql.Driver
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      lettuce:
+        pool:
+          enabled: false
 
 
 
@@ -20,30 +27,15 @@ minio:
   accessKey: minioadmin
   secretKey: minioadmin
   bucketName: cloud
-## springdoc-openapi项目配置
-#springdoc:
-#  swagger-ui:
-#    path: /swagger-ui.html
-#    tags-sorter: alpha
-#    operations-sorter: alpha
-#  api-docs:
-#    path: /v3/api-docs
-#  group-configs:
-#    - group: 'default'
-#      paths-to-match: '/**'
-#      packages-to-scan: com.xiaominfo.knife4j.demo.web
-## knife4j的增强配置，不需要增强可以不配
-#knife4j:
-#  enable: true
-#  setting:
-#    language: zh_cn
 
-# ========================zipkin===================
-#management:
-#  zipkin:
-#    tracing:
-#      endpoint: http://localhost:9411/api/v2/spans
-#  tracing:
-#    sampling:
-#      probability: 1.0 #采样率默认为0.1(0.1就是10次只能有一次被记录下来)，值越大收集越及时。
-
+# 媒体服务自定义配置
+media:
+  upload:
+    max-file-size: 524288000 # 允许的最大文件大小 (500MB)
+    allowed-content-types:
+      - "image/jpeg"
+      - "image/png"
+      - "video/mp4"
+    cleanup:
+      enabled: true # 是否启用清理任务
+      stale-threshold-hours: 24 # 任务过期阈值（小时）

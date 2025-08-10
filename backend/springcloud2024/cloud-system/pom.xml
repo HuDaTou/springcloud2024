@@ -9,7 +9,6 @@
     <artifactId>cloud-system</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>system-log-starter</module>
         <module>system-consul-starter</module>
         <module>system-auth-starter</module>
         <module>system-redis-starter</module>

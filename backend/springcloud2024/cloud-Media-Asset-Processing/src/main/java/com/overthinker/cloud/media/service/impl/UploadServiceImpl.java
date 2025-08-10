@@ -41,7 +41,6 @@ public class UploadServiceImpl implements UploadService {
     private final MinioClient minioClient;
     private final MinioAsyncClient minioAsyncClient;
     private final MinioProperties minioProperties;
-    private final MediaProperties mediaProperties;
     private final MediaAssetMapper mediaAssetMapper;
     private final MyRedisCache redisCache;
     private final MediaAssetService MediaAssetService; // 注入媒体处理服务

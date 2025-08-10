@@ -183,11 +183,6 @@
         </dependency>
 
 
-        <!-- Audit Log Starter -->
-        <dependency>
-            <groupId>com.overthinker.cloud</groupId>
-            <artifactId>system-audit-log-starter</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.overthinker.cloud</groupId>
             <artifactId>system-auth-starter</artifactId>

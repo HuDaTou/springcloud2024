@@ -1,15 +1,15 @@
 package com.overthinker.cloud.web.controller;
 
-import com.overthinker.cloud.annotation.LogAnnotation;
-import com.overthinker.cloud.controller.base.BaseController;
-import com.overthinker.cloud.resp.ResultData;
-import com.overthinker.cloud.annotation.AccessLimit;
+import com.overthinker.cloud.common.annotation.LogAnnotation;
+import com.overthinker.cloud.common.base.BaseController;
+import com.overthinker.cloud.common.resp.ResultData;
+import com.overthinker.cloud.common.annotation.AccessLimit;
 
 import com.overthinker.cloud.web.entity.DTO.MenuDTO;
 import com.overthinker.cloud.web.entity.VO.MenuByIdVO;
 import com.overthinker.cloud.web.entity.VO.MenuVO;
 import com.overthinker.cloud.web.entity.VO.RoleVO;
-import com.overthinker.cloud.annotation.LogConst;
+import com.overthinker.cloud.common.annotation.LogConst;
 import com.overthinker.cloud.web.service.MenuService;
 import com.overthinker.cloud.web.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;

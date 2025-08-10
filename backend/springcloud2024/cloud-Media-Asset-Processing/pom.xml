@@ -30,33 +30,27 @@
             <artifactId>cloud-common</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.overthinker.cloud</groupId>
-            <artifactId>system-consul-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.minio</groupId>
-            <artifactId>minio</artifactId>
-        </dependency>
-
-
-
-
-
-
-
-        <!-- minio -->
+<!--        <dependency>-->
+<!--            <groupId>com.overthinker.cloud</groupId>-->
+<!--            <artifactId>system-consul-starter</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>io.minio</groupId>
             <artifactId>minio</artifactId>
         </dependency>
+
+
+
+
+
+
+
 
         <!-- Auth Starter for permission scanning -->
-        <dependency>
-            <groupId>com.overthinker.cloud</groupId>
-            <artifactId>system-auth-starter</artifactId>
-
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.overthinker.cloud</groupId>-->
+<!--            <artifactId>system-auth-starter</artifactId>-->
+<!--        </dependency>-->
 
         <!-- SpringDoc for API documentation -->
         <dependency>

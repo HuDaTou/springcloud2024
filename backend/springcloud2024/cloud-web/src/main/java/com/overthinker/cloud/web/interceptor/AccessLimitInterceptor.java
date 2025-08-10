@@ -8,16 +8,15 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.overthinker.cloud.redis.utils.MyRedisCache;
-import com.overthinker.cloud.resp.ResultData;
-import com.overthinker.cloud.resp.ReturnCodeEnum;
-import com.overthinker.cloud.annotation.AccessLimit;
-import com.overthinker.cloud.web.entity.DTO.AddBlackListDTO;
+import com.overthinker.cloud.common.resp.ResultData;
+import com.overthinker.cloud.common.resp.ReturnCodeEnum;
+import com.overthinker.cloud.common.annotation.AccessLimit;
+
 import com.overthinker.cloud.web.entity.PO.BlackList;
 import com.overthinker.cloud.redis.constants.RedisConst;
 import com.overthinker.cloud.web.entity.constants.SQLConst;
 import com.overthinker.cloud.web.entity.enums.BlackListPolicy;
-import com.overthinker.cloud.web.mapper.BlackListMapper;
-import com.overthinker.cloud.web.service.BlackListService;
+
 import com.overthinker.cloud.web.utils.IpUtils;
 
 
@@ -47,11 +46,7 @@ public class AccessLimitInterceptor implements HandlerInterceptor {
     @Resource
     private MyRedisCache myRedisCache;
 
-    @Resource
-    private BlackListService blackListService;
 
-    @Resource
-    private BlackListMapper blackListMapper;
 
     private static final String EXPIRE_TIME_KEY_PREFIX = "expire_time_";
 

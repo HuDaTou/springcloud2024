@@ -1,16 +1,15 @@
 package com.overthinker.cloud.media.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.overthinker.cloud.controller.base.BaseController;
+import com.overthinker.cloud.common.base.BaseController;
 import com.overthinker.cloud.media.entity.PO.MediaAsset;
 import com.overthinker.cloud.media.service.UploadService;
-import com.overthinker.cloud.resp.ResultData;
+import com.overthinker.cloud.common.resp.ResultData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 

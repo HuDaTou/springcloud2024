@@ -6,7 +6,7 @@ import com.overthinker.cloud.auth.entity.DTO.SearchBlackListDTO;
 import com.overthinker.cloud.auth.entity.DTO.UpdateBlackListDTO;
 import com.overthinker.cloud.auth.entity.PO.BlackList;
 import com.overthinker.cloud.auth.entity.VO.BlackListVO;
-import com.overthinker.cloud.resp.ResultData;
+import com.overthinker.cloud.common.resp.ResultData;
 
 
 import java.util.List;

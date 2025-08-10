@@ -2,7 +2,7 @@ package com.overthinker.cloud.web.utils;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileNameUtil;
-import com.overthinker.cloud.resp.ReturnCodeEnum;
+import com.overthinker.cloud.common.resp.ReturnCodeEnum;
 import com.overthinker.cloud.web.entity.enums.UploadEnum;
 import com.overthinker.cloud.web.exception.FileUploadException;
 import io.minio.MinioClient;

@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.service;
 
-import com.overthinker.cloud.resp.ResultData;
+import com.overthinker.cloud.common.resp.ResultData;
 import com.overthinker.cloud.web.entity.DTO.UserRegisterDTO;
 import com.overthinker.cloud.web.entity.DTO.UserResetConfirmDTO;
 import com.overthinker.cloud.web.entity.DTO.UserResetPasswordDTO;

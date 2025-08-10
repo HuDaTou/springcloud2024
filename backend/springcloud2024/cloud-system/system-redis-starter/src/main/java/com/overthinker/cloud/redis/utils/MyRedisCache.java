@@ -1,6 +1,6 @@
 package com.overthinker.cloud.redis.utils;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.BoundSetOperations;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -12,9 +12,11 @@ import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings(value = {"unchecked", "rawtypes"})
 @Component
+@RequiredArgsConstructor
 public class MyRedisCache {
-    @Autowired
-    public RedisTemplate redisTemplate;
+    private final RedisTemplate redisTemplate;
+
+
 
     /**
      * redis进行自增

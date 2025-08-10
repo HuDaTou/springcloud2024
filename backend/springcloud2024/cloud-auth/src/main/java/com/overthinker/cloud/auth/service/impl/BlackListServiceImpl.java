@@ -17,10 +17,10 @@ import com.overthinker.cloud.auth.service.IpService;
 import com.overthinker.cloud.auth.utils.SecurityUtils;
 import com.overthinker.cloud.redis.constants.RedisConst;
 import com.overthinker.cloud.redis.utils.MyRedisCache;
-import com.overthinker.cloud.resp.ResultData;
+import com.overthinker.cloud.common.resp.ResultData;
 
-import com.overthinker.cloud.utils.IpUtils;
-import com.overthinker.cloud.utils.StringUtils;
+import com.overthinker.cloud.common.utils.IpUtils;
+import com.overthinker.cloud.common.utils.StringUtils;
 import com.overthinker.cloud.auth.entity.PO.User;
 
 import jakarta.annotation.Resource;

@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.overthinker.cloud.auth.entity.base.BaseData;
-import com.overthinker.cloud.entity.BasecopyProperties;
+import com.overthinker.cloud.common.entity.BasecopyProperties;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;

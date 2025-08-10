@@ -3,7 +3,7 @@ package com.overthinker.cloud.controller;
 
 import cn.hutool.core.util.IdUtil;
 import com.overthinker.cloud.entity.TPay;
-import com.overthinker.cloud.resp.ResultData;
+import com.overthinker.cloud.common.resp.ResultData;
 import com.overthinker.cloud.service.ITPayService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;

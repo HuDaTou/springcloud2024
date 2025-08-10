@@ -5,7 +5,7 @@ spring:
     consul:
       enabled: true
       host: ${address.consul-host}
-      port: 8500
+      port: ${address.consul-port}
       discovery:
         service-name: ${spring.application.name}
         heartbeat:
@@ -16,6 +16,7 @@ spring:
         format: YAML
 address:
   consul-host: ${address.local.host}
+  consul-port: ${address.local.port}
   local:
     host: localhost
     port: 8080

@@ -10,7 +10,13 @@ spring:
     password: ${DB_PASS:123456}
     driver-class-name: org.postgresql.Driver
 
-
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      lettuce:
+        pool:
+          enabled: false
 
 
 
@@ -33,4 +39,3 @@ media:
     cleanup:
       enabled: true # 是否启用清理任务
       stale-threshold-hours: 24 # 任务过期阈值（小时）
-

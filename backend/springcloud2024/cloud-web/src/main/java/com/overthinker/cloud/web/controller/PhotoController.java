@@ -1,15 +1,15 @@
 package com.overthinker.cloud.web.controller;
 
-import com.overthinker.cloud.annotation.LogAnnotation;
-import com.overthinker.cloud.controller.base.BaseController;
-import com.overthinker.cloud.resp.ResultData;
-import com.overthinker.cloud.annotation.AccessLimit;
+import com.overthinker.cloud.common.annotation.LogAnnotation;
+import com.overthinker.cloud.common.base.BaseController;
+import com.overthinker.cloud.common.resp.ResultData;
+import com.overthinker.cloud.common.annotation.AccessLimit;
 
 import com.overthinker.cloud.web.entity.DTO.DeletePhotoOrAlbumDTO;
 import com.overthinker.cloud.web.entity.DTO.PhotoAlbumDTO;
 import com.overthinker.cloud.web.entity.VO.PageVO;
 import com.overthinker.cloud.web.entity.VO.PhotoAndAlbumListVO;
-import com.overthinker.cloud.annotation.LogConst;
+import com.overthinker.cloud.common.annotation.LogConst;
 import com.overthinker.cloud.web.service.PhotoService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.Resource;

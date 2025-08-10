@@ -17,6 +17,8 @@ public record LogDTO(
     String module,
     //操作人员
     String userName,
+    //用户id
+    String userId,
     //操作类型
     String operation,
     //操作状态(0：成功，1：失败)

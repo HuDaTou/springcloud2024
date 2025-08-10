@@ -4,12 +4,11 @@ import com.overthinker.cloud.auth.entity.DTO.LoginRequest;
 import com.overthinker.cloud.auth.service.impl.UserServiceImpl;
 import com.overthinker.cloud.auth.utils.JwtUtils;
 
-import com.overthinker.cloud.resp.ResultData;
+import com.overthinker.cloud.common.resp.ResultData;
 import jakarta.annotation.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

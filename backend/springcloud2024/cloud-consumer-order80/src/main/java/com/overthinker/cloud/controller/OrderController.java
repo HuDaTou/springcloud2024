@@ -3,10 +3,10 @@ package com.overthinker.cloud.controller;
 
 import cn.hutool.core.date.DateUtil;
 import com.overthinker.cloud.api.apis.PayFeignApi;
-import com.overthinker.cloud.entity.DTO.PayDTO;
-import com.overthinker.cloud.entity.VO.PayVO;
-import com.overthinker.cloud.resp.ResultData;
-import com.overthinker.cloud.resp.ReturnCodeEnum;
+import com.overthinker.cloud.common.entity.DTO.PayDTO;
+import com.overthinker.cloud.common.entity.VO.PayVO;
+import com.overthinker.cloud.common.resp.ResultData;
+import com.overthinker.cloud.common.resp.ReturnCodeEnum;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
