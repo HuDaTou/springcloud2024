@@ -1,5 +1,7 @@
 package com.overthinker.cloud.media.service;
 
+import com.overthinker.cloud.media.entity.DTO.InitiateMultipartUploadDTO;
+
 import com.overthinker.cloud.media.entity.PO.MediaAsset;
 
 import java.util.Map;
@@ -10,16 +12,12 @@ public interface UploadService {
     /**
      * 初始化分片上传任务，并返回所有分片的预签名URL。
      *
-     * @param filetype        上传类型
+     * @param initiateMultipartUploadDTO        上传类型
      * @param userId      上传用户ID
-     * @param filename    原始文件名
-     * @param totalParts  总分片数
-     * @param fileSize    文件总大小（字节）
-     * @param contentType 文件的MIME类型
-     * @param fileMd5     文件的MD5哈希值
+
      * @return 包含uploadId、objectName和预签名URL映射的Map
      */
-    Map<String, Object> handleFirstPartAndGenerateUrls(Long userId,String filetype, String filename, int totalParts, long fileSize, String contentType, String fileMd5) throws Exception;
+    Map<String, Object> handleFirstPartAndGenerateUrls(Long userId, InitiateMultipartUploadDTO initiateMultipartUploadDTO) throws Exception;
 
     /**
      * 完成分片上传。

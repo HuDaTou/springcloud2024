@@ -2,6 +2,8 @@ package com.overthinker.cloud.media.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.overthinker.cloud.common.base.BaseController;
+
+import com.overthinker.cloud.media.entity.DTO.InitiateMultipartUploadDTO;
 import com.overthinker.cloud.media.entity.PO.MediaAsset;
 import com.overthinker.cloud.media.service.UploadService;
 import com.overthinker.cloud.common.resp.ResultData;
@@ -28,19 +30,8 @@ public class MediaController extends BaseController {
     @PostMapping("/initiate")
     public ResultData<Map<String, Object>> initiateMultipartUpload(
             @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId,
-            @Parameter(name = "fileType", description = "文件类型", required = true, in = ParameterIn.QUERY)
-            @RequestParam("fileType") String fileType,
-            @Parameter(name = "filename", description = "要上传的原始文件名", required = true, in = ParameterIn.QUERY)
-            @RequestParam("filename") String filename,
-            @Parameter(name = "totalParts", description = "文件被分割的总块数", required = true, in = ParameterIn.QUERY)
-            @RequestParam("totalParts") int totalParts,
-            @Parameter(name = "fileSize", description = "文件总大小（以字节为单位）", required = true, in = ParameterIn.QUERY)
-            @RequestParam("fileSize") long fileSize,
-            @Parameter(name = "contentType", description = "文件的MIME类型", required = true, in = ParameterIn.QUERY)
-            @RequestParam("contentType") String contentType,
-            @Parameter(name = "fileMd5", description = "文件的MD5哈希值", required = true, in = ParameterIn.QUERY)
-            @RequestParam("fileMd5") String fileMd5) throws Exception {
-        return ResultData.success(uploadService.handleFirstPartAndGenerateUrls( userId, fileType, filename, totalParts, fileSize, contentType, fileMd5));
+            @RequestBody @Parameter(name = "initiateMultipartUploadDTO", description = "初始化分片上传的参数", required = true) InitiateMultipartUploadDTO initiateMultipartUploadDTO) throws Exception {
+        return ResultData.success(uploadService.handleFirstPartAndGenerateUrls( userId, initiateMultipartUploadDTO));
     }
 
     @Operation(summary = "完成分片上传")

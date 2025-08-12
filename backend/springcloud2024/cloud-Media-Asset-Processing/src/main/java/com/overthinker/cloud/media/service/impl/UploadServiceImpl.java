@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.overthinker.cloud.media.config.MinioProperties;
 import com.overthinker.cloud.media.constants.MediaStatus;
+import com.overthinker.cloud.media.entity.DTO.InitiateMultipartUploadDTO;
 import com.overthinker.cloud.media.entity.PO.FileUploadRules;
 import com.overthinker.cloud.media.entity.PO.MediaAsset;
 import com.overthinker.cloud.media.mapper.MediaAssetMapper;
@@ -50,7 +51,7 @@ public class UploadServiceImpl implements UploadService {
 
     @Override
     @Transactional
-    public Map<String, Object> handleFirstPartAndGenerateUrls(Long userId,String fileType, String filename, int totalParts, long fileSize, String contentType, String fileMd5) throws Exception {
+    public Map<String, Object> handleFirstPartAndGenerateUrls(Long userId, InitiateMultipartUploadDTO DTO) throws Exception {
 
 
 
@@ -58,16 +59,16 @@ public class UploadServiceImpl implements UploadService {
 
 
         // 1. 配置校验
-        FileUploadRules fileUploadRules = fileUploadRulesService.getById(fileType);
+        FileUploadRules fileUploadRules = fileUploadRulesService.getById(DTO.fileType());
 
 
 
         // 使用注入的 mediaProperties 进行校验
-        if (fileSize > fileUploadRules.getMaxSizeKb()) {
+        if (DTO.fileSize() > fileUploadRules.getMaxSizeKb()) {
             throw new IllegalArgumentException("文件大小超过 " + (fileUploadRules.getMaxSizeKb() / 1024 / 1024) + "MB 限制");
         }
-        if (!fileUploadRules.getAllowedExtensions().contains(contentType)) {
-            throw new IllegalArgumentException("不支持的文件类型: " + contentType);
+        if (!fileUploadRules.getAllowedExtensions().contains(DTO.contentType())) {
+            throw new IllegalArgumentException("不支持的文件类型: " + DTO.contentType());
         }
 
 
@@ -75,20 +76,20 @@ public class UploadServiceImpl implements UploadService {
         // 2. 秒传功能实现
         // 根据MD5查找是否已存在相同文件
         MediaAsset existingAsset = mediaAssetMapper.selectOne(new QueryWrapper<MediaAsset>()
-                .eq("file_md5", fileMd5)
+                .eq("file_md5", DTO.fileMd5())
                 .eq("status", MediaStatus.UPLOADED)
                 .last("LIMIT 1"));
 
         if (existingAsset != null) {
-            log.info("文件秒传命中，MD5: {}。直接复用现有文件: {}", fileMd5, existingAsset.getObjectName());
+            log.info("文件秒传命中，MD5: {}。直接复用现有文件: {}", DTO.fileMd5(), existingAsset.getObjectName());
             // 创建一条新的媒体记录，但指向同一个MinIO对象
             MediaAsset newAsset = new MediaAsset()
-                    .setFileName(filename)
+                    .setFileName(DTO.filename())
                     .setObjectName(existingAsset.getObjectName()) // 指向已存在的文件
                     .setBucketName(existingAsset.getBucketName())
                     .setFileSize(existingAsset.getFileSize())
                     .setFileType(existingAsset.getFileType())
-                    .setFileMd5(fileMd5)
+                    .setFileMd5(DTO.fileMd5())
                     .setUploaderId(userId)
                     .setStatus(MediaStatus.UPLOADED); // 直接设为已上传
             mediaAssetMapper.insert(newAsset);
@@ -103,16 +104,16 @@ public class UploadServiceImpl implements UploadService {
         }
 
         // 3. 正常分片上传流程
-        String fileExtension = filename.substring(filename.lastIndexOf("."));
+        String fileExtension = DTO.filename().substring(DTO.filename().lastIndexOf("."));
         String objectName = UUID.randomUUID().toString().replace("-", "") + fileExtension;
 
         MediaAsset asset = new MediaAsset()
-                .setFileName(filename)
+                .setFileName(DTO.filename())
                 .setObjectName(objectName)
                 .setBucketName(minioProperties.getBucketName())
-                .setFileSize(fileSize)
-                .setFileType(contentType)
-                .setFileMd5(fileMd5)
+                .setFileSize(DTO.fileSize())
+                .setFileType(DTO.contentType())
+                .setFileMd5(DTO.fileMd5())
                 .setUploaderId(userId)
                 .setStatus(MediaStatus.UPLOADING);
         mediaAssetMapper.insert(asset);
@@ -135,16 +136,16 @@ public class UploadServiceImpl implements UploadService {
 //                        .build()
 //        ).join();
         String uploadId = response.result().uploadId();
-        log.info("为文件 {} 生成分片上传任务ID: {} for object: {}", filename, uploadId, objectName);
+        log.info("为文件 {} 生成分片上传任务ID: {} for object: {}", DTO.filename(), uploadId, objectName);
 
         // 将 objectName 和 MD5 存入缓存，以便完成时校验
         Map<String, String> cacheValue = new HashMap<>();
         cacheValue.put("objectName", objectName);
-        cacheValue.put("fileMd5", fileMd5);
+        cacheValue.put("fileMd5", DTO.fileMd5());
         redisCache.setCacheObject(UPLOAD_ID_CACHE_PREFIX + uploadId, cacheValue, 2, TimeUnit.HOURS);
 
         Map<Integer, String> presignedUrls = new LinkedHashMap<>();
-        for (int partNumber = 1; partNumber <= totalParts; partNumber++) {
+        for (int partNumber = 1; partNumber <= DTO.totalParts(); partNumber++) {
             String url = null;
             Map<String, String> queryParams = new HashMap<>();
             queryParams.put("uploadId", uploadId);
