@@ -22,7 +22,7 @@ public class FileUploadRules extends BaseData implements BasecopyProperties {
      * 
      */
     @TableId
-    private Integer id;
+    private Long id;
 
     /**
      * 规则的唯一名称，用于程序中引用

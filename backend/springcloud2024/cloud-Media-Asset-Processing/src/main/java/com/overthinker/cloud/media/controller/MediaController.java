@@ -56,9 +56,9 @@ public class MediaController extends BaseController {
     @GetMapping("/list")
     public ResultData<Page<MediaAsset>> listFiles(
             @Parameter(name = "pageNum", description = "页码", in = ParameterIn.QUERY)
-            @RequestParam(defaultValue = "1") int pageNum,
+            @RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
             @Parameter(name = "pageSize", description = "每页数量", in = ParameterIn.QUERY)
-            @RequestParam(defaultValue = "10") int pageSize) {
+            @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
         return ResultData.success(uploadService.listFiles(pageNum, pageSize));
     }
 
@@ -67,7 +67,7 @@ public class MediaController extends BaseController {
     public ResultData<Void> deleteFile(
             @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId,
             @Parameter(name = "objectName", description = "文件的唯一对象名", required = true, in = ParameterIn.PATH)
-            @PathVariable String objectName) {
+            @PathVariable("objectName") String objectName) {
         uploadService.deleteFile(userId, objectName);
         return ResultData.success();
     }
@@ -76,7 +76,7 @@ public class MediaController extends BaseController {
     @GetMapping("/url/{objectName}")
     public ResultData<String> getFileUrl(
             @Parameter(name = "objectName", description = "文件的唯一对象名", required = true, in = ParameterIn.PATH)
-            @PathVariable String objectName) {
+            @PathVariable("objectName") String objectName) {
         return ResultData.success(uploadService.getPresignedFileUrl(objectName));
     }
 }

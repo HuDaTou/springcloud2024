@@ -4,9 +4,10 @@ mybatis-plus:
   check-config-location: true
   configuration:
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+    map-underscore-to-camel-case: true
   global-config:
     db-config:
       id-type: assign_id
       logic-delete-field: is_deleted
-      logic-delete-value: 1
-      logic-not-delete-value: 0
+      logic-delete-value: true
+      logic-not-delete-value: false

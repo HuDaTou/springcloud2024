@@ -18,7 +18,17 @@ spring:
         pool:
           enabled: false
 
-
+mybatis-plus:
+  check-config-location: true
+  configuration:
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      id-type: assign_id
+      logic-delete-field: is_deleted
+      logic-delete-value: true
+      logic-not-delete-value: false
 
 
 ## 连接 minio
@@ -39,3 +49,17 @@ media:
     cleanup:
       enabled: true # 是否启用清理任务
       stale-threshold-hours: 24 # 任务过期阈值（小时）
+
+# SpringDoc OpenAPI 全局配置
+springdoc:
+  api-docs:
+    info:
+      title: 媒体资产处理服务 (cloud-media-asset-processing)
+      version: 1.0.0
+      description: 提供文件上传、下载、存储和元数据管理的中心化服务。
+
+audit:
+  log:
+    rabbitmq:  false
+
+

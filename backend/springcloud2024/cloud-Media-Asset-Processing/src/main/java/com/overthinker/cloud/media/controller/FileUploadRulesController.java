@@ -35,7 +35,7 @@ public class FileUploadRulesController extends BaseController {
      */
     @GetMapping("/{id}")
     @Operation(summary = "获取上传规则", description = "根据ID查询单个文件上传规则")
-    public ResultData<FileUploadRules> getRuleById(@PathVariable Long id) {
+    public ResultData<FileUploadRules> getRuleById(@PathVariable("id") Long id) {
         FileUploadRules rule = fileUploadRulesService.getById(id);
         return ResultData.success(rule);
     }
@@ -65,7 +65,7 @@ public class FileUploadRulesController extends BaseController {
      */
     @PutMapping("/{id}")
     @Operation(summary = "更新上传规则", description = "根据ID更新一条已存在的文件上传规则")
-    public ResultData<Boolean> updateRule(@PathVariable Integer id, @RequestBody FileUploadRulesInfoDTO fileUploadRuleDto) {
+    public ResultData<Boolean> updateRule(@PathVariable("id") Long id, @RequestBody FileUploadRulesInfoDTO fileUploadRuleDto) {
         FileUploadRules rule = new FileUploadRules().copyFrom(fileUploadRuleDto);
         rule.setId(id); // 从URL路径中设置要更新的规则ID
         boolean success = fileUploadRulesService.updateById(rule);
@@ -80,7 +80,7 @@ public class FileUploadRulesController extends BaseController {
      */
     @DeleteMapping("/{id}")
     @Operation(summary = "删除上传规则", description = "根据ID删除一条文件上传规则")
-    public ResultData<Boolean> deleteRule(@PathVariable Long id) {
+    public ResultData<Boolean> deleteRule(@PathVariable("id") Long id) {
         boolean success = fileUploadRulesService.removeById(id);
         return ResultData.success(success);
     }
@@ -94,7 +94,7 @@ public class FileUploadRulesController extends BaseController {
      */
     @GetMapping("/list")
     @Operation(summary = "分页列出上传规则", description = "分页查询所有文件上传规则")
-    public ResultData<IPage<FileUploadRules>> listRules(@RequestParam(defaultValue = "1") long current, @RequestParam(defaultValue = "10") long size) {
+    public ResultData<IPage<FileUploadRules>> listRules(@RequestParam(value = "current", defaultValue = "1") long current, @RequestParam(value = "size", defaultValue = "10") long size) {
         Page<FileUploadRules> page = new Page<>(current, size);
         IPage<FileUploadRules> pageResult = fileUploadRulesService.page(page);
         return ResultData.success(pageResult);

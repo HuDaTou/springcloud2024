@@ -53,7 +53,7 @@ Key features:
 
     <Loggers>
         <!-- Application specific logger -->
-        <Logger name="com.overthinker.cloud" level="INFO"/>
+        <Logger name="com.overthinker.cloud" level="DEBUG"/>
 
         <!-- Framework loggers -->
         <Logger name="org.springframework" level="WARN"/>

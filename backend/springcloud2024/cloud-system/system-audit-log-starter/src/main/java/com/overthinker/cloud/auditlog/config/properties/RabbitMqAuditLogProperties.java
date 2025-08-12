@@ -25,4 +25,10 @@ public class RabbitMqAuditLogProperties {
      * The routing key used to bind the queue to the exchange.
      */
     private String routingKey = "audit.log.#";
+
+    /**
+     * Whether to enable sending audit logs to RabbitMQ.
+     * Defaults to true.
+     */
+    private boolean enable = true;
 }
