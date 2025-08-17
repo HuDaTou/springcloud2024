@@ -1,4 +1,11 @@
 spring:
+  application:
+    name: cloud-auth
+  datasource:
+    url: jdbc:postgresql://localhost:5432/springcloud2024_auth
+    username: your_username # Please replace with your database username
+    password: your_password # Please replace with your database password
+    driver-class-name: org.postgresql.Driver
   rabbitmq:
     listener:
       simple:
@@ -8,6 +15,10 @@ spring:
           max-attempts: 3
     queue:
       audit-log: audit.log.queue # The queue to listen to
+  security:
+    jwt:
+      key: 229a3b7a-f813-4e3a-8b7a-9b7e2d3f4c5a # This should be a strong, securely managed secret in a real environment
+      expire: 24 # Expiration in hours
 
 justauth:
   enabled: true

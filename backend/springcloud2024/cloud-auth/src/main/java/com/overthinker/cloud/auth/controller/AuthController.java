@@ -3,9 +3,8 @@ package com.overthinker.cloud.auth.controller;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.overthinker.cloud.auth.entity.DTO.LoginRequest;
 import com.overthinker.cloud.auth.entity.PO.LoginUser;
-import com.overthinker.cloud.auth.service.impl.UserServiceImpl;
+import com.overthinker.cloud.auth.service.UserService;
 import com.overthinker.cloud.auth.utils.JwtUtils;
-
 import com.overthinker.cloud.common.resp.ResultData;
 import jakarta.annotation.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,7 +31,7 @@ public class AuthController {
     private JwtUtils jwtUtils;
 
     @Resource
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @PostMapping("/login")
     public ResultData<String> login(@RequestBody LoginRequest loginRequest) {

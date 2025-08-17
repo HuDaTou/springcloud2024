@@ -15,7 +15,7 @@ import com.overthinker.cloud.auth.mapper.UserMapper;
 import com.overthinker.cloud.auth.service.BlackListService;
 import com.overthinker.cloud.auth.service.IpService;
 import com.overthinker.cloud.auth.utils.SecurityUtils;
-import com.overthinker.cloud.redis.constants.RedisConst;
+
 import com.overthinker.cloud.redis.utils.MyRedisCache;
 import com.overthinker.cloud.common.resp.ResultData;
 
@@ -154,9 +154,9 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
     private void updateBlackListCache(BlackList blackList) {
         if (blackList.getType() == BlackListConst.BLACK_LIST_TYPE_BOT) {
             // 更新redis缓存
-            myRedisCache.setCacheMapValue(RedisConst.BLACK_LIST_IP_KEY, blackList.getIpInfo().getCreateIp(), blackList.getExpiresTime());
+            myRedisCache.setCacheMapValue(BlackListConst.BLACK_LIST_IP_KEY, blackList.getIpInfo().getCreateIp(), blackList.getExpiresTime());
         } else if (blackList.getType() == BlackListConst.BLACK_LIST_TYPE_USER) {
-            myRedisCache.setCacheMapValue(RedisConst.BLACK_LIST_UID_KEY, blackList.getUserId().toString(), blackList.getExpiresTime());
+            myRedisCache.setCacheMapValue(BlackListConst.BLACK_LIST_UID_KEY, blackList.getUserId().toString(), blackList.getExpiresTime());
         }
     }
 
@@ -167,9 +167,9 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
         blackListMapper.selectBatchIds(ids).forEach(blackList -> {
             if (blackList.getType() == BlackListConst.BLACK_LIST_TYPE_BOT) {
                 // 清除缓存
-                myRedisCache.deleteCacheMapValue(RedisConst.BLACK_LIST_IP_KEY, blackList.getIpInfo().getCreateIp());
+                myRedisCache.deleteCacheMapValue(BlackListConst.BLACK_LIST_IP_KEY, blackList.getIpInfo().getCreateIp());
             } else if (blackList.getType() == BlackListConst.BLACK_LIST_TYPE_USER) {
-                myRedisCache.deleteCacheMapValue(RedisConst.BLACK_LIST_UID_KEY, blackList.getUserId().toString());
+                myRedisCache.deleteCacheMapValue(BlackListConst.BLACK_LIST_UID_KEY, blackList.getUserId().toString());
             }
         });
         if (this.removeBatchByIds(ids)) {

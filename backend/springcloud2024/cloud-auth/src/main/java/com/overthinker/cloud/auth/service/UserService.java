@@ -132,4 +132,8 @@ public interface UserService extends IService<User>, UserDetailsService {
      * @return 是否成功
      */
     ResultData<Void> thirdUpdateEmail(UpdateEmailDTO updateEmailDTO);
+
+    List<String> getUserAuthorities(Long userId);
+
+    List<String> getUserRoleNames(Long userId);
 }

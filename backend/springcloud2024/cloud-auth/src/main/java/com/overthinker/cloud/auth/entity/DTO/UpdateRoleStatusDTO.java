@@ -1,4 +1,4 @@
-package com.overthinker.cloud.web.entity.DTO;
+package com.overthinker.cloud.auth.entity.DTO;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

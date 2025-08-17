@@ -3,16 +3,21 @@ package com.overthinker.cloud.auth.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.overthinker.cloud.auth.entity.DTO.*;
+import com.overthinker.cloud.auth.entity.PO.LoginUser;
+import com.overthinker.cloud.auth.entity.PO.RolePermission;
 import com.overthinker.cloud.auth.entity.PO.User;
+import com.overthinker.cloud.auth.entity.PO.UserRole;
 import com.overthinker.cloud.auth.entity.VO.UserAccountVO;
 import com.overthinker.cloud.auth.entity.VO.UserDetailsVO;
 import com.overthinker.cloud.auth.entity.VO.UserListVO;
-import com.overthinker.cloud.auth.mapper.UserMapper;
+import com.overthinker.cloud.auth.mapper.*;
 import com.overthinker.cloud.auth.service.UserService;
 import com.overthinker.cloud.auth.utils.SecurityUtils;
-import com.overthinker.cloud.common.constants.RedisConstants;
+
 import com.overthinker.cloud.common.resp.ResultData;
-import com.overthinker.cloud.common.service.RedisService;
+
+import com.overthinker.cloud.auth.constants.AuthRedisConst;
+import com.overthinker.cloud.redis.utils.MyRedisCache;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,7 +39,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private UserMapper userMapper;
 
     @Resource
-    private RedisService redisService;
+    private UserRoleMapper userRoleMapper;
+
+    @Resource
+    private RolePermissionMapper rolePermissionMapper;
+
+    @Resource
+    private PermissionMapper permissionMapper;
+
+    @Resource
+    private RoleMapper roleMapper;
+
+    @Resource
+    private MyRedisCache myRedisCache;
 
     @Resource
     private PasswordEncoder passwordEncoder;
@@ -44,7 +62,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (Objects.isNull(user)) {
             throw new UsernameNotFoundException("用户不存在");
         }
-        return user;
+        return new LoginUser(user, this.getUserAuthorities(user.getId()));
     }
 
     @Override
@@ -56,7 +74,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public UserAccountVO findAccountById(Long id) {
         User user = userMapper.selectById(id);
-        return user.copyProperties(UserAccountVO.class);
+        UserAccountVO vo = user.copyProperties(UserAccountVO.class);
+        vo.setPermissions(this.getUserAuthorities(id));
+        vo.setRoles(this.getUserRoleNames(id));
+        return vo;
     }
 
     @Override
@@ -136,10 +157,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Long userId = SecurityUtils.getUserId();
         User user = userMapper.selectById(userId);
         if (Objects.isNull(user)) {
-            return ResultData.fail("用户不存在");
+            return ResultData.failure("用户不存在");
         }
 
-        String redisCode = (String) redisService.get(RedisConstants.EMAIL_CODE_KEY + updateEmailDTO.getEmail());
+        String redisCode = myRedisCache.getCacheObject(AuthRedisConst.EMAIL_VERIFY_CODE_KEY + updateEmailDTO.getEmail());
         if (!updateEmailDTO.getCode().equals(redisCode)) {
             return ResultData.failure("验证码错误");
         }
@@ -150,7 +171,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         user.setEmail(updateEmailDTO.getEmail());
         userMapper.updateById(user);
-        redisService.del(RedisConstants.EMAIL_CODE_KEY + updateEmailDTO.getEmail());
+        myRedisCache.deleteObject(AuthRedisConst.EMAIL_VERIFY_CODE_KEY + updateEmailDTO.getEmail());
         return ResultData.success();
+    }
+
+    @Override
+    public List<String> getUserAuthorities(Long userId) {
+        List<UserRole> userRoles = userRoleMapper.selectList(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, userId));
+        if (userRoles.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<Long> roleIds = userRoles.stream().map(UserRole::getRoleId).toList();
+        List<RolePermission> rolePermissions = rolePermissionMapper.selectList(new LambdaQueryWrapper<RolePermission>().in(RolePermission::getRoleId, roleIds));
+        if (rolePermissions.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<Long> permissionIds = rolePermissions.stream().map(RolePermission::getPermissionId).toList();
+        return permissionMapper.selectBatchIds(permissionIds).stream().map(com.overthinker.cloud.auth.entity.PO.Permission::getPermissionKey).toList();
+    }
+
+    @Override
+    public List<String> getUserRoleNames(Long userId) {
+        List<UserRole> userRoles = userRoleMapper.selectList(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, userId));
+        if (userRoles.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<Long> roleIds = userRoles.stream().map(UserRole::getRoleId).toList();
+        return roleMapper.selectBatchIds(roleIds).stream().map(com.overthinker.cloud.auth.entity.PO.Role::getRoleName).toList();
     }
 }

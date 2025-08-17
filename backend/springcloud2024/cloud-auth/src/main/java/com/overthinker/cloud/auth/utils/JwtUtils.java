@@ -7,7 +7,8 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.overthinker.cloud.auth.entity.PO.LoginUser;
 import com.overthinker.cloud.auth.entity.PO.User;
-import com.overthinker.cloud.redis.constants.RedisConst;
+
+import com.overthinker.cloud.auth.constants.BlackListConst;
 import com.overthinker.cloud.redis.utils.MyRedisCache;
 import com.overthinker.cloud.system.auth.constants.SecurityConst;
 import jakarta.annotation.Resource;
@@ -52,12 +53,12 @@ public class JwtUtils {
 
     private boolean deleteToken(String uuid) {
         if (isInvalidToken(uuid)) return false;
-        myRedisCache.deleteObject(RedisConst.JWT_WHITE_LIST + uuid);
+        myRedisCache.deleteObject(BlackListConst.JWT_BLACK_LIST + uuid);
         return true;
     }
 
     private boolean isInvalidToken(String uuid) {
-        return !myRedisCache.isHasKey(RedisConst.JWT_WHITE_LIST + uuid);
+        return !myRedisCache.isHasKey(BlackListConst.JWT_BLACK_LIST + uuid);
     }
 
     public DecodedJWT resolveJwt(String headerToken) {
@@ -88,7 +89,7 @@ public class JwtUtils {
                 .withExpiresAt(expire)
                 .withIssuedAt(now)
                 .sign(algorithm);
-        myRedisCache.setCacheObject(RedisConst.JWT_WHITE_LIST + uuid, jwt, (int) (expire.getTime() - now.getTime()), TimeUnit.MILLISECONDS);
+        myRedisCache.setCacheObject(BlackListConst.JWT_BLACK_LIST + uuid, jwt, (int) (expire.getTime() - now.getTime()), TimeUnit.MILLISECONDS);
         return jwt;
     }
 

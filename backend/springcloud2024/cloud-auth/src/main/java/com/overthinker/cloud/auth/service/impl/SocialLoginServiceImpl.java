@@ -1,6 +1,7 @@
 package com.overthinker.cloud.auth.service.impl;
 
 import com.overthinker.cloud.auth.config.JustAuthAutoConfiguration;
+import com.overthinker.cloud.auth.entity.PO.LoginUser;
 import com.overthinker.cloud.auth.entity.PO.User;
 import com.overthinker.cloud.auth.service.SocialLoginService;
 import com.overthinker.cloud.auth.service.UserService;
@@ -12,6 +13,7 @@ import me.zhyd.oauth.model.AuthCallback;
 import me.zhyd.oauth.model.AuthResponse;
 import me.zhyd.oauth.model.AuthUser;
 import me.zhyd.oauth.request.AuthRequest;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -52,10 +54,11 @@ public class SocialLoginServiceImpl implements SocialLoginService {
                 userService.save(user);
             }
             // 生成JWT
-            String jwt = jwtUtils.createJwt(user, user.getId(), user.getUsername());
+            UserDetails loginUser = new LoginUser(user, userService.getUserAuthorities(user.getId()));
+            String jwt = jwtUtils.createJwt(loginUser, user.getId(), user.getUsername());
             return ResultData.success(jwt);
         } else {
-            return ResultData.fail(response.getMsg());
+            return ResultData.failure(response.getMsg());
         }
     }
 
