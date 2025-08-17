@@ -160,5 +160,10 @@
             <groupId>com.xuxueli</groupId>
             <artifactId>xxl-job-core</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.overthinker.cloud</groupId>
+            <artifactId>system-redis-starter</artifactId>
+        </dependency>
     </dependencies>
 </project>

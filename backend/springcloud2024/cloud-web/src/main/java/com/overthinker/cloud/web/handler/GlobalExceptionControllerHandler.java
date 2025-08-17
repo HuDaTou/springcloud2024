@@ -2,7 +2,6 @@ package com.overthinker.cloud.web.handler;
 
 import com.overthinker.cloud.common.resp.ResultData;
 import com.overthinker.cloud.common.resp.ReturnCodeEnum;
-import com.overthinker.cloud.web.exception.BlackListException;
 import com.overthinker.cloud.web.exception.BusinessException;
 import com.overthinker.cloud.web.exception.FileUploadException;
 import com.overthinker.cloud.web.exception.ServerException;
@@ -53,11 +52,7 @@ public class GlobalExceptionControllerHandler {
         return ResultData.failure(e.getReturnCodeEnum());
     }
 
-    @ExceptionHandler(BlackListException.class)
-    public ResultData<Void> handlerBlackListException(BlackListException e) {
-        log.error("黑名单异常:{}({})", e.getMessage(), e.getStackTrace());
-        return ResultData.failure(ReturnCodeEnum.BLACK_LIST_ERROR.getCode(), e.getMessage());
-    }
+
 
     @ExceptionHandler(ServerException.class)
     public ResultData<Void> handlerServerException(ServerException e) {
@@ -65,10 +60,5 @@ public class GlobalExceptionControllerHandler {
         return ResultData.failure(e.getReturnCodeEnum().getCode(), e.getMessage());
     }
 
-    // 最大的异常，防止出现其他不明异常无法处理
-//    @ExceptionHandler(Exception.class)
-//    public ResultData<Void> handlerException(Exception e){
-//        log.error("系统异常:{}，异常:{}",e.getMessage(),e.getStackTrace());
-//        return ResultData.failure(ReturnCodeEnum.OTHER_ERROR.getCode(), e.getMessage());
-//    }
+
 }

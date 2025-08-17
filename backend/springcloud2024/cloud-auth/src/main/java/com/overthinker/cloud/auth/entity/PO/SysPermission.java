@@ -8,7 +8,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * Entity for the system permission table.
+ * 系统权限表的实体。
  */
 @Data
 @TableName("sys_permission")
@@ -20,22 +20,22 @@ public class SysPermission implements Serializable {
     private Long id;
 
     /**
-     * Permission category, e.g., "User Management"
+     * 权限类别，例如 "用户管理"
      */
     private String category;
 
     /**
-     * Permission name, e.g., "Create User"
+     * 权限名称，例如 "创建用户"
      */
     private String name;
 
     /**
-     * HTTP request method, e.g., "GET", "POST"
+     * HTTP请求方法，例如 "GET", "POST"
      */
     private String httpMethod;
 
     /**
-     * The full request path for the permission
+     * 权限的完整请求路径
      */
     private String path;
 }

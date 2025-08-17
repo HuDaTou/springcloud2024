@@ -61,72 +61,72 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public void userLoginStatus(Long id, Integer type) {
-        // Implement user login status logic here
+        // 在此处实现用户登录状态逻辑
     }
 
     @Override
     @Transactional
     public ResultData<Void> userRegister(UserRegisterDTO userRegisterDTO) {
-        // Implement user register logic here
+        // 在此处实现用户注册逻辑
         return ResultData.success();
     }
 
     @Override
     public ResultData<Void> userResetConfirm(UserResetConfirmDTO userResetDTO) {
-        // Implement user reset confirm logic here
+        // 在此处实现用户重置确认逻辑
         return ResultData.success();
     }
 
     @Override
     @Transactional
     public ResultData<Void> userResetPassword(UserResetPasswordDTO userResetDTO) {
-        // Implement user reset password logic here
+        // 在此处实现用户重置密码逻辑
         return ResultData.success();
     }
 
     @Override
     public List<UserListVO> getUserOrSearch(UserSearchDTO userSearchDTO) {
-        // Implement get user or search logic here
+        // 在此处实现获取用户或搜索逻辑
         return null;
     }
 
     @Override
     @Transactional
     public ResultData<Void> updateStatus(Long id, Integer status) {
-        // Implement update status logic here
+        // 在此处实现更新状态逻辑
         return ResultData.success();
     }
 
     @Override
     public UserDetailsVO findUserDetailsById(Long id) {
-        // Implement find user details by id logic here
+        // 在此处实现通过id查找用户详细信息逻辑
         return null;
     }
 
     @Override
     @Transactional
     public ResultData<Void> deleteUser(List<Long> ids) {
-        // Implement delete user logic here
+        // 在此处实现删除用户逻辑
         return ResultData.success();
     }
 
     @Override
     @Transactional
     public ResultData<Void> updateUser(UserUpdateDTO userUpdateDTO) {
-        // Implement update user logic here
+        // 在此处实现更新用户逻辑
         return ResultData.success();
     }
 
     @Override
     public ResultData<String> uploadAvatar(MultipartFile avatarFile) throws Exception {
-        // Implement upload avatar logic here
+        // 在此处实现上传头像逻辑
         return ResultData.success();
     }
 
     @Override
     @Transactional
     public ResultData<Void> updateEmailAndVerify(UpdateEmailDTO updateEmailDTO) {
-        // Implement update email and verify logic here
+        // 在此处实现更新邮件和验证逻辑
         return ResultData.success();
     }
 
@@ -141,11 +141,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         String redisCode = (String) redisService.get(RedisConstants.EMAIL_CODE_KEY + updateEmailDTO.getEmail());
         if (!updateEmailDTO.getCode().equals(redisCode)) {
-            return ResultData.fail("验证码错误");
+            return ResultData.failure("验证码错误");
         }
 
         if (!passwordEncoder.matches(updateEmailDTO.getPassword(), user.getPassword())) {
-            return ResultData.fail("密码错误");
+            return ResultData.failure("密码错误");
         }
 
         user.setEmail(updateEmailDTO.getEmail());

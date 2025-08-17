@@ -1,30 +1,48 @@
 package com.overthinker.cloud.auth.controller;
 
-
 import com.overthinker.cloud.api.dto.PermissionDTO;
+import com.overthinker.cloud.auth.entity.PO.SysPermission;
 import com.overthinker.cloud.auth.service.PermissionService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.overthinker.cloud.common.resp.ResultData;
+import jakarta.annotation.Resource;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Internal controller for permission registration.
- */
 @RestController
-@RequestMapping("/internal/api/v1/permissions")
+@RequestMapping("/permissions")
 public class PermissionController {
 
-    private final PermissionService permissionService;
+    @Resource
+    private PermissionService permissionService;
 
-    public PermissionController(PermissionService permissionService) {
-        this.permissionService = permissionService;
+    @GetMapping
+    public ResultData<List<SysPermission>> getAllPermissions() {
+        return ResultData.success(permissionService.list());
     }
 
-    @PostMapping("/register")
-    public void registerPermissions(@RequestBody List<PermissionDTO> permissions) {
+    @PostMapping
+    public ResultData<Void> createPermission(@RequestBody SysPermission permission) {
+        permissionService.save(permission);
+        return ResultData.success();
+    }
+
+    @PutMapping("/{id}")
+    public ResultData<Void> updatePermission(@PathVariable Long id, @RequestBody SysPermission permission) {
+        permission.setId(id);
+        permissionService.updateById(permission);
+        return ResultData.success();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResultData<Void> deletePermission(@PathVariable Long id) {
+        permissionService.removeById(id);
+        return ResultData.success();
+    }
+
+    @PostMapping("/internal/register")
+    public ResultData<Void> registerPermissions(@RequestBody List<PermissionDTO> permissions) {
         permissionService.registerPermissions(permissions);
+        return ResultData.success();
     }
 }

@@ -5,7 +5,7 @@ import com.overthinker.cloud.auth.entity.PO.SysPermission;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * Mapper interface for SysPermission.
+ * SysPermission 的 Mapper 接口。
  */
 @Mapper
 public interface SysPermissionMapper extends BaseMapper<SysPermission> {

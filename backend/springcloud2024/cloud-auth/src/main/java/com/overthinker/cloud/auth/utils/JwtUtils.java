@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
- * JWT utility class for the auth service.
+ * 认证服务JWT工具类。
  */
 @Component
 public class JwtUtils {

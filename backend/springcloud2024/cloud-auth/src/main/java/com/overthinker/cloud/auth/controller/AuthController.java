@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * Controller for user authentication.
+ * 用户认证控制器。
  */
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -36,7 +36,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResultData<String> login(@RequestBody LoginRequest loginRequest) {
-        // Use Spring Security's AuthenticationManager to validate the user
+        // 使用 Spring Security 的 AuthenticationManager 来验证用户
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.username(), loginRequest.password())
         );
@@ -44,7 +44,7 @@ public class AuthController {
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         Long userId = loginUser.getUser().getId();
 
-        // Create JWT
+        // 创建JWT
         String jwt = jwtUtils.createJwt(loginUser, userId, loginUser.getUsername());
 
         return ResultData.success(jwt);
@@ -54,20 +54,19 @@ public class AuthController {
     public ResultData<Void> verify(String token, String url) {
         DecodedJWT decodedJWT = jwtUtils.resolveJwt(token);
         if (decodedJWT == null) {
-            return ResultData.failure("Invalid token");
+            return ResultData.failure("无效的token");
         }
 
         Long userId = jwtUtils.toId(decodedJWT);
         List<String> userAuthorities = userService.getUserAuthorities(userId);
 
-        // This is a simplified check. In a real system, you would look up the required
-        // permission for the given URL from the database.
+        // 这是一个简化的检查。在实际系统中，您将从数据库中查找给定URL所需的权限。
         boolean hasPermission = userAuthorities.stream().anyMatch(url::contains);
 
         if (hasPermission) {
             return ResultData.success();
         } else {
-            return ResultData.failure("No permission");
+            return ResultData.failure("没有权限");
         }
     }
 }

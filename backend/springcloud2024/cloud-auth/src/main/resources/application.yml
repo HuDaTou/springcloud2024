@@ -8,3 +8,18 @@ spring:
           max-attempts: 3
     queue:
       audit-log: audit.log.queue # The queue to listen to
+
+justauth:
+  enabled: true
+  gitee:
+    client-id: YOUR_GITEE_CLIENT_ID
+    client-secret: YOUR_GITEE_CLIENT_SECRET
+    redirect-uri: http://localhost:8080/oauth/callback/gitee
+  github:
+    client-id: YOUR_GITHUB_CLIENT_ID
+    client-secret: YOUR_GITHUB_CLIENT_SECRET
+    redirect-uri: http://localhost:8080/oauth/callback/github
+  wechat:
+    client-id: YOUR_WECHAT_CLIENT_ID
+    client-secret: YOUR_WECHAT_CLIENT_SECRET
+    redirect-uri: http://localhost:8080/oauth/callback/wechat
