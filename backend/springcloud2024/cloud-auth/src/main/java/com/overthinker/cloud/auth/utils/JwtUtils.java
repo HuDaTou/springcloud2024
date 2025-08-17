@@ -1,13 +1,16 @@
 package com.overthinker.cloud.auth.utils;
 
-
-import cn.hutool.jwt.JWT;
-
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.overthinker.cloud.auth.entity.PO.LoginUser;
-
+import com.overthinker.cloud.auth.entity.PO.User;
+import com.overthinker.cloud.redis.constants.RedisConst;
 import com.overthinker.cloud.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.auth.constants.SecurityConst;
 import jakarta.annotation.Resource;
-import org.bouncycastle.math.ec.rfc8032.Ed25519;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -36,7 +39,7 @@ public class JwtUtils {
     public boolean invalidateJwt(String headerToken) {
         String token = this.convertToken(headerToken);
         if (token == null) return false;
-        Ed25519.Algorithm algorithm = Algorithm.HMAC256(key);
+        Algorithm algorithm = Algorithm.HMAC256(key);
         JWTVerifier jwtVerifier = JWT.require(algorithm).build();
         try {
             DecodedJWT jwt = jwtVerifier.verify(token);
@@ -60,7 +63,7 @@ public class JwtUtils {
     public DecodedJWT resolveJwt(String headerToken) {
         String token = this.convertToken(headerToken);
         if (token == null) return null;
-        Ed25519.Algorithm algorithm = Algorithm.HMAC256(key);
+        Algorithm algorithm = Algorithm.HMAC256(key);
         JWTVerifier jwtVerifier = JWT.require(algorithm).build();
         try {
             DecodedJWT verify = jwtVerifier.verify(token);

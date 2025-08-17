@@ -1,12 +1,12 @@
-package com.overthinker.cloud.web.service;
+package com.overthinker.cloud.auth.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.overthinker.cloud.common.resp.ResultData;
-import com.overthinker.cloud.web.entity.DTO.*;
-import com.overthinker.cloud.web.entity.PO.User;
-import com.overthinker.cloud.web.entity.VO.UserAccountVO;
-import com.overthinker.cloud.web.entity.VO.UserDetailsVO;
-import com.overthinker.cloud.web.entity.VO.UserListVO;
+import com.overthinker.cloud.auth.entity.DTO.*;
+import com.overthinker.cloud.auth.entity.PO.User;
+import com.overthinker.cloud.auth.entity.VO.UserAccountVO;
+import com.overthinker.cloud.auth.entity.VO.UserDetailsVO;
+import com.overthinker.cloud.auth.entity.VO.UserListVO;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.multipart.MultipartFile;
 

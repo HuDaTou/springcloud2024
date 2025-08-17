@@ -3,9 +3,8 @@ package com.overthinker.cloud.auth.entity.PO;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.overthinker.cloud.auth.entity.base.BaseData;
 import com.overthinker.cloud.common.entity.BasecopyProperties;
-
+import com.overthinker.cloud.common.entity.PO.BaseData;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -99,4 +98,3 @@ public class User extends BaseData implements BasecopyProperties {
     @Schema(description = "是否删除（0：未删除，1：已删除）", example = "0")
     private Integer isDeleted;
 }
-

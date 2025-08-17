@@ -1,4 +1,4 @@
-package com.overthinker.cloud.web.entity.VO;
+package com.overthinker.cloud.auth.entity.VO;
 
 import lombok.Data;
 

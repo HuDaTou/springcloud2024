@@ -1,4 +1,4 @@
-package com.overthinker.cloud.web.entity.VO;
+package com.overthinker.cloud.auth.entity.VO;
 
 import com.overthinker.cloud.common.entity.BasecopyProperties;
 import io.swagger.v3.oas.annotations.media.Schema;

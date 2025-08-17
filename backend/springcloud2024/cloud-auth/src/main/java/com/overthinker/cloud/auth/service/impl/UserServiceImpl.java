@@ -2,96 +2,155 @@ package com.overthinker.cloud.auth.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
-import com.overthinker.cloud.auth.entity.PO.*;
+import com.overthinker.cloud.auth.entity.DTO.*;
+import com.overthinker.cloud.auth.entity.PO.User;
+import com.overthinker.cloud.auth.entity.VO.UserAccountVO;
+import com.overthinker.cloud.auth.entity.VO.UserDetailsVO;
+import com.overthinker.cloud.auth.entity.VO.UserListVO;
 import com.overthinker.cloud.auth.mapper.UserMapper;
-import com.overthinker.cloud.auth.mapper.RoleMapper;
-import com.overthinker.cloud.auth.mapper.PermissionMapper;
-import com.overthinker.cloud.auth.mapper.UserRoleMapper;
-import com.overthinker.cloud.auth.mapper.RolePermissionMapper;
-
+import com.overthinker.cloud.auth.service.UserService;
+import com.overthinker.cloud.auth.utils.SecurityUtils;
+import com.overthinker.cloud.common.constants.RedisConstants;
+import com.overthinker.cloud.common.resp.ResultData;
+import com.overthinker.cloud.common.service.RedisService;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
-/**
- * User service implementation for authentication and authorization.
- */
-@Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserDetailsService {
+@Slf4j
+@Service("userService")
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     @Resource
     private UserMapper userMapper;
+
     @Resource
-    private RoleMapper roleMapper;
+    private RedisService redisService;
+
     @Resource
-    private UserRoleMapper userRoleMapper;
-    @Resource
-    private RolePermissionMapper rolePermissionMapper;
-    @Resource
-    private PermissionMapper permissionMapper;
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // In auth service, we only support loading by username/email from our own DB.
-        // Third-party login logic should be handled by a dedicated controller.
-        User user = findAccountByNameOrEmail(username);
-
-        if (ObjectUtils.isEmpty(user)) {
-            throw new UsernameNotFoundException("Username or password error.");
+        User user = this.findAccountByNameOrEmail(username);
+        if (Objects.isNull(user)) {
+            throw new UsernameNotFoundException("用户不存在");
         }
-
-        // Check if user is disabled
-        if (user.getIsDisable() == 1) {
-            throw new UsernameNotFoundException("Account is disabled.");
-        }
-
-        List<String> authorities = getUserAuthorities(user.getId());
-        return new LoginUser(user, authorities);
+        return user;
     }
 
+    @Override
     public User findAccountByNameOrEmail(String text) {
-        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(User::getUsername, text).or().eq(User::getEmail, text);
-        return userMapper.selectOne(wrapper);
+        return userMapper.selectOne(new LambdaQueryWrapper<User>()
+                .eq(User::getUsername, text).or().eq(User::getEmail, text));
     }
 
-    public List<String> getUserAuthorities(Long userId) {
-        // Get user roles
-        List<UserRole> userRoles = userRoleMapper.selectList(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, userId));
-        if (userRoles.isEmpty()) {
-            return List.of();
+    @Override
+    public UserAccountVO findAccountById(Long id) {
+        User user = userMapper.selectById(id);
+        return user.copyProperties(UserAccountVO.class);
+    }
+
+    @Override
+    public void userLoginStatus(Long id, Integer type) {
+        // Implement user login status logic here
+    }
+
+    @Override
+    @Transactional
+    public ResultData<Void> userRegister(UserRegisterDTO userRegisterDTO) {
+        // Implement user register logic here
+        return ResultData.success();
+    }
+
+    @Override
+    public ResultData<Void> userResetConfirm(UserResetConfirmDTO userResetDTO) {
+        // Implement user reset confirm logic here
+        return ResultData.success();
+    }
+
+    @Override
+    @Transactional
+    public ResultData<Void> userResetPassword(UserResetPasswordDTO userResetDTO) {
+        // Implement user reset password logic here
+        return ResultData.success();
+    }
+
+    @Override
+    public List<UserListVO> getUserOrSearch(UserSearchDTO userSearchDTO) {
+        // Implement get user or search logic here
+        return null;
+    }
+
+    @Override
+    @Transactional
+    public ResultData<Void> updateStatus(Long id, Integer status) {
+        // Implement update status logic here
+        return ResultData.success();
+    }
+
+    @Override
+    public UserDetailsVO findUserDetailsById(Long id) {
+        // Implement find user details by id logic here
+        return null;
+    }
+
+    @Override
+    @Transactional
+    public ResultData<Void> deleteUser(List<Long> ids) {
+        // Implement delete user logic here
+        return ResultData.success();
+    }
+
+    @Override
+    @Transactional
+    public ResultData<Void> updateUser(UserUpdateDTO userUpdateDTO) {
+        // Implement update user logic here
+        return ResultData.success();
+    }
+
+    @Override
+    public ResultData<String> uploadAvatar(MultipartFile avatarFile) throws Exception {
+        // Implement upload avatar logic here
+        return ResultData.success();
+    }
+
+    @Override
+    @Transactional
+    public ResultData<Void> updateEmailAndVerify(UpdateEmailDTO updateEmailDTO) {
+        // Implement update email and verify logic here
+        return ResultData.success();
+    }
+
+    @Override
+    @Transactional
+    public ResultData<Void> thirdUpdateEmail(UpdateEmailDTO updateEmailDTO) {
+        Long userId = SecurityUtils.getUserId();
+        User user = userMapper.selectById(userId);
+        if (Objects.isNull(user)) {
+            return ResultData.fail("用户不存在");
         }
 
-        List<Long> roleIds = userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList());
-        List<Role> roles = roleMapper.selectBatchIds(roleIds);
-        roles = roles.stream().filter(role -> Objects.equals(role.getStatus(), 0)).collect(Collectors.toList()); // Assuming 0 is active
-
-        if (roles.isEmpty()) {
-            return List.of();
+        String redisCode = (String) redisService.get(RedisConstants.EMAIL_CODE_KEY + updateEmailDTO.getEmail());
+        if (!updateEmailDTO.getCode().equals(redisCode)) {
+            return ResultData.fail("验证码错误");
         }
 
-        // Get role permissions
-        List<Long> activeRoleIds = roles.stream().map(Role::getId).collect(Collectors.toList());
-        List<RolePermission> rolePermissions = rolePermissionMapper.selectList(new LambdaQueryWrapper<RolePermission>().in(RolePermission::getRoleId, activeRoleIds));
-        if (rolePermissions.isEmpty()) {
-            return roles.stream().map(role -> SecurityConst.ROLE_PREFIX + role.getRoleKey()).collect(Collectors.toList());
+        if (!passwordEncoder.matches(updateEmailDTO.getPassword(), user.getPassword())) {
+            return ResultData.fail("密码错误");
         }
 
-        List<Long> permissionIds = rolePermissions.stream().map(RolePermission::getPermissionId).collect(Collectors.toList());
-        List<Permission> permissions = permissionMapper.selectBatchIds(permissionIds);
-
-        // Combine roles and permissions
-        List<String> authorities = permissions.stream().map(Permission::getPermissionKey).collect(Collectors.toList());
-        authorities.addAll(roles.stream().map(role -> SecurityConst.ROLE_PREFIX + role.getRoleKey()).collect(Collectors.toList()));
-
-        return authorities;
+        user.setEmail(updateEmailDTO.getEmail());
+        userMapper.updateById(user);
+        redisService.del(RedisConstants.EMAIL_CODE_KEY + updateEmailDTO.getEmail());
+        return ResultData.success();
     }
 }

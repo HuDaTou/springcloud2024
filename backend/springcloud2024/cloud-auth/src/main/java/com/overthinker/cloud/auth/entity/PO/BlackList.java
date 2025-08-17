@@ -3,10 +3,11 @@ package com.overthinker.cloud.auth.entity.PO;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.overthinker.cloud.auth.entity.base.BaseData;
+
 import com.overthinker.cloud.auth.entity.ip.BlackListIpInfo;
 import com.overthinker.cloud.common.entity.BasecopyProperties;
 
+import com.overthinker.cloud.common.entity.PO.BaseData;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -36,4 +36,3 @@ public class UserRole implements BasecopyProperties {
     @Schema(description = "角色ID", example = "2001")
     private Long roleId;
 }
-

@@ -12,7 +12,6 @@ import com.overthinker.cloud.media.service.FileUploadRulesService;
 import com.overthinker.cloud.media.service.MediaAssetService;
 import com.overthinker.cloud.media.service.UploadService;
 
-import com.overthinker.cloud.media.config.MediaProperties;
 import com.overthinker.cloud.redis.utils.MyRedisCache;
 import io.minio.messages.Part;
 import io.minio.ListPartsResponse;
@@ -28,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import java.io.InputStream;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -127,14 +125,6 @@ public class UploadServiceImpl implements UploadService {
                 null
         ).join();
 
-//        minioAsyncClient.composeObject(
-//                ComposeObjectArgs.builder()
-//                        .bucket(minioProperties.getBucketName())
-//                        .object(objectName)
-//                        .uploadId(uploadId)
-//                        .parts(new Part(1, objectName))
-//                        .build()
-//        ).join();
         String uploadId = response.result().uploadId();
         log.info("为文件 {} 生成分片上传任务ID: {} for object: {}", DTO.filename(), uploadId, objectName);
 
@@ -215,11 +205,11 @@ public class UploadServiceImpl implements UploadService {
                     null,                            // extraHeaders
                     null                             // extraQueryParams
             );
-            // ✅ 关键：调用 .join() 获取结果
+            // 调用 .join() 获取结果
             ObjectWriteResponse completeResponse = completeFuture.join();
 
 
-            System.out.println("✅ 分片合并成功，文件已生成：" + completeResponse.object());
+            log.info("分片合并成功，文件已生成：{}", completeResponse.object());
             // 2. 完整性校验
             // 从MinIO获取刚上传完成的文件并计算其MD5
             String serverSideMd5 = calculateMinioObjectMd5(objectName);

@@ -1,14 +1,14 @@
-package com.overthinker.cloud.web.controller;
+package com.overthinker.cloud.auth.controller;
 
 import com.overthinker.cloud.common.base.BaseController;
 import com.overthinker.cloud.common.resp.ResultData;
-import com.overthinker.cloud.web.entity.DTO.*;
-import com.overthinker.cloud.web.entity.VO.UserAccountVO;
-import com.overthinker.cloud.web.entity.VO.UserDetailsVO;
-import com.overthinker.cloud.web.entity.VO.UserListVO;
-import com.overthinker.cloud.web.service.AuthService;
-import com.overthinker.cloud.web.service.UserService;
-import com.overthinker.cloud.web.utils.SecurityUtils;
+import com.overthinker.cloud.auth.entity.DTO.*;
+import com.overthinker.cloud.auth.entity.VO.UserAccountVO;
+import com.overthinker.cloud.auth.entity.VO.UserDetailsVO;
+import com.overthinker.cloud.auth.entity.VO.UserListVO;
+import com.overthinker.cloud.auth.service.AuthService;
+import com.overthinker.cloud.auth.service.UserService;
+import com.overthinker.cloud.auth.utils.SecurityUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
