@@ -1,0 +1,41 @@
+{
+    "name": "SpringCloud2024 Dev Container",
+    // 指向 docker-compose.yaml 文件，这对于我们的多服务设置至关重要
+    "dockerComposeFile": "../docker-compose.yaml",
+
+    // 指定 docker-compose.yaml 中用于开发容器的服务
+    "service": "app",
+
+    // 指定容器中项目文件将被挂载到的文件夹
+    "workspaceFolder": "/workspace",
+
+    // 指定在容器内执行命令所使用的用户
+    "remoteUser": "root",
+
+    // 为不同 IDE 配置特定属性
+    "customizations": {
+        // VS Code 的配置
+        "vscode": {
+            "extensions": [
+                "vscjava.vscode-java-pack",
+                "vmware.vscode-spring-boot"
+            ]
+        },
+        // JetBrains IDE 的配置
+        "jetbrains": {
+            "backend": "IntelliJ",
+            "settings": {
+                // 可以在此处添加 IDE 设置。
+            },
+            "plugins": [
+                // 大多数核心插件（如 Maven 和 Spring）已与 IntelliJ Ultimate 捆绑。
+                // 如果需要，可以在此处添加其他插件 ID。
+                // 例如："org.sonarlint.idea"
+            ]
+        }
+    },
+
+    // 定义一个在容器创建成功后执行的命令
+    // 此命令将仅下载依赖项，以加快初始设置速度
+    "postCreateCommand": "mvn dependency:go-offline -DskipTests"
+}

@@ -1,0 +1,168 @@
+2025-08-11 00:03:49.017  INFO 32560 --- [background-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 8.0.2.Final
+2025-08-11 00:03:49.199  INFO 32560 --- [main] c.o.c.m.Media                            : Starting Media using Java 17.0.10 with PID 32560 (D:\gitcode\springcloud2024\backend\springcloud2024\cloud-Media-Asset-Processing\target\classes started by overh in D:\gitcode\springcloud2024)
+2025-08-11 00:03:49.202  INFO 32560 --- [main] c.o.c.m.Media                            : No active profile set, falling back to 1 default profile: "default"
+2025-08-11 00:03:50.513  INFO 32560 --- [main] o.a.c.h.Http11NioProtocol                : Initializing ProtocolHandler ["http-nio-8010"]
+2025-08-11 00:03:50.514  INFO 32560 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2025-08-11 00:03:50.515  INFO 32560 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.36]
+2025-08-11 00:03:50.556  INFO 32560 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+2025-08-11 00:03:51.450  WARN 32560 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Multiple @RequestMapping annotations found on public com.overthinker.cloud.common.resp.ResultData com.overthinker.cloud.media.controller.FileUploadRulesController.updateRule(com.overthinker.cloud.media.entity.DTO.FileUploadRulesInfoDTO), but only the first will be used: [@org.springframework.web.bind.annotation.PutMapping(consumes={}, headers={}, name="", params={}, path={}, produces={}, value={}), @org.springframework.web.bind.annotation.PostMapping(consumes={}, headers={}, name="", params={}, path={"/upsert"}, produces={}, value={"/upsert"})]
+2025-08-11 00:03:52.237  INFO 32560 --- [main] o.a.c.h.Http11NioProtocol                : Starting ProtocolHandler ["http-nio-8010"]
+2025-08-11 00:03:53.703  INFO 32560 --- [main] c.o.c.m.Media                            : Started Media in 5.224 seconds (process running for 5.842)
+2025-08-11 00:03:53.709  INFO 32560 --- [main] c.o.c.m.c.MinioInitializationService     : 检查MinIO存储桶'cloud'是否存在...
+2025-08-11 00:03:53.799  INFO 32560 --- [main] c.o.c.m.c.MinioInitializationService     : MinIO存储桶'cloud'已存在。
+2025-08-11 00:03:54.244  INFO 32560 --- [RMI TCP Connection(7)-198.18.0.1] o.a.c.c.C.[.[.[/]                        : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-08-11 00:03:54.411  WARN 32560 --- [AMQP Connection 127.0.0.1:5672] c.r.c.i.ForgivingExceptionHandler        : An unexpected connection driver error occurred (Exception message: Socket closed)
+2025-08-11 00:03:54.423  WARN 32560 --- [AMQP Connection 0:0:0:0:0:0:0:1:5672] c.r.c.i.ForgivingExceptionHandler        : An unexpected connection driver error occurred (Exception message: Socket closed)
+2025-08-11 00:03:54.425  WARN 32560 --- [RMI TCP Connection(8)-198.18.0.1] o.s.b.a.a.RabbitHealthIndicator          : Rabbit health check failed
+
+org.springframework.amqp.AmqpAuthenticationException: com.rabbitmq.client.AuthenticationFailureException: ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile.
+	at org.springframework.amqp.rabbit.support.RabbitExceptionTranslator.convertRabbitAccessException(RabbitExceptionTranslator.java:64) ~[spring-rabbit-3.2.3.jar:3.2.3]
+	at org.springframework.amqp.rabbit.connection.AbstractConnectionFactory.createBareConnection(AbstractConnectionFactory.java:632) ~[spring-rabbit-3.2.3.jar:3.2.3]
+	at org.springframework.amqp.rabbit.connection.CachingConnectionFactory.createConnection(CachingConnectionFactory.java:726) ~[spring-rabbit-3.2.3.jar:3.2.3]
+	at org.springframework.amqp.rabbit.connection.ConnectionFactoryUtils.createConnection(ConnectionFactoryUtils.java:257) ~[spring-rabbit-3.2.3.jar:3.2.3]
+	at org.springframework.amqp.rabbit.core.RabbitTemplate.doExecute(RabbitTemplate.java:2262) ~[spring-rabbit-3.2.3.jar:3.2.3]
+	at org.springframework.amqp.rabbit.core.RabbitTemplate.execute(RabbitTemplate.java:2235) ~[spring-rabbit-3.2.3.jar:3.2.3]
+	at org.springframework.amqp.rabbit.core.RabbitTemplate.execute(RabbitTemplate.java:2215) ~[spring-rabbit-3.2.3.jar:3.2.3]
+	at org.springframework.boot.actuate.amqp.RabbitHealthIndicator.getVersion(RabbitHealthIndicator.java:49) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.amqp.RabbitHealthIndicator.doHealthCheck(RabbitHealthIndicator.java:44) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.AbstractHealthIndicator.health(AbstractHealthIndicator.java:82) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.HealthIndicator.getHealth(HealthIndicator.java:37) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.HealthEndpoint.getHealth(HealthEndpoint.java:82) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.HealthEndpoint.getHealth(HealthEndpoint.java:41) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getLoggedHealth(HealthEndpointSupport.java:172) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getContribution(HealthEndpointSupport.java:145) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getAggregateContribution(HealthEndpointSupport.java:156) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getContribution(HealthEndpointSupport.java:141) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getHealth(HealthEndpointSupport.java:110) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getHealth(HealthEndpointSupport.java:81) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.HealthEndpoint.health(HealthEndpoint.java:76) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.HealthEndpoint.health(HealthEndpoint.java:66) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[?:?]
+	at org.springframework.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:281) ~[spring-core-6.2.3.jar:6.2.3]
+	at org.springframework.boot.actuate.endpoint.invoke.reflect.ReflectiveOperationInvoker.invoke(ReflectiveOperationInvoker.java:74) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.endpoint.annotation.AbstractDiscoveredOperation.invoke(AbstractDiscoveredOperation.java:60) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.endpoint.jmx.EndpointMBean.invoke(EndpointMBean.java:124) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.endpoint.jmx.EndpointMBean.invoke(EndpointMBean.java:97) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at java.management/com.sun.jmx.interceptor.DefaultMBeanServerInterceptor.invoke(DefaultMBeanServerInterceptor.java:814) ~[?:?]
+	at java.management/com.sun.jmx.mbeanserver.JmxMBeanServer.invoke(JmxMBeanServer.java:802) ~[?:?]
+	at java.management.rmi/javax.management.remote.rmi.RMIConnectionImpl.doOperation(RMIConnectionImpl.java:1472) ~[?:?]
+	at java.management.rmi/javax.management.remote.rmi.RMIConnectionImpl$PrivilegedOperation.run(RMIConnectionImpl.java:1310) ~[?:?]
+	at java.management.rmi/javax.management.remote.rmi.RMIConnectionImpl.doPrivilegedOperation(RMIConnectionImpl.java:1405) ~[?:?]
+	at java.management.rmi/javax.management.remote.rmi.RMIConnectionImpl.invoke(RMIConnectionImpl.java:829) ~[?:?]
+	at java.base/jdk.internal.reflect.GeneratedMethodAccessor22.invoke(Unknown Source) ~[?:?]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[?:?]
+	at java.rmi/sun.rmi.server.UnicastServerRef.dispatch(UnicastServerRef.java:360) ~[?:?]
+	at java.rmi/sun.rmi.transport.Transport$1.run(Transport.java:200) ~[?:?]
+	at java.rmi/sun.rmi.transport.Transport$1.run(Transport.java:197) ~[?:?]
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:712) [?:?]
+	at java.rmi/sun.rmi.transport.Transport.serviceCall(Transport.java:196) ~[?:?]
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport.handleMessages(TCPTransport.java:587) ~[?:?]
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(TCPTransport.java:828) ~[?:?]
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.lambda$run$0(TCPTransport.java:705) ~[?:?]
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399) [?:?]
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(TCPTransport.java:704) [?:?]
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136) [?:?]
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635) [?:?]
+	at java.base/java.lang.Thread.run(Thread.java:840) [?:?]
+Caused by: com.rabbitmq.client.AuthenticationFailureException: ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile.
+	at com.rabbitmq.client.impl.AMQConnection.start(AMQConnection.java:395) ~[amqp-client-5.22.0.jar:5.22.0]
+	at com.rabbitmq.client.ConnectionFactory.newConnection(ConnectionFactory.java:1251) ~[amqp-client-5.22.0.jar:5.22.0]
+	at com.rabbitmq.client.ConnectionFactory.newConnection(ConnectionFactory.java:1198) ~[amqp-client-5.22.0.jar:5.22.0]
+	at org.springframework.amqp.rabbit.connection.AbstractConnectionFactory.connectAddresses(AbstractConnectionFactory.java:678) ~[spring-rabbit-3.2.3.jar:3.2.3]
+	at org.springframework.amqp.rabbit.connection.AbstractConnectionFactory.connect(AbstractConnectionFactory.java:647) ~[spring-rabbit-3.2.3.jar:3.2.3]
+	at org.springframework.amqp.rabbit.connection.AbstractConnectionFactory.createBareConnection(AbstractConnectionFactory.java:593) ~[spring-rabbit-3.2.3.jar:3.2.3]
+	... 50 more
+
+2025-08-11 00:03:54.432  INFO 32560 --- [RMI TCP Connection(8)-198.18.0.1] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2025-08-11 00:03:54.548  INFO 32560 --- [RMI TCP Connection(8)-198.18.0.1] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@32db5c19
+2025-08-11 00:03:54.555  INFO 32560 --- [RMI TCP Connection(8)-198.18.0.1] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2025-08-11 00:04:39.065  INFO 32560 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+2025-08-11 00:04:39.066  INFO 32560 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.
+2025-08-11 00:04:41.603  INFO 24064 --- [background-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 8.0.2.Final
+2025-08-11 00:04:41.776  INFO 24064 --- [main] c.o.c.m.Media                            : Starting Media using Java 17.0.10 with PID 24064 (D:\gitcode\springcloud2024\backend\springcloud2024\cloud-Media-Asset-Processing\target\classes started by overh in D:\gitcode\springcloud2024)
+2025-08-11 00:04:41.779  INFO 24064 --- [main] c.o.c.m.Media                            : No active profile set, falling back to 1 default profile: "default"
+2025-08-11 00:04:43.074  INFO 24064 --- [main] o.a.c.h.Http11NioProtocol                : Initializing ProtocolHandler ["http-nio-8010"]
+2025-08-11 00:04:43.075  INFO 24064 --- [main] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2025-08-11 00:04:43.075  INFO 24064 --- [main] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.36]
+2025-08-11 00:04:43.118  INFO 24064 --- [main] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+2025-08-11 00:04:44.030  WARN 24064 --- [main] s.w.s.m.m.a.RequestMappingHandlerMapping : Multiple @RequestMapping annotations found on public com.overthinker.cloud.common.resp.ResultData com.overthinker.cloud.media.controller.FileUploadRulesController.updateRule(com.overthinker.cloud.media.entity.DTO.FileUploadRulesInfoDTO), but only the first will be used: [@org.springframework.web.bind.annotation.PutMapping(consumes={}, headers={}, name="", params={}, path={}, produces={}, value={}), @org.springframework.web.bind.annotation.PostMapping(consumes={}, headers={}, name="", params={}, path={"/upsert"}, produces={}, value={"/upsert"})]
+2025-08-11 00:04:44.836  INFO 24064 --- [main] o.a.c.h.Http11NioProtocol                : Starting ProtocolHandler ["http-nio-8010"]
+2025-08-11 00:04:46.266  INFO 24064 --- [main] c.o.c.m.Media                            : Started Media in 5.192 seconds (process running for 5.82)
+2025-08-11 00:04:46.272  INFO 24064 --- [main] c.o.c.m.c.MinioInitializationService     : 检查MinIO存储桶'cloud'是否存在...
+2025-08-11 00:04:46.358  INFO 24064 --- [main] c.o.c.m.c.MinioInitializationService     : MinIO存储桶'cloud'已存在。
+2025-08-11 00:04:46.579  INFO 24064 --- [RMI TCP Connection(6)-198.18.0.1] o.a.c.c.C.[.[.[/]                        : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-08-11 00:04:46.624  WARN 24064 --- [AMQP Connection 127.0.0.1:5672] c.r.c.i.ForgivingExceptionHandler        : An unexpected connection driver error occurred (Exception message: Socket closed)
+2025-08-11 00:04:46.630  WARN 24064 --- [AMQP Connection 0:0:0:0:0:0:0:1:5672] c.r.c.i.ForgivingExceptionHandler        : An unexpected connection driver error occurred (Exception message: Socket closed)
+2025-08-11 00:04:46.631  WARN 24064 --- [RMI TCP Connection(5)-198.18.0.1] o.s.b.a.a.RabbitHealthIndicator          : Rabbit health check failed
+
+org.springframework.amqp.AmqpAuthenticationException: com.rabbitmq.client.AuthenticationFailureException: ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile.
+	at org.springframework.amqp.rabbit.support.RabbitExceptionTranslator.convertRabbitAccessException(RabbitExceptionTranslator.java:64) ~[spring-rabbit-3.2.3.jar:3.2.3]
+	at org.springframework.amqp.rabbit.connection.AbstractConnectionFactory.createBareConnection(AbstractConnectionFactory.java:632) ~[spring-rabbit-3.2.3.jar:3.2.3]
+	at org.springframework.amqp.rabbit.connection.CachingConnectionFactory.createConnection(CachingConnectionFactory.java:726) ~[spring-rabbit-3.2.3.jar:3.2.3]
+	at org.springframework.amqp.rabbit.connection.ConnectionFactoryUtils.createConnection(ConnectionFactoryUtils.java:257) ~[spring-rabbit-3.2.3.jar:3.2.3]
+	at org.springframework.amqp.rabbit.core.RabbitTemplate.doExecute(RabbitTemplate.java:2262) ~[spring-rabbit-3.2.3.jar:3.2.3]
+	at org.springframework.amqp.rabbit.core.RabbitTemplate.execute(RabbitTemplate.java:2235) ~[spring-rabbit-3.2.3.jar:3.2.3]
+	at org.springframework.amqp.rabbit.core.RabbitTemplate.execute(RabbitTemplate.java:2215) ~[spring-rabbit-3.2.3.jar:3.2.3]
+	at org.springframework.boot.actuate.amqp.RabbitHealthIndicator.getVersion(RabbitHealthIndicator.java:49) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.amqp.RabbitHealthIndicator.doHealthCheck(RabbitHealthIndicator.java:44) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.AbstractHealthIndicator.health(AbstractHealthIndicator.java:82) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.HealthIndicator.getHealth(HealthIndicator.java:37) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.HealthEndpoint.getHealth(HealthEndpoint.java:82) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.HealthEndpoint.getHealth(HealthEndpoint.java:41) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getLoggedHealth(HealthEndpointSupport.java:172) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getContribution(HealthEndpointSupport.java:145) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getAggregateContribution(HealthEndpointSupport.java:156) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getContribution(HealthEndpointSupport.java:141) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getHealth(HealthEndpointSupport.java:110) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.HealthEndpointSupport.getHealth(HealthEndpointSupport.java:81) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.HealthEndpoint.health(HealthEndpoint.java:76) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.health.HealthEndpoint.health(HealthEndpoint.java:66) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[?:?]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[?:?]
+	at org.springframework.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:281) ~[spring-core-6.2.3.jar:6.2.3]
+	at org.springframework.boot.actuate.endpoint.invoke.reflect.ReflectiveOperationInvoker.invoke(ReflectiveOperationInvoker.java:74) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.endpoint.annotation.AbstractDiscoveredOperation.invoke(AbstractDiscoveredOperation.java:60) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.endpoint.jmx.EndpointMBean.invoke(EndpointMBean.java:124) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at org.springframework.boot.actuate.endpoint.jmx.EndpointMBean.invoke(EndpointMBean.java:97) ~[spring-boot-actuator-3.4.3.jar:3.4.3]
+	at java.management/com.sun.jmx.interceptor.DefaultMBeanServerInterceptor.invoke(DefaultMBeanServerInterceptor.java:814) ~[?:?]
+	at java.management/com.sun.jmx.mbeanserver.JmxMBeanServer.invoke(JmxMBeanServer.java:802) ~[?:?]
+	at java.management.rmi/javax.management.remote.rmi.RMIConnectionImpl.doOperation(RMIConnectionImpl.java:1472) ~[?:?]
+	at java.management.rmi/javax.management.remote.rmi.RMIConnectionImpl$PrivilegedOperation.run(RMIConnectionImpl.java:1310) ~[?:?]
+	at java.management.rmi/javax.management.remote.rmi.RMIConnectionImpl.doPrivilegedOperation(RMIConnectionImpl.java:1405) ~[?:?]
+	at java.management.rmi/javax.management.remote.rmi.RMIConnectionImpl.invoke(RMIConnectionImpl.java:829) ~[?:?]
+	at java.base/jdk.internal.reflect.GeneratedMethodAccessor22.invoke(Unknown Source) ~[?:?]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[?:?]
+	at java.rmi/sun.rmi.server.UnicastServerRef.dispatch(UnicastServerRef.java:360) ~[?:?]
+	at java.rmi/sun.rmi.transport.Transport$1.run(Transport.java:200) ~[?:?]
+	at java.rmi/sun.rmi.transport.Transport$1.run(Transport.java:197) ~[?:?]
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:712) [?:?]
+	at java.rmi/sun.rmi.transport.Transport.serviceCall(Transport.java:196) ~[?:?]
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport.handleMessages(TCPTransport.java:587) ~[?:?]
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(TCPTransport.java:828) ~[?:?]
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.lambda$run$0(TCPTransport.java:705) ~[?:?]
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399) [?:?]
+	at java.rmi/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(TCPTransport.java:704) [?:?]
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136) [?:?]
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635) [?:?]
+	at java.base/java.lang.Thread.run(Thread.java:840) [?:?]
+Caused by: com.rabbitmq.client.AuthenticationFailureException: ACCESS_REFUSED - Login was refused using authentication mechanism PLAIN. For details see the broker logfile.
+	at com.rabbitmq.client.impl.AMQConnection.start(AMQConnection.java:395) ~[amqp-client-5.22.0.jar:5.22.0]
+	at com.rabbitmq.client.ConnectionFactory.newConnection(ConnectionFactory.java:1251) ~[amqp-client-5.22.0.jar:5.22.0]
+	at com.rabbitmq.client.ConnectionFactory.newConnection(ConnectionFactory.java:1198) ~[amqp-client-5.22.0.jar:5.22.0]
+	at org.springframework.amqp.rabbit.connection.AbstractConnectionFactory.connectAddresses(AbstractConnectionFactory.java:678) ~[spring-rabbit-3.2.3.jar:3.2.3]
+	at org.springframework.amqp.rabbit.connection.AbstractConnectionFactory.connect(AbstractConnectionFactory.java:647) ~[spring-rabbit-3.2.3.jar:3.2.3]
+	at org.springframework.amqp.rabbit.connection.AbstractConnectionFactory.createBareConnection(AbstractConnectionFactory.java:593) ~[spring-rabbit-3.2.3.jar:3.2.3]
+	... 50 more
+
+2025-08-11 00:04:46.639  INFO 24064 --- [RMI TCP Connection(5)-198.18.0.1] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2025-08-11 00:04:46.728  INFO 24064 --- [RMI TCP Connection(5)-198.18.0.1] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@12c92323
+2025-08-11 00:04:46.730  INFO 24064 --- [RMI TCP Connection(5)-198.18.0.1] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2025-08-11 00:04:54.440  INFO 24064 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+2025-08-11 00:04:54.442  INFO 24064 --- [SpringApplicationShutdownHook] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.

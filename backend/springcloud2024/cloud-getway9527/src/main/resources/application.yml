@@ -1,6 +1,0 @@
-gateway:
-  auth:
-    whitelist:
-      - /api/v1/auth/login
-      - /user/register
-      - /article/list

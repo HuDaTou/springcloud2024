@@ -1,0 +1,12 @@
+2025-07-28 22:35:08.489  INFO 35524 --- [background-preinit]
+            o.h.v.i.u.Version                        : HV000001: Hibernate Validator 8.0.2.Final
+2025-07-28 22:35:08.844  WARN 35524 --- [main]
+            j.p.spi                                  : jakarta.persistence.spi::No valid providers found.
+2025-07-28 22:37:32.043  INFO 39040 --- [background-preinit]
+            o.h.v.i.u.Version                        : HV000001: Hibernate Validator 8.0.2.Final
+2025-07-28 22:37:32.354  WARN 39040 --- [main]
+            j.p.spi                                  : jakarta.persistence.spi::No valid providers found.
+2025-07-28 22:38:25.652  INFO 28148 --- [background-preinit]
+            o.h.v.i.u.Version                        : HV000001: Hibernate Validator 8.0.2.Final
+2025-07-28 22:38:25.993  WARN 28148 --- [main]
+            j.p.spi                                  : jakarta.persistence.spi::No valid providers found.

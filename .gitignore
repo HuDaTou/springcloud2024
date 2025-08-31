@@ -1,3 +1,11 @@
-.idea
-logs/
+/*/target
+/*/*.iml
+/cloud-system/*/target/
 
+
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
