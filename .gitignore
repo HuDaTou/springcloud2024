@@ -1,11 +1,56 @@
-/*/target
-/*/*.iml
-/cloud-system/*/target/
+# ===============================================================
+# 这是一个根据项目结构和最佳实践生成的 .gitignore 文件。
+# ===============================================================
 
+# 1. 日志文件
+# 忽略所有 .log 文件、logs 目录以及压缩的日志文件。
+*.log
+logs/
+*.log.*.gz
+hs_err_pid*
 
+# 2. 构建产物
+# 忽略所有 Maven 和前端项目的构建输出目录。
+**/target/
+**/dist/
+**/release/
+/.output/
 
-# IntelliJ project files
-.idea
-*.iml
-out
-gen
+# 3. 依赖目录
+# 忽略前端项目的依赖目录。
+**/node_modules/
+
+# 4. IDE 和编辑器配置文件
+# 忽略 IntelliJ, Eclipse, VSCode 等编辑器的配置。
+/.idea/
+**/*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+*.vscode/
+
+# 5. 操作系统生成的文件
+# 忽略 macOS, Windows 和 Linux 系统自动生成的文件。
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 6. 环境配置文件
+# 忽略所有 .env 文件。建议创建一个 .env.example 文件作为模板。
+.env
+.env.*
+!.env.example
+
+# 7. 其他生成文件
+# 忽略 Maven Wrapper 的临时文件和 JAR 包。
+.mvn/wrapper/maven-wrapper.jar
+!/.mvn/wrapper/maven-wrapper.properties
+
+# 临时文件和打包文件
+*.jar
+*.war
+*.zip
+*.tar
+*.tar.gz

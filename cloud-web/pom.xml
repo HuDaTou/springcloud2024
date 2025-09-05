@@ -188,11 +188,6 @@
             <artifactId>system-auth-starter</artifactId>
         </dependency>
 
-        <!-- Log Starter -->
-        <dependency>
-            <groupId>com.overthinker.cloud</groupId>
-            <artifactId>system-log-starter</artifactId>
-        </dependency>
 
     </dependencies>
 
