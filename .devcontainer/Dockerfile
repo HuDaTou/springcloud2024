@@ -1,19 +1,30 @@
 # 使用预装了 Java 17 的官方镜像
 FROM mcr.microsoft.com/devcontainers/java:1-17
 
-# 切换到 root 用户，以便在 /root 目录下执行安装操作
+# 切换到 root 用户，确保安装权限
 USER root
 
-# 将工作目录设置为 /root/workspace，以符合您的要求
+# 设置环境变量 NVS_HOME
+ENV NVS_HOME="/root/.nvs"
+
+# 克隆 nvs 仓库并运行 nvs 安装脚本
+# 使用 && 将多条命令合并为一条 RUN 指令，减少镜像层数
+RUN git clone https://github.com/jasongin/nvs "$NVS_HOME" \
+    && . "$NVS_HOME/nvs.sh" install \
+    # 添加并安装 Node.js 24 LTS 版本
+    && nvs add 24 \
+    # 切换到 Node.js 24 版本
+    && nvs use 24 \
+    # 将 Node.js 24 版本设置为默认，这样即使重新启动容器，它也会是默认版本
+    && nvs link 24 \
+    # 使用 npm 安装 @google/gemini-cli
+    && npm install -g @google/gemini-cli
+
+# 将 nvs 的 source 命令写入 shell 配置文件，确保每次启动容器时自动加载
+RUN echo '. "$NVS_HOME/nvs.sh"' >> /root/.bashrc
+
+# 设置工作目录
 WORKDIR /root/workspace
 
-# 将 nvs 克隆到 root 用户的家目录 (~/ 或 /root/) 下，
-# 验证 nvs 安装，然后安装 Node.js 24 LTS 版本，并将其设置为默认。
-# 最后，安装 @google/gemini-cli
-# 所有命令合并到单个 RUN 层，以提高构建效率。
-RUN git clone https://github.com/jasongin/nvs /root/.nvs && \
-    . "/root/.nvs/nvs.sh" && \
-    nvs version || (echo "nvs version check failed, attempting re-installation..." && rm -rf /root/.nvs && git clone https://github.com/jasongin/nvs /root/.nvs && . "/root/.nvs/nvs.sh") && \
-    nvs add 24 && \
-    nvs use 24 && \
-    npm install -g @google/gemini-cli
+# 定义默认命令
+CMD ["/bin/bash"]
