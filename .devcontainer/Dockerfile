@@ -7,18 +7,18 @@ USER root
 # 设置环境变量 NVS_HOME
 ENV NVS_HOME="/root/.nvs"
 
-# 克隆 nvs 仓库并运行 nvs 安装脚本
-# 使用 && 将多条命令合并为一条 RUN 指令，减少镜像层数
+# 运行一系列命令：克隆 nvs，安装 Node.js 和 gemini-cli
 RUN git clone https://github.com/jasongin/nvs "$NVS_HOME" \
     && . "$NVS_HOME/nvs.sh" install \
-    # 添加并安装 Node.js 24 LTS 版本
     && nvs add 24 \
-    # 切换到 Node.js 24 版本
     && nvs use 24 \
-    # 将 Node.js 24 版本设置为默认，这样即使重新启动容器，它也会是默认版本
     && nvs link 24 \
-    # 使用 npm 安装 @google/gemini-cli
     && npm install -g @google/gemini-cli
+
+# 创建 /root/arthas 目录并下载 arthas-boot.jar
+# 使用独立的 RUN 指令以确保目录创建和下载操作的原子性
+RUN mkdir -p /root/arthas \
+    && curl -o /root/arthas/arthas-boot.jar https://arthas.aliyun.com/arthas-boot.jar
 
 # 将 nvs 的 source 命令写入 shell 配置文件，确保每次启动容器时自动加载
 RUN echo '. "$NVS_HOME/nvs.sh"' >> /root/.bashrc

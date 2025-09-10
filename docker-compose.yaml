@@ -1,6 +1,6 @@
 services:
 
-  app:
+  devcontainer:
     build:
       context: .
       dockerfile: .devcontainer/Dockerfile

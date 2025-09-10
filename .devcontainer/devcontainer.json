@@ -4,7 +4,7 @@
     "dockerComposeFile": "../docker-compose.yaml",
 
     // 指定 docker-compose.yaml 中用于开发容器的服务
-    "service": "app",
+    "service": "devcontainer",
 
     // 指定容器中项目文件将被挂载到的文件夹
     "workspaceFolder": "/workspace",
