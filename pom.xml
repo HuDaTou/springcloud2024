@@ -20,9 +20,7 @@
         <module>cloud-system</module>
         <module>cloud-AI</module>
         <module>cloud-auth</module>
-        <module>cloud-common-core</module>
-        <module>cloud-common-db</module>
-        <module>cloud-common-web</module>
+        <module>cloud-common</module>
     </modules>
 
     <repositories>
