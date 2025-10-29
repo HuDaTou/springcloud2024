@@ -36,12 +36,12 @@ services:
     ]
     volumes:
       - consul_data:/consul/data
-    restart: always
+    restart: no
     networks:
       - SpringCloudNet
 
   rabbitmq:
-    restart: always
+    restart: no
     image: rabbitmq:management
     container_name: rabbitmq
     hostname: rabbit
@@ -61,7 +61,7 @@ services:
   mysql8.0:
     image: mysql:8.0.21
     container_name: mysql8
-    restart: always
+    restart: no
     environment:
       TZ: Asia/Shanghai
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -88,7 +88,7 @@ services:
   redis:
     image: redis:7.2
     container_name: redis
-    restart: always
+    restart: no
     ports:
       - 6379:6379
     volumes:
@@ -195,14 +195,14 @@ services:
       - pgvector_data:/var/lib/postgresql/data
       - pgvector_config:/etc/postgresql/17/main
       - pgvector_logs:/var/log/postgresql
-    restart: always
+    restart: no
     networks:
       - SpringCloudNet
 
   postgres:
     image: postgres:16.9
     container_name: postgres
-    restart: always
+    restart: no
     shm_size: 128mb
     environment:
       POSTGRES_USER: ${POSTGRES_USER}

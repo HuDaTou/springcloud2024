@@ -11,9 +11,7 @@
     <packaging>pom</packaging>
     <modules>
 <!--        <module>cloud-provider-payment8001</module>-->
-        <module>cloud-common</module>
-<!--        <module>cloud-consumer-order80</module>-->
-        <module>cloud-getway9527</module>
+        <module>cloud-gatway9527</module>
         <module>cloud-Media-Asset-Processing</module>
         <module>cloud-web</module>
         <module>spring-study</module>
@@ -22,7 +20,9 @@
         <module>cloud-system</module>
         <module>cloud-AI</module>
         <module>cloud-auth</module>
-        
+        <module>cloud-common-core</module>
+        <module>cloud-common-db</module>
+        <module>cloud-common-web</module>
     </modules>
 
     <repositories>
@@ -111,7 +111,17 @@
             <!-- 内部模块-->
             <dependency>
                 <groupId>com.overthinker.cloud</groupId>
-                <artifactId>cloud-common</artifactId>
+                <artifactId>cloud-common-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.overthinker.cloud</groupId>
+                <artifactId>cloud-common-db</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.overthinker.cloud</groupId>
+                <artifactId>cloud-common-web</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
