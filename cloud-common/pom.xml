@@ -16,6 +16,7 @@
         <module>cloud-common-core</module>
         <module>cloud-common-db</module>
         <module>cloud-common-web</module>
+        <module>cloud-common-webflux</module>
     </modules>
 
     <properties>

@@ -1,6 +1,7 @@
 package com.overthinker.cloud.common.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 /**
  * 自定义填充公共字段
  */
-@Slf4j
+@Log4j2
 @Component
 public class MyMetaObjectHandler implements MetaObjectHandler {
 

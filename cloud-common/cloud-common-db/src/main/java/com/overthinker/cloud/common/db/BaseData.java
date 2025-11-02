@@ -1,4 +1,4 @@
-package com.overthinker.cloud.common.core.entity.PO;
+package com.overthinker.cloud.common.db;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 public class BaseData {

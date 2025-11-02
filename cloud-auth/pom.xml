@@ -33,11 +33,6 @@
 
 
 
-        <!-- Common module -->
-        <dependency>
-            <groupId>com.overthinker.cloud</groupId>
-            <artifactId>cloud-common</artifactId>
-        </dependency>
 
         <!-- PostgreSQL Driver -->
         <dependency>
@@ -159,6 +154,16 @@
         <dependency>
             <groupId>com.overthinker.cloud</groupId>
             <artifactId>system-redis-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.overthinker.cloud</groupId>
+            <artifactId>cloud-common-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.overthinker.cloud</groupId>
+            <artifactId>cloud-common-core</artifactId>
         </dependency>
     </dependencies>
 </project>

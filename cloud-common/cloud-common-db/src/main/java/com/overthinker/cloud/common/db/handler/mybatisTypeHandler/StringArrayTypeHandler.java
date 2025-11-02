@@ -1,4 +1,4 @@
-package com.overthinker.cloud.common.handler.mybatisTypeHandler;
+package com.overthinker.cloud.common.db.handler.mybatisTypeHandler;
 
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;

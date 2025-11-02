@@ -2,7 +2,7 @@ package com.overthinker.cloud.common.core.resp;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONWriter;
-import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +14,6 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
 public class ResultData<T> {
     private Integer code;
@@ -75,6 +74,7 @@ public class ResultData<T> {
     public static <T> ResultData<T> failure(ReturnCodeEnum returnCodeEnum, String msg) {
         return ResultData.<T>builder().code(returnCodeEnum.getCode()).msg(msg).data(null).build();
     }
+
 
     public String asJsonString() {
         return JSONObject.toJSONString(this, JSONWriter.Feature.WriteNulls);

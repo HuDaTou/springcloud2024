@@ -1,8 +1,10 @@
-package com.overthinker.cloud.common.handler;
+package com.overthinker.cloud.common.web.handler;
 
-import com.overthinker.cloud.common.exceptions.FileUploadException;
-import com.overthinker.cloud.common.resp.ResultData;
-import com.overthinker.cloud.common.resp.ReturnCodeEnum;
+import com.overthinker.cloud.common.core.resp.ResultData;
+import com.overthinker.cloud.common.core.resp.ReturnCodeEnum;
+
+
+import com.overthinker.cloud.common.web.exceptions.exceptions.FileUploadException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -10,9 +12,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@Log4j2
+
 @RestControllerAdvice
 @Order(1)
+@Log4j2
 //TODO:这段是什么意思为什么不直接用HttpStatus？
 public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)

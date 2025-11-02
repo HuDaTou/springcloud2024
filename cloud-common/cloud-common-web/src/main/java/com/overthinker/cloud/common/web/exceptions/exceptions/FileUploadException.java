@@ -1,6 +1,7 @@
-package com.overthinker.cloud.common.exceptions;
+package com.overthinker.cloud.common.web.exceptions.exceptions;
 
-import com.overthinker.cloud.common.resp.ReturnCodeEnum;
+
+import com.overthinker.cloud.common.core.resp.ReturnCodeEnum;
 import lombok.Getter;
 
 @Getter

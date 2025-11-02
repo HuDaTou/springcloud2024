@@ -4,10 +4,11 @@ package com.overthinker.cloud.common.core.validators;
 // 自定义校验器类
 
 
-import com.overthinker.cloud.common.annotation.FileFormat;
+
+import com.overthinker.cloud.common.core.annotation.FileFormat;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.springframework.web.multipart.MultipartFile;
+
 
 import java.util.Arrays;
 import java.util.List;

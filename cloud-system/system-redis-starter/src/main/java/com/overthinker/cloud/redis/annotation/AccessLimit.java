@@ -1,4 +1,4 @@
-package com.overthinker.cloud.common.core.annotation;
+package com.overthinker.cloud.redis.annotation;
 
 import java.lang.annotation.*;
 

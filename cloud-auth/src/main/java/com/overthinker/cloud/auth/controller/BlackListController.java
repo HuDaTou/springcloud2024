@@ -8,7 +8,7 @@ import com.overthinker.cloud.auth.entity.DTO.SearchBlackListDTO;
 import com.overthinker.cloud.auth.entity.DTO.UpdateBlackListDTO;
 import com.overthinker.cloud.auth.entity.VO.BlackListVO;
 import com.overthinker.cloud.auth.service.BlackListService;
-import com.overthinker.cloud.common.base.BaseController;
+import com.overthinker.cloud.common.core.base.BaseController;
 import com.overthinker.cloud.common.resp.ResultData;
 
 import io.swagger.v3.oas.annotations.Operation;
