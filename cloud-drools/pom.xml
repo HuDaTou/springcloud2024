@@ -15,7 +15,7 @@
         <!--                依赖cloud-common-->
         <dependency>
             <groupId>com.overthinker.cloud</groupId>
-            <artifactId>cloud-common</artifactId>
+            <artifactId>cloud-common-web</artifactId>
         </dependency>
 
 

@@ -25,10 +25,6 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.overthinker.cloud</groupId>
-            <artifactId>cloud-common</artifactId>
-        </dependency>
 
 <!--        <dependency>-->
 <!--            <groupId>com.overthinker.cloud</groupId>-->

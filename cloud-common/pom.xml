@@ -9,7 +9,9 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
+    <groupId>com.overthinker.cloud.common</groupId>
     <artifactId>cloud-common</artifactId>
+    <version>${parent.version}</version>
     <packaging>pom</packaging>
 
     <modules>

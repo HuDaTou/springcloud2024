@@ -4,6 +4,7 @@ spring:
   ai:
     openai:
       base-url: localhost:12434/engines
+      api-key: dummy-key
 
 
   #    vectorstore:
