@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.overthinker.cloud</groupId>
+        <groupId>com.overthinker.cloud.system</groupId>
         <artifactId>cloud-system</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>system-redis-starter</artifactId>
@@ -28,9 +28,8 @@
 
         <!-- Provides common entities and utilities -->
         <dependency>
-            <groupId>com.overthinker.cloud</groupId>
-            <artifactId>cloud-common</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.overthinker.cloud.common</groupId>
+            <artifactId>cloud-common-core</artifactId>
         </dependency>
     </dependencies>
 

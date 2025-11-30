@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.overthinker.cloud</groupId>
         <artifactId>springcloud2024</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
     <artifactId>cloud-drools</artifactId>
 
@@ -14,7 +14,7 @@
 
         <!--                依赖cloud-common-->
         <dependency>
-            <groupId>com.overthinker.cloud</groupId>
+            <groupId>com.overthinker.cloud.common</groupId>
             <artifactId>cloud-common-web</artifactId>
         </dependency>
 

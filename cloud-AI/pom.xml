@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.overthinker.cloud</groupId>
         <artifactId>springcloud2024</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>cloud-AI</artifactId>
@@ -14,7 +14,6 @@
         <dependency>
             <groupId>com.overthinker.cloud.common</groupId>
             <artifactId>cloud-common-webflux</artifactId>
-
         </dependency>
 
 
@@ -25,10 +24,7 @@
             <artifactId>spring-ai-starter-model-openai</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-starter-mcp-client</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-spring-boot-testcontainers</artifactId>

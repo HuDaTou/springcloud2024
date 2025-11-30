@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.overthinker.cloud</groupId>
         <artifactId>springcloud2024</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
     <artifactId>cloud-web</artifactId>
 
@@ -39,12 +39,12 @@
 
         <!-- Redis Starter -->
         <dependency>
-            <groupId>com.overthinker.cloud</groupId>
+            <groupId>com.overthinker.cloud.system</groupId>
             <artifactId>system-redis-starter</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.overthinker.cloud</groupId>
+            <groupId>com.overthinker.cloud.system</groupId>
             <artifactId>system-audit-log-starter</artifactId>
         </dependency>
 
@@ -83,7 +83,7 @@
 
         <!--        依赖cloud-common-->
         <dependency>
-            <groupId>com.overthinker.cloud</groupId>
+            <groupId>com.overthinker.cloud.common</groupId>
             <artifactId>cloud-common-web</artifactId>
         </dependency>
 
@@ -100,7 +100,7 @@
 
         <!-- RabbitMQ Starter -->
         <dependency>
-            <groupId>com.overthinker.cloud</groupId>
+            <groupId>com.overthinker.cloud.system</groupId>
             <artifactId>system-rabbitmq-starter</artifactId>
         </dependency>
 
@@ -171,7 +171,7 @@
 
 
         <dependency>
-            <groupId>com.overthinker.cloud</groupId>
+            <groupId>com.overthinker.cloud.system</groupId>
             <artifactId>system-auth-starter</artifactId>
         </dependency>
 

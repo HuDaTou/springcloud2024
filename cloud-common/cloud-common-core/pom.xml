@@ -6,13 +6,12 @@
     <parent>
         <groupId>com.overthinker.cloud.common</groupId>
         <artifactId>cloud-common</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>cloud-common-core</artifactId>
     <packaging>jar</packaging>
-    <version>${parent.version}</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

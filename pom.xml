@@ -7,7 +7,7 @@
 
     <groupId>com.overthinker.cloud</groupId>
     <artifactId>springcloud2024</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
     <modules>
 <!--        <module>cloud-provider-payment8001</module>-->
@@ -51,7 +51,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!--    模块版本-->
-        <cloud.overthinker.version>1.0</cloud.overthinker.version>
+        <revision>1.0-SNAPSHOT</revision>
 
         <!--    依赖集中管理信息-->
         <spring.boot.version>3.4.3</spring.boot.version>
@@ -110,70 +110,63 @@
             <dependency>
                 <groupId>com.overthinker.cloud.common</groupId>
                 <artifactId>cloud-common-core</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.overthinker.cloud.common</groupId>
                 <artifactId>cloud-common-db</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
                 <groupId>com.overthinker.cloud.common</groupId>
                 <artifactId>cloud-common-web</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.overthinker.cloud.common</groupId>
                 <artifactId>cloud-common-webflux</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>com.overthinker.cloud</groupId>-->
-<!--                <artifactId>cloud-system</artifactId>-->
-<!--                <version>${project.version}</version>-->
-<!--                <type>pom</type>-->
-<!--                <scope>import</scope>-->
-<!--            </dependency>-->
 
 
             <dependency>
                 <groupId>com.overthinker.cloud</groupId>
                 <artifactId>cloud-api</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
             </dependency>
 
 
 <!--            starter 管理-->
             <dependency>
-                <groupId>com.overthinker.cloud</groupId>
+                <groupId>com.overthinker.cloud.system</groupId>
                 <artifactId>system-consul-starter</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.overthinker.cloud</groupId>
+                <groupId>com.overthinker.cloud.system</groupId>
                 <artifactId>system-log-starter</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.overthinker.cloud</groupId>
+                <groupId>com.overthinker.cloud.system</groupId>
                 <artifactId>system-redis-starter</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.overthinker.cloud</groupId>
+                <groupId>com.overthinker.cloud.system</groupId>
                 <artifactId>system-auth-starter</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.overthinker.cloud</groupId>
+                <groupId>com.overthinker.cloud.system</groupId>
                 <artifactId>system-audit-log-starter</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.overthinker.cloud</groupId>
+                <groupId>com.overthinker.cloud.system</groupId>
                 <artifactId>system-rabbitmq-starter</artifactId>
-                <version>${project.version}</version>
+                <version>${revision}</version>
             </dependency>
 
             <!-- 引入spring-boot-dependencies，管理版本 -->
@@ -479,4 +472,33 @@
     <dependencies>
 
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.2.7</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

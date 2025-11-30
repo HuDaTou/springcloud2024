@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.overthinker.cloud</groupId>
         <artifactId>springcloud2024</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
     <artifactId>cloud-auth</artifactId>
     <name>cloud-auth</name>
@@ -43,18 +43,17 @@
 
         <!-- Auth Starter for DTOs -->
         <dependency>
-            <groupId>com.overthinker.cloud</groupId>
+            <groupId>com.overthinker.cloud.system</groupId>
             <artifactId>system-auth-starter</artifactId>
         </dependency>
 
         <!-- RabbitMQ Starter -->
         <dependency>
-            <groupId>com.overthinker.cloud</groupId>
+            <groupId>com.overthinker.cloud.system</groupId>
             <artifactId>system-rabbitmq-starter</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.overthinker.cloud</groupId>
+            <groupId>com.overthinker.cloud.system</groupId>
             <artifactId>system-redis-starter</artifactId>
         </dependency>
 
@@ -152,17 +151,17 @@
         </dependency>
 
         <dependency>
-            <groupId>com.overthinker.cloud</groupId>
+            <groupId>com.overthinker.cloud.system</groupId>
             <artifactId>system-redis-starter</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.overthinker.cloud</groupId>
+            <groupId>com.overthinker.cloud.common</groupId>
             <artifactId>cloud-common-web</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.overthinker.cloud</groupId>
+            <groupId>com.overthinker.cloud.common</groupId>
             <artifactId>cloud-common-core</artifactId>
         </dependency>
     </dependencies>
