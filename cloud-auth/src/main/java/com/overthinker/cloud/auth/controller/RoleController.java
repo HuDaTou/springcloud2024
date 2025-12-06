@@ -2,7 +2,8 @@ package com.overthinker.cloud.auth.controller;
 
 import com.overthinker.cloud.auth.entity.PO.Role;
 import com.overthinker.cloud.auth.service.RoleService;
-import com.overthinker.cloud.common.resp.ResultData;
+
+import com.overthinker.cloud.common.core.resp.ResultData;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 

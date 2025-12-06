@@ -1,7 +1,8 @@
 package com.overthinker.cloud.auth.controller;
 
 import com.overthinker.cloud.auth.service.SocialLoginService;
-import com.overthinker.cloud.common.resp.ResultData;
+
+import com.overthinker.cloud.common.core.resp.ResultData;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;

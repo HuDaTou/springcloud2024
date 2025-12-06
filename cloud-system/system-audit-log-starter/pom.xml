@@ -38,7 +38,7 @@
         <!-- Common module -->
         <dependency>
             <groupId>com.overthinker.cloud.common</groupId>
-            <artifactId>cloud-common-core</artifactId>
+            <artifactId>cloud-common-web</artifactId>
 
         </dependency>
 
@@ -47,6 +47,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
         </dependency>
     </dependencies>
 

@@ -2,8 +2,9 @@ package com.overthinker.cloud.media.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.overthinker.cloud.common.base.BaseController;
-import com.overthinker.cloud.common.resp.ResultData;
+
+import com.overthinker.cloud.common.core.base.BaseController;
+import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.media.entity.DTO.FileUploadRulesInfoDTO;
 import com.overthinker.cloud.media.entity.PO.FileUploadRules;
 import com.overthinker.cloud.media.service.FileUploadRulesService;

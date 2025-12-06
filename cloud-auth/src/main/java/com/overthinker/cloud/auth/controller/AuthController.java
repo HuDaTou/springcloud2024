@@ -5,7 +5,8 @@ import com.overthinker.cloud.auth.entity.DTO.LoginRequest;
 import com.overthinker.cloud.auth.entity.PO.LoginUser;
 import com.overthinker.cloud.auth.service.UserService;
 import com.overthinker.cloud.auth.utils.JwtUtils;
-import com.overthinker.cloud.common.resp.ResultData;
+
+import com.overthinker.cloud.common.core.resp.ResultData;
 import jakarta.annotation.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -8,148 +9,35 @@
     </parent>
     <artifactId>cloud-auth</artifactId>
     <name>cloud-auth</name>
-
-
+    <description>认证授权中心服务，负责OAuth2.1 Token颁发与管理</description>
 
     <dependencies>
-        <!-- Web support for creating controllers -->
+        <!-- OAuth2 Authorization Server 核心依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-oauth2-authorization-server</artifactId>
         </dependency>
 
-        <!-- Spring Security -->
+        <!-- Spring Security 安全框架 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!-- MyBatisPlus for database operations -->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-        </dependency>
 
-
-
-
-
-        <!-- PostgreSQL Driver -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-        <!-- Auth Starter for DTOs -->
+        <!-- Consul 服务注册与发现 -->
         <dependency>
             <groupId>com.overthinker.cloud.system</groupId>
-            <artifactId>system-auth-starter</artifactId>
+            <artifactId>system-consul-starter</artifactId>
         </dependency>
 
-        <!-- RabbitMQ Starter -->
+        <!-- 数据库相关 -->
         <dependency>
-            <groupId>com.overthinker.cloud.system</groupId>
-            <artifactId>system-rabbitmq-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.overthinker.cloud.system</groupId>
-            <artifactId>system-redis-starter</artifactId>
+            <groupId>com.overthinker.cloud.common</groupId>
+            <artifactId>cloud-common-db</artifactId>
         </dependency>
 
-        <!-- JWT library -->
-        <dependency>
-            <groupId>com.auth0</groupId>
-            <artifactId>java-jwt</artifactId>
-        </dependency>
-
-        <!-- Druid Connection Pool -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-starter</artifactId>
-        </dependency>
-
-        <!-- P6Spy for SQL logging -->
-        <dependency>
-            <groupId>com.github.gavlyukovskiy</groupId>
-            <artifactId>p6spy-spring-boot-starter</artifactId>
-        </dependency>
-
-        <!-- Validation Starter -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
-
-
-        <!-- Mail Starter -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
-        </dependency>
-
-        <!-- User Agent Parser -->
-        <dependency>
-            <groupId>eu.bitwalker</groupId>
-            <artifactId>UserAgentUtils</artifactId>
-            <version>1.21</version>
-        </dependency>
-
-        <!-- Auth for third-party login -->
-        <dependency>
-            <groupId>me.zhyd.oauth</groupId>
-            <artifactId>JustAuth</artifactId>
-            <version>1.16.6</version>
-        </dependency>
-
-        <!-- OkHttp for streaming requests -->
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-        </dependency>
-
-        <!-- System information -->
-        <dependency>
-            <groupId>com.github.oshi</groupId>
-            <artifactId>oshi-core</artifactId>
-            <version>6.4.0</version>
-        </dependency>
-        <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna</artifactId>
-            <version>5.12.1</version>
-        </dependency>
-        <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna-platform</artifactId>
-            <version>5.12.1</version>
-        </dependency>
-
-        <!-- Quartz for scheduling -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-quartz</artifactId>
-        </dependency>
-
-        <!-- C3P0 connection pool -->
-        <dependency>
-            <groupId>com.mchange</groupId>
-            <artifactId>c3p0</artifactId>
-            <version>0.9.5.4</version>
-        </dependency>
-
-        <!-- MinIO for file storage -->
-        <dependency>
-            <groupId>io.minio</groupId>
-            <artifactId>minio</artifactId>
-        </dependency>
-
-        <!-- XXL-Job for distributed task scheduling -->
-        <dependency>
-            <groupId>com.xuxueli</groupId>
-            <artifactId>xxl-job-core</artifactId>
-        </dependency>
-
+        <!-- Redis 缓存支持 (用于存储Token等) -->
         <dependency>
             <groupId>com.overthinker.cloud.system</groupId>
             <artifactId>system-redis-starter</artifactId>
@@ -160,9 +48,15 @@
             <artifactId>cloud-common-web</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.overthinker.cloud.common</groupId>
-            <artifactId>cloud-common-core</artifactId>
-        </dependency>
+
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -1,6 +1,7 @@
 package com.overthinker.cloud.auth.service;
 
-import com.overthinker.cloud.common.resp.ResultData;
+
+import com.overthinker.cloud.common.core.resp.ResultData;
 import me.zhyd.oauth.model.AuthCallback;
 
 public interface SocialLoginService {

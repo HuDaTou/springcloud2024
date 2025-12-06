@@ -1,23 +1,22 @@
 package com.overthinker.cloud.system.auth.config;
 
-import com.overthinker.cloud.api.client.AuthClient;
-import com.overthinker.cloud.api.dto.PermissionDTO;
-import com.overthinker.cloud.system.auth.service.PermissionRegistryClient;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.overthinker.cloud.system.auth.service.PermissionScanner;
-import org.springframework.boot.ApplicationRunner;
+import com.overthinker.cloud.system.auth.service.PermissionSender;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
+import org.springframework.core.env.Environment;
 
 /**
- * Auto-configuration for the permission scanning and registration starter.
+ * 权限自动配置类
+ * 负责自动装配权限扫描器和发送器。
+ * 当属性 permission.scanner.enabled 为 true 时（或缺省时）启用。
  */
 @Configuration
-@EnableFeignClients(basePackages = "com.overthinker.cloud.api.client")
 @ConditionalOnProperty(name = "permission.scanner.enabled", havingValue = "true", matchIfMissing = true)
 public class PermissionAutoConfiguration {
 
@@ -27,15 +26,11 @@ public class PermissionAutoConfiguration {
     }
 
     @Bean
-    public PermissionRegistryClient permissionRegistryClient(AuthClient authClient) {
-        return new PermissionRegistryClient(authClient);
-    }
-
-    @Bean
-    public ApplicationRunner permissionRegistrationRunner(PermissionScanner scanner, PermissionRegistryClient client) {
-        return args -> {
-            List<PermissionDTO> permissions = scanner.scanPermissions();
-            client.registerPermissions(permissions);
-        };
+    @ConditionalOnBean(RabbitTemplate.class) // 仅当RabbitTemplate存在时才创建发送器
+    public PermissionSender permissionSender(PermissionScanner permissionScanner,
+                                             RabbitTemplate rabbitTemplate,
+                                             ObjectMapper objectMapper,
+                                             Environment environment) {
+        return new PermissionSender(permissionScanner, rabbitTemplate, objectMapper, environment);
     }
 }

@@ -1,13 +1,15 @@
-package com.overthinker.cloud.common.core.validators;
+package com.overthinker.cloud.media.validators;
 
 
 // 自定义校验器类
 
 
 
-import com.overthinker.cloud.common.core.annotation.FileFormat;
+
+import com.overthinker.cloud.media.annotation.FileFormat;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import java.util.Arrays;

@@ -4,9 +4,10 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
-import com.overthinker.cloud.common.entity.BasecopyProperties;
-import com.overthinker.cloud.common.entity.PO.BaseData;
-import com.overthinker.cloud.common.handler.mybatisTypeHandler.StringListTypeHandler;
+
+import com.overthinker.cloud.common.core.entity.BasecopyProperties;
+import com.overthinker.cloud.common.db.BaseData;
+import com.overthinker.cloud.common.db.handler.mybatisTypeHandler.StringListTypeHandler;
 import lombok.Data;
 
 import java.util.List;

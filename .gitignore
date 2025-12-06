@@ -47,7 +47,7 @@ desktop.ini
 # 忽略 Maven Wrapper 的临时文件和 JAR 包。
 .mvn/wrapper/maven-wrapper.jar
 !/.mvn/wrapper/maven-wrapper.properties
-
+.flattened-pom.xml
 # 临时文件和打包文件
 *.jar
 *.war

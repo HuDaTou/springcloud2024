@@ -1,12 +1,9 @@
 package com.overthinker.cloud.auth.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.overthinker.cloud.auth.entity.PO.SysPermission;
+import com.overthinker.cloud.auth.entity.SysPermission;
 import org.apache.ibatis.annotations.Mapper;
 
-/**
- * SysPermission 的 Mapper 接口。
- */
 @Mapper
 public interface SysPermissionMapper extends BaseMapper<SysPermission> {
 }

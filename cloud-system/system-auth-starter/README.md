@@ -1,35 +1,47 @@
-# 系统认证启动器
+# System-Auth-Starter 安全组件
 
-## 1. 模块概述
+## 简介
+`system-auth-starter` 是一个通用的安全依赖包 (Starter)。**任何业务微服务 (如 cloud-ai, cloud-order) 只需要引入这个依赖，就能自动获得标准的安全能力。**
 
-`system-auth-starter` 是一个 Spring Boot 启动器，旨在为 `springcloud2024` 项目中的其他微服务提供集中化、可重用的身份验证和授权功能。
+## 核心功能
 
-其主要职责是在任何将其作为依赖项的服务中自动扫描与权限相关的注解。然后，它与中央 `cloud-auth` 服务通信以注册这些权限，确保系统的访问控制列表始终保持最新。
+### 1. 资源服务器 (Resource Server) 自动配置
+*   **自动配置**: `ResourceServerConfig`。
+*   **功能**: 
+    *   引入 `spring-boot-starter-oauth2-resource-server`。
+    *   配置 Security 拦截链，默认拦截所有请求。
+    *   配置 JWT 解析器，自动从 Token 的 `authorities` 字段中提取权限，并转换为 Spring Security 的 `GrantedAuthority`。
+    *   启用 `@EnableMethodSecurity`，支持在 Controller 上使用 `@PreAuthorize` 注解。
 
-## 2. 核心功能
+### 2. 权限自动扫描与上报
+*   **组件**: `PermissionScanner` 和 `PermissionSender`。
+*   **原理**:
+    *   在微服务启动时，自动扫描所有 Controller 方法。
+    *   提取 `@PreAuthorize("hasAuthority('xxx')")` 中的权限标识 (`xxx`)。
+    *   提取 `@Operation(summary="xxx")` 中的接口描述。
+    *   将扫描结果封装为 `PermissionDTO` 列表。
+    *   通过 **RabbitMQ** 异步发送到 `auth.permission.exchange`。
+*   **目的**: 实现“代码即权限”，无需人工维护数据库中的权限表。
 
-- **自动权限发现：** 在应用程序启动时，扫描控制器方法上的 `@Operation` 和其他与安全相关的注解。
-- **权限注册：** 使用 Feign 客户端将发现的权限发送到 `cloud-auth` 服务进行存储和管理。
-- **简化的安全配置：** 提供一个预配置的 `SecurityFilterChain`，其他服务可以导入该配置以保护其端点。
-- **解耦的认证逻辑：** 抽象了权限处理的细节，使服务开发人员能够专注于业务逻辑。
+## 如何使用
 
-## 3. 关键依赖
+1.  **引入依赖**:
+    在微服务的 `pom.xml` 中添加：
+    ```xml
+    <dependency>
+        <groupId>com.overthinker.cloud.system</groupId>
+        <artifactId>system-auth-starter</artifactId>
+    </dependency>
+    ```
 
-- **Spring Cloud OpenFeign:** `org.springframework.cloud:spring-cloud-starter-openfeign`
-- **Spring Boot Security:** `org.springframework.boot:spring-boot-starter-security`
-- **SpringDoc OpenAPI:** `org.springdoc:springdoc-openapi-starter-common`
-- **Cloud API:** `com.overthinker.cloud:cloud-api`（包含认证服务的 Feign 客户端接口）
+2.  **编写代码**:
+    在 Controller 接口上添加权限注解：
+    ```java
+    @GetMapping("/chat")
+    @PreAuthorize("hasAuthority('ai:chat')") // 权限标识
+    @Operation(summary = "AI对话接口")        // 接口描述
+    public String chat() { ... }
+    ```
 
-## 4. 如何使用
-
-要在另一个微服务（例如 `cloud-web`）中启用自动权限发现和注册，只需将其 `pom.xml` 文件中的此启动器添加为依赖项即可：
-
-```xml
-<dependency>
-    <groupId>com.overthinker.cloud</groupId>
-    <artifactId>system-auth-starter</artifactId>
-    <version>${project.version}</version>
-</dependency>
-```
-
-应用程序启动后，启动器将自动处理其余部分。请确保 `cloud-auth` 服务正在运行，并且可以通过服务发现机制（例如 Nacos）进行访问。
+3.  **启动服务**:
+    服务启动后，该接口的权限信息会自动注册到 Cloud-Auth 的数据库中。

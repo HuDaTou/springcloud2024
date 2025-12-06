@@ -1,36 +1,34 @@
+# Spring Application Configuration
 spring:
   application:
-    name: cloud-auth
-  datasource:
-    url: jdbc:postgresql://localhost:5432/springcloud2024_auth
-    username: your_username # Please replace with your database username
-    password: your_password # Please replace with your database password
-    driver-class-name: org.postgresql.Driver
-  rabbitmq:
-    listener:
-      simple:
-        retry:
-          enabled: true # Enable retry mechanism
-          initial-interval: 1000ms
-          max-attempts: 3
-    queue:
-      audit-log: audit.log.queue # The queue to listen to
+    name: cloud-auth # 应用名称，用于Consul注册
+  profiles:
+    active: dev # 激活的配置文件，可以根据环境修改
   security:
-    jwt:
-      key: 229a3b7a-f813-4e3a-8b7a-9b7e2d3f4c5a # This should be a strong, securely managed secret in a real environment
-      expire: 24 # Expiration in hours
+    oauth2:
+      authorizationserver:
+        issuer: http://localhost:9000 # 授权服务器的Issuer URI，与AuthorizationServerConfig中配置的保持一致
 
-justauth:
-  enabled: true
-  gitee:
-    client-id: YOUR_GITEE_CLIENT_ID
-    client-secret: YOUR_GITEE_CLIENT_SECRET
-    redirect-uri: http://localhost:8080/oauth/callback/gitee
-  github:
-    client-id: YOUR_GITHUB_CLIENT_ID
-    client-secret: YOUR_GITHUB_CLIENT_SECRET
-    redirect-uri: http://localhost:8080/oauth/callback/github
-  wechat:
-    client-id: YOUR_WECHAT_CLIENT_ID
-    client-secret: YOUR_WECHAT_CLIENT_SECRET
-    redirect-uri: http://localhost:8080/oauth/callback/wechat
+# Server Configuration
+server:
+  port: 9000 # 服务端口
+
+# Consul Configuration
+  cloud:
+    consul:
+      host: localhost # Consul服务地址
+      port: 8500 # Consul端口
+      discovery:
+        service-name: ${spring.application.name} # 注册到Consul的服务名称
+        prefer-ip-address: true # 优先使用IP地址注册
+        health-check-path: /actuator/health # 健康检查路径
+        health-check-interval: 10s # 健康检查间隔
+      config:
+        enabled: true # 启用Consul配置中心
+
+# Logging Configuration (Log4j2 will pick up log4j2-spring.xml from common-core)
+logging:
+  level:
+    root: INFO
+    org.springframework.security: DEBUG # 方便调试Spring Security
+    org.springframework.security.oauth2: DEBUG # 方便调试OAuth2流程

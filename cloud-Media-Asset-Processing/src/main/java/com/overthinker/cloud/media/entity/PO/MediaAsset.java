@@ -4,7 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 
-import com.overthinker.cloud.common.entity.PO.BaseData;
+
+import com.overthinker.cloud.common.db.BaseData;
 import lombok.Data;
 import lombok.experimental.Accessors;
 

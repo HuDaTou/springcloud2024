@@ -1,6 +1,7 @@
-package com.overthinker.cloud.common.core.annotation;
+package com.overthinker.cloud.media.annotation;
 
-import com.overthinker.cloud.common.validators.FileFormatValidator;
+
+import com.overthinker.cloud.media.validators.FileFormatValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

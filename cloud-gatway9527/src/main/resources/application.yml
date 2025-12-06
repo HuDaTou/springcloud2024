@@ -1,6 +1,58 @@
-gateway:
-  auth:
-    whitelist:
-      - /api/v1/auth/login
-      - /user/register
-      - /article/list
+# Spring Application Configuration
+spring:
+  application:
+    name: cloud-gatway9527 # 应用名称，用于Consul注册
+  profiles:
+    active: dev # 激活的配置文件，可以根据环境修改
+
+# Server Configuration
+server:
+  port: 9527 # 网关服务端口
+
+# Consul Configuration
+  cloud:
+    consul:
+      host: localhost # Consul服务地址
+      port: 8500 # Consul端口
+      discovery:
+        service-name: ${spring.application.name} # 注册到Consul的服务名称
+        prefer-ip-address: true # 优先使用IP地址注册
+        health-check-path: /actuator/health # 健康检查路径
+        health-check-interval: 10s # 健康检查间隔
+      config:
+        enabled: true # 启用Consul配置中心
+
+# Gateway Routes Configuration
+  cloud:
+    gateway:
+      routes:
+        - id: cloud-auth # 路由到认证中心
+          uri: lb://cloud-auth # 使用负载均衡器找到cloud-auth服务
+          predicates:
+            - Path=/auth/** # 匹配所有/auth/**的请求
+          filters:
+            - StripPrefix=1 # 移除路径中的/auth前缀
+        - id: cloud-ai # 路由到AI服务
+          uri: lb://cloud-ai
+          predicates:
+            - Path=/ai/**
+          filters:
+            - StripPrefix=1
+
+# Security Configuration for Resource Server (JWT Validation)
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # 配置授权服务器的JWK Set URI，网关将从这里获取公钥来验证JWT签名
+          # 假设cloud-auth运行在9000端口
+          issuer-uri: http://localhost:9000 # cloud-auth的Issuer URI
+          jwk-set-uri: http://localhost:9000/oauth2/jwks # cloud-auth的JWK Set端点
+
+# Logging Configuration (Log4j2 will pick up log4j2-spring.xml from common-core)
+logging:
+  level:
+    root: INFO
+    org.springframework.security: DEBUG # 方便调试Spring Security
+    org.springframework.security.oauth2: DEBUG # 方便调试OAuth2流程
+    org.springframework.cloud.gateway: DEBUG # 方便调试Gateway路由

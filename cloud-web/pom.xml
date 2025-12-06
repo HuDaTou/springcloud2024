@@ -13,18 +13,9 @@
     <dependencies>
 
 
-
-        <!--        mybatis plus-->
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-        </dependency>
-
-
-        <!-- 数据库-->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>com.overthinker.cloud.common</groupId>
+            <artifactId>cloud-common-db</artifactId>
         </dependency>
         <!--SpringBoot集成druid连接池-->
         <dependency>
@@ -98,10 +89,9 @@
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
 
-        <!-- RabbitMQ Starter -->
         <dependency>
-            <groupId>com.overthinker.cloud.system</groupId>
-            <artifactId>system-rabbitmq-starter</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
 
         <!-- 邮件发送与解析 -->

@@ -15,7 +15,6 @@
         <module>system-consul-starter</module>
         <module>system-auth-starter</module>
         <module>system-redis-starter</module>
-        <module>system-RabbitMQ-starter</module>
         <module>system-audit-log-starter</module>
     </modules>
 

@@ -1,87 +1,54 @@
-# Spring Cloud 2024 微服务项目
+# Spring Cloud 微服务安全架构 (Spring Cloud Security 2024)
 
-## 1. 项目概述
+本项目基于 Spring Cloud 2024 和 Spring Boot 3.x 构建，采用标准的 OAuth2.1 协议实现微服务架构下的统一认证与鉴权。
 
-`springcloud2024` 是一个基于最新的 Spring Cloud、Spring Boot 和 Spring Cloud Alibaba 规范的综合性微服务项目。它可作为现代分布式应用程序的强大后端架构，集成了各种基本服务和中间件。
+## 核心架构
 
-该项目旨在成为一个学习和生产就-绪的样板，展示了微服务开发的最佳实践，包括服务发现、配置管理、网关路由、身份验证和可观察性。
+采用 **"网关统一验票 + 微服务独立鉴权"** 的混合模式，兼顾了安全性和开发效率。
 
-## 2. 技术栈
+*   **Cloud-Auth (认证中心)**: 
+    *   基于 `spring-authorization-server`。
+    *   负责用户认证 (Login)、授权 (Consent) 和 颁发 Token (JWT)。
+    *   Token 中包含用户的身份信息 (User ID) 和权限列表 (Permissions)。
+*   **Cloud-Gateway (网关)**: 
+    *   基于 `spring-cloud-gateway` + `spring-security-oauth2-resource-server`。
+    *   负责拦截所有请求，校验 Token 的签名有效性 (验票)。
+    *   只有持有有效 Token 的请求才能通过网关，路由到下游微服务。
+*   **Microservices (业务微服务)**: 
+    *   引入 `system-auth-starter`。
+    *   负责**细粒度鉴权**。使用 `@PreAuthorize("hasAuthority('ai:chat')")` 控制接口访问权限。
+    *   负责**权限上报**。启动时自动扫描接口权限并上报给 Cloud-Auth。
 
-- **核心框架：** Spring Boot 3.x、Spring Cloud 2024.0.0
-- **服务治理：** Spring Cloud Alibaba（Nacos 用于服务发现和配置）
-- **API 网关：** Spring Cloud Gateway
-- **身份验证：** Spring Security、JWT
-- **数据库：** MySQL、PostgreSQL、MyBatis-Plus
-- **缓存：** Redis
-- **消息队列：** RabbitMQ
-- **人工智能：** Spring AI
-- **规则引擎：** Drools
-- **分布式作业调度：** XXL-Job
-- **对象存储：** Minio
-- **可观察性：** Micrometer、Zipkin
-- **API 文档：** SpringDoc、Knife4j
+## 模块说明
 
-## 3. 模块分解
+| 模块 | 路径 | 描述 |
+| :--- | :--- | :--- |
+| **cloud-auth** | `/cloud-auth` | **认证授权中心**。核心服务，必须优先启动。 |
+| **cloud-gatway9527** | `/cloud-gatway9527` | **API 网关**。流量入口，负责路由和 Token 验签。 |
+| **system-auth-starter** | `/cloud-system/system-auth-starter` | **安全公共组件**。封装了资源服务器配置和权限扫描逻辑，供微服务引用。 |
+| **cloud-ai** | `/cloud-AI` | **AI 业务服务** (示例)。演示如何接入安全体系。 |
 
-该项目由以下模块组成：
+## 快速开始
 
-| 模块 | 描述 |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `cloud-api` | 定义要在服务之间共享的通用 API 接口和 DTO。 |
-| `cloud-auth` | 负责用户登录和令牌颁发的集中式身份验证服务。 |
-| `cloud-common` | 包含共享类、枚举和帮助函数的通用实用程序模块。 |
-| `cloud-getway9527` | 将所有传入请求路由到相应微服务的中央 API 网关。 |
-| `cloud-AI` | 一个用于使用 Spring AI 集成人工智能功能的实验模块。 |
-| `cloud-drools` | 一个用于集成 Drools 规则引擎以动态管理和执行业务规则的模块。 |
-| `cloud-Media-Asset-Processing` | 专门用于处理媒体资产处理（例如视频转码或图像大小调整）的服务。 |
-| `cloud-web` | 包含核心应用程序逻辑和面向 Web 的控制器的主要业务模块。 |
-| `cloud-system` | 各种系统级启动器组件的父模块。 |
-| `system-auth-starter` | 一个用于向其他服务提供可重用身份验证和授权逻辑的启动器。 |
-| `system-consul-starter` | 一个用于将 Consul 集成为服务发现客户端的启动器。 |
-| `system-log-starter` | 一个用于集中式和结构化日志记录的启动器。 |
-| `system-RabbitMQ-starter` | 一个用于轻松与 RabbitMQ 集成的启动器。 |
-| `system-redis-starter` | 一个用于简化 Redis 集成和配置的启动器。 |
-| `spring-study` | 一个用于试验和学习新 Spring 功能的沙箱模块。 |
+### 1. 环境准备
+*   Java 17+
+*   Maven 3.8+
+*   Consul (默认 `localhost:8500`)
+*   RabbitMQ (默认 `localhost:5672`)
+*   PostgreSQL (默认 `localhost:5432`)
+*   Redis (默认 `localhost:6379`)
 
-## 4. 环境设置
+### 2. 启动顺序
+1.  启动基础设施 (Consul, RabbitMQ, PostgreSQL, Redis)。
+2.  启动 **Cloud-Auth** (端口 9000)。等待启动完成。
+3.  启动 **Cloud-Gateway** (端口 9527)。
+4.  启动 **Cloud-AI** (或其他业务服务)。
 
-要运行此项目，您需要在系统上安装以下软件：
+### 3. 验证流程
+1.  访问 `http://localhost:9527/auth/login` (通过网关路由到 Auth) 或直接访问 `http://localhost:9000/login`。
+2.  使用账号 `admin / 123456` (需在数据库 `sys_user` 表中预置) 登录。
+3.  进行 OAuth2 授权流程，获取 Access Token。
+4.  携带 Token 访问 `http://localhost:9527/ai/chat`。
 
-- **Java 17+**
-- **Maven 3.6+**
-- **Docker 和 Docker Compose**（用于运行 Nacos、Redis、RabbitMQ 等中间件）
-- **IDE**（推荐使用 IntelliJ IDEA 或 VS Code）
-
-在启动应用程序之前，请确保所有必需的中间件服务（Nacos、Redis、RabbitMQ、MySQL）都已运行。您通常可以使用 Docker Compose 启动它们。
-
-## 5. 如何运行
-
-1. **克隆存储库：**
-    ```bash
-    git clone <your-repository-url>
-    cd springcloud2024
-    ```
-
-2. **启动中间件：**
-    使用 Docker 或您首选的方法启动所有必要的服务（Nacos、Redis 等）。确保可以从本地计算机访问它们。
-
-3. **配置应用程序：**
-    更新每个模块中的 `bootstrap.yaml` 和 `application.yaml` 文件，以匹配您的环境设置（例如，数据库凭据、Nacos 地址）。
-
-4. **构建项目：**
-    ```bash
-    mvn clean install
-    ```
-
-5. **运行服务：**
-    按以下顺序启动微服务：
-    - `cloud-getway9527`
-    - `cloud-auth`
-    - `cloud-web`
-    - 任何其他所需的服务。
-
-您可以从 IDE 运行每个服务，也可以对已编译的 JAR 文件使用 `java -jar` 命令。
-
-## 6. 更新记录
-- **2025-08-31:** 根据项目结构和最佳实践，全面优化了根目录的 `.gitignore` 文件，增加了对日志、构建产物、IDE配置和环境变量文件的忽略规则。
+## 数据库脚本
+请参考 `/sql` 目录下的 SQL 脚本初始化数据库，特别是 `sys_user`, `sys_role`, `sys_permission` 等表。

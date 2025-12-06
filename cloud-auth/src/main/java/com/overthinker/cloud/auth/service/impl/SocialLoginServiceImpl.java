@@ -1,6 +1,5 @@
 package com.overthinker.cloud.auth.service.impl;
 
-import com.overthinker.cloud.auth.config.JustAuthAutoConfiguration;
 import com.overthinker.cloud.auth.entity.PO.LoginUser;
 import com.overthinker.cloud.auth.entity.PO.User;
 import com.overthinker.cloud.auth.service.SocialLoginService;
