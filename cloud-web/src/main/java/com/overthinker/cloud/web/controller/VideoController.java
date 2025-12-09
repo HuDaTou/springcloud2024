@@ -1,7 +1,7 @@
 package com.overthinker.cloud.web.controller;
 
-import com.overthinker.cloud.common.base.BaseController;
-import com.overthinker.cloud.common.resp.ResultData;
+import com.overthinker.cloud.common.core.base.BaseController;
+import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.common.annotation.AccessLimit;
 import com.overthinker.cloud.web.entity.DTO.SearchVideoDTO;
 import com.overthinker.cloud.web.entity.DTO.VideoInfoTDO;

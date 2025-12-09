@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.handler;
 
-import com.overthinker.cloud.common.resp.ResultData;
+import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.common.resp.ReturnCodeEnum;
 import com.overthinker.cloud.web.exception.BusinessException;
 import com.overthinker.cloud.web.exception.FileUploadException;

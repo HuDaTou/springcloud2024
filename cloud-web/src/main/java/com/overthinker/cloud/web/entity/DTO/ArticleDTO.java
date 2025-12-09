@@ -1,6 +1,7 @@
 package com.overthinker.cloud.web.entity.DTO;
 
-import com.overthinker.cloud.common.entity.BasecopyProperties;
+
+import com.overthinker.cloud.common.core.entity.BasecopyProperties;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.List;

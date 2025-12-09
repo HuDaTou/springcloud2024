@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.overthinker.cloud.common.resp.ResultData;
+import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.web.entity.DTO.CommentIsCheckDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchCommentDTO;
 import com.overthinker.cloud.web.entity.DTO.UserCommentDTO;

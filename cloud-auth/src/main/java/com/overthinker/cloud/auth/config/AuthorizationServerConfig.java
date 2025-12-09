@@ -55,20 +55,25 @@ public class AuthorizationServerConfig {
     @Bean
     @Order(1)
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
-        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-        http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-                .oidc(Customizer.withDefaults());	// Enable OpenID Connect 1.0
+        OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
+                OAuth2AuthorizationServerConfigurer.authorizationServer(); // 创建配置器实例
 
         http
+            .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher()) // 应用于OAuth2端点
+            .with(authorizationServerConfigurer, (authorizationServer) -> {
+                authorizationServer
+                    .oidc(Customizer.withDefaults()); // 启用OpenID Connect 1.0
+            })
+            // 配置资源服务器，用于处理JWT（例如JWKS端点）
+            .oauth2ResourceServer(oauth2ResourceServer ->
+                oauth2ResourceServer.jwt(Customizer.withDefaults()))
+            // 异常处理：当未认证时重定向到登录页
             .exceptionHandling((exceptions) -> exceptions
                 .defaultAuthenticationEntryPointFor(
                     new LoginUrlAuthenticationEntryPoint("/login"),
                     new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
                 )
-            )
-            .oauth2ResourceServer(oauth2ResourceServer ->
-                oauth2ResourceServer.jwt(Customizer.withDefaults()));
-
+            );
         return http.build();
     }
 

@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.controller;
 
-import com.overthinker.cloud.common.base.BaseController;
+import com.overthinker.cloud.common.core.base.BaseController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;

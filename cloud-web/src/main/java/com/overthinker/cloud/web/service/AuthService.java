@@ -1,9 +1,8 @@
 package com.overthinker.cloud.web.service;
 
-import com.overthinker.cloud.common.resp.ResultData;
-import com.overthinker.cloud.web.entity.DTO.UserRegisterDTO;
-import com.overthinker.cloud.web.entity.DTO.UserResetConfirmDTO;
-import com.overthinker.cloud.web.entity.DTO.UserResetPasswordDTO;
+import com.overthinker.cloud.common.core.resp.ResultData;
+import org.springframework.security.core.userdetails.UserDetails;
+
 
 public interface AuthService {
 

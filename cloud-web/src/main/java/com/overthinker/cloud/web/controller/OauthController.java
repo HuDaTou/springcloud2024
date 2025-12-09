@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.controller;
 
-import com.overthinker.cloud.common.base.BaseController;
+import com.overthinker.cloud.common.core.base.BaseController;
 import com.overthinker.cloud.common.annotation.AccessLimit;
 import com.overthinker.cloud.web.entity.enums.RegisterOrLoginTypeEnum;
 import com.overthinker.cloud.web.entity.oauth.GiteeBody;

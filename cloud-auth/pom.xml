@@ -18,6 +18,12 @@
             <artifactId>spring-boot-starter-oauth2-authorization-server</artifactId>
         </dependency>
 
+        <!-- OAuth2 Client 用于支持第三方登录 (GitHub, Gitee 等) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
+
         <!-- Spring Security 安全框架 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -37,6 +43,8 @@
             <artifactId>cloud-common-db</artifactId>
         </dependency>
 
+
+
         <!-- Redis 缓存支持 (用于存储Token等) -->
         <dependency>
             <groupId>com.overthinker.cloud.system</groupId>
@@ -46,6 +54,11 @@
         <dependency>
             <groupId>com.overthinker.cloud.common</groupId>
             <artifactId>cloud-common-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
         </dependency>
 
 

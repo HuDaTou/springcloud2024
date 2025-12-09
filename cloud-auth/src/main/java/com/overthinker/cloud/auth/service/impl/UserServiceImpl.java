@@ -14,7 +14,7 @@ import com.overthinker.cloud.auth.mapper.*;
 import com.overthinker.cloud.auth.service.UserService;
 import com.overthinker.cloud.auth.utils.SecurityUtils;
 
-import com.overthinker.cloud.common.resp.ResultData;
+import com.overthinker.cloud.common.core.resp.ResultData;
 
 import com.overthinker.cloud.auth.constants.AuthRedisConst;
 import com.overthinker.cloud.redis.utils.MyRedisCache;

@@ -67,4 +67,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         List<SysPermission> permissions = permissionMapper.selectBatchIds(permissionIds);
         return permissions.stream().map(SysPermission::getPermissionKey).collect(Collectors.toList());
     }
+
+    @Override
+    public SysUser getUserByEmail(String email) {
+        return baseMapper.selectOne(new LambdaQueryWrapper<SysUser>()
+                .eq(SysUser::getEmail, email));
+    }
 }

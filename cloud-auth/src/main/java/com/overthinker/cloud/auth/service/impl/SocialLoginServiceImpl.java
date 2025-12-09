@@ -5,7 +5,7 @@ import com.overthinker.cloud.auth.entity.PO.User;
 import com.overthinker.cloud.auth.service.SocialLoginService;
 import com.overthinker.cloud.auth.service.UserService;
 import com.overthinker.cloud.auth.utils.JwtUtils;
-import com.overthinker.cloud.common.resp.ResultData;
+import com.overthinker.cloud.common.core.resp.ResultData;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import me.zhyd.oauth.model.AuthCallback;

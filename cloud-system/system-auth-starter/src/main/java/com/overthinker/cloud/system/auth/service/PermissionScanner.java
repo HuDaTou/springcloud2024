@@ -29,7 +29,7 @@ public class PermissionScanner {
     private final Environment environment;
 
     // 正则表达式，用于从 @PreAuthorize("hasAuthority('xxx')") 中提取 'xxx'
-    private static final Pattern PRE_AUTHORIZE_PATTERN = Pattern.compile("hasAuthority\('([^']+)'\)");
+    private static final Pattern PRE_AUTHORIZE_PATTERN = Pattern.compile("hasAuthority\\('([^']+)'\\)");
 
     public PermissionScanner(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;

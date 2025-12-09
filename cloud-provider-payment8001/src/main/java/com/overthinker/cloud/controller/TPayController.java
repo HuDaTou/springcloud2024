@@ -5,7 +5,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.overthinker.cloud.common.entity.DTO.PayDTO;
 import com.overthinker.cloud.entity.TPay;
 import com.overthinker.cloud.common.entity.VO.PayVO;
-import com.overthinker.cloud.common.resp.ResultData;
+import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.service.impl.TPayServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

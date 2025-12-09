@@ -30,14 +30,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // 1. 根据用户名从数据库加载用户
+        // 1. 根据用户名或邮箱从数据库加载用户
+        // 尝试按用户名查找
         SysUser sysUser = sysUserService.getUserByUsername(username);
         if (sysUser == null) {
-            log.warn("用户 {} 不存在或密码错误！", username);
+            // 如果按用户名没找到，再尝试按邮箱查找
+            sysUser = sysUserService.getUserByEmail(username);
+        }
+
+        if (sysUser == null) {
+            log.warn("用户 [{}] 不存在或密码错误！", username);
             throw new UsernameNotFoundException("用户不存在或密码错误！");
         }
         if (sysUser.getIsDeleted() == 1 || sysUser.getIsDisable() == 1) {
-            log.warn("用户 {} 已被禁用或删除！", username);
+            log.warn("用户 [{}] 已被禁用或删除！", sysUser.getUsername());
             throw new UsernameNotFoundException("用户已被禁用！");
         }
 

@@ -2,7 +2,7 @@ package com.overthinker.cloud.web.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.overthinker.cloud.common.resp.ResultData;
+import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.web.entity.DTO.SearchTreeHoleDTO;
 import com.overthinker.cloud.web.entity.DTO.TreeHoleIsCheckDTO;
 import com.overthinker.cloud.web.entity.PO.TreeHole;

@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.entity.email;
 
-import com.overthinker.cloud.common.entity.BasecopyProperties;
+import com.overthinker.cloud.common.core.entity.BasecopyProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

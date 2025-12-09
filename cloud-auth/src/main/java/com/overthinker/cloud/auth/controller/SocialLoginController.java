@@ -6,7 +6,7 @@ import com.overthinker.cloud.common.core.resp.ResultData;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import me.zhyd.oauth.model.AuthCallback;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;

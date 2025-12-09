@@ -1,10 +1,12 @@
-package com.overthinker.cloud.web.quartz;
+package com.overthinker.cloud.web.xxljob;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.overthinker.cloud.redis.utils.MyRedisCache;
 import com.overthinker.cloud.web.entity.PO.Article;
-import com.overthinker.cloud.redis.constants.RedisConst;
+
 import com.overthinker.cloud.web.mapper.ArticleMapper;
-import com.overthinker.cloud.web.utils.MyRedisCache;
+
+import com.xxl.job.core.handler.annotation.XxlJob;
 import jakarta.annotation.Resource;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +22,7 @@ import java.util.List;
  * 刷新缓存任务 / 5分钟刷新一次
  */
 @Slf4j
-public class RefreshTheCache extends QuartzJobBean {
+public class RefreshTheCache  {
 
     @Resource
     private ArticleMapper articleMapper;
@@ -28,7 +30,8 @@ public class RefreshTheCache extends QuartzJobBean {
     @Resource
     private MyRedisCache redisCache;
 
-    @Override
+
+    @XxlJob("executeInternal")
     protected void executeInternal(@NonNull JobExecutionContext context) {
         log.info("-------------------------------开始同步文章浏览量到数据库-------------------------------");
         try {

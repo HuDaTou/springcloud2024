@@ -1,17 +1,20 @@
 package com.overthinker.cloud.web.controller;
 
 
-import com.overthinker.cloud.common.annotation.LogAnnotation;
-import com.overthinker.cloud.common.base.BaseController;
-import com.overthinker.cloud.common.resp.ResultData;
-import com.overthinker.cloud.common.annotation.AccessLimit;
-import com.overthinker.cloud.common.annotation.CheckBlacklist;
 
+import com.overthinker.cloud.common.core.annotation.CheckBlacklist;
+import com.overthinker.cloud.common.core.annotation.LogAnnotation;
+import com.overthinker.cloud.common.core.annotation.LogConst;
+import com.overthinker.cloud.common.core.base.BaseController;
+import com.overthinker.cloud.common.core.resp.ResultData;
+
+
+import com.overthinker.cloud.redis.annotation.AccessLimit;
 import com.overthinker.cloud.web.entity.DTO.LeaveWordIsCheckDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchLeaveWordDTO;
 import com.overthinker.cloud.web.entity.VO.LeaveWordListVO;
 import com.overthinker.cloud.web.entity.VO.LeaveWordVO;
-import com.overthinker.cloud.common.annotation.LogConst;
+
 import com.overthinker.cloud.web.service.LeaveWordService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

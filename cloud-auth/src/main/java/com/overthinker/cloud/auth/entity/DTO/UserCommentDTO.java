@@ -1,6 +1,6 @@
 package com.overthinker.cloud.auth.entity.DTO;
 
-import com.overthinker.cloud.common.entity.BasecopyProperties;
+import com.overthinker.cloud.common.core.entity.BasecopyProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

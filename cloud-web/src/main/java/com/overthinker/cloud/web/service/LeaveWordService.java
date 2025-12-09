@@ -1,7 +1,7 @@
 package com.overthinker.cloud.web.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.overthinker.cloud.common.resp.ResultData;
+import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.web.entity.DTO.LeaveWordIsCheckDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchLeaveWordDTO;
 import com.overthinker.cloud.web.entity.PO.LeaveWord;

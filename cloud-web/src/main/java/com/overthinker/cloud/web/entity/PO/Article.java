@@ -3,8 +3,9 @@ package com.overthinker.cloud.web.entity.PO;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.overthinker.cloud.common.entity.BasecopyProperties;
-import com.overthinker.cloud.common.entity.PO.BaseData;
+
+import com.overthinker.cloud.common.core.entity.BasecopyProperties;
+import com.overthinker.cloud.common.db.BaseData;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

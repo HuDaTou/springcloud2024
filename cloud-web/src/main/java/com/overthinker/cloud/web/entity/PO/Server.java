@@ -1,7 +1,7 @@
 package com.overthinker.cloud.web.entity.PO;
 
 
-import com.overthinker.cloud.common.entity.BasecopyProperties;
+import com.overthinker.cloud.common.core.entity.BasecopyProperties;
 import com.overthinker.cloud.web.entity.server.*;
 import com.overthinker.cloud.web.utils.Arith;
 import com.overthinker.cloud.web.utils.IpUtils;
