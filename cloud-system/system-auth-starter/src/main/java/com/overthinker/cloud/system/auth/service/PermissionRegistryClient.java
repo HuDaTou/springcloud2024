@@ -1,7 +1,7 @@
 package com.overthinker.cloud.system.auth.service;
 
-import com.overthinker.cloud.api.client.AuthClient;
-import com.overthinker.cloud.api.dto.PermissionDTO;
+import com.overthinker.cloud.api.auth.api.AuthClient;
+import com.overthinker.cloud.api.auth.dto.PermissionDTO;
 
 import java.util.List;
 import java.util.logging.Level;

@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.overthinker.cloud.auth.entity.DTO.UserRegisterDTO;
 import com.overthinker.cloud.auth.entity.DTO.UserResetConfirmDTO;
 import com.overthinker.cloud.auth.entity.DTO.UserResetPasswordDTO;
-import com.overthinker.cloud.auth.entity.SysUser;
-import com.overthinker.cloud.auth.entity.SysUserRole;
+import com.overthinker.cloud.auth.entity.PO.SysUser;
+import com.overthinker.cloud.auth.entity.PO.SysUserRole;
 import com.overthinker.cloud.auth.mapper.SysUserMapper;
 import com.overthinker.cloud.auth.mapper.SysUserRoleMapper;
 import com.overthinker.cloud.auth.service.AuthService;
@@ -68,7 +68,8 @@ public class AuthServiceImpl implements AuthService {
         user.setIsDeleted(0);
         user.setIsDisable(0);
         // 设置默认头像等
-        user.setAvatar("https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png");
+        user.setAvatar("""
+                https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png""");
 
         userMapper.insert(user);
 

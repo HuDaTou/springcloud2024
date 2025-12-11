@@ -1,7 +1,6 @@
 package com.overthinker.cloud.auth.service;
 
-import com.overthinker.cloud.auth.entity.SysUser;
-import com.overthinker.cloud.auth.service.ISysUserService;
+import com.overthinker.cloud.auth.entity.PO.SysUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -42,7 +41,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             log.warn("用户 [{}] 不存在或密码错误！", username);
             throw new UsernameNotFoundException("用户不存在或密码错误！");
         }
-        if (sysUser.getIsDeleted() == 1 || sysUser.getIsDisable() == 1) {
+        if ( sysUser.getIsDisable() == 1) {
             log.warn("用户 [{}] 已被禁用或删除！", sysUser.getUsername());
             throw new UsernameNotFoundException("用户已被禁用！");
         }

@@ -1,13 +1,12 @@
 package com.overthinker.cloud.system.auth.service;
 
-import com.overthinker.cloud.api.dto.PermissionDTO;
+import com.overthinker.cloud.api.auth.dto.PermissionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 

@@ -3,10 +3,12 @@ package com.overthinker.cloud.auth.listener;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.overthinker.cloud.api.dto.PermissionDTO;
-import com.overthinker.cloud.auth.entity.SysPermission;
+
+import com.overthinker.cloud.api.auth.dto.PermissionDTO;
+import com.overthinker.cloud.auth.entity.PO.SysRolePermission;
 import com.overthinker.cloud.auth.service.ISysPermissionService;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.QueueBinding;
@@ -80,8 +82,8 @@ public class PermissionListener {
     private void saveOrUpdatePermission(PermissionDTO dto) {
         String code = dto.getCode();
         // 1. 查询是否存在
-        SysPermission existing = permissionService.getOne(new LambdaQueryWrapper<SysPermission>()
-                .eq(SysPermission::getPermissionKey, code));
+        SysRolePermission.SysPermission existing = permissionService.getOne(new LambdaQueryWrapper<SysRolePermission.SysPermission>()
+                .eq(SysRolePermission.SysPermission::getPermissionKey, code));
 
         if (existing != null) {
             // 2. 更新 (只更新描述等非关键字段，以免覆盖管理员的手动配置)
@@ -100,12 +102,11 @@ public class PermissionListener {
             }
         } else {
             // 3. 插入
-            SysPermission newPermission = new SysPermission();
+            SysRolePermission.SysPermission newPermission = new SysRolePermission.SysPermission();
             newPermission.setPermissionKey(code);
             newPermission.setPermissionDesc(dto.getName());
             newPermission.setCreateTime(LocalDateTime.now());
             newPermission.setUpdateTime(LocalDateTime.now());
-            newPermission.setIsDeleted(0);
             newPermission.setMenuId(0L); // 默认为0，表示未分配菜单，需管理员后续在后台关联菜单
             
             permissionService.save(newPermission);

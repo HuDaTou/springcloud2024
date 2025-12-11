@@ -1,40 +1,48 @@
-package com.overthinker.cloud.auth.entity;
+package com.overthinker.cloud.auth.entity.PO;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 权限表
+ * 角色表
  */
 @Data
-@TableName("sys_permission")
-public class SysPermission implements Serializable {
+@TableName("sys_role")
+public class SysRole  {
 
-    private static final long serialVersionUID = 1L;
 
     /**
-     * 权限表id
+     * 角色id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
-     * 描述
+     * 角色名称
      */
-    private String permissionDesc;
+    private String roleName;
 
     /**
-     * 权限字符
+     * 角色字符
      */
-    private String permissionKey;
+    private String roleKey;
 
     /**
-     * 菜单id
+     * 状态（0：正常，1：停用）
      */
-    private Long menuId;
+    private Integer status;
+
+    /**
+     * 排序
+     */
+    private Long orderNum;
+
+    /**
+     * 备注
+     */
+    private String remark;
 
     /**
      * 创建时间

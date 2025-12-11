@@ -11,7 +11,9 @@ import com.overthinker.cloud.common.db.BaseData;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 
 /**
@@ -20,6 +22,8 @@ import lombok.NoArgsConstructor;
  * @author overH
  * @since 2023-12-05 19:55:11
  */
+@EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

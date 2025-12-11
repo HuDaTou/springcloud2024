@@ -2,7 +2,10 @@ package com.overthinker.cloud.auth.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.overthinker.cloud.auth.entity.*;
+import com.overthinker.cloud.auth.entity.PO.SysRole;
+import com.overthinker.cloud.auth.entity.PO.SysRolePermission;
+import com.overthinker.cloud.auth.entity.PO.SysUser;
+import com.overthinker.cloud.auth.entity.PO.SysUserRole;
 import com.overthinker.cloud.auth.mapper.*;
 import com.overthinker.cloud.auth.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,8 +67,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         List<Long> permissionIds = rolePermissions.stream().map(SysRolePermission::getPermissionId).collect(Collectors.toList());
 
         // 3. 查询权限标识
-        List<SysPermission> permissions = permissionMapper.selectBatchIds(permissionIds);
-        return permissions.stream().map(SysPermission::getPermissionKey).collect(Collectors.toList());
+        List<SysRolePermission.SysPermission> permissions = permissionMapper.selectBatchIds(permissionIds);
+        return permissions.stream().map(SysRolePermission.SysPermission::getPermissionKey).collect(Collectors.toList());
     }
 
     @Override

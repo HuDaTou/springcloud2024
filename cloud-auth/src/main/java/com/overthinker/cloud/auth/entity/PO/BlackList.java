@@ -7,11 +7,10 @@ import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.overthinker.cloud.auth.entity.ip.BlackListIpInfo;
 
 import com.overthinker.cloud.common.core.entity.BasecopyProperties;
+import com.overthinker.cloud.common.db.BaseData;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 import java.util.Date;
 
@@ -22,7 +21,8 @@ import java.util.Date;
  * @author overH
  * @since 2024-09-05 16:13:19
  */
-@Builder
+@EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

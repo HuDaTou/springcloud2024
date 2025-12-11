@@ -14,9 +14,10 @@ import com.overthinker.cloud.auth.mapper.BlackListMapper;
 import com.overthinker.cloud.auth.mapper.UserMapper;
 import com.overthinker.cloud.auth.service.BlackListService;
 import com.overthinker.cloud.auth.service.IpService;
-import com.overthinker.cloud.auth.utils.SecurityUtils;
+
 
 import com.overthinker.cloud.common.core.resp.ResultData;
+import com.overthinker.cloud.common.web.utils.ServletUtils;
 import com.overthinker.cloud.common.core.utils.StringUtils;
 import com.overthinker.cloud.redis.utils.MyRedisCache;
 
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -73,15 +75,18 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
     }
 
     protected Boolean saveBlackList(AddBlackListDTO addBlackListDTO, Integer index) {
-        BlackList blackList = BlackList.builder()
-                .userId(!addBlackListDTO.userIds().isEmpty() ? addBlackListDTO.userIds().get(index) : null)
-                .reason(addBlackListDTO.reason())
-                .type(!addBlackListDTO.userIds().isEmpty() ? BlackListConst.BLACK_LIST_TYPE_USER : BlackListConst.BLACK_LIST_TYPE_BOT)
-                .expiresTime(addBlackListDTO.expiresTime()).build();
+        BlackList blackList = new BlackList()
+                .setUserId(!addBlackListDTO.userIds().isEmpty() ? addBlackListDTO.userIds().get(index) : null)
+                .setReason(addBlackListDTO.reason())
+                .setType(!addBlackListDTO.userIds().isEmpty()
+                        ? BlackListConst.BLACK_LIST_TYPE_USER
+                        : BlackListConst.BLACK_LIST_TYPE_BOT)
+                .setExpiresTime(addBlackListDTO.expiresTime());
 
-        BlackListIpInfo blackListIpInfo = BlackListIpInfo.builder()
-                .createIp(!addBlackListDTO.userIds().isEmpty() ? null : IpUtils.getIpAddr(SecurityUtils.getCurrentHttpRequest()))
-                .build();
+        BlackListIpInfo blackListIpInfo = new BlackListIpInfo()
+                .setCreateIp(!addBlackListDTO.userIds().isEmpty()
+                        ? null
+                        : Objects.requireNonNull(ServletUtils.getRequest()).getRemoteAddr());
         blackList.setIpInfo(blackListIpInfo);
         if (addBlackListDTO.userIds().isEmpty()) {
             Long idByIp = blackListMapper.getIdByIp(blackListIpInfo.getCreateIp());
@@ -91,7 +96,7 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
             }
         }
         if (null != blackList.getId() ? this.updateById(blackList) : this.save(blackList)) {
-            if (blackList.getType() == BlackListConst.BLACK_LIST_TYPE_BOT) {
+            if (Objects.equals(blackList.getType(), BlackListConst.BLACK_LIST_TYPE_BOT)) {
                 ipService.refreshIpDetailAsyncByBid(blackList.getId());
             }
             updateBlackListCache(blackList);
@@ -137,10 +142,10 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
 
     @Override
     public ResultData<Void> updateBlackList(UpdateBlackListDTO updateBlackListDTO) {
-        BlackList blackList = BlackList.builder()
-                .id(updateBlackListDTO.getId())
-                .reason(updateBlackListDTO.getReason())
-                .expiresTime(updateBlackListDTO.getExpiresTime()).build();
+        BlackList blackList = new BlackList()
+                .setId(updateBlackListDTO.getId())
+                .setReason(updateBlackListDTO.getReason())
+                .setExpiresTime(updateBlackListDTO.getExpiresTime());
         if (this.updateById(blackList)) {
             // 修改缓存
             BlackList black = blackListMapper.selectById(blackList.getId());
@@ -151,10 +156,10 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
     }
 
     private void updateBlackListCache(BlackList blackList) {
-        if (blackList.getType() == BlackListConst.BLACK_LIST_TYPE_BOT) {
+        if (BlackListConst.BLACK_LIST_TYPE_BOT.equals(blackList.getType())) {
             // 更新redis缓存
             myRedisCache.setCacheMapValue(BlackListConst.BLACK_LIST_IP_KEY, blackList.getIpInfo().getCreateIp(), blackList.getExpiresTime());
-        } else if (blackList.getType() == BlackListConst.BLACK_LIST_TYPE_USER) {
+        } else if ( BlackListConst.BLACK_LIST_TYPE_USER.equals(blackList.getType())) {
             myRedisCache.setCacheMapValue(BlackListConst.BLACK_LIST_UID_KEY, blackList.getUserId().toString(), blackList.getExpiresTime());
         }
     }
@@ -164,10 +169,10 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
     public ResultData<Void> deleteBlackList(List<Long> ids) {
         // 清除缓存
         blackListMapper.selectBatchIds(ids).forEach(blackList -> {
-            if (blackList.getType() == BlackListConst.BLACK_LIST_TYPE_BOT) {
+            if (BlackListConst.BLACK_LIST_TYPE_BOT.equals(blackList.getType())) {
                 // 清除缓存
                 myRedisCache.deleteCacheMapValue(BlackListConst.BLACK_LIST_IP_KEY, blackList.getIpInfo().getCreateIp());
-            } else if (blackList.getType() == BlackListConst.BLACK_LIST_TYPE_USER) {
+            } else if (BlackListConst.BLACK_LIST_TYPE_USER.equals(blackList.getType())) {
                 myRedisCache.deleteCacheMapValue(BlackListConst.BLACK_LIST_UID_KEY, blackList.getUserId().toString());
             }
         });

@@ -1,29 +1,23 @@
-package com.overthinker.cloud.web.service.impl;
+package com.overthinker.cloud.auth.service.impl;
 
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.thread.NamedThreadFactory;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import com.overthinker.cloud.web.entity.DTO.IpResult;
-import com.overthinker.cloud.web.entity.PO.BlackList;
-import com.overthinker.cloud.web.entity.PO.Log;
-import com.overthinker.cloud.web.entity.PO.LoginLog;
-import com.overthinker.cloud.web.entity.PO.User;
-import com.overthinker.cloud.web.entity.constants.ThirdPartyInterfaceConst;
-import com.overthinker.cloud.web.entity.ip.IpDetail;
-import com.overthinker.cloud.web.handler.GlobalUncaughtExceptionHandler;
-import com.overthinker.cloud.web.mapper.BlackListMapper;
-import com.overthinker.cloud.web.mapper.LogMapper;
-import com.overthinker.cloud.web.mapper.LoginLogMapper;
-import com.overthinker.cloud.web.mapper.UserMapper;
-import com.overthinker.cloud.web.service.IpService;
+import com.overthinker.cloud.auth.entity.DTO.IpResult;
+import com.overthinker.cloud.auth.entity.PO.BlackList;
+import com.overthinker.cloud.auth.entity.PO.User;
+import com.overthinker.cloud.auth.constants.ThirdPartyInterfaceConst;
+import com.overthinker.cloud.auth.entity.ip.IpDetail;
+import com.overthinker.cloud.auth.mapper.BlackListMapper;
+import com.overthinker.cloud.auth.mapper.UserMapper;
+import com.overthinker.cloud.auth.service.IpService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -39,23 +33,20 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class IpServiceImpl implements IpService, DisposableBean {
 
+    private static final Thread.UncaughtExceptionHandler UNCAUGHT_EXCEPTION_HANDLER =
+            (t, e) -> log.error("Exception in thread {} ", t.getName(), e);
+
     private static final ExecutorService EXECUTOR = new ThreadPoolExecutor(1, 1,
             0L, TimeUnit.MILLISECONDS,
             new LinkedBlockingQueue<>(500),
             new NamedThreadFactory("refresh-ipDetail", null, false,
-                    GlobalUncaughtExceptionHandler.getInstance()));
+                    UNCAUGHT_EXCEPTION_HANDLER));
 
     @Resource
     private BlackListMapper blackListMapper;
 
     @Resource
     private UserMapper userMapper;
-
-    @Resource
-    private LoginLogMapper loginLogMapper;
-
-    @Resource
-    private LogMapper logMapper;
 
     /**
      * 异步刷新ip详情获取
@@ -144,24 +135,7 @@ public class IpServiceImpl implements IpService, DisposableBean {
      */
     @Override
     public void refreshIpDetailAsyncByLogIdAndLogin(Long loginLogId) {
-        EXECUTOR.execute(() -> {
-            LoginLog loginLog = loginLogMapper.selectById(loginLogId);
-            if (Objects.isNull(loginLog)) {
-                return;
-            }
-            String ip = loginLog.getIp();
-            if (StrUtil.isBlank(ip)) {
-                return;
-            }
-            IpDetail ipDetail = TryGetIpDetailOrNullTreeTimes(ip);
-            if (Objects.nonNull(ipDetail)) {
-                loginLog.setAddress(buildAddr(ipDetail.getRegion(), ipDetail.getCity(), ipDetail.getCountry()));
-            } else {
-                loginLog.setAddress("未知");
-                log.error("loginLog get ip detail fail ip:{},loginLogId:{}", ip, loginLogId);
-            }
-            loginLogMapper.updateById(loginLog);
-        });
+        // This functionality is removed as it belongs to the cloud-web module.
     }
 
     /**
@@ -171,24 +145,7 @@ public class IpServiceImpl implements IpService, DisposableBean {
      */
     @Override
     public void refreshIpDetailAsyncByLogId(Long logId) {
-        EXECUTOR.execute(() -> {
-            Log log = logMapper.selectById(logId);
-            if (Objects.isNull(log)) {
-                return;
-            }
-            String ip = log.getIp();
-            if (StrUtil.isBlank(ip)) {
-                return;
-            }
-            IpDetail ipDetail = TryGetIpDetailOrNullTreeTimes(ip);
-            if (Objects.nonNull(ipDetail)) {
-                log.setAddress(buildAddr(ipDetail.getRegion(), ipDetail.getCity(), ipDetail.getCountry()));
-            } else {
-                log.setAddress("未知");
-                IpServiceImpl.log.error("log get ip detail fail ip:{},log:{}", ip, log);
-            }
-            logMapper.updateById(log);
-        });
+        // This functionality is removed as it belongs to the cloud-web module.
     }
 
     /**
@@ -226,25 +183,6 @@ public class IpServiceImpl implements IpService, DisposableBean {
         }
 
         return region + " " + city;
-    }
-
-
-    //测试耗时结果 100次查询总耗时约100s，平均一次成功查询需要1s,可以接受
-    //第99次成功,目前耗时：111281ms
-    public static void main(String[] args) {
-        Date begin = new Date();
-        for (int i = 0; i < 100; i++) {
-            int finalI = i;
-            EXECUTOR.execute(() -> {
-                IpDetail ipDetail = TryGetIpDetailOrNullTreeTimes("");
-                if (Objects.nonNull(ipDetail)) {
-                    Date date = new Date();
-                    System.out.printf("第%d次成功,目前耗时：%dms%n", finalI, (date.getTime() - begin.getTime()));
-                    log.info(ipDetail.toString());
-                }
-            });
-        }
-        System.out.println(StrUtil.format(ThirdPartyInterfaceConst.TAOBAO_IP_DETAIL, "1433223"));
     }
 
     private static IpDetail TryGetIpDetailOrNullTreeTimes(String ip) {

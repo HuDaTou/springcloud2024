@@ -1,7 +1,7 @@
 package com.overthinker.cloud.auth.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.overthinker.cloud.auth.entity.SysRole;
+import com.overthinker.cloud.auth.entity.PO.SysRole;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

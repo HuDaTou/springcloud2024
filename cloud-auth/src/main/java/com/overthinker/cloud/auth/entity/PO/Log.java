@@ -3,16 +3,23 @@ package com.overthinker.cloud.auth.entity.PO;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.overthinker.cloud.common.db.BaseData;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
+@EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @TableName("system_log")
-public class Log implements Serializable {
+public class Log extends BaseData {
 
-    private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;

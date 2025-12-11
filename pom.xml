@@ -391,6 +391,12 @@
                 <version>1.16.6</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.xkcoding.justauth</groupId>
+                <artifactId>justauth-spring-boot-starter</artifactId>
+                <version>1.4.0</version>
+            </dependency>
+
 
             <!--feign-micrometer 5-->
             <dependency>
