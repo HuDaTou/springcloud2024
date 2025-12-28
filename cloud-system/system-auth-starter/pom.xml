@@ -27,7 +27,10 @@
             <artifactId>cloud-api</artifactId>
         </dependency>
 
-
+<!--        <dependency>-->
+<!--            <groupId>com.overthinker.cloud.common</groupId>-->
+<!--            <artifactId>cloud-common-web</artifactId>-->
+<!--        </dependency>-->
 
         <!-- OAuth2 资源服务器支持，用于校验和解析JWT Token -->
         <dependency>

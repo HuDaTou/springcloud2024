@@ -1,7 +1,6 @@
 # Spring Application Configuration
 spring:
-  application:
-    name: cloud-auth # 应用名称，用于Consul注册
+
   profiles:
     active: dev # 激活的配置文件，可以根据环境修改
   security:
@@ -11,7 +10,7 @@ spring:
 
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:postgresql://postgres:5432/${POSTGRES_DB}/auth
+    url: jdbc:postgresql://localhost:5432/cloud?currentSchema=auth
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
@@ -31,23 +30,17 @@ spring:
       filters: stat,wall,log4j
       use-global-data-source-stat: true
       connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
-
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: ${RABBITMQ_DEFAULT_USER}
+    password: ${RABBITMQ_DEFAULT_PASS}
 # Server Configuration
 server:
-  port: 9000 # 服务端口
+  port: 9123 # 服务端口
 
-# Consul Configuration
-  cloud:
-    consul:
-      host: localhost # Consul服务地址
-      port: 8500 # Consul端口
-      discovery:
-        service-name: ${spring.application.name} # 注册到Consul的服务名称
-        prefer-ip-address: true # 优先使用IP地址注册
-        health-check-path: /actuator/health # 健康检查路径
-        health-check-interval: 10s # 健康检查间隔
-      config:
-        enabled: true # 启用Consul配置中心
+justauth:
+  enabled: false
 
 # Logging Configuration (Log4j2 will pick up log4j2-spring.xml from common-core)
 logging:

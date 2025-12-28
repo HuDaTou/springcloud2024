@@ -22,12 +22,13 @@ import java.util.List;
  */
 public interface UserService extends IService<User>, UserDetailsService {
     /**
-     * 根据用户名或者密码查询用户
+     * 根据用户名或者邮箱查询用户
      *
-     * @param text 用户名或者邮箱
+     * @param userName 用户名
+     * @param email 用户邮箱
      * @return 用户信息
      */
-    User findAccountByNameOrEmail(String text);
+    User findAccountByNameOrEmail(String userName,String email);
 
     /**
      * 根据用户id查询用户信息

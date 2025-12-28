@@ -70,7 +70,7 @@ public class PermissionScanner {
                 // 如果没有@PreAuthorize注解，视为公开接口或未配置权限控制接口，暂时跳过或记录为默认
                 // 这里选择：如果没有显式权限控制，不纳入权限管理表
                 if (code == null) {
-                    log.debug("跳过未配置 @PreAuthorize 的方法: {}.வைக்", controllerClass.getSimpleName(), method.getName());
+                    log.debug("跳过未配置 @PreAuthorize 的方法: {}", controllerClass.getSimpleName(), method.getName());
                     continue;
                 }
 

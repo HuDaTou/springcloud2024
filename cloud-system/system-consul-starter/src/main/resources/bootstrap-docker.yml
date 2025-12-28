@@ -1,2 +1,2 @@
-address:
-  consul-host: ${address.docker.host}
+#address:
+##  consul-host: ${address.docker.host}

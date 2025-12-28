@@ -29,8 +29,6 @@ public class UserController extends BaseController {
     @Resource
     private UserService userService;
 
-    @Resource
-    private AuthService authService;
 
     @Operation(summary = "获取当前用户信息", description = "获取当前登录用户的账号详细信息")
     @GetMapping("/auth/info")
@@ -62,23 +60,7 @@ public class UserController extends BaseController {
         return userService.thirdUpdateEmail(updateEmailDTO);
     }
 
-    @Operation(summary = "用户注册", description = "新用户通过邮箱验证码注册账号")
-    @PostMapping("/register")
-    public ResultData<Void> register(@RequestBody @Valid UserRegisterDTO userRegisterDTO) {
-        return authService.register(userRegisterDTO);
-    }
 
-    @Operation(summary = "重置密码-确认邮件", description = "找回密码第一步：验证邮箱和验证码是否正确")
-    @PostMapping("/reset-confirm")
-    public ResultData<Void> resetConfirm(@RequestBody @Valid UserResetConfirmDTO userResetDTO) {
-        return authService.resetConfirm(userResetDTO);
-    }
-
-    @Operation(summary = "重置密码", description = "找回密码第二步：设置新密码")
-    @PostMapping("/reset-password")
-    public ResultData<Void> resetPassword(@RequestBody @Valid UserResetPasswordDTO userResetDTO) {
-        return authService.resetPassword(userResetDTO);
-    }
 
     @Operation(summary = "获取用户列表", description = "【管理员】获取系统所有用户列表")
     @GetMapping("/list")

@@ -17,9 +17,16 @@ public class PermissionDTO {
     private String category;
     private String name;
     private String code; // 权限标识，如 "user:add"
+    /**
+     * HTTP请求方法，例如 "GET", "POST"
+     */
     private String httpMethod;
-    private String path;
-    private String serviceName; // 所属服务名
 
+    /**
+     * 权限的完整请求路径
+     */
+    private String path;
+    //    权限代码
+    private  String permissonCode;
 
 }

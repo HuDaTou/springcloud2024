@@ -37,39 +37,5 @@ public class SysRolePermission extends BaseData  {
      */
     private Long permissionId;
 
-    /**
-     * 权限表
-     */
-    @EqualsAndHashCode(callSuper = true)
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @TableName("sys_permission")
-    public static class SysPermission extends BaseData {
 
-
-
-        /**
-         * 权限表id
-         */
-        @TableId(value = "id", type = IdType.AUTO)
-        private Long id;
-
-        /**
-         * 描述
-         */
-        private String permissionDesc;
-
-        /**
-         * 权限字符
-         */
-        private String permissionKey;
-
-        /**
-         * 菜单id
-         */
-        private Long menuId;
-
-
-    }
 }

@@ -4,6 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
  */
 @Configuration
 @EnableMethodSecurity // 启用方法级别的安全注解，如@PreAuthorize
+@EnableWebSecurity // <--- 必须有这个注解，它会触发 HttpSecurity 的创建
 public class ResourceServerConfig {
 
     /**
@@ -31,7 +34,7 @@ public class ResourceServerConfig {
     public SecurityFilterChain resourceServerSecurityFilterChain(HttpSecurity http) throws Exception {
         http
             // 禁用CSRF，因为JWT是无状态的，不需要CSRF保护
-            .csrf(csrf -> csrf.disable())
+            .csrf(AbstractHttpConfigurer::disable)
             // 配置授权规则
             .authorizeHttpRequests(authorizeRequests ->
                 authorizeRequests

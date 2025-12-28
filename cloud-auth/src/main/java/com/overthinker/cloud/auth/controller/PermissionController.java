@@ -1,7 +1,8 @@
 package com.overthinker.cloud.auth.controller;
 
+import com.overthinker.cloud.auth.entity.PO.SysPermission;
 import com.overthinker.cloud.auth.entity.PO.SysRolePermission;
-import com.overthinker.cloud.auth.service.ISysPermissionService;
+import com.overthinker.cloud.auth.service.PermissionService;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -17,17 +18,17 @@ import java.util.List;
 public class PermissionController {
 
     @Resource
-    private ISysPermissionService permissionService;
+    private PermissionService permissionService;
 
     @Operation(summary = "获取所有权限", description = "获取系统中所有的权限列表")
     @GetMapping
-    public ResultData<List<SysRolePermission.SysPermission>> getAllPermissions() {
+    public ResultData<List<SysPermission>> getAllPermissions() {
         return ResultData.success(permissionService.list());
     }
 
     @Operation(summary = "创建权限", description = "手动创建一个新的权限")
     @PostMapping
-    public ResultData<Void> createPermission(@RequestBody SysRolePermission.SysPermission permission) {
+    public ResultData<Void> createPermission(@RequestBody SysPermission permission) {
         permissionService.save(permission);
         return ResultData.success();
     }
@@ -36,7 +37,7 @@ public class PermissionController {
     @PutMapping("/{id}")
     public ResultData<Void> updatePermission(
             @Parameter(description = "权限ID", required = true) @PathVariable Long id,
-            @RequestBody SysRolePermission.SysPermission permission) {
+            @RequestBody SysPermission permission) {
         permission.setId(id);
         permissionService.updateById(permission);
         return ResultData.success();

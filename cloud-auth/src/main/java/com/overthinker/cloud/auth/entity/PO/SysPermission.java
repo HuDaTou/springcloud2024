@@ -47,4 +47,7 @@ public class SysPermission extends BaseData {
      * 权限的完整请求路径
      */
     private String path;
+
+//    权限代码
+    private  String permissonCode;
 }

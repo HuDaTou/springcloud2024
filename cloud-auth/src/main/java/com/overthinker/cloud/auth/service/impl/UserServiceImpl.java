@@ -3,10 +3,8 @@ package com.overthinker.cloud.auth.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.overthinker.cloud.auth.entity.DTO.*;
-import com.overthinker.cloud.auth.entity.PO.LoginUser;
-import com.overthinker.cloud.auth.entity.PO.RolePermission;
-import com.overthinker.cloud.auth.entity.PO.User;
-import com.overthinker.cloud.auth.entity.PO.UserRole;
+import com.overthinker.cloud.auth.entity.PO.*;
+import com.overthinker.cloud.auth.entity.VO.BlackListVO;
 import com.overthinker.cloud.auth.entity.VO.UserAccountVO;
 import com.overthinker.cloud.auth.entity.VO.UserDetailsVO;
 import com.overthinker.cloud.auth.entity.VO.UserListVO;
@@ -20,6 +18,7 @@ import com.overthinker.cloud.auth.constants.AuthRedisConst;
 import com.overthinker.cloud.redis.utils.MyRedisCache;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -55,20 +54,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Resource
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private BlackListServiceImpl blackListService;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = this.findAccountByNameOrEmail(username);
+    public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+        User user = this.findAccountByNameOrEmail(usernameOrEmail,usernameOrEmail);
         if (Objects.isNull(user)) {
             throw new UsernameNotFoundException("用户不存在");
         }
+        SearchBlackListDTO searchBlackListDTO = new SearchBlackListDTO();
+        searchBlackListDTO.setUserName(user.getUsername());
+//        检测用户是否在黑名单里面
+        BlackList byId = blackListService.getById(user.getId());
+        if (Objects.isNull(byId)) throw  new UsernameNotFoundException("用户已被封禁");
+
         return new LoginUser(user, this.getUserAuthorities(user.getId()));
     }
 
     @Override
-    public User findAccountByNameOrEmail(String text) {
+    public User findAccountByNameOrEmail(String userName,String email) {
         return userMapper.selectOne(new LambdaQueryWrapper<User>()
-                .eq(User::getUsername, text).or().eq(User::getEmail, text));
+                .eq(User::getUsername, userName).or().eq(User::getEmail, email));
     }
 
     @Override

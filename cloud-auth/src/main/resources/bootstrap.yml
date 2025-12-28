@@ -1,0 +1,32 @@
+spring:
+
+  application:
+    name: cloud-auth # 应用名称，用于Consul注册
+  cloud:
+    consul:
+      enabled: true
+      host: ${address.consul-host}
+      port: ${address.consul-port}
+      discovery:
+        service-name: ${spring.application.name}
+        prefer-ip-address: true # 优先使用IP地址注册
+        health-check-path: /actuator/health # 健康检查路径
+        health-check-interval: 10s # 健康检查间隔
+        heartbeat:
+          enabled: false
+      config:
+        enabled: true
+        profile-separator: '-'
+        format: YAML
+address:
+  consul-host: ${address.local.host}
+  consul-port: ${address.local.port}
+  local:
+    host: localhost
+    port: 8500
+  docker:
+    host: localhost
+    port: 8080
+  k8s:
+    host: home.overthinker.top
+    port: 8080

@@ -59,8 +59,5 @@ public class BlackList extends BaseData implements BasecopyProperties {
     @Schema(description = "IP相关信息，type=2时必填", implementation = BlackListIpInfo.class)
     private BlackListIpInfo ipInfo;
 
-    // 是否删除（0：未删除，1：已删除）默认：0
-    @Schema(description = "逻辑删除标记", allowableValues = {"0", "1"}, example = "0")
-    private Integer isDeleted;
 }
 
