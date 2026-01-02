@@ -91,8 +91,4 @@ public class User extends BaseData implements BasecopyProperties {
     // 用户最近登录时间
     @Schema(description = "最后登录时间", example = "2023-06-01T12:00:00Z")
     private Date loginTime;
-
-    // 是否删除（0：未删除，1：已删除）
-    @Schema(description = "是否删除（0：未删除，1：已删除）", example = "0")
-    private Integer isDeleted;
 }

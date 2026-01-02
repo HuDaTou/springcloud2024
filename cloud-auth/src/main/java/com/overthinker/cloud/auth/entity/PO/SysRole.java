@@ -1,64 +1,62 @@
 package com.overthinker.cloud.auth.entity.PO;
 
-import com.baomidou.mybatisplus.annotation.*;
-import lombok.Data;
 
-import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
+import com.overthinker.cloud.common.core.entity.BasecopyProperties;
+
+import com.overthinker.cloud.common.db.BaseData;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+
 
 /**
- * 角色表
+ * (Role)表实体类
+ *
+ * @author overH
+ * @since 2023-10-13 15:02:40
  */
+@EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @TableName("sys_role")
-public class SysRole  {
+public class SysRole extends BaseData implements BasecopyProperties {
 
-
-    /**
-     * 角色id
-     */
-    @TableId(value = "id", type = IdType.AUTO)
+    // 角色id
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @Schema(description = "角色ID", example = "1234567890123456789")
     private Long id;
 
-    /**
-     * 角色名称
-     */
+    // 角色名称
+    @Schema(description = "角色名称", example = "管理员")
     private String roleName;
 
-    /**
-     * 角色字符
-     */
+    // 角色字符
+    @Schema(description = "角色标识", example = "admin")
     private String roleKey;
 
-    /**
-     * 状态（0：正常，1：停用）
-     */
+    // 是否删除（0：未删除，1：已删除）
+    @Schema(description = "是否删除（0：未删除，1：已删除）", example = "0")
+    private Integer isDeleted;
+
+    // 状态（0：正常，1：停用）
+    @Schema(description = "角色状态：0-正常 1-停用", allowableValues = {"0", "1"}, example = "0")
     private Integer status;
 
-    /**
-     * 排序
-     */
+    // 顺序
+    @Schema(description = "角色排序", example = "1")
     private Long orderNum;
 
-    /**
-     * 备注
-     */
+    // 备注
+    @Schema(description = "角色备注", example = "系统管理员")
     private String remark;
-
-    /**
-     * 创建时间
-     */
-    @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updateTime;
-
-    /**
-     * 是否删除（0：未删除，1：已删除）
-     */
-    @TableLogic
-    private Integer isDeleted;
 }
+

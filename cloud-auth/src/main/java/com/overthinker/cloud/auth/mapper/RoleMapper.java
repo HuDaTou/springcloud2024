@@ -1,7 +1,7 @@
 package com.overthinker.cloud.auth.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.overthinker.cloud.auth.entity.PO.Role;
+import com.overthinker.cloud.auth.entity.PO.SysRole;
 
 
 /**
@@ -10,6 +10,6 @@ import com.overthinker.cloud.auth.entity.PO.Role;
  * @author overH
  * @since 2023-10-13 15:02:40
  */
-public interface RoleMapper extends BaseMapper<Role> {
+public interface RoleMapper extends BaseMapper<SysRole> {
 
 }

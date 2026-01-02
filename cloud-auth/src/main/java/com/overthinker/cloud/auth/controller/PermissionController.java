@@ -1,7 +1,6 @@
 package com.overthinker.cloud.auth.controller;
 
 import com.overthinker.cloud.auth.entity.PO.SysPermission;
-import com.overthinker.cloud.auth.entity.PO.SysRolePermission;
 import com.overthinker.cloud.auth.service.PermissionService;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import io.swagger.v3.oas.annotations.Operation;

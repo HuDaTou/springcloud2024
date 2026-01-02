@@ -1,6 +1,6 @@
 package com.overthinker.cloud.auth.controller;
 
-import com.overthinker.cloud.auth.entity.PO.Role;
+import com.overthinker.cloud.auth.entity.PO.SysRole;
 import com.overthinker.cloud.auth.service.RoleService;
 
 import com.overthinker.cloud.common.core.resp.ResultData;
@@ -17,18 +17,18 @@ public class RoleController {
     private RoleService roleService;
 
     @GetMapping
-    public ResultData<List<Role>> getAllRoles() {
+    public ResultData<List<SysRole>> getAllRoles() {
         return ResultData.success(roleService.list());
     }
 
     @PostMapping
-    public ResultData<Void> createRole(@RequestBody Role role) {
+    public ResultData<Void> createRole(@RequestBody SysRole role) {
         roleService.save(role);
         return ResultData.success();
     }
 
     @PutMapping("/{id}")
-    public ResultData<Void> updateRole(@PathVariable Long id, @RequestBody Role role) {
+    public ResultData<Void> updateRole(@PathVariable Long id, @RequestBody SysRole role) {
         role.setId(id);
         roleService.updateById(role);
         return ResultData.success();

@@ -24,10 +24,12 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.overthinker.cloud</groupId>-->
-<!--            <artifactId>system-consul-starter</artifactId>-->
-<!--        </dependency>-->
+        <!-- Consul 服务注册与发现 -->
+        <dependency>
+            <groupId>com.overthinker.cloud.system</groupId>
+            <artifactId>system-consul-starter</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>io.minio</groupId>
             <artifactId>minio</artifactId>

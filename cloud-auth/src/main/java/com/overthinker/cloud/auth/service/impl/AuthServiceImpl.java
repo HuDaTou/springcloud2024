@@ -3,7 +3,7 @@ package com.overthinker.cloud.auth.service.impl;
 import com.overthinker.cloud.auth.entity.DTO.UserRegisterDTO;
 import com.overthinker.cloud.auth.entity.DTO.UserResetConfirmDTO;
 import com.overthinker.cloud.auth.entity.DTO.UserResetPasswordDTO;
-import com.overthinker.cloud.auth.entity.PO.Role;
+import com.overthinker.cloud.auth.entity.PO.SysRole;
 import com.overthinker.cloud.auth.entity.PO.User;
 import com.overthinker.cloud.auth.entity.PO.UserRole;
 import com.overthinker.cloud.auth.mapper.UserRoleMapper;
@@ -71,7 +71,7 @@ public class AuthServiceImpl implements AuthService {
         userService.save(user);
 
         // 5. 分配默认角色 (如 USER)
-        Role dfalultRole = roleService.getDfalultRole();
+        SysRole dfalultRole = roleService.getDfalultRole();
         UserRole userRole = new UserRole().setUserId(user.getId())
                 .setRoleId(dfalultRole.getId());
         userRoleMapper.insert(userRole);

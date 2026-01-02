@@ -1,11 +1,11 @@
 package com.overthinker.cloud.auth.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.overthinker.cloud.auth.entity.PO.Role;
+import com.overthinker.cloud.auth.entity.PO.SysRole;
 
-public interface RoleService extends IService<Role> {
+public interface RoleService extends IService<SysRole> {
 
-    Role getDfalultRole();
+    SysRole getDfalultRole();
 
     Void setDfalultRole();
 }

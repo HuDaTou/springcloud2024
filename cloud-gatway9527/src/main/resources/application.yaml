@@ -7,22 +7,30 @@ spring:
   cloud:
     gateway:
 #      动态路由配置
-#      discovery:
-#        locator:
-#          enabled: true # 开启根据服务发现的自动路由功能
-#          lower-case-service-id: true # 将服务名转为小写
-      routes:
-        - id: pay_routh1 #pay_routh1                #路由的ID(类似mysql主键ID)，没有固定规则但要求唯一，建议配合服务名
-          uri: lb://cloud-payment-service             #匹配后提供服务的路由地址
-          predicates:
-            - Path=/pay/gateway/get/**              # 断言，路径相匹配的进行路由
-
-
-        - id: pay_routh2 #pay_routh2                #路由的ID(类似mysql主键ID)，没有固定规则但要求唯一，建议配合服务名
-          uri: http://localhost:8001                #匹配后提供服务的路由地址
-          predicates:
-            - Path=/pay/gateway/info/**              # 断言，路径相匹配的进行路由
-
+      discovery:
+        locator:
+          enabled: true # 开启根据服务发现的自动路由功能
+          lower-case-service-id: true # 将服务名转为小写
+#      routes:
+#        - id: pay_routh1 #pay_routh1                #路由的ID(类似mysql主键ID)，没有固定规则但要求唯一，建议配合服务名
+#          uri: lb://cloud-payment-service             #匹配后提供服务的路由地址
+#          predicates:
+#            - Path=/pay/gateway/get/**              # 断言，路径相匹配的进行路由
+#
+#
+#        - id: pay_routh2 #pay_routh2                #路由的ID(类似mysql主键ID)，没有固定规则但要求唯一，建议配合服务名
+#          uri: http://localhost:8001                #匹配后提供服务的路由地址
+#          predicates:
+#            - Path=/pay/gateway/info/**              # 断言，路径相匹配的进行路由
+  # Security Configuration for Resource Server (JWT Validation)
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # 配置授权服务器的JWK Set URI，网关将从这里获取公钥来验证JWT签名
+          # 假设cloud-auth运行在9000端口
+          issuer-uri: http://localhost:9000 # cloud-auth的Issuer URI
+          jwk-set-uri: http://localhost:9000/oauth2/jwks # cloud-auth的JWK Set端点
 
 
 knife4j:
@@ -50,3 +58,9 @@ knife4j:
         # 路由前缀
         context-path: /
         order: 3
+logging:
+  level:
+    root: INFO
+    org.springframework.security: DEBUG # 方便调试Spring Security
+    org.springframework.security.oauth2: DEBUG # 方便调试OAuth2流程
+    org.springframework.cloud.gateway: DEBUG # 方便调试Gateway路由

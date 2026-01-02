@@ -7,15 +7,14 @@
     <resultMap id="BaseResultMap" type="com.overthinker.cloud.media.entity.PO.FileUploadRules">
             <id property="id" column="id" />
             <result property="ruleName" column="rule_name" />
-            <result property="fileCategory" column="file_category" typeHandler="com.overthinker.cloud.common.handler.mybatisTypeHandler.StringListTypeHandler"/>
-            <result property="allowedExtensions" column="allowed_extensions" typeHandler="com.overthinker.cloud.common.handler.mybatisTypeHandler.StringListTypeHandler"/>
+            <result property="fileCategory" column="file_category" />
+            <result property="allowedExtensions" column="allowed_extensions" />
             <result property="maxSizeKb" column="max_size_kb" />
             <result property="storagePath" column="storage_path" />
             <result property="isActive" column="is_active" />
             <result property="description" column="description" />
             <result property="createTime" column="create_time" />
             <result property="updateTime" column="update_time" />
-            <result property="isDeleted" column="is_deleted" />
     </resultMap>
 
     <sql id="Base_Column_List">

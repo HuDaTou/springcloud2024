@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.overthinker.cloud.auth.entity.DTO.*;
 import com.overthinker.cloud.auth.entity.PO.*;
-import com.overthinker.cloud.auth.entity.VO.BlackListVO;
 import com.overthinker.cloud.auth.entity.VO.UserAccountVO;
 import com.overthinker.cloud.auth.entity.VO.UserDetailsVO;
 import com.overthinker.cloud.auth.entity.VO.UserListVO;
@@ -18,6 +17,7 @@ import com.overthinker.cloud.auth.constants.AuthRedisConst;
 import com.overthinker.cloud.redis.utils.MyRedisCache;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.glassfish.jaxb.core.v2.TODO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -44,7 +44,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private RolePermissionMapper rolePermissionMapper;
 
     @Resource
-    private PermissionMapper permissionMapper;
+    private SysPermissionMapper sysPermissionMapper;
+
+
 
     @Resource
     private RoleMapper roleMapper;
@@ -194,7 +196,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return Collections.emptyList();
         }
         List<Long> permissionIds = rolePermissions.stream().map(RolePermission::getPermissionId).toList();
-        return permissionMapper.selectBatchIds(permissionIds).stream().map(com.overthinker.cloud.auth.entity.PO.Permission::getPermissionKey).toList();
+//        TODO 这里是有问题的
+        return sysPermissionMapper.selectBatchIds(permissionIds).stream().map(SysPermission::getName).toList();
     }
 
     @Override
@@ -204,6 +207,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return Collections.emptyList();
         }
         List<Long> roleIds = userRoles.stream().map(UserRole::getRoleId).toList();
-        return roleMapper.selectBatchIds(roleIds).stream().map(com.overthinker.cloud.auth.entity.PO.Role::getRoleName).toList();
+        return roleMapper.selectBatchIds(roleIds).stream().map(SysRole::getRoleName).toList();
     }
 }
