@@ -14,6 +14,7 @@ import com.overthinker.cloud.auth.mapper.BlackListMapper;
 import com.overthinker.cloud.auth.mapper.UserMapper;
 import com.overthinker.cloud.auth.service.IpService;
 import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Service;
@@ -31,24 +32,37 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor // 核心：为 final 字段生成构造器
 public class IpServiceImpl implements IpService, DisposableBean {
 
+    /**
+     * 静态常量：未捕获异常处理器 (保持原样，它是类级别的)
+     */
     private static final Thread.UncaughtExceptionHandler UNCAUGHT_EXCEPTION_HANDLER =
             (t, e) -> log.error("Exception in thread {} ", t.getName(), e);
 
+    /**
+     * 静态常量：线程池 (保持原样，它已经在定义时初始化了)
+     */
     private static final ExecutorService EXECUTOR = new ThreadPoolExecutor(1, 1,
             0L, TimeUnit.MILLISECONDS,
             new LinkedBlockingQueue<>(500),
             new NamedThreadFactory("refresh-ipDetail", null, false,
                     UNCAUGHT_EXCEPTION_HANDLER));
 
-    @Resource
-    private BlackListMapper blackListMapper;
-
-    @Resource
-    private UserMapper userMapper;
+    // --- 以下是 Spring 注入的 Bean，改为 final 并删掉 @Resource ---
 
     /**
+     * 黑名单持久层
+     */
+    private final BlackListMapper blackListMapper;
+
+    /**
+     * 用户持久层
+     */
+    private final UserMapper userMapper;
+
+ /**
      * 异步刷新ip详情获取
      *
      * @param bid 黑名单id

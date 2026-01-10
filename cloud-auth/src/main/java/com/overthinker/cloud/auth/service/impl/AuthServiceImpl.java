@@ -6,12 +6,16 @@ import com.overthinker.cloud.auth.entity.DTO.UserResetPasswordDTO;
 import com.overthinker.cloud.auth.entity.PO.SysRole;
 import com.overthinker.cloud.auth.entity.PO.User;
 import com.overthinker.cloud.auth.entity.PO.UserRole;
+import com.overthinker.cloud.auth.entity.VO.UserRegisterBuildVO;
 import com.overthinker.cloud.auth.mapper.UserRoleMapper;
 import com.overthinker.cloud.auth.service.AuthService;
 import com.overthinker.cloud.auth.service.RoleService;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.system.redis.constant.RedisConstants;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,22 +28,42 @@ import java.util.Objects;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
 
 
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    /**
+     * 密码加密工具
+     */
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private StringRedisTemplate redisTemplate;
-    @Autowired
-    private UserServiceImpl userService;
-    @Autowired
-    private RoleService roleService;
-    @Autowired
-    private UserRoleMapper userRoleMapper;
+    /**
+     * Redis 操作模板（用于验证码存储、Token管理等）
+     */
+    private final StringRedisTemplate redisTemplate;
+
+    /**
+     * 用户基本信息服务
+     */
+    private final UserServiceImpl userService;
+
+    /**
+     * 角色/权限服务
+     */
+    private final RoleService roleService;
+
+    /**
+     * 用户与角色关联表的持久层
+     */
+    private final UserRoleMapper userRoleMapper;
+
+    /**
+     * 消息队列模板（用于异步发送邮件/短信）
+     */
+    private final RabbitTemplate rabbitTemplate;
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)

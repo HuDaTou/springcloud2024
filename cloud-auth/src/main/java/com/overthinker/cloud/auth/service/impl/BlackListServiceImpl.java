@@ -24,6 +24,7 @@ import com.overthinker.cloud.redis.utils.MyRedisCache;
 import com.overthinker.cloud.auth.entity.PO.User;
 
 import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,19 +39,28 @@ import java.util.stream.Collectors;
  * @since 2024-09-05 16:13:21
  */
 @Service("blackListService")
+@RequiredArgsConstructor
 public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList> implements BlackListService {
 
-    @Resource
-    private BlackListMapper blackListMapper;
+    /**
+     * 黑名单持久层
+     */
+    private final BlackListMapper blackListMapper;
 
-    @Resource
-    private IpService ipService;
+    /**
+     * IP 相关服务
+     */
+    private final IpService ipService;
 
-    @Resource
-    private UserMapper userMapper;
+    /**
+     * 用户持久层
+     */
+    private final UserMapper userMapper;
 
-    @Resource
-    private MyRedisCache myRedisCache;
+    /**
+     * 自定义 Redis 缓存工具
+     */
+    private final MyRedisCache myRedisCache;
 
     @Override
     public ResultData<Void> addBlackList(AddBlackListDTO addBlackListDTO) {

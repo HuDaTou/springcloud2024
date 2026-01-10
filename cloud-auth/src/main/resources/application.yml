@@ -7,6 +7,17 @@ spring:
     oauth2:
       authorizationserver:
         issuer: http://localhost:9000 # 授权服务器的Issuer URI，与AuthorizationServerConfig中配置的保持一致
+  mail:
+    host: smtp.qq.com
+    port: 465
+    password: flyeasakxhzodiih
+    username: 2262135195@qq.com
+    properties:
+                mail:
+                  smtp:
+                    auth: true
+                    ssl:
+                      enable: true # QQ邮箱465端口必须开启SSL
 
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource

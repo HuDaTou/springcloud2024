@@ -7,6 +7,7 @@ import com.overthinker.cloud.auth.entity.DTO.UpdateBlackListDTO;
 import com.overthinker.cloud.auth.entity.PO.BlackList;
 import com.overthinker.cloud.auth.entity.VO.BlackListVO;
 import com.overthinker.cloud.common.core.resp.ResultData;
+import org.springframework.stereotype.Service;
 
 
 import java.util.List;
@@ -18,6 +19,8 @@ import java.util.List;
  * @author overH
  * @since 2024-09-05 16:13:20
  */
+@Service
+
 public interface BlackListService extends IService<BlackList> {
 
     /**

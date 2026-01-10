@@ -1,5 +1,6 @@
 package com.overthinker.cloud.redis.utils;
 
+import cn.hutool.core.util.RandomUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.BoundSetOperations;
 import org.springframework.data.redis.core.HashOperations;
@@ -10,6 +11,11 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+/**
+ *
+ *
+ * 这是我自己实现的redis 工具模板
+ */
 @SuppressWarnings(value = {"unchecked", "rawtypes"})
 @Component
 @RequiredArgsConstructor
@@ -29,6 +35,7 @@ public class MyRedisCache {
 
     /**
      * 缓存基本的对象，Integer、String、实体类等
+     * 没有时间限制永久保存
      *
      * @param key   缓存的键值
      * @param value 缓存的值
@@ -270,4 +277,5 @@ public class MyRedisCache {
     public boolean isHasKey(final String key) {
         return Boolean.TRUE.equals(redisTemplate.hasKey(key));
     }
+
 }

@@ -5,10 +5,12 @@ import com.overthinker.cloud.auth.entity.DTO.UserResetConfirmDTO;
 import com.overthinker.cloud.auth.entity.DTO.UserResetPasswordDTO;
 
 
+import com.overthinker.cloud.auth.entity.VO.UserRegisterBuildVO;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface AuthService {
+
 
     /**
      * 处理用户注册。
