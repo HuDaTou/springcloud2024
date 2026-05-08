@@ -2,7 +2,7 @@ package com.overthinker.cloud.web.entity.VO;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author overH
@@ -20,7 +20,6 @@ public class TreeHoleListVO {
     // 是否通过
     private Integer isCheck;
     //创建时间
-    private Date createTime;
-    //修改时间
-    private Date updateTime;
+    private LocalDateTime createTime;
+    private LocalDateTime updateTime;
 }

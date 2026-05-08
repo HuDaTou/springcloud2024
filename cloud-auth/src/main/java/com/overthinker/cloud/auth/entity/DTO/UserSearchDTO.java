@@ -2,7 +2,7 @@ package com.overthinker.cloud.auth.entity.DTO;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author overH
@@ -18,7 +18,7 @@ public class UserSearchDTO {
     //是否禁用 0 否 1 是
     private Integer isDisable;
     // 创建时间开始
-    private Date createTimeStart;
+    private LocalDateTime createTimeStart;
     // 创建时间结束
-    private Date createTimeEnd;
+    private LocalDateTime createTimeEnd;
 }

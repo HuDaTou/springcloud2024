@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.web.entity.DTO.CommentIsCheckDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchCommentDTO;
+import com.overthinker.cloud.web.entity.DTO.UserCommentDTO;
 
 import com.overthinker.cloud.web.entity.PO.Comment;
 import com.overthinker.cloud.web.entity.VO.ArticleCommentVO;

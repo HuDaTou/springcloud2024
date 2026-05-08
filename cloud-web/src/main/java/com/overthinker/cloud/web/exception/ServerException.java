@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.exception;
 
-import com.overthinker.cloud.common.resp.ReturnCodeEnum;
+import com.overthinker.cloud.common.core.resp.ReturnCodeEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

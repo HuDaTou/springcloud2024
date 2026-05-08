@@ -31,7 +31,7 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests((authorize) -> authorize
                 // 放行静态资源和登录页
-                .requestMatchers("/actuator/**", "/css/**", "/js/**", "/favicon.ico", "/error").permitAll()
+                .requestMatchers("/actuator/**", "/css/**", "/js/**", "/favicon.ico", "/error", "/internal/**").permitAll()
                 // 其他请求需要认证
                 .anyRequest().authenticated()
             )

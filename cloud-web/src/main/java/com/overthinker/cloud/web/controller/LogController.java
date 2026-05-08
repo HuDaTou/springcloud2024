@@ -1,18 +1,13 @@
 package com.overthinker.cloud.web.controller;
 
-
-
 import com.overthinker.cloud.common.core.annotation.LogAnnotation;
 import com.overthinker.cloud.common.core.annotation.LogConst;
 import com.overthinker.cloud.common.core.base.BaseController;
 import com.overthinker.cloud.common.core.resp.ResultData;
-
-
-import com.overthinker.cloud.auditlog.entity.DTO.LogDTO;
 import com.overthinker.cloud.redis.annotation.AccessLimit;
+import com.overthinker.cloud.web.entity.DTO.LogDTO;
 import com.overthinker.cloud.web.entity.DTO.LogDeleteDTO;
 import com.overthinker.cloud.web.entity.VO.PageVO;
-
 import com.overthinker.cloud.web.service.LogService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -51,7 +46,7 @@ public class LogController extends BaseController {
 
     @PreAuthorize("hasAnyAuthority('system:log:search')")
     @Operation(summary = "搜索操作日志")
-    @Parameter(name = "loginLogDTO", description = "搜索条件")
+    @Parameter(name = "logDTO", description = "搜索条件")
     @AccessLimit(seconds = 60, maxCount = 30)
     @PostMapping("/search")
     public ResultData<PageVO> getLogSearch(@RequestBody @Valid LogDTO logDTO) {
@@ -60,7 +55,7 @@ public class LogController extends BaseController {
 
     @PreAuthorize("hasAnyAuthority('system:log:delete')")
     @Operation(summary = "删除/清空操作日志")
-    @Parameter(name = "deleteLoginLogDTO", description = "删除的id数组")
+    @Parameter(name = "logDeleteDTO", description = "删除的id数组")
     @AccessLimit(seconds = 60, maxCount = 30)
     @LogAnnotation(module = "操作日志", operation = LogConst.DELETE)
     @DeleteMapping("/delete")

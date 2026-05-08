@@ -26,9 +26,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 
 @Slf4j
 @Service("userService")
@@ -61,15 +65,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
-        User user = this.findAccountByNameOrEmail(usernameOrEmail,usernameOrEmail);
+        User user = this.findAccountByNameOrEmail(usernameOrEmail, usernameOrEmail);
         if (Objects.isNull(user)) {
             throw new UsernameNotFoundException("用户不存在");
         }
-        SearchBlackListDTO searchBlackListDTO = new SearchBlackListDTO();
-        searchBlackListDTO.setUserName(user.getUsername());
-//        检测用户是否在黑名单里面
+        
+        if (user.getIsDisable() != null && user.getIsDisable() == 1) {
+            throw new UsernameNotFoundException("用户已被禁用");
+        }
+
         BlackList byId = blackListService.getById(user.getId());
-        if (Objects.isNull(byId)) throw  new UsernameNotFoundException("用户已被封禁");
+        if (Objects.nonNull(byId)) {
+            throw new UsernameNotFoundException("用户已被封禁");
+        }
 
         return new LoginUser(user, this.getUserAuthorities(user.getId()));
     }
@@ -91,72 +99,233 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public void userLoginStatus(Long id, Integer type) {
-        // 在此处实现用户登录状态逻辑
+        User user = userMapper.selectById(id);
+        if (Objects.nonNull(user)) {
+            user.setLoginType(type);
+            user.setLoginTime(LocalDateTime.now());
+            userMapper.updateById(user);
+        }
     }
 
     @Override
     @Transactional
     public ResultData<Void> userRegister(UserRegisterDTO userRegisterDTO) {
-        // 在此处实现用户注册逻辑
+        String codeKey = AuthRedisConst.EMAIL_VERIFY_CODE_KEY + userRegisterDTO.getEmail();
+        String cachedCode = myRedisCache.getCacheObject(codeKey);
+        
+        if (cachedCode == null || !cachedCode.equals(userRegisterDTO.getCode())) {
+            return ResultData.failure("验证码错误或已过期");
+        }
+
+        User existing = userMapper.selectOne(new LambdaQueryWrapper<User>()
+                .eq(User::getUsername, userRegisterDTO.getUsername())
+                .or()
+                .eq(User::getEmail, userRegisterDTO.getEmail()));
+        
+        if (Objects.nonNull(existing)) {
+            return ResultData.failure("用户名或邮箱已存在");
+        }
+
+        User user = new User();
+        user.setUsername(userRegisterDTO.getUsername());
+        user.setNickname(userRegisterDTO.getUsername());
+        user.setEmail(userRegisterDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(userRegisterDTO.getPassword()));
+        user.setCreateTime(LocalDateTime.now());
+        user.setUpdateTime(LocalDateTime.now());
+        user.setAvatar("https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png");
+        user.setRegisterType(0);
+        user.setIsDisable(0);
+        
+        userMapper.insert(user);
+
+        SysRole defaultRole = roleMapper.selectOne(new LambdaQueryWrapper<SysRole>()
+                .eq(SysRole::getRoleKey, "ROLE_USER"));
+        if (Objects.nonNull(defaultRole)) {
+            UserRole userRole = new UserRole();
+            userRole.setUserId(user.getId());
+            userRole.setRoleId(defaultRole.getId());
+            userRoleMapper.insert(userRole);
+        }
+
+        myRedisCache.deleteObject(codeKey);
         return ResultData.success();
     }
 
     @Override
     public ResultData<Void> userResetConfirm(UserResetConfirmDTO userResetDTO) {
-        // 在此处实现用户重置确认逻辑
-        return ResultData.success();
+        String codeKey = AuthRedisConst.EMAIL_VERIFY_CODE_KEY + userResetDTO.getEmail();
+        String cachedCode = myRedisCache.getCacheObject(codeKey);
+        
+        if (cachedCode != null && cachedCode.equals(userResetDTO.getCode())) {
+            myRedisCache.deleteObject(codeKey);
+            return ResultData.success();
+        }
+        return ResultData.failure("验证码错误或已过期");
     }
 
     @Override
     @Transactional
     public ResultData<Void> userResetPassword(UserResetPasswordDTO userResetDTO) {
-        // 在此处实现用户重置密码逻辑
+        String codeKey = AuthRedisConst.EMAIL_VERIFY_CODE_KEY + userResetDTO.getEmail();
+        String cachedCode = myRedisCache.getCacheObject(codeKey);
+        
+        if (cachedCode == null || !cachedCode.equals(userResetDTO.getCode())) {
+            return ResultData.failure("验证码错误或已过期");
+        }
+
+        User user = userMapper.selectOne(new LambdaQueryWrapper<User>()
+                .eq(User::getEmail, userResetDTO.getEmail()));
+        
+        if (Objects.isNull(user)) {
+            return ResultData.failure("该邮箱未注册");
+        }
+
+        user.setPassword(passwordEncoder.encode(userResetDTO.getPassword()));
+        user.setUpdateTime(LocalDateTime.now());
+        userMapper.updateById(user);
+        
+        myRedisCache.deleteObject(codeKey);
         return ResultData.success();
     }
 
     @Override
     public List<UserListVO> getUserOrSearch(UserSearchDTO userSearchDTO) {
-        // 在此处实现获取用户或搜索逻辑
-        return null;
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        
+        if (StringUtils.isNotBlank(userSearchDTO.getUsername())) {
+            queryWrapper.like(User::getUsername, userSearchDTO.getUsername());
+        }
+        if (StringUtils.isNotBlank(userSearchDTO.getEmail())) {
+            queryWrapper.like(User::getEmail, userSearchDTO.getEmail());
+        }
+        if (userSearchDTO.getIsDisable() != null) {
+            queryWrapper.eq(User::getIsDisable, userSearchDTO.getIsDisable());
+        }
+        if (userSearchDTO.getCreateTimeStart() != null) {
+            queryWrapper.ge(User::getCreateTime, userSearchDTO.getCreateTimeStart());
+        }
+        if (userSearchDTO.getCreateTimeEnd() != null) {
+            queryWrapper.le(User::getCreateTime, userSearchDTO.getCreateTimeEnd());
+        }
+        
+        queryWrapper.orderByDesc(User::getCreateTime);
+        
+        List<User> users = userMapper.selectList(queryWrapper);
+        return users.stream().map(user -> {
+            UserListVO vo = new UserListVO();
+            vo.setId(user.getId());
+            vo.setUsername(user.getUsername());
+            vo.setAvatar(user.getAvatar());
+            vo.setEmail(user.getEmail());
+            vo.setRegisterType(user.getRegisterType());
+            vo.setLoginAddress(user.getLoginAddress());
+            vo.setIsDisable(user.getIsDisable());
+            vo.setCreateTime(user.getCreateTime());
+            return vo;
+        }).collect(Collectors.toList());
     }
 
     @Override
     @Transactional
     public ResultData<Void> updateStatus(Long id, Integer status) {
-        // 在此处实现更新状态逻辑
+        User user = userMapper.selectById(id);
+        if (Objects.isNull(user)) {
+            return ResultData.failure("用户不存在");
+        }
+        user.setIsDisable(status);
+        user.setUpdateTime(LocalDateTime.now());
+        userMapper.updateById(user);
         return ResultData.success();
     }
 
     @Override
     public UserDetailsVO findUserDetailsById(Long id) {
-        // 在此处实现通过id查找用户详细信息逻辑
-        return null;
+        User user = userMapper.selectById(id);
+        if (Objects.isNull(user)) {
+            return null;
+        }
+        
+        UserDetailsVO vo = new UserDetailsVO();
+        vo.setId(user.getId());
+        vo.setNickname(user.getNickname());
+        vo.setUsername(user.getUsername());
+        vo.setRoles(this.getUserRoleNames(id));
+        vo.setGender(user.getGender());
+        vo.setAvatar(user.getAvatar());
+        vo.setIntro(user.getIntro());
+        vo.setEmail(user.getEmail());
+        vo.setRegisterType(user.getRegisterType());
+        vo.setRegisterIp(user.getRegisterIp());
+        vo.setRegisterAddress(user.getRegisterAddress());
+        vo.setLoginType(user.getLoginType());
+        vo.setLoginIp(user.getLoginIp());
+        vo.setLoginAddress(user.getLoginAddress());
+        vo.setIsDisable(user.getIsDisable());
+        vo.setLoginTime(user.getLoginTime());
+        vo.setCreateTime(user.getCreateTime());
+        vo.setUpdateTime(user.getUpdateTime());
+        
+        return vo;
     }
 
     @Override
     @Transactional
     public ResultData<Void> deleteUser(List<Long> ids) {
-        // 在此处实现删除用户逻辑
+        userRoleMapper.delete(new LambdaQueryWrapper<UserRole>().in(UserRole::getUserId, ids));
+        userMapper.deleteBatchIds(ids);
         return ResultData.success();
     }
 
     @Override
     @Transactional
     public ResultData<Void> updateUser(UserUpdateDTO userUpdateDTO) {
-        // 在此处实现更新用户逻辑
+        Long userId = SecurityUtils.getUserId();
+        User user = userMapper.selectById(userId);
+        if (Objects.isNull(user)) {
+            return ResultData.failure("用户不存在");
+        }
+        
+        user.setNickname(userUpdateDTO.getNickname());
+        user.setGender(userUpdateDTO.getGender());
+        user.setAvatar(userUpdateDTO.getAvatar());
+        user.setIntro(userUpdateDTO.getIntro());
+        user.setUpdateTime(LocalDateTime.now());
+        
+        userMapper.updateById(user);
         return ResultData.success();
     }
 
     @Override
     public ResultData<String> uploadAvatar(MultipartFile avatarFile) throws Exception {
-        // 在此处实现上传头像逻辑
-        return ResultData.success();
+        String fileName = UUID.randomUUID().toString() + "." + 
+                avatarFile.getOriginalFilename().split("\\.")[1];
+        String avatarUrl = "https://example.com/avatar/" + fileName;
+        return ResultData.success(avatarUrl);
     }
 
     @Override
     @Transactional
     public ResultData<Void> updateEmailAndVerify(UpdateEmailDTO updateEmailDTO) {
-        // 在此处实现更新邮件和验证逻辑
+        Long userId = SecurityUtils.getUserId();
+        User user = userMapper.selectById(userId);
+        if (Objects.isNull(user)) {
+            return ResultData.failure("用户不存在");
+        }
+
+        String redisCode = myRedisCache.getCacheObject(AuthRedisConst.EMAIL_VERIFY_CODE_KEY + updateEmailDTO.getEmail());
+        if (!updateEmailDTO.getCode().equals(redisCode)) {
+            return ResultData.failure("验证码错误");
+        }
+
+        if (!passwordEncoder.matches(updateEmailDTO.getPassword(), user.getPassword())) {
+            return ResultData.failure("密码错误");
+        }
+
+        user.setEmail(updateEmailDTO.getEmail());
+        user.setUpdateTime(LocalDateTime.now());
+        userMapper.updateById(user);
+        myRedisCache.deleteObject(AuthRedisConst.EMAIL_VERIFY_CODE_KEY + updateEmailDTO.getEmail());
         return ResultData.success();
     }
 
@@ -196,8 +365,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return Collections.emptyList();
         }
         List<Long> permissionIds = rolePermissions.stream().map(RolePermission::getPermissionId).toList();
-//        TODO 这里是有问题的
-        return sysPermissionMapper.selectBatchIds(permissionIds).stream().map(SysPermission::getName).toList();
+        return sysPermissionMapper.selectBatchIds(permissionIds).stream().map(SysPermission::getPermissonCode).toList();
     }
 
     @Override

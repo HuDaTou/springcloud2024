@@ -5,7 +5,7 @@ import com.overthinker.cloud.auth.entity.ip.BlackListIpInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author overH
@@ -31,11 +31,11 @@ public class BlackListVO {
     private Integer type;
     //封禁时间
     @Schema(description = "封禁时间")
-    private Date bannedTime;
+    private LocalDateTime bannedTime;
     //到期时间
     @Schema(description = "到期时间")
-    private Date expiresTime;
+    private LocalDateTime expiresTime;
     //更新时间
     @Schema(description = "更新时间")
-    private Date updateTime;
+    private LocalDateTime updateTime;
 }

@@ -1,5 +1,10 @@
 package com.overthinker.cloud.web.entity.PO;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.overthinker.cloud.common.core.entity.BasecopyProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -7,7 +12,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @SuppressWarnings("serial")
 @Data
@@ -32,7 +37,7 @@ public class VideoTag implements BasecopyProperties {
 
     @TableField(fill = FieldFill.INSERT)
     @Schema(description = "创建时间", example = "2023-06-01T12:00:00Z")
-    private Date createTime;
+    private LocalDateTime createTime;
 
     // 是否删除（0：未删除，1：已删除）
     @Schema(description = "是否删除（0：未删除，1：已删除）", example = "0")

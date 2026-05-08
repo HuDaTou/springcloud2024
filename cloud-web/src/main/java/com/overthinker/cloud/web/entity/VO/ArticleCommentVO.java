@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -38,7 +38,7 @@ public class ArticleCommentVO {
     //回复用户的id
     private Long replyUserId;
     //评论时间
-    private Date createTime;
+    private LocalDateTime createTime;
     // 评论昵称
     private String commentUserNickname;
     // 评论头像

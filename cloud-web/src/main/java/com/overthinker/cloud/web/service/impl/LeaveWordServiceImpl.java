@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.web.entity.DTO.LeaveWordIsCheckDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchLeaveWordDTO;
+import com.overthinker.cloud.api.auth.api.UserClient;
 import com.overthinker.cloud.web.entity.PO.*;
 import com.overthinker.cloud.web.entity.VO.LeaveWordListVO;
 import com.overthinker.cloud.web.entity.VO.LeaveWordVO;
@@ -18,7 +19,7 @@ import com.overthinker.cloud.web.entity.enums.MailboxAlertsEnum;
 import com.overthinker.cloud.web.mapper.*;
 import com.overthinker.cloud.web.service.LeaveWordService;
 import com.overthinker.cloud.web.service.PublicService;
-import com.overthinker.cloud.web.utils.SecurityUtils;
+import com.overthinker.cloud.system.auth.utils.SecurityUtils;
 import com.overthinker.cloud.web.utils.StringUtils;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,7 +41,7 @@ import java.util.stream.Collectors;
 public class LeaveWordServiceImpl extends ServiceImpl<LeaveWordMapper, LeaveWord> implements LeaveWordService {
 
     @Resource
-    private UserMapper userMapper;
+    private UserClient userClient;
 
     @Resource
     private CommentMapper commentMapper;
@@ -61,12 +62,17 @@ public class LeaveWordServiceImpl extends ServiceImpl<LeaveWordMapper, LeaveWord
                 .eq(id != null, SQLConst.ID, id)
                 .orderByDesc(SQLConst.CREATE_TIME)
                 .list().stream().map(leaveWord -> {
-                    User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, leaveWord.getUserId()));
-                    return leaveWord.copyProperties(LeaveWordVO.class, leaveWordVO -> leaveWordVO.setNickname(user.getNickname())
-                            .setAvatar(user.getAvatar())
-                            .setCommentCount(commentMapper.selectCount(new LambdaQueryWrapper<Comment>().eq(Comment::getType, CommentEnum.COMMENT_TYPE_LEAVE_WORD.getType()).eq(Comment::getIsCheck, SQLConst.IS_CHECK_YES).eq(Comment::getTypeId, leaveWord.getId())))
+                    LeaveWordVO vo = leaveWord.copyProperties(LeaveWordVO.class);
+                    ResultData<Map<String, Object>> userInfoResult = userClient.getUserInfoById(leaveWord.getUserId());
+                    Map<String, Object> userInfo = userInfoResult.getData();
+                    if (userInfo != null) {
+                        vo.setNickname((String) userInfo.get("nickname"));
+                        vo.setAvatar((String) userInfo.get("avatar"));
+                    }
+                    vo.setCommentCount(commentMapper.selectCount(new LambdaQueryWrapper<Comment>().eq(Comment::getType, CommentEnum.COMMENT_TYPE_LEAVE_WORD.getType()).eq(Comment::getIsCheck, SQLConst.IS_CHECK_YES).eq(Comment::getTypeId, leaveWord.getId())))
                             .setLikeCount(likeMapper.selectCount(new LambdaQueryWrapper<Like>().eq(Like::getType, LikeEnum.LIKE_TYPE_LEAVE_WORD.getType()).eq(Like::getTypeId, leaveWord.getId())))
-                            .setFavoriteCount(favoriteMapper.selectCount(new LambdaQueryWrapper<Favorite>().eq(Favorite::getType, CommentEnum.COMMENT_TYPE_LEAVE_WORD.getType()).eq(Favorite::getTypeId, leaveWord.getId()))));
+                            .setFavoriteCount(favoriteMapper.selectCount(new LambdaQueryWrapper<Favorite>().eq(Favorite::getType, CommentEnum.COMMENT_TYPE_LEAVE_WORD.getType()).eq(Favorite::getTypeId, leaveWord.getId())));
+                    return vo;
                 }).toList();
     }
 
@@ -89,11 +95,10 @@ public class LeaveWordServiceImpl extends ServiceImpl<LeaveWordMapper, LeaveWord
                 .userId(SecurityUtils.getUserId()).build();
 
         if (this.save(build)) {
-            // 是否是站长本人留言
-            User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, SecurityUtils.getUserId()));
-            if (Objects.equals(user.getEmail(), email) || !messageNewNotice) return ResultData.success();
+            ResultData<String> userEmailResult = userClient.getEmailById(SecurityUtils.getUserId());
+            String userEmail = userEmailResult.getData();
+            if (Objects.equals(userEmail, email) || !messageNewNotice) return ResultData.success();
 
-            // 留言成功，发送邮箱提醒给站长
             Map<String, Object> map = new HashMap<>();
             map.put("messageId", build.getId());
             publicService.sendEmail(MailboxAlertsEnum.MESSAGE_NOTIFICATION_EMAIL.getCodeStr(), email, map);
@@ -107,10 +112,10 @@ public class LeaveWordServiceImpl extends ServiceImpl<LeaveWordMapper, LeaveWord
     public List<LeaveWordListVO> getBackLeaveWordList(SearchLeaveWordDTO searchDTO) {
         LambdaQueryWrapper<LeaveWord> wrapper = new LambdaQueryWrapper<>();
         if (StringUtils.isNotNull(searchDTO)) {
-            // 搜索
-            List<User> users = userMapper.selectList(new LambdaQueryWrapper<User>().like(User::getUsername, searchDTO.getUserName()));
-            if (!users.isEmpty())
-                wrapper.in(StringUtils.isNotEmpty(searchDTO.getUserName()), LeaveWord::getUserId, users.stream().map(User::getId).collect(Collectors.toList()));
+            ResultData<List<Long>> userIdsResult = userClient.searchUserIdsByUsername(searchDTO.getUserName());
+            List<Long> userIds = userIdsResult.getData() != null ? userIdsResult.getData() : List.of();
+            if (!userIds.isEmpty())
+                wrapper.in(StringUtils.isNotEmpty(searchDTO.getUserName()), LeaveWord::getUserId, userIds);
             else
                 wrapper.eq(StringUtils.isNotNull(searchDTO.getUserName()), LeaveWord::getUserId, null);
 
@@ -120,9 +125,12 @@ public class LeaveWordServiceImpl extends ServiceImpl<LeaveWordMapper, LeaveWord
         }
         List<LeaveWord> leaveWords = leaveWordMapper.selectList(wrapper);
         if (!leaveWords.isEmpty()) {
-            return leaveWords.stream().map(leaveWord -> leaveWord.copyProperties(LeaveWordListVO.class,
-                    v -> v.setUserName(userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, leaveWord.getUserId()))
-                            .getUsername()))).toList();
+            return leaveWords.stream().map(leaveWord -> {
+                LeaveWordListVO vo = leaveWord.copyProperties(LeaveWordListVO.class);
+                ResultData<String> usernameResult = userClient.getUsernameById(leaveWord.getUserId());
+                vo.setUserName(usernameResult.getData() != null ? usernameResult.getData() : "");
+                return vo;
+            }).toList();
         }
         return null;
     }

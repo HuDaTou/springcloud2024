@@ -1,6 +1,6 @@
 package com.overthinker.cloud.redis.utils;
 
-import cn.hutool.core.util.RandomUtil;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.BoundSetOperations;
 import org.springframework.data.redis.core.HashOperations;
@@ -20,9 +20,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 @RequiredArgsConstructor
 public class MyRedisCache {
-    private final RedisTemplate redisTemplate;
-
-
+    private final RedisTemplate<String, Object> redisTemplate;
 
     /**
      * redis进行自增
@@ -85,9 +83,10 @@ public class MyRedisCache {
      * @param key 缓存键值
      * @return 缓存键值对应的数据
      */
+    @SuppressWarnings("unchecked")
     public <T> T getCacheObject(final String key) {
-        ValueOperations<String, T> operation = redisTemplate.opsForValue();
-        return operation.get(key);
+        ValueOperations<String, Object> operation = redisTemplate.opsForValue();
+        return (T) operation.get(key);
     }
 
     /**
@@ -127,8 +126,9 @@ public class MyRedisCache {
      * @param key 缓存的键值
      * @return 缓存键值对应的数据
      */
+    @SuppressWarnings("unchecked")
     public <T> List<T> getCacheList(final String key) {
-        return redisTemplate.opsForList().range(key, 0, -1);
+        return (List<T>) redisTemplate.opsForList().range(key, 0, -1);
     }
 
     /**
@@ -138,8 +138,9 @@ public class MyRedisCache {
      * @param dataSet 缓存的数据
      * @return 缓存数据的对象
      */
+    @SuppressWarnings("unchecked")
     public <T> BoundSetOperations<String, T> setCacheSet(final String key, final Set<T> dataSet) {
-        BoundSetOperations<String, T> setOperation = redisTemplate.boundSetOps(key);
+        BoundSetOperations<String, T> setOperation = (BoundSetOperations<String, T>) redisTemplate.boundSetOps(key);
         Iterator<T> it = dataSet.iterator();
         while (it.hasNext()) {
             setOperation.add(it.next());
@@ -153,8 +154,9 @@ public class MyRedisCache {
      * @param key
      * @return
      */
+    @SuppressWarnings("unchecked")
     public <T> Set<T> getCacheSet(final String key) {
-        return redisTemplate.opsForSet().members(key);
+        return (Set<T>) redisTemplate.opsForSet().members(key);
     }
 
     /**
@@ -190,8 +192,9 @@ public class MyRedisCache {
      * @param key
      * @return
      */
+    @SuppressWarnings("unchecked")
     public <T> Map<String, T> getCacheMap(final String key) {
-        return redisTemplate.opsForHash().entries(key);
+        return (Map<String, T>) (Map<?, ?>) redisTemplate.opsForHash().entries(key);
     }
 
     /**
@@ -222,9 +225,10 @@ public class MyRedisCache {
      * @param hKey Hash键
      * @return Hash中的对象
      */
+    @SuppressWarnings("unchecked")
     public <T> T getCacheMapValue(final String key, final String hKey) {
-        HashOperations<String, String, T> opsForHash = redisTemplate.opsForHash();
-        return opsForHash.get(key, hKey);
+        HashOperations<String, String, Object> opsForHash = redisTemplate.opsForHash();
+        return (T) opsForHash.get(key, hKey);
     }
 
 
@@ -257,8 +261,9 @@ public class MyRedisCache {
      * @param hKeys Hash键集合
      * @return Hash对象集合
      */
+    @SuppressWarnings("unchecked")
     public <T> List<T> getMultiCacheMapValue(final String key, final Collection<Object> hKeys) {
-        return redisTemplate.opsForHash().multiGet(key, hKeys);
+        return (List<T>) redisTemplate.opsForHash().multiGet(key, hKeys);
     }
 
     /**

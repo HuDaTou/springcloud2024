@@ -2,7 +2,7 @@ package com.overthinker.cloud.web.entity.DTO;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author overH
@@ -18,7 +18,6 @@ public class LoginLogDTO {
     //登录状态(0：成功，1：失败)
     private Integer state;
     // 登录开始时间
-    private Date loginTimeStart;
-    // 登录结束时间
-    private Date loginTimeEnd;
+    private LocalDateTime loginTimeStart;
+    private LocalDateTime loginTimeEnd;
 }

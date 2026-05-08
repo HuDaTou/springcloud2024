@@ -1,17 +1,14 @@
 package com.overthinker.cloud.web.xxljob;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.overthinker.cloud.redis.constants.RedisConst;
 import com.overthinker.cloud.redis.utils.MyRedisCache;
 import com.overthinker.cloud.web.entity.PO.Article;
-
 import com.overthinker.cloud.web.mapper.ArticleMapper;
-
+import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import jakarta.annotation.Resource;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.quartz.JobExecutionContext;
-import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import java.util.List;
 
@@ -32,21 +29,22 @@ public class RefreshTheCache  {
 
 
     @XxlJob("executeInternal")
-    protected void executeInternal(@NonNull JobExecutionContext context) {
+    public void executeInternal() {
         log.info("-------------------------------开始同步文章浏览量到数据库-------------------------------");
         try {
-            // 获取所有文章id
             List<Long> articleIds = articleMapper.selectList(null).stream().map(Article::getId).toList();
-            // 通过id从redis中获取缓存的访问量
             articleIds.forEach(id -> {
-                // 把访问量设置到mysql数据库中
-                Long cacheObject = Long.valueOf((Integer) redisCache.getCacheObject(RedisConst.ARTICLE_VISIT_COUNT + id));
-                // 不会触发自动填充
-                articleMapper.update(null, new LambdaUpdateWrapper<Article>().eq(Article::getId, id).set(Article::getVisitCount, cacheObject));
+                Object cacheObj = redisCache.getCacheObject(RedisConst.ARTICLE_VISIT_COUNT + id);
+                if (cacheObj != null) {
+                    Long cacheObject = ((Number) cacheObj).longValue();
+                    articleMapper.update(null, new LambdaUpdateWrapper<Article>().eq(Article::getId, id).set(Article::getVisitCount, cacheObject));
+                }
             });
             log.info("-------------------------------同步文章浏览量成功-------------------------------");
+            XxlJobHelper.handleSuccess();
         } catch (Exception e) {
             log.error("同步文章浏览量失败", e);
+            XxlJobHelper.handleFail(e.getMessage());
         }
     }
 }

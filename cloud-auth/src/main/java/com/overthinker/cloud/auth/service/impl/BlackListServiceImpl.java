@@ -4,6 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.overthinker.cloud.auth.constants.BlackListConst;
+import com.overthinker.cloud.api.auth.dto.AddBlackListRequest;
+import com.overthinker.cloud.api.auth.dto.BlackListCheckResponse;
 import com.overthinker.cloud.auth.entity.DTO.AddBlackListDTO;
 import com.overthinker.cloud.auth.entity.DTO.SearchBlackListDTO;
 import com.overthinker.cloud.auth.entity.DTO.UpdateBlackListDTO;
@@ -18,16 +20,19 @@ import com.overthinker.cloud.auth.service.IpService;
 
 import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.common.web.utils.ServletUtils;
-import com.overthinker.cloud.common.core.utils.StringUtils;
+import com.overthinker.cloud.common.core.utils.MyStringUtils;
 import com.overthinker.cloud.redis.utils.MyRedisCache;
 
 import com.overthinker.cloud.auth.entity.PO.User;
 
-import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -124,13 +129,13 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
             // 搜索
             List<User> users = userMapper.selectList(new LambdaQueryWrapper<User>().like(User::getUsername, searchBlackListDTO.getUserName()));
             if (!users.isEmpty())
-                queryWrapper.in(StringUtils.isNotEmpty(searchBlackListDTO.getUserName()), BlackList::getUserId, users.stream().map(User::getId).collect(Collectors.toList()));
+                queryWrapper.in(MyStringUtils.isNotEmpty(searchBlackListDTO.getUserName()), BlackList::getUserId, users.stream().map(User::getId).collect(Collectors.toList()));
             else
-                queryWrapper.eq(StringUtils.isNotNull(searchBlackListDTO.getUserName()), BlackList::getUserId, null);
+                queryWrapper.eq(MyStringUtils.isNotNull(searchBlackListDTO.getUserName()), BlackList::getUserId, null);
 
             queryWrapper.like(StrUtil.isNotBlank(searchBlackListDTO.getReason()), BlackList::getReason, searchBlackListDTO.getReason())
                     .eq(null != searchBlackListDTO.getType(), BlackList::getType, searchBlackListDTO.getType())
-                    .between(StringUtils.isNotNull(searchBlackListDTO.getStartTime()) && StringUtils.isNotNull(searchBlackListDTO.getEndTime()), BlackList::getBannedTime, searchBlackListDTO.getStartTime(), searchBlackListDTO.getEndTime());
+                    .between(MyStringUtils.isNotNull(searchBlackListDTO.getStartTime()) && MyStringUtils.isNotNull(searchBlackListDTO.getEndTime()), BlackList::getBannedTime, searchBlackListDTO.getStartTime(), searchBlackListDTO.getEndTime());
         }
         queryWrapper.orderByDesc(BlackList::getCreateTime);
 
@@ -190,5 +195,54 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
             return ResultData.success();
         }
         return ResultData.failure();
+    }
+
+    @Override
+    public BlackListCheckResponse checkBlacklist(String ip, Long userId) {
+        Long timestampByIP = myRedisCache.getCacheMapValue(BlackListConst.BLACK_LIST_IP_KEY, ip);
+        Long timestampByUID = userId != null ? myRedisCache.getCacheMapValue(BlackListConst.BLACK_LIST_UID_KEY, userId.toString()) : null;
+
+        if (timestampByIP != null || timestampByUID != null) {
+            Long timestamp = timestampByIP != null ? timestampByIP : timestampByUID;
+            if (System.currentTimeMillis() > timestamp.longValue()) {
+                expireBlacklist(ip, userId);
+                return BlackListCheckResponse.builder().blocked(false).build();
+            } else {
+                LocalDateTime expiresDateTime = LocalDateTime.ofInstant(
+                        Instant.ofEpochMilli(timestamp), ZoneId.systemDefault());
+                LocalDateTime now = LocalDateTime.now();
+                Duration duration = Duration.between(now, expiresDateTime);
+                String message = String.format("已被封禁，距解封剩余：%d秒", duration.getSeconds());
+                return BlackListCheckResponse.builder()
+                        .blocked(true)
+                        .message(message)
+                        .expiresTime(timestamp)
+                        .build();
+            }
+        }
+        return BlackListCheckResponse.builder().blocked(false).build();
+    }
+
+    @Override
+    @Transactional
+    public void expireBlacklist(String ip, Long userId) {
+        if (ip != null) {
+            myRedisCache.deleteCacheMapValue(BlackListConst.BLACK_LIST_IP_KEY, ip);
+            blackListMapper.deleteByIp(ip);
+        } else if (userId != null) {
+            myRedisCache.deleteCacheMapValue(BlackListConst.BLACK_LIST_UID_KEY, userId.toString());
+            blackListMapper.delete(new LambdaQueryWrapper<BlackList>()
+                    .eq(BlackList::getUserId, userId));
+        }
+    }
+
+    @Override
+    public void addBlacklistInternal(AddBlackListRequest request) {
+        AddBlackListDTO dto = new AddBlackListDTO(
+                request.getUserIds() != null ? request.getUserIds() : List.of(),
+                request.getReason(),
+                request.getExpiresTime()
+        );
+        addBlackList(dto);
     }
 }

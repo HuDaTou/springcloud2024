@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 
 /**
@@ -44,11 +44,11 @@ public class BlackList extends BaseData implements BasecopyProperties {
     // 封禁时间
     @TableField(fill = FieldFill.INSERT)
     @Schema(description = "封禁开始时间", example = "2023-06-01T12:00:00Z")
-    private Date bannedTime;
+    private LocalDateTime bannedTime;
 
     // 到期时间
     @Schema(description = "封禁到期时间，null表示永久封禁", example = "2023-07-01T12:00:00Z")
-    private Date expiresTime;
+    private LocalDateTime expiresTime;
 
     // 类型（1：用户，2：路人/攻击者）
     @Schema(description = "黑名单类型：1-用户 2-路人/攻击者", allowableValues = {"1", "2"}, example = "1")

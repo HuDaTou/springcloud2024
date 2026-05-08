@@ -1,6 +1,8 @@
 package com.overthinker.cloud.auth.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.overthinker.cloud.api.auth.dto.AddBlackListRequest;
+import com.overthinker.cloud.api.auth.dto.BlackListCheckResponse;
 import com.overthinker.cloud.auth.entity.DTO.AddBlackListDTO;
 import com.overthinker.cloud.auth.entity.DTO.SearchBlackListDTO;
 import com.overthinker.cloud.auth.entity.DTO.UpdateBlackListDTO;
@@ -53,4 +55,28 @@ public interface BlackListService extends IService<BlackList> {
      * @return 是否成功
      */
     ResultData<Void> deleteBlackList(List<Long> ids);
+
+    /**
+     * 检查IP或用户是否在黑名单中
+     *
+     * @param ip    IP地址
+     * @param userId 用户ID
+     * @return 检查结果
+     */
+    BlackListCheckResponse checkBlacklist(String ip, Long userId);
+
+    /**
+     * 手动解除黑名单封禁
+     *
+     * @param ip    IP地址
+     * @param userId 用户ID
+     */
+    void expireBlacklist(String ip, Long userId);
+
+    /**
+     * 内部接口添加黑名单
+     *
+     * @param request 添加请求
+     */
+    void addBlacklistInternal(AddBlackListRequest request);
 }

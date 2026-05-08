@@ -85,12 +85,13 @@ public class PermissionScanner {
                 String fullPath = (servicePathPrefix + controllerBasePath + methodPath).replaceAll("//+", "/");
 
                 PermissionDTO dto = new PermissionDTO(
+                        serviceName,
                         category,
                         operationName,
                         code,
                         httpMethod,
                         fullPath,
-                        serviceName
+                        code
                 );
                 permissions.add(dto);
             }

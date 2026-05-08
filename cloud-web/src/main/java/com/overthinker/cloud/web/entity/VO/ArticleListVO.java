@@ -3,7 +3,7 @@ package com.overthinker.cloud.web.entity.VO;
 import com.overthinker.cloud.common.core.entity.BasecopyProperties;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -37,6 +37,6 @@ public class ArticleListVO implements BasecopyProperties {
     //访问量
     private Long visitCount;
     //文章创建时间
-    private Date createTime;
+    private LocalDateTime createTime;
 }
 

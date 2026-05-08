@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author overH
@@ -20,5 +20,5 @@ public class ChatSessionVO {
     @Schema(description = "会话标题")
     private String conversationTitle;
     @Schema(description = "会话创建时间")
-    private Date createTime;
+    private LocalDateTime createTime;
 }

@@ -6,19 +6,18 @@ import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.web.entity.DTO.LinkDTO;
 import com.overthinker.cloud.web.entity.DTO.LinkIsCheckDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchLinkDTO;
+import com.overthinker.cloud.api.auth.api.UserClient;
 import com.overthinker.cloud.web.entity.PO.Link;
-import com.overthinker.cloud.web.entity.PO.User;
 import com.overthinker.cloud.web.entity.VO.LinkListVO;
 import com.overthinker.cloud.web.entity.VO.LinkVO;
 import com.overthinker.cloud.redis.constants.RedisConst;
 import com.overthinker.cloud.web.entity.constants.SQLConst;
 import com.overthinker.cloud.web.entity.enums.MailboxAlertsEnum;
 import com.overthinker.cloud.web.mapper.LinkMapper;
-import com.overthinker.cloud.web.mapper.UserMapper;
 import com.overthinker.cloud.web.service.LinkService;
 import com.overthinker.cloud.web.service.PublicService;
-import com.overthinker.cloud.web.utils.MyRedisCache;
-import com.overthinker.cloud.web.utils.SecurityUtils;
+import com.overthinker.cloud.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.auth.utils.SecurityUtils;
 import com.overthinker.cloud.web.utils.StringUtils;
 import com.overthinker.cloud.web.utils.WebUtil;
 import jakarta.annotation.Resource;
@@ -48,7 +47,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
     private PublicService publicService;
 
     @Resource
-    private UserMapper userMapper;
+    private UserClient userClient;
 
     @Resource
     private MyRedisCache myRedisCache;
@@ -89,17 +88,25 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
     public List<LinkVO> getLinkList() {
         List<Link> links = linkMapper.selectList(new LambdaQueryWrapper<Link>().eq(Link::getIsCheck, SQLConst.STATUS_PUBLIC));
 
-        return links.stream().map(link -> link.copyProperties(LinkVO.class, v -> v.setAvatar(userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, link.getUserId())).getAvatar()))).toList();
+        return links.stream().map(link -> {
+            LinkVO vo = link.copyProperties(LinkVO.class);
+            ResultData<Map<String, Object>> userInfoResult = userClient.getUserInfoById(link.getUserId());
+            Map<String, Object> userInfo = userInfoResult.getData();
+            if (userInfo != null) {
+                vo.setAvatar((String) userInfo.get("avatar"));
+            }
+            return vo;
+        }).toList();
     }
 
     @Override
     public List<LinkListVO> getBackLinkList(SearchLinkDTO searchDTO) {
         LambdaQueryWrapper<Link> wrapper = new LambdaQueryWrapper<>();
         if (StringUtils.isNotNull(searchDTO)) {
-            // 搜索
-            List<User> users = userMapper.selectList(new LambdaQueryWrapper<User>().like(User::getUsername, searchDTO.getUserName()));
-            if (!users.isEmpty())
-                wrapper.in(StringUtils.isNotEmpty(searchDTO.getUserName()), Link::getUserId, users.stream().map(User::getId).collect(Collectors.toList()));
+            ResultData<List<Long>> userIdsResult = userClient.searchUserIdsByUsername(searchDTO.getUserName());
+            List<Long> userIds = userIdsResult.getData() != null ? userIdsResult.getData() : List.of();
+            if (!userIds.isEmpty())
+                wrapper.in(StringUtils.isNotEmpty(searchDTO.getUserName()), Link::getUserId, userIds);
             else
                 wrapper.eq(StringUtils.isNotNull(searchDTO.getUserName()), Link::getUserId, null);
 
@@ -110,9 +117,12 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
         }
         List<Link> links = linkMapper.selectList(wrapper);
         if (!links.isEmpty()) {
-            return links.stream().map(link -> link.copyProperties(LinkListVO.class,
-                    v -> v.setUserName(userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, link.getUserId()))
-                            .getUsername()))).toList();
+            return links.stream().map(link -> {
+                LinkListVO vo = link.copyProperties(LinkListVO.class);
+                ResultData<String> usernameResult = userClient.getUsernameById(link.getUserId());
+                vo.setUserName(usernameResult.getData() != null ? usernameResult.getData() : "");
+                return vo;
+            }).toList();
         }
         return null;
     }

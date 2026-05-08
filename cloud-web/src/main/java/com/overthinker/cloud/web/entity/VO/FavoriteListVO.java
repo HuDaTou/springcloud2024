@@ -2,7 +2,7 @@ package com.overthinker.cloud.web.entity.VO;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author overH
@@ -22,5 +22,5 @@ public class FavoriteListVO {
     // 是否有效 (0否 1是)
     private Integer isCheck;
     //收藏时间
-    private Date createTime;
+    private LocalDateTime createTime;
 }

@@ -8,6 +8,7 @@ import com.overthinker.cloud.common.core.base.BaseController;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.redis.annotation.AccessLimit;
 import com.overthinker.cloud.web.entity.DTO.CommentIsCheckDTO;
+import com.overthinker.cloud.web.entity.DTO.UserCommentDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchCommentDTO;
 import com.overthinker.cloud.web.entity.VO.ArticleCommentVO;
 import com.overthinker.cloud.web.entity.VO.CommentListVO;
@@ -64,7 +65,8 @@ public class CommentController extends BaseController {
     @AccessLimit(seconds = 60, maxCount = 10)
     @PostMapping("/auth/add/comment")
     public ResultData<String> userComment(@Valid @RequestBody UserCommentDTO commentDTO) {
-        return commentService.userComment(commentDTO);
+        ResultData<String> result = commentService.userComment(commentDTO);
+        return result;
     }
 
     @PreAuthorize("hasAnyAuthority('blog:comment:list')")

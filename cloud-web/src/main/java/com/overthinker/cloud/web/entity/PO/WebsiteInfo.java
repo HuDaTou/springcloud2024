@@ -11,7 +11,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 
 /**
@@ -61,7 +61,7 @@ public class WebsiteInfo extends BaseData implements BasecopyProperties {
     private String recordInfo;
 
     @Schema(description = "网站开始运行时间", example = "2023-01-01T00:00:00Z")
-    private Date startTime;
+    private LocalDateTime startTime;
 
     @Schema(description = "是否删除（0：未删除，1：已删除）", example = "0")
     private Integer isDeleted;

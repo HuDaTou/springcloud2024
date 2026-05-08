@@ -8,8 +8,8 @@ import com.overthinker.cloud.redis.constants.RedisConst;
 import com.overthinker.cloud.web.entity.enums.LikeEnum;
 import com.overthinker.cloud.web.mapper.LikeMapper;
 import com.overthinker.cloud.web.service.LikeService;
-import com.overthinker.cloud.web.utils.MyRedisCache;
-import com.overthinker.cloud.web.utils.SecurityUtils;
+import com.overthinker.cloud.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.auth.utils.SecurityUtils;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -69,7 +69,7 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like> implements Li
 
     @Override
     public ResultData<List<Like>> isLike(Integer type, Integer typeId) {
-        if (SecurityUtils.isLogin()) {
+        if (SecurityUtils.isAuthenticated()) {
             LambdaQueryWrapper<Like> wrapper = new LambdaQueryWrapper<>();
             if (Objects.equals(type, LikeEnum.LIKE_TYPE_ARTICLE.getType())) {
                 List<Like> like = likeMapper.selectList(wrapper

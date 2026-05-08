@@ -4,21 +4,13 @@ spring:
   ai:
     ollama:
       base-url: http://localhost:11434
-
-
-
-  #    vectorstore:
-#      milvus:
-#        client:
-#          host: "localhost"
-#          port: 19530
-#          username: "root"
-#          password: "milvus"
-#        databaseName: "default"
-#        collectionName: "vector_store"
-#        embeddingDimension: 1536
-#        indexType: IVF_FLAT
-#        metricType: COSINE
+      chat:
+        options:
+          model: llama3
+          temperature: 0.4
+      embedding:
+        options:
+          model: all-minilm
 
   r2dbc:
     url: r2dbc:postgresql://localhost:5432/mydatabase?cloud-ai
@@ -27,3 +19,7 @@ spring:
 
 server:
   port: 8788
+
+logging:
+  level:
+    org.springframework.ai: DEBUG

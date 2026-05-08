@@ -14,11 +14,13 @@ import com.overthinker.cloud.web.entity.PO.VideoTag;
 import com.overthinker.cloud.web.entity.VO.VideoInfoVO;
 import com.overthinker.cloud.redis.constants.RedisConst;
 import com.overthinker.cloud.web.entity.enums.UploadEnum;
+import com.overthinker.cloud.api.auth.api.UserClient;
+import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.web.mapper.*;
 import com.overthinker.cloud.web.service.VideoService;
 import com.overthinker.cloud.web.service.VideoTagService;
-import com.overthinker.cloud.web.utils.MyRedisCache;
-import com.overthinker.cloud.web.utils.SecurityUtils;
+import com.overthinker.cloud.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.auth.utils.SecurityUtils;
 import com.overthinker.cloud.web.utils.StringUtils;
 import com.overthinker.cloud.web.utils.VideoUploadUtils;
 import jakarta.annotation.Resource;
@@ -51,7 +53,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
     private CategoryMapper categoryMapper;
 
     @Resource
-    private UserMapper userMapper;
+    private UserClient userClient;
 
     @Resource
     private VideoTagMapper videoTagMapper;
@@ -97,7 +99,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
     @Override
     public List<VideoInfoVO> getUserAndPublicVideoList(@NotNull Integer pageNum, @NotNull Integer pageSize) {
         LambdaQueryWrapper<Video> queryWrapper = new LambdaQueryWrapper<>();
-        if (SecurityUtils.isLogin()) {
+        if (SecurityUtils.isAuthenticated()) {
             Long userId = SecurityUtils.getUserId();
             // 组合条件：公开视频 或 (私有视频 且 属于当前用户)
             queryWrapper
@@ -118,8 +120,8 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         if (!videoInfoVOS.isEmpty()) {
             videoInfoVOS.forEach(videoInfoVO -> {
                 videoInfoVO.setCategoryName(categoryMapper.selectById(videoInfoVO.getCategoryId()).getCategoryName());
-                videoInfoVO.setUserName(userMapper.selectById(videoInfoVO.getUserId()).getUsername());
-                // 查询文章标签
+                ResultData<String> usernameResult = userClient.getUsernameById(videoInfoVO.getUserId());
+                videoInfoVO.setUserName(usernameResult.getData() != null ? usernameResult.getData() : "");
                 List<Long> tagIds = videoTagMapper.selectList(new LambdaQueryWrapper<VideoTag>().eq(VideoTag::getVideoId, videoInfoVO.getId())).stream().map(VideoTag::getTagId).toList();
                 videoInfoVO.setTagsName(tagMapper.selectBatchIds(tagIds).stream().map(Tag::getTagName).toList());
             });
@@ -181,8 +183,8 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         if (!videoInfoVOS.isEmpty()) {
             videoInfoVOS.forEach(videoInfoVO -> {
                 videoInfoVO.setCategoryName(categoryMapper.selectById(videoInfoVO.getCategoryId()).getCategoryName());
-                videoInfoVO.setUserName(userMapper.selectById(videoInfoVO.getUserId()).getUsername());
-                // 查询视频标签
+                ResultData<String> usernameResult = userClient.getUsernameById(videoInfoVO.getUserId());
+                videoInfoVO.setUserName(usernameResult.getData() != null ? usernameResult.getData() : "");
                 List<Long> tagIds = videoTagMapper.selectList(new LambdaQueryWrapper<VideoTag>().eq(VideoTag::getVideoId, videoInfoVO.getId())).stream().map(VideoTag::getTagId).toList();
                 videoInfoVO.setTagsName(tagMapper.selectBatchIds(tagIds).stream().map(Tag::getTagName).toList());
             });
@@ -195,15 +197,14 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
     public List<VideoInfoVO> listVideo() {
         List<VideoInfoVO> videoInfoVOS = videoMapper.selectList(new LambdaQueryWrapper<Video>()
                 .orderByDesc(Video::getCreateTime)).stream().map(video ->
-//                video.asViewObject(VideoInfoVO.class
-                        BeanUtil.copyProperties(video, VideoInfoVO.class)
+                BeanUtil.copyProperties(video, VideoInfoVO.class)
         ).toList();
 
         if (!videoInfoVOS.isEmpty()) {
             videoInfoVOS.forEach(videoInfoVO -> {
                 videoInfoVO.setCategoryName(categoryMapper.selectById(videoInfoVO.getCategoryId()).getCategoryName());
-                videoInfoVO.setUserName(userMapper.selectById(videoInfoVO.getUserId()).getUsername());
-                // 查询视频标签
+                ResultData<String> usernameResult = userClient.getUsernameById(videoInfoVO.getUserId());
+                videoInfoVO.setUserName(usernameResult.getData() != null ? usernameResult.getData() : "");
                 List<Long> tagIds = videoTagMapper.selectList(new LambdaQueryWrapper<VideoTag>().eq(VideoTag::getVideoId, videoInfoVO.getId())).stream().map(VideoTag::getTagId).toList();
                 videoInfoVO.setTagsName(tagMapper.selectBatchIds(tagIds).stream().map(Tag::getTagName).toList());
             });

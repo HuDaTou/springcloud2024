@@ -3,33 +3,41 @@ package com.overthinker.cloud.web.entity.DTO;
 
 import com.overthinker.cloud.common.core.entity.BasecopyProperties;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
-public record ArticleDTO(
-    Long id,
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Accessors(chain = true)
+public class ArticleDTO implements BasecopyProperties {
+    Long id;
 
     @NotNull(message = "分类id不能为空")
-    Long categoryId,
+    Long categoryId;
 
     @NotNull(message = "标签id不能为空")
-    List<Long> tagId,
+    List<Long> tagId;
 
     @NotNull(message = "文章缩略图不能为空")
-    String articleCover,
+    String articleCover;
 
     @NotNull(message = "文章标题不能为空")
-    String articleTitle,
+    String articleTitle;
 
     @NotNull(message = "文章内容不能为空")
-    String articleContent,
+    String articleContent;
 
-    @NotNull(message = "文章类型不能为空")
-    Integer articleType,
+    @NotNull(message = "文章类型(1原创 2转载 3翻译)")
+    Integer articleType;
 
     @NotNull(message = "是否置顶不能为空")
-    Integer isTop,
+    Integer isTop;
 
     @NotNull(message = "文章状态不能为空")
-    Integer status
-) implements BasecopyProperties {}
+    Integer status;
+}

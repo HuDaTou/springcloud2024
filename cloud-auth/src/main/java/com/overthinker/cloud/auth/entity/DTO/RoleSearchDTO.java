@@ -2,7 +2,7 @@ package com.overthinker.cloud.auth.entity.DTO;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author overH
@@ -18,7 +18,7 @@ public class RoleSearchDTO {
     // 状态（0：正常，1：停用）
     private Integer status;
     //创建时间，开始时间
-    private Date createTimeStart;
+    private LocalDateTime createTimeStart;
     //创建时间，结束时间
-    private Date createTimeEnd;
+    private LocalDateTime createTimeEnd;
 }

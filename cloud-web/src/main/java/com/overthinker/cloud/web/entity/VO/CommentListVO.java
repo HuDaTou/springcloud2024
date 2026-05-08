@@ -2,7 +2,7 @@ package com.overthinker.cloud.web.entity.VO;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author overH
@@ -28,7 +28,6 @@ public class CommentListVO {
     //是否通过 (0否 1是)
     private Integer isCheck;
     //评论时间
-    private Date createTime;
-    //更新时间
-    private Date updateTime;
+    private LocalDateTime createTime;
+    private LocalDateTime updateTime;
 }

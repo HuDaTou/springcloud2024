@@ -4,7 +4,7 @@ import com.overthinker.cloud.common.core.entity.BasecopyProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -46,8 +46,8 @@ public class UserAccountVO implements BasecopyProperties {
     private List<String> permissions;
     //用户最近登录时间
     @Schema(description = "用户最近登录时间")
-    private Date loginTime;
+    private LocalDateTime loginTime;
     //用户创建时间
     @Schema(description = "用户创建时间")
-    private Date createTime;
+    private LocalDateTime createTime;
 }

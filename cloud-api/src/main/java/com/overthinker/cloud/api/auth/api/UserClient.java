@@ -1,0 +1,28 @@
+package com.overthinker.cloud.api.auth.api;
+
+import com.overthinker.cloud.common.core.resp.ResultData;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+import java.util.Map;
+
+@FeignClient(name = "cloud-auth")
+public interface UserClient {
+
+    @GetMapping("/internal/api/v1/user/count")
+    ResultData<Long> getUserCount();
+
+    @GetMapping("/internal/api/v1/user/username")
+    ResultData<String> getUsernameById(@RequestParam Long userId);
+
+    @GetMapping("/internal/api/v1/user/email")
+    ResultData<String> getEmailById(@RequestParam Long userId);
+
+    @GetMapping("/internal/api/v1/user/info")
+    ResultData<Map<String, Object>> getUserInfoById(@RequestParam Long userId);
+
+    @GetMapping("/internal/api/v1/user/search")
+    ResultData<List<Long>> searchUserIdsByUsername(@RequestParam String username);
+}

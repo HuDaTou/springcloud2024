@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 
 /**
@@ -50,6 +50,6 @@ public class MenuVO {
     //是否禁用 (0否 1是)
     private Boolean isDisable;
     //创建时间
-    private Date createTime;
+    private LocalDateTime createTime;
 }
 

@@ -15,7 +15,7 @@ import com.overthinker.cloud.web.exception.FileUploadException;
 import com.overthinker.cloud.web.mapper.PhotoMapper;
 import com.overthinker.cloud.web.service.PhotoService;
 import com.overthinker.cloud.web.utils.PhotoUploudUtils;
-import com.overthinker.cloud.web.utils.SecurityUtils;
+import com.overthinker.cloud.system.auth.utils.SecurityUtils;
 import com.overthinker.cloud.web.utils.StringUtils;
 import jakarta.annotation.Resource;
 import lombok.extern.log4j.Log4j2;

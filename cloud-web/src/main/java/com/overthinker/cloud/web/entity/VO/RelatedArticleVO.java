@@ -3,7 +3,7 @@ package com.overthinker.cloud.web.entity.VO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author overH
@@ -25,5 +25,5 @@ public class RelatedArticleVO {
     private String articleTitle;
     //文章创建时间
     @Schema(description = "文章创建时间")
-    private Date createTime;
+    private LocalDateTime createTime;
 }

@@ -1,7 +1,6 @@
 package com.overthinker.cloud.web.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.overthinker.cloud.web.entity.PO.BlackList;
 import com.overthinker.cloud.web.entity.PO.Comment;
 import com.overthinker.cloud.web.entity.PO.Favorite;
 import com.overthinker.cloud.web.entity.PO.Like;
@@ -13,7 +12,7 @@ import com.overthinker.cloud.web.entity.enums.FavoriteEnum;
 import com.overthinker.cloud.web.entity.enums.LikeEnum;
 import com.overthinker.cloud.web.mapper.*;
 import com.overthinker.cloud.web.service.RedisService;
-import com.overthinker.cloud.web.utils.MyRedisCache;
+import com.overthinker.cloud.redis.utils.MyRedisCache;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -80,9 +79,6 @@ public class RedisServiceImpl implements RedisService {
     @Resource
     private CommentMapper commentMapper;
 
-    @Resource
-    private BlackListMapper blackListMapper;
-
     @Override
     public void initCount() {
         log.info("--------开始执行缓存文章点赞数量，评论数量，收藏数量--------");
@@ -103,28 +99,5 @@ public class RedisServiceImpl implements RedisService {
         myRedisCache.setCacheMap(RedisConst.ARTICLE_LIKE_COUNT, likeCount);
         myRedisCache.setCacheMap(RedisConst.ARTICLE_COMMENT_COUNT, commentCount);
         log.info("--------成功执行缓存文章点赞数量，评论数量，收藏数量--------");
-    }
-
-    @Override
-    public void initBlackList() {
-        // 清除黑名单缓存
-        myRedisCache.deleteObject(RedisConst.BLACK_LIST_UID_KEY);
-        myRedisCache.deleteObject(RedisConst.BLACK_LIST_IP_KEY);
-
-        // 将所有黑名单id初始化到redis中
-        log.info("--------开始执行初始化黑名单缓存--------");
-        List<BlackList> blackLists = blackListMapper.selectList(null);
-        if (!blackLists.isEmpty()) {
-            blackLists.forEach(blackList -> {
-                if (blackList.getUserId() != null) {
-                    myRedisCache.setCacheMapValue(RedisConst.BLACK_LIST_UID_KEY, blackList.getUserId().toString(), blackList.getExpiresTime());
-                } else {
-                    myRedisCache.setCacheMapValue(RedisConst.BLACK_LIST_IP_KEY, blackList.getIpInfo().getCreateIp(), blackList.getExpiresTime());
-                }
-            });
-            log.info("--------成功执行初始化黑名单缓存--------");
-        } else {
-            log.info("--------没有黑名单信息，无法初始化--------");
-        }
     }
 }

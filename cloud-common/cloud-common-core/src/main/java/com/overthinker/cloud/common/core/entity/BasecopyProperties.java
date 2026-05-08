@@ -29,14 +29,18 @@ public interface BasecopyProperties {
      */
     default <T> T copyFrom(Object sourceObj) {
         if (sourceObj == null) {
-            return (T) this;
+            @SuppressWarnings("unchecked")
+            T result = (T) this;
+            return result;
         }
         // 总是遍历目标对象的字段，确保填充完整
         Field[] targetFields = getFields(this.getClass());
         for (Field targetField : targetFields) {
             copyField(targetField, this, sourceObj);
         }
-        return (T) this;
+        @SuppressWarnings("unchecked")
+        T result = (T) this;
+        return result;
     }
 
     /**

@@ -2,7 +2,7 @@ package com.overthinker.cloud.web.entity.VO;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 
 /**
@@ -44,6 +44,6 @@ public class LogVO {
     // 操作描述
     private String description;
     //时间
-    private Date loginTime;
+    private LocalDateTime loginTime;
 }
 

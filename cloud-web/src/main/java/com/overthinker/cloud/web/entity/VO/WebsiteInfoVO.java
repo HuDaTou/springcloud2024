@@ -2,7 +2,7 @@ package com.overthinker.cloud.web.entity.VO;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author overH
@@ -32,9 +32,8 @@ public class WebsiteInfoVO {
     //备案信息
     private String recordInfo;
     //开始运行时间
-    private Date startTime;
-    // 文章的最后更新
-    private Date lastUpdateTime;
+    private LocalDateTime startTime;
+    private LocalDateTime lastUpdateTime;
     // 文章数目
     private Long articleCount;
     // 分类数

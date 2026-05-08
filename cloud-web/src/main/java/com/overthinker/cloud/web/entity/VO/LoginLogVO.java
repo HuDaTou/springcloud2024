@@ -3,7 +3,7 @@ package com.overthinker.cloud.web.entity.VO;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 
 /**
@@ -33,6 +33,6 @@ public class LoginLogVO implements Serializable {
     //登录信息
     private String message;
     //用户登录时间
-    private Date loginTime;
+    private LocalDateTime loginTime;
 }
 

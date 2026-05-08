@@ -1,17 +1,17 @@
 package com.overthinker.cloud.web.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.overthinker.cloud.common.annotation.LogAnnotation;
+import com.overthinker.cloud.common.core.annotation.LogAnnotation;
 import com.overthinker.cloud.common.core.base.BaseController;
 import com.overthinker.cloud.common.core.resp.ResultData;
-import com.overthinker.cloud.common.annotation.AccessLimit;
-import com.overthinker.cloud.common.annotation.CheckBlacklist;
+import com.overthinker.cloud.redis.annotation.AccessLimit;
+import com.overthinker.cloud.common.core.annotation.CheckBlacklist;
 
 import com.overthinker.cloud.web.entity.DTO.SearchTreeHoleDTO;
 import com.overthinker.cloud.web.entity.DTO.TreeHoleIsCheckDTO;
 import com.overthinker.cloud.web.entity.VO.TreeHoleListVO;
 import com.overthinker.cloud.web.entity.VO.TreeHoleVO;
-import com.overthinker.cloud.common.annotation.LogConst;
+import com.overthinker.cloud.common.core.annotation.LogConst;
 import com.overthinker.cloud.web.service.TreeHoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -43,6 +43,7 @@ public class TreeHoleController extends BaseController {
     @CheckBlacklist
     @Operation(summary = "添加树洞")
     @AccessLimit(seconds = 60, maxCount = 60)
+
     @PostMapping("/auth/addTreeHole")
     public ResultData<Void> addTreeHole(@Valid @NotNull @RequestBody String content) {
         return treeHoleService.addTreeHole(JSON.parseObject(content).getString("content"));

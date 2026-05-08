@@ -1,26 +1,27 @@
 package com.overthinker.cloud.web.entity.VO;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.util.Date;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
  * @author overH
  * <p>
- * 创建时间：2023/11/30 15:34
+ * 创建时间：2023/11/28 9:04
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Accessors(chain = true)
 public class RoleAllVO {
-    //角色id
     private Long id;
-    // 角色名称
     private String roleName;
-    //角色字符
     private String roleKey;
-    // 状态（0：正常，1：停用）
+    private Integer isDeleted;
     private Integer status;
-    // 顺序
     private Long orderNum;
-    //创建时间
-    private Date createTime;
+    private String remark;
+    private String createTime;
+    private String updateTime;
 }

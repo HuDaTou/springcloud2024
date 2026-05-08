@@ -3,7 +3,7 @@ package com.overthinker.cloud.auditlog.entity.DTO;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author overH
@@ -23,10 +23,8 @@ public record LogDTO(
     String operation,
     //操作状态(0：成功，1：失败)
     Integer state,
-    // 操作时间开始
-    Date logTimeStart,
-    // 操作时间结束
-    Date logTimeEnd,
+    LocalDateTime logTimeStart,
+    LocalDateTime logTimeEnd,
     // 当前页
     @NotNull
     Long current,

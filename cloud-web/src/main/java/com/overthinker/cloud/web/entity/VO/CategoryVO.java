@@ -3,7 +3,7 @@ package com.overthinker.cloud.web.entity.VO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 
 /**
@@ -25,7 +25,6 @@ public class CategoryVO {
     @Schema(description = "分类下的文章数量")
     private Long articleCount;
     // 标签创建时间
-    private Date createTime;
-    // 标签更新时间
-    private Date updateTime;
+    private LocalDateTime createTime;
+    private LocalDateTime updateTime;
 }

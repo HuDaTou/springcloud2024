@@ -2,7 +2,7 @@ package com.overthinker.cloud.auth.entity.VO;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author overH
@@ -26,5 +26,5 @@ public class UserListVO {
     //是否禁用 0 否 1 是
     private Integer isDisable;
     //用户创建时间
-    private Date createTime;
+    private LocalDateTime createTime;
 }

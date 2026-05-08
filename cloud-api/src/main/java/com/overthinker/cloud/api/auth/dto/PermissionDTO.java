@@ -14,6 +14,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PermissionDTO {
+    private String serviceName; // 服务名称
     private String category;
     private String name;
     private String code; // 权限标识，如 "user:add"

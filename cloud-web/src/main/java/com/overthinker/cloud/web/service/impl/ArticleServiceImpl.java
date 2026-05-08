@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.overthinker.cloud.common.core.resp.ResultData;
 
 import com.overthinker.cloud.common.core.resp.ReturnCodeEnum;
+import com.overthinker.cloud.redis.constants.RedisConst;
 import com.overthinker.cloud.redis.utils.MyRedisCache;
 import com.overthinker.cloud.web.entity.DTO.ArticleDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchArticleDTO;
@@ -21,6 +22,7 @@ import com.overthinker.cloud.web.exception.BusinessException;
 import com.overthinker.cloud.web.exception.FileUploadException;
 import com.overthinker.cloud.web.mapper.*;
 import com.overthinker.cloud.web.service.*;
+import com.overthinker.cloud.system.auth.utils.SecurityUtils;
 import com.overthinker.cloud.web.utils.FileUploadUtils;
 
 import com.overthinker.cloud.web.utils.StringUtils;
@@ -76,7 +78,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     private FileUploadUtils fileUploadUtils;
 
     @Resource
-    private UserMapper userMapper;
+    private com.overthinker.cloud.api.auth.api.UserClient userClient;
 
     @Resource
     private LikeMapper likeMapper;
@@ -275,7 +277,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             // 清除标签关系
             articleTagMapper.deleteById(article.getId());
             // 新增标签关系
-            List<ArticleTag> articleTags = articleDTO.getTagId().stream().map(articleTag -> ArticleTag.builder().articleId(article.getId()).tagId(articleTag).build()).toList();
+            List<ArticleTag> articleTags = articleDTO.getTagId().stream().map(tagId -> ArticleTag.builder().articleId(article.getId()).tagId(tagId).build()).toList();
             articleTagService.saveBatch(articleTags);
             return ResultData.success();
         }
@@ -320,8 +322,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (!articleListVOS.isEmpty()) {
             articleListVOS.forEach(articleListVO -> {
                 articleListVO.setCategoryName(categoryMapper.selectById(articleListVO.getCategoryId()).getCategoryName());
-                articleListVO.setUserName(userMapper.selectById(articleListVO.getUserId()).getUsername());
-                // 查询文章标签
+                ResultData<String> usernameResult = userClient.getUsernameById(articleListVO.getUserId());
+                articleListVO.setUserName(usernameResult.getData() != null ? usernameResult.getData() : "");
                 List<Long> tagIds = articleTagMapper.selectList(new LambdaQueryWrapper<ArticleTag>().eq(ArticleTag::getArticleId, articleListVO.getId())).stream().map(ArticleTag::getTagId).toList();
                 articleListVO.setTagsName(tagMapper.selectBatchIds(tagIds).stream().map(Tag::getTagName).toList());
             });
@@ -341,8 +343,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (!articleListVOS.isEmpty()) {
             articleListVOS.forEach(articleListVO -> {
                 articleListVO.setCategoryName(categoryMapper.selectById(articleListVO.getCategoryId()).getCategoryName());
-                articleListVO.setUserName(userMapper.selectById(articleListVO.getUserId()).getUsername());
-                // 查询文章标签
+                ResultData<String> usernameResult = userClient.getUsernameById(articleListVO.getUserId());
+                articleListVO.setUserName(usernameResult.getData() != null ? usernameResult.getData() : "");
                 List<Long> tagIds = articleTagMapper.selectList(new LambdaQueryWrapper<ArticleTag>().eq(ArticleTag::getArticleId, articleListVO.getId())).stream().map(ArticleTag::getTagId).toList();
                 articleListVO.setTagsName(tagMapper.selectBatchIds(tagIds).stream().map(Tag::getTagName).toList());
             });
@@ -371,9 +373,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public ArticleDTO getArticleDTO(Long id) {
         ArticleDTO articleDTO = articleMapper.selectById(id).copyProperties(ArticleDTO.class);
         if (StringUtils.isNotNull(articleDTO)) {
-            // 查询文章标签
             List<Long> tagIds = articleTagMapper.selectList(new LambdaQueryWrapper<ArticleTag>().eq(ArticleTag::getArticleId, articleDTO.getId())).stream().map(ArticleTag::getTagId).toList();
-            articleDTO.setTagId(tagMapper.selectBatchIds(tagIds).stream().map(Tag::getId).toList());
+            articleDTO.setTagId(tagIds);
             return articleDTO;
         }
         return null;

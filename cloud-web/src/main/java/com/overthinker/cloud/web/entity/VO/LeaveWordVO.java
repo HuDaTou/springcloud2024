@@ -3,7 +3,7 @@ package com.overthinker.cloud.web.entity.VO;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author overH
@@ -20,7 +20,7 @@ public class LeaveWordVO {
     //留言内容
     private String content;
     //留言时间
-    private Date createTime;
+    private LocalDateTime createTime;
     // 用户昵称
     private String nickname;
     // 用户头像

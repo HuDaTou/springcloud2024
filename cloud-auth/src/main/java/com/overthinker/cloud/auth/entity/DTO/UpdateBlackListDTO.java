@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author overH
@@ -33,5 +33,5 @@ public class UpdateBlackListDTO {
     @Schema(description = "封禁到期时间")
     @NotNull(message = "封禁到期时间不能为空")
 //    @Future(message = "封禁到期时间必须大于当前时间")
-    private Date expiresTime;
+    private LocalDateTime expiresTime;
 }

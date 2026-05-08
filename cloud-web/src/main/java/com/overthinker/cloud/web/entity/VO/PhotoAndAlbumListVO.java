@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -29,7 +29,7 @@ public class PhotoAndAlbumListVO {
     //照片体积大小(kb)
     private Double size;
     //创建时间
-    private Date createTime;
+    private LocalDateTime createTime;
     // 相册封面
     private String albumCover;
 }

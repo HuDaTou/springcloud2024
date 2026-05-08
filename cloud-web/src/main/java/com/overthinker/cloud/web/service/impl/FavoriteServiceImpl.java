@@ -5,24 +5,23 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.web.entity.DTO.FavoriteIsCheckDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchFavoriteDTO;
+import com.overthinker.cloud.api.auth.api.UserClient;
 import com.overthinker.cloud.web.entity.PO.Favorite;
-import com.overthinker.cloud.web.entity.PO.User;
 import com.overthinker.cloud.web.entity.VO.FavoriteListVO;
 import com.overthinker.cloud.redis.constants.RedisConst;
 import com.overthinker.cloud.web.mapper.ArticleMapper;
 import com.overthinker.cloud.web.mapper.FavoriteMapper;
 import com.overthinker.cloud.web.mapper.LeaveWordMapper;
-import com.overthinker.cloud.web.mapper.UserMapper;
 import com.overthinker.cloud.web.service.FavoriteService;
-import com.overthinker.cloud.web.utils.MyRedisCache;
-import com.overthinker.cloud.web.utils.SecurityUtils;
+import com.overthinker.cloud.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.auth.utils.SecurityUtils;
 import com.overthinker.cloud.web.utils.StringUtils;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+
 
 /**
  * (Favorite)表服务实现类
@@ -40,7 +39,7 @@ public class FavoriteServiceImpl extends ServiceImpl<FavoriteMapper, Favorite> i
     private MyRedisCache myRedisCache;
 
     @Resource
-    private UserMapper userMapper;
+    private UserClient userClient;
 
     @Resource
     private ArticleMapper articleMapper;
@@ -85,7 +84,7 @@ public class FavoriteServiceImpl extends ServiceImpl<FavoriteMapper, Favorite> i
 
     @Override
     public Boolean isFavorite(Integer type, Integer typeId) {
-        if (SecurityUtils.isLogin()) {
+        if (SecurityUtils.isAuthenticated()) {
             // 是否收藏
             Favorite favorite = favoriteMapper.selectOne(new LambdaQueryWrapper<Favorite>()
                     .eq(Favorite::getUserId, SecurityUtils.getUserId())
@@ -100,10 +99,10 @@ public class FavoriteServiceImpl extends ServiceImpl<FavoriteMapper, Favorite> i
     public List<FavoriteListVO> getBackFavoriteList(SearchFavoriteDTO searchDTO) {
         LambdaQueryWrapper<Favorite> wrapper = new LambdaQueryWrapper<>();
         if (StringUtils.isNotNull(searchDTO)) {
-            // 搜索
-            List<User> users = userMapper.selectList(new LambdaQueryWrapper<User>().like(User::getUsername, searchDTO.getUserName()));
-            if (!users.isEmpty())
-                wrapper.in(StringUtils.isNotEmpty(searchDTO.getUserName()), Favorite::getUserId, users.stream().map(User::getId).collect(Collectors.toList()));
+            ResultData<List<Long>> userIdsResult = userClient.searchUserIdsByUsername(searchDTO.getUserName());
+            List<Long> userIds = userIdsResult.getData() != null ? userIdsResult.getData() : List.of();
+            if (!userIds.isEmpty())
+                wrapper.in(StringUtils.isNotEmpty(searchDTO.getUserName()), Favorite::getUserId, userIds);
             else
                 wrapper.eq(StringUtils.isNotNull(searchDTO.getUserName()), Favorite::getUserId, null);
 
@@ -114,14 +113,16 @@ public class FavoriteServiceImpl extends ServiceImpl<FavoriteMapper, Favorite> i
         }
         List<Favorite> favorites = favoriteMapper.selectList(wrapper);
         if (!favorites.isEmpty()) {
-            return favorites.stream().map(favorite -> favorite.copyProperties(FavoriteListVO.class,
-                    v -> {
-                        v.setUserName(userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, favorite.getUserId())).getUsername());
-                        switch (favorite.getType()) {
-                            case 1 -> v.setContent(articleMapper.selectById(favorite.getTypeId()).getArticleContent());
-                            case 2 -> v.setContent(leaveWordMapper.selectById(favorite.getTypeId()).getContent());
-                        }
-                    })).toList();
+            return favorites.stream().map(favorite -> {
+                FavoriteListVO vo = favorite.copyProperties(FavoriteListVO.class);
+                ResultData<String> usernameResult = userClient.getUsernameById(favorite.getUserId());
+                vo.setUserName(usernameResult.getData() != null ? usernameResult.getData() : "");
+                switch (favorite.getType()) {
+                    case 1 -> vo.setContent(articleMapper.selectById(favorite.getTypeId()).getArticleContent());
+                    case 2 -> vo.setContent(leaveWordMapper.selectById(favorite.getTypeId()).getContent());
+                }
+                return vo;
+            }).toList();
         }
         return null;
     }

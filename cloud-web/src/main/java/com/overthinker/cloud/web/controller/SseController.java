@@ -1,10 +1,11 @@
 package com.overthinker.cloud.web.controller;
 
+import com.overthinker.cloud.api.auth.api.UserClient;
 import com.overthinker.cloud.common.core.base.BaseController;
+import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.web.entity.VO.SseDataVO;
 import com.overthinker.cloud.web.service.ArticleService;
 import com.overthinker.cloud.web.service.PhotoService;
-import com.overthinker.cloud.web.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -28,20 +29,22 @@ import java.util.UUID;
 public class SseController extends BaseController {
 
     private final ArticleService articleService;
-    private final UserService userService;
+    private final UserClient userClient;
     private final PhotoService photoService;
 
-    // 缓存数据的 Flux
-    private final Flux<SseDataVO> dataFlux = Flux.interval(Duration.ofSeconds(3))
-            .map(seq -> {
-                SseDataVO vo = new SseDataVO();
-                vo.setOnlineCount(1);
-                vo.setArticleCount(1L);
-                vo.setUserCount(1L);
-                vo.setPhotoCount(1L);
-                return vo;
-            })
-            .share(); // 使用 share() 实现多播
+    private Flux<SseDataVO> createDataFlux() {
+        return Flux.interval(Duration.ofSeconds(3))
+                .map(seq -> {
+                    SseDataVO vo = new SseDataVO();
+                    vo.setOnlineCount(1);
+                    vo.setArticleCount(articleService.count());
+                    ResultData<Long> userCountResult = userClient.getUserCount();
+                    vo.setUserCount(userCountResult.getData() != null ? userCountResult.getData() : 0L);
+                    vo.setPhotoCount(photoService.count());
+                    return vo;
+                })
+                .share();
+    }
 
     // 在线人数的 Flux
     private final Flux<String> countFlux = Flux.interval(Duration.ofSeconds(3))
@@ -52,7 +55,7 @@ public class SseController extends BaseController {
     @Operation(summary = "SSE获取服务监控数据")
     @GetMapping(value = "/data", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ServerSentEvent<SseDataVO>> streamData() {
-        return dataFlux.map(data -> ServerSentEvent.<SseDataVO>builder()
+        return createDataFlux().map(data -> ServerSentEvent.<SseDataVO>builder()
                         .id(UUID.randomUUID().toString())
                         .data(data)
                         .build())

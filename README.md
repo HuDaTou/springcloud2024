@@ -62,7 +62,7 @@
 ## 快速开始
 
 ### 1. 环境准备
-*   Java 17+
+*   Java 21+
 *   Maven 3.8+
 *   Consul (默认 `localhost:8500`)
 *   RabbitMQ (默认 `localhost:5672`)
@@ -88,3 +88,279 @@
 ## 数据库脚本
 请参考 `/sql` 目录下的 SQL 脚本初始化数据库，特别是 `sys_user`, `sys_role`, `sys_permission` 等表。
 **注意**：`sys_user` 表中的密码需要使用 BCrypt 加密 (例如，`admin` 对应的 BCrypt 密码是 `$2a$10$VyFtQ3T943p3NY5R0IxzIONjdqABmuCSGiHe5uV8d1ujLGYuS2KZe`)。
+
+## 代码编写规范
+
+### 1. Java 代码规范
+
+#### 1.1 基本约定
+- **编码格式**：使用 UTF-8 编码
+- **缩进**：使用 4 个空格，禁止使用 Tab
+- **行宽**：每行不超过 120 个字符
+- **空行**：方法之间、类的成员之间用空行分隔
+- **导入顺序**：先 `java.*`，再 `javax.*`，然后第三方库，最后项目内部包，每组之间空一行
+
+#### 1.2 类与接口
+- 类名使用 **大驼峰命名法 (PascalCase)**
+- **Service 接口**：直接使用业务名称（如 `UserService`），**不以 `I` 开头**
+- **Service 实现类**：接口名 + `Impl`（如 `UserServiceImpl`）
+- 抽象类以 `Abstract` 开头（如 `AbstractService`）
+- 异常类以 `Exception` 结尾（如 `AuthException`）
+- 枚举类以 `Enum` 结尾（如 `ReturnCodeEnum`）
+
+#### 1.3 方法与变量
+- 方法名使用 **小驼峰命名法 (camelCase)**，采用动宾结构（如 `getUserById`）
+- 变量名使用 **小驼峰命名法 (camelCase)**，避免单字符变量（循环索引除外）
+- 常量名使用 **全大写 + 下划线分隔**（如 `JWT_EXPIRE_TIME`），定义在常量类中
+- 方法参数名使用 **小驼峰命名法**，且具有描述性
+
+#### 1.4 控制结构
+- `if-else`、`for`、`while`、`do-while` 语句必须使用大括号，即使只有一行代码
+- `if` 条件表达式必须换行时，操作符放在换行处
+- 三元运算符仅用于简单表达式，避免嵌套
+- 使用 `Objects.isNull()` 和 `Objects.nonNull()` 判断对象是否为空
+
+### 2. 命名规范
+
+| 类型 | 命名规则 | 示例 |
+| :--- | :--- | :--- |
+| 包名 | 全小写，使用域名反转 | `com.overthinker.cloud.auth` |
+| Service 接口 | PascalCase | `UserService`, `AuthService` |
+| Service 实现类 | PascalCase + Impl | `UserServiceImpl`, `AuthServiceImpl` |
+| Controller | PascalCase + Controller | `UserController`, `AuthController` |
+| Mapper | PascalCase + Mapper | `UserMapper`, `RoleMapper` |
+| DTO | PascalCase + DTO | `UserRegisterDTO`, `UserUpdateDTO` |
+| VO | PascalCase + VO | `UserAccountVO`, `UserDetailsVO` |
+| PO | PascalCase + PO | `User`, `SysPermission` |
+| 常量类 | PascalCase + Const | `AuthRedisConst`, `SecurityConst` |
+| 工具类 | PascalCase + Utils | `SecurityUtils`, `SpringContextUtils` |
+| 枚举 | PascalCase + Enum | `ReturnCodeEnum`, `MyModel` |
+| 异常 | PascalCase + Exception | `TokenExpiredException` |
+
+### 3. 目录结构规范
+
+```
+module/
+├── src/main/java/com/overthinker/cloud/module/
+│   ├── controller/        # REST API 控制层
+│   ├── service/           # 业务接口
+│   │   └── impl/          # 业务实现
+│   ├── mapper/            # MyBatis Mapper 接口
+│   ├── entity/            # 实体类
+│   │   ├── PO/            # 数据库实体 (Persistent Object)
+│   │   ├── DTO/           # 数据传输对象 (Data Transfer Object)
+│   │   └── VO/            # 视图对象 (View Object)
+│   ├── config/            # 配置类
+│   ├── constants/         # 常量定义
+│   ├── utils/             # 工具类
+│   ├── listener/          # 事件监听器
+│   └── Application.java   # 启动类
+└── src/main/resources/
+    ├── application.yml    # 应用配置
+    └── mapper/            # MyBatis XML 文件
+```
+
+### 4. 注释规范
+
+#### 4.1 Javadoc 注释
+- 类、接口、公共方法必须有 Javadoc 注释
+- 注释使用中文，清晰描述功能、参数、返回值和异常
+- 使用 `@author`、`@since` 标注作者和版本信息
+
+```java
+/**
+ * 用户服务接口
+ *
+ * @author overH
+ * @since 2023-10-10
+ */
+public interface UserService extends IService<User> {
+    /**
+     * 根据用户ID查询用户账户信息
+     *
+     * @param id 用户ID
+     * @return 用户账户视图对象
+     */
+    UserAccountVO findAccountById(Long id);
+}
+```
+
+#### 4.2 代码注释
+- 复杂业务逻辑必须有注释说明
+- 单行注释使用 `//`，多行注释使用 `/* */`
+- 注释应说明**为什么**这么做，而不是重复代码
+
+### 5. Spring 相关规范
+
+#### 5.1 依赖注入
+- **优先使用 `@Resource` 注解**进行字段注入（项目约定）
+- 复杂依赖或需要循环依赖时使用构造函数注入
+- Service 实现类使用 `@Service("beanName")` 指定 Bean 名称
+
+#### 5.2 事务管理
+- 使用 `@Transactional` 注解声明事务
+- 事务方法应是 public 修饰符
+- 明确指定事务传播行为和回滚规则
+
+#### 5.3 注解使用顺序
+```java
+@Slf4j                    // 日志
+@Service("userService")   // 组件注解
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+    // ...
+}
+```
+
+### 6. 数据层规范
+
+#### 6.1 MyBatis 规范
+- Mapper 接口继承 `BaseMapper<T>` 或 `IService<T>`
+- 使用 `LambdaQueryWrapper` 进行类型安全的查询构造
+- SQL 语句使用 `#{}` 占位符，禁止拼接字符串
+
+#### 6.2 通用响应结果
+- 使用 `ResultData<T>` 作为统一返回格式
+- 成功响应：`ResultData.success()` 或 `ResultData.success(data)`
+- 失败响应：`ResultData.failure()` 或 `ResultData.failure(msg)`
+
+```java
+// 成功响应
+return ResultData.success(user);
+
+// 失败响应
+return ResultData.failure("用户不存在");
+```
+
+#### 6.3 返回码枚举
+- 使用 `ReturnCodeEnum` 管理统一错误码
+- 错误码范围：
+  - `2xx`：成功或业务提示
+  - `4xx`：客户端错误
+  - `5xx`：服务端错误
+  - `10xx`：业务自定义错误
+
+### 7. 安全规范
+
+#### 7.1 敏感信息
+- 禁止硬编码敏感信息（密码、密钥、配置等）
+- 敏感信息必须通过配置文件或环境变量注入
+- 日志中禁止打印密码、Token 等敏感数据
+
+#### 7.2 输入验证
+- 所有外部输入必须进行参数校验
+- 使用 `@Valid` 和 `@Validated` 注解进行 Bean 校验
+- SQL 查询使用预编译语句，防止 SQL 注入
+
+#### 7.3 权限控制
+- 使用 `@PreAuthorize("hasAuthority('permission_code')")` 进行方法级权限控制
+- 权限码格式：`模块:功能`（如 `ai:chat`, `user:list`）
+
+### 8. Git 提交规范
+
+#### 8.1 提交格式
+```
+<type>(<scope>): <description>
+
+[optional body]
+
+[optional footer]
+```
+
+#### 8.2 类型说明
+| 类型 | 说明 |
+| :--- | :--- |
+| `feat` | 新增功能 |
+| `fix` | 修复 Bug |
+| `docs` | 文档更新 |
+| `style` | 代码格式调整（不影响逻辑） |
+| `refactor` | 代码重构 |
+| `test` | 测试代码 |
+| `chore` | 构建/工具配置 |
+
+#### 8.3 示例
+```
+feat(auth): 添加 OAuth2 授权码模式支持
+
+- 实现 AuthorizationCodeTokenGranter
+- 添加授权码存储逻辑
+- 更新 SecurityConfig 配置
+
+Closes #123
+```
+
+### 9. 日志规范
+
+- 使用 `@Slf4j` 注解注入 Logger
+- 日志级别：
+  - `DEBUG`：详细的调试信息
+  - `INFO`：关键业务流程日志
+  - `WARN`：警告信息，需要关注但不影响运行
+  - `ERROR`：错误信息，影响功能运行
+- 禁止使用 `System.out.println()`
+
+### 10. API 设计规范
+
+#### 10.1 HTTP 方法
+| 方法 | 用途 |
+| :--- | :--- |
+| `GET` | 查询资源 |
+| `POST` | 创建资源 |
+| `PUT` | 更新资源（全量） |
+| `PATCH` | 更新资源（部分） |
+| `DELETE` | 删除资源 |
+
+#### 10.2 URI 命名
+- 使用小写字母和连字符（如 `/auth/reset-password`）
+- 资源用复数形式（如 `/users`）
+- 避免动词，使用名词（如 `/users` 而非 `/getUsers`）
+
+#### 10.3 响应格式
+```json
+{
+    "code": 200,
+    "msg": "success",
+    "data": {},
+    "timestamp": 1620000000000
+}
+```
+
+#### 10.4 错误码
+| 错误码 | 含义 |
+| :--- | :--- |
+| `200` | 请求成功 |
+| `400` | 请求参数错误 |
+| `401` | 未授权（Token 无效或过期） |
+| `403` | 无权限访问 |
+| `404` | 资源不存在 |
+| `500` | 服务器内部错误 |
+
+### 11. 异步编程规范
+
+#### 11.1 Reactor 响应式编程
+- 响应式方法返回 `Mono<T>` 或 `Flux<T>`
+- 使用 `reactor.core.publisher` 包下的类
+- 方法命名使用 `Mono` 或 `Flux` 相关后缀（如 `query` 而非 `queryMono`）
+
+#### 11.2 异步任务
+- 使用 `@Async` 注解标记异步方法
+- 异步方法返回 `CompletableFuture<T>`
+
+### 12. 接口文档规范
+
+使用 Swagger/OpenAPI 注解：
+- `@Tag`：Controller 级别描述
+- `@Operation`：方法级别描述
+- `@Parameter`：参数描述
+
+```java
+@Tag(name = "用户登录", description = "用户账户登录")
+@RestController
+@RequestMapping("/auth")
+public class AuthController {
+    @Operation(summary = "用户注册", description = "新用户通过邮箱验证码注册账号")
+    @PostMapping("/register")
+    public ResultData<Void> register(@RequestBody @Valid UserRegisterDTO userRegisterDTO) {
+        // ...
+    }
+}
+```

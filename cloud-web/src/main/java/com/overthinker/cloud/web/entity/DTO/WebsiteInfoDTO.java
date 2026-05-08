@@ -3,7 +3,7 @@ package com.overthinker.cloud.web.entity.DTO;
 import com.overthinker.cloud.common.core.entity.BasecopyProperties;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author overH
@@ -21,5 +21,5 @@ public class WebsiteInfoDTO implements BasecopyProperties {
     //备案信息
     private String recordInfo;
     //开始运行时间
-    private Date startTime;
+    private LocalDateTime startTime;
 }

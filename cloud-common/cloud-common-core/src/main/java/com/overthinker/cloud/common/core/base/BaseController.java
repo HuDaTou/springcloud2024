@@ -1,10 +1,8 @@
 package com.overthinker.cloud.common.core.base;
 
 
-import cn.hutool.db.Page;
 import com.overthinker.cloud.common.core.resp.ResultData;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 /**

@@ -1,6 +1,6 @@
 package com.overthinker.cloud.auth.controller;
 
-import com.overthinker.cloud.auth.service.AuthService;
+
 import com.overthinker.cloud.common.core.base.BaseController;
 
 import com.overthinker.cloud.auth.entity.DTO.*;
@@ -19,7 +19,10 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Tag(name = "用户管理", description = "用户账户管理、信息修改、注册及管理后台用户操作接口")
 @RestController
@@ -90,5 +93,39 @@ public class UserController extends BaseController {
     @DeleteMapping("/delete")
     public ResultData<Void> deleteUser(@RequestBody UserDeleteDTO userDeleteDTO) {
         return userService.deleteUser(userDeleteDTO.getIds());
+    }
+
+    @GetMapping("/internal/api/v1/user/count")
+    public ResultData<Long> getUserCount() {
+        return messageHandler(() -> userService.count());
+    }
+
+    @GetMapping("/internal/api/v1/user/username")
+    public ResultData<String> getUsernameById(@RequestParam Long userId) {
+        return messageHandler(() -> userService.findAccountById(userId).getUsername());
+    }
+
+    @GetMapping("/internal/api/v1/user/email")
+    public ResultData<String> getEmailById(@RequestParam Long userId) {
+        return messageHandler(() -> userService.findAccountById(userId).getEmail());
+    }
+
+    @GetMapping("/internal/api/v1/user/info")
+    public ResultData<Map<String, Object>> getUserInfoById(@RequestParam Long userId) {
+        UserAccountVO account = userService.findAccountById(userId);
+        Map<String, Object> info = new HashMap<>();
+        info.put("username", account.getUsername());
+        info.put("email", account.getEmail());
+        info.put("nickname", account.getNickname());
+        info.put("avatar", account.getAvatar());
+        return ResultData.success(info);
+    }
+
+    @GetMapping("/internal/api/v1/user/search")
+    public ResultData<List<Long>> searchUserIdsByUsername(@RequestParam String username) {
+        UserSearchDTO searchDTO = new UserSearchDTO();
+        searchDTO.setUsername(username);
+        return messageHandler(() -> userService.getUserOrSearch(searchDTO)
+                .stream().map(UserListVO::getId).collect(Collectors.toList()));
     }
 }

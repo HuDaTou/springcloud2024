@@ -7,7 +7,7 @@ import com.overthinker.cloud.auth.entity.ENUMS.EmailCompolent;
 import com.overthinker.cloud.auth.service.EmailService;
 import com.overthinker.cloud.auth.utils.SpringContextUtils;
 import com.overthinker.cloud.common.core.constants.NumberConst;
-import com.overthinker.cloud.common.core.utils.StringUtils;
+import com.overthinker.cloud.common.core.utils.MyStringUtils;
 import com.overthinker.cloud.redis.utils.MyRedisCache;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -28,10 +28,10 @@ public class EmailServiceImpl implements EmailService {
     public void getEmailCode(String email, String type) {
 //        先检查缓存中是否有该邮箱的验证码
 //        构建缓存key
-        String redisKey = StringUtils.buildRedisKey(type, email);
+        String redisKey = MyStringUtils.buildRedisKey(type, email);
         String cacheObject = myRedisCache.getCacheObject(redisKey);
 
-        if (StringUtils.isNotEmpty(cacheObject)) {
+        if (MyStringUtils.isNotEmpty(cacheObject)) {
             cacheObject = RandomUtil.randomString(NumberConst.SIX);
             myRedisCache.setCacheObject(redisKey, cacheObject, NumberConst.THOUSAND, TimeUnit.MINUTES);
         }

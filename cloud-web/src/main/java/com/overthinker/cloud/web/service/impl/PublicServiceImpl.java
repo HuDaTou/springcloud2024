@@ -2,14 +2,14 @@ package com.overthinker.cloud.web.service.impl;
 
 import com.overthinker.cloud.redis.constants.RedisConst;
 import com.overthinker.cloud.web.service.PublicService;
-import com.overthinker.cloud.web.utils.MyRedisCache;
+import com.overthinker.cloud.redis.utils.MyRedisCache;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -72,6 +72,6 @@ public class PublicServiceImpl implements PublicService {
             rabbitTemplate.convertAndSend(exchange, routingKey, content);
         } else rabbitTemplate.convertAndSend(exchange, routingKey, Map.of("email", email, "type", type));
 
-        log.info("邮件通知消息发送完毕，发送时间为：{}，发送的消息类型：{}，发送的邮箱：{}", new Date(), type, email);
+        log.info("邮件通知消息发送完毕，发送时间为：{}，发送的消息类型：{}，发送的邮箱：{}", LocalDateTime.now(), type, email);
     }
 }

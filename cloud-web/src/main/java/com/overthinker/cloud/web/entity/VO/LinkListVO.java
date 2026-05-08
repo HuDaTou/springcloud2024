@@ -2,7 +2,7 @@ package com.overthinker.cloud.web.entity.VO;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * @author overH
@@ -26,7 +26,7 @@ public class LinkListVO {
     //邮箱地址
     private String email;
     //文章创建时间
-    private Date createTime;
+    private LocalDateTime createTime;
     //审核状态（0：未通过，1：已通过）
     private Integer isCheck;
 }

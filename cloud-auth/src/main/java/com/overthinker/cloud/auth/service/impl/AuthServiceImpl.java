@@ -75,9 +75,9 @@ public class AuthServiceImpl implements AuthService {
             return ResultData.failure("验证码错误或已过期");
         }
 
-        // 2. 检查用户名是否存在
+        // 2. 检查用户名或邮箱是否已存在
         User accountByNameOrEmail = userService.findAccountByNameOrEmail(dto.getUsername(), dto.getEmail());
-        if (Objects.isNull(accountByNameOrEmail)) return ResultData.failure("用户名已存在");
+        if (Objects.nonNull(accountByNameOrEmail)) return ResultData.failure("用户名或邮箱已存在");
 
 
         // 4. 创建用户
@@ -109,13 +109,49 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResultData<Void> resetConfirm(UserResetConfirmDTO userResetDTO) {
-        // TODO: 实现重置密码验证逻辑
-        return ResultData.success();
+        String email = userResetDTO.getEmail();
+        
+        User user = userService.findAccountByNameOrEmail(email, email);
+        if (Objects.isNull(user)) {
+            return ResultData.failure("该邮箱未注册");
+        }
+
+        String codeKey = RedisConstants.USER_CODE_KEY_PREFIX + email;
+        String cachedCode = redisTemplate.opsForValue().get(codeKey);
+        
+        if (cachedCode != null && cachedCode.equals(userResetDTO.getCode())) {
+            redisTemplate.delete(codeKey);
+            return ResultData.success();
+        }
+        
+        return ResultData.failure("验证码错误或已过期");
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResultData<Void> resetPassword(UserResetPasswordDTO userResetDTO) {
-        // TODO: 实现重置密码逻辑
+        String email = userResetDTO.getEmail();
+        String code = userResetDTO.getCode();
+        String newPassword = userResetDTO.getPassword();
+
+        User user = userService.findAccountByNameOrEmail(email, email);
+        if (Objects.isNull(user)) {
+            return ResultData.failure("该邮箱未注册");
+        }
+
+        String codeKey = RedisConstants.USER_CODE_KEY_PREFIX + email;
+        String cachedCode = redisTemplate.opsForValue().get(codeKey);
+        
+        if (cachedCode == null || !cachedCode.equals(code)) {
+            return ResultData.failure("验证码错误或已过期");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setUpdateTime(LocalDateTime.now());
+        userService.updateById(user);
+        
+        redisTemplate.delete(codeKey);
+        
         return ResultData.success();
     }
 

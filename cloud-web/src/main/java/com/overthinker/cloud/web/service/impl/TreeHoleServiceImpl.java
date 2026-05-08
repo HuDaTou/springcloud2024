@@ -5,20 +5,20 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.web.entity.DTO.SearchTreeHoleDTO;
 import com.overthinker.cloud.web.entity.DTO.TreeHoleIsCheckDTO;
+import com.overthinker.cloud.api.auth.api.UserClient;
 import com.overthinker.cloud.web.entity.PO.TreeHole;
-import com.overthinker.cloud.web.entity.PO.User;
 import com.overthinker.cloud.web.entity.VO.TreeHoleListVO;
 import com.overthinker.cloud.web.entity.VO.TreeHoleVO;
 import com.overthinker.cloud.web.entity.constants.SQLConst;
 import com.overthinker.cloud.web.mapper.TreeHoleMapper;
-import com.overthinker.cloud.web.mapper.UserMapper;
 import com.overthinker.cloud.web.service.TreeHoleService;
-import com.overthinker.cloud.web.utils.SecurityUtils;
+import com.overthinker.cloud.system.auth.utils.SecurityUtils;
 import com.overthinker.cloud.web.utils.StringUtils;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class TreeHoleServiceImpl extends ServiceImpl<TreeHoleMapper, TreeHole> implements TreeHoleService {
 
     @Resource
-    private UserMapper userMapper;
+    private UserClient userClient;
 
     @Resource
     private TreeHoleMapper treeHoleMapper;
@@ -48,21 +48,27 @@ public class TreeHoleServiceImpl extends ServiceImpl<TreeHoleMapper, TreeHole> i
     public List<TreeHoleVO> getTreeHole() {
         List<TreeHole> treeHoles = treeHoleMapper.selectList(new LambdaQueryWrapper<TreeHole>().eq(TreeHole::getIsCheck, SQLConst.IS_CHECK_YES));
         if (treeHoles.isEmpty()) return null;
-        return treeHoles.stream().map(treeHole -> treeHole.copyProperties(TreeHoleVO.class, treeHoleVO -> {
-            User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, treeHole.getUserId()));
-            treeHoleVO.setNickname(user.getUsername());
-            treeHoleVO.setAvatar(user.getAvatar());
-        })).collect(Collectors.toList());
+        return treeHoles.stream().map(treeHole -> {
+            TreeHoleVO vo = treeHole.copyProperties(TreeHoleVO.class);
+            ResultData<String> usernameResult = userClient.getUsernameById(treeHole.getUserId());
+            vo.setNickname(usernameResult.getData() != null ? usernameResult.getData() : "");
+            ResultData<Map<String, Object>> userInfoResult = userClient.getUserInfoById(treeHole.getUserId());
+            Map<String, Object> userInfo = userInfoResult.getData();
+            if (userInfo != null) {
+                vo.setAvatar((String) userInfo.get("avatar"));
+            }
+            return vo;
+        }).collect(Collectors.toList());
     }
 
     @Override
     public List<TreeHoleListVO> getBackTreeHoleList(SearchTreeHoleDTO searchDTO) {
         LambdaQueryWrapper<TreeHole> wrapper = new LambdaQueryWrapper<>();
         if (StringUtils.isNotNull(searchDTO)) {
-            // 搜索
-            List<User> users = userMapper.selectList(new LambdaQueryWrapper<User>().like(User::getUsername, searchDTO.getUserName()));
-            if (!users.isEmpty())
-                wrapper.in(StringUtils.isNotEmpty(searchDTO.getUserName()), TreeHole::getUserId, users.stream().map(User::getId).collect(Collectors.toList()));
+            ResultData<List<Long>> userIdsResult = userClient.searchUserIdsByUsername(searchDTO.getUserName());
+            List<Long> userIds = userIdsResult.getData() != null ? userIdsResult.getData() : List.of();
+            if (!userIds.isEmpty())
+                wrapper.in(StringUtils.isNotEmpty(searchDTO.getUserName()), TreeHole::getUserId, userIds);
             else
                 wrapper.eq(StringUtils.isNotNull(searchDTO.getUserName()), TreeHole::getUserId, null);
 
@@ -72,9 +78,12 @@ public class TreeHoleServiceImpl extends ServiceImpl<TreeHoleMapper, TreeHole> i
         }
         List<TreeHole> treeHoles = treeHoleMapper.selectList(wrapper);
         if (!treeHoles.isEmpty()) {
-            return treeHoles.stream().map(treeHole -> treeHole.copyProperties(TreeHoleListVO.class,
-                    v -> v.setUserName(userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, treeHole.getUserId()))
-                            .getUsername()))).toList();
+            return treeHoles.stream().map(treeHole -> {
+                TreeHoleListVO vo = treeHole.copyProperties(TreeHoleListVO.class);
+                ResultData<String> usernameResult = userClient.getUsernameById(treeHole.getUserId());
+                vo.setUserName(usernameResult.getData() != null ? usernameResult.getData() : "");
+                return vo;
+            }).toList();
         }
         return null;
     }

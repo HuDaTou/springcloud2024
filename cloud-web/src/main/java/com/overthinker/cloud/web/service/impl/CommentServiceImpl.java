@@ -9,10 +9,10 @@ import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.web.entity.DTO.CommentIsCheckDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchCommentDTO;
 import com.overthinker.cloud.web.entity.DTO.UserCommentDTO;
+import com.overthinker.cloud.api.auth.api.UserClient;
 import com.overthinker.cloud.web.entity.PO.Comment;
 import com.overthinker.cloud.web.entity.PO.LeaveWord;
 import com.overthinker.cloud.web.entity.PO.Like;
-import com.overthinker.cloud.web.entity.PO.User;
 import com.overthinker.cloud.web.entity.VO.ArticleCommentVO;
 import com.overthinker.cloud.web.entity.VO.CommentListVO;
 import com.overthinker.cloud.web.entity.VO.PageVO;
@@ -24,12 +24,11 @@ import com.overthinker.cloud.web.entity.enums.MailboxAlertsEnum;
 import com.overthinker.cloud.web.mapper.CommentMapper;
 import com.overthinker.cloud.web.mapper.LeaveWordMapper;
 import com.overthinker.cloud.web.mapper.LikeMapper;
-import com.overthinker.cloud.web.mapper.UserMapper;
 import com.overthinker.cloud.web.service.CommentService;
 import com.overthinker.cloud.web.service.LikeService;
 import com.overthinker.cloud.web.service.PublicService;
-import com.overthinker.cloud.web.utils.MyRedisCache;
-import com.overthinker.cloud.web.utils.SecurityUtils;
+import com.overthinker.cloud.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.auth.utils.SecurityUtils;
 import com.overthinker.cloud.web.utils.StringUtils;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,7 +52,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     private CommentMapper commentMapper;
 
     @Resource
-    private UserMapper userMapper;
+    private UserClient userClient;
 
     @Resource
     private LikeService likeService;
@@ -135,13 +134,11 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     public ResultData<String> userComment(UserCommentDTO commentDTO) {
         Comment comment = commentDTO.copyProperties(Comment.class, commentDto -> commentDto.setCommentUserId(SecurityUtils.getUserId()));
         if (this.save(comment)) {
-            // 判断用是否为第三方登录没有邮箱
-            User user = userMapper.selectById(SecurityUtils.getUserId());
-            if (StringUtils.isEmpty(user.getEmail())) {
-                // 提示绑定邮箱
+            ResultData<String> emailResult = userClient.getEmailById(SecurityUtils.getUserId());
+            if (StringUtils.isEmpty(emailResult.getData())) {
                 return ResultData.success("检测到您尚未绑定邮箱,无法开启邮箱提醒，请先绑定邮箱");
             }
-            return this.commentEmailReminder(commentDTO, user, comment);
+            return this.commentEmailReminder(commentDTO, emailResult.getData(), comment);
         }
         return ResultData.failure();
     }
@@ -150,16 +147,13 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
      * 评论邮箱提醒
      *
      * @param commentDTO 前端DTO
-     * @param user       用户
+     * @param userEmail  用户邮箱
      * @param comment    新增评论消息
      * @return ResultData
      */
-    public ResultData<String> commentEmailReminder(UserCommentDTO commentDTO, User user, Comment comment) {
-        // 缓存评论数量+1
+    public ResultData<String> commentEmailReminder(UserCommentDTO commentDTO, String userEmail, Comment comment) {
         myRedisCache.incrementCacheMapValue(RedisConst.ARTICLE_COMMENT_COUNT, commentDTO.getTypeId().toString(), 1);
-        // 评论
         if (StringUtils.isNull(commentDTO.getReplyId())) {
-
             if ((commentDTO.getType() == 1 && !articleEmailNotice) || commentDTO.getType() == 2 && !messageEmailNotice)
                 return ResultData.success();
 
@@ -167,32 +161,27 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             selectWhereMap.put("commentType", commentDTO.getType());
             selectWhereMap.put("commentId", comment.getId());
 
-            // 留言提示对应发布留言的用户
             if (commentDTO.getType() == 1) {
-                if (Objects.equals(fromUser, user.getEmail())) return ResultData.success();
-                // 发邮箱给站长
+                if (Objects.equals(fromUser, userEmail)) return ResultData.success();
                 publicService.sendEmail(MailboxAlertsEnum.COMMENT_NOTIFICATION_EMAIL.getCodeStr(), fromUser, selectWhereMap);
             }
 
             if (commentDTO.getType() == 2) {
-                // 查出回复的该留言用户的邮箱
                 LeaveWord leaveWord = leaveWordMapper.selectOne(new LambdaQueryWrapper<LeaveWord>().eq(LeaveWord::getId, commentDTO.getTypeId()));
-                User replyUser = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, leaveWord.getUserId()));
-                // 用户没绑定邮箱，或者回复的留言是自己
-                if (Objects.equals(replyUser.getEmail(), null) || Objects.equals(replyUser.getEmail(), user.getEmail()))
+                ResultData<String> replyEmailResult = userClient.getEmailById(leaveWord.getUserId());
+                String replyEmail = replyEmailResult.getData();
+                if (StringUtils.isEmpty(replyEmail) || Objects.equals(replyEmail, userEmail))
                     return ResultData.success();
-                // 发送邮箱给该留言的用户
-                publicService.sendEmail(MailboxAlertsEnum.COMMENT_NOTIFICATION_EMAIL.getCodeStr(), replyUser.getEmail(), selectWhereMap);
+                publicService.sendEmail(MailboxAlertsEnum.COMMENT_NOTIFICATION_EMAIL.getCodeStr(), replyEmail, selectWhereMap);
             }
         }
-        // 回复评论
         if (Objects.nonNull(commentDTO.getReplyId())) {
-            User replyUser = userMapper.selectById(commentDTO.getReplyUserId());
+            ResultData<String> replyEmailResult = userClient.getEmailById(commentDTO.getReplyUserId());
+            String replyEmail = replyEmailResult.getData();
             if ((commentDTO.getType() == 1 && !articleReplyNotice) || (commentDTO.getType() == 2 && !messageReplyNotice))
                 return ResultData.success();
 
-            // 如果用户回复自己并且回复人是站长就无需提醒
-            if (Objects.equals(replyUser.getEmail(), user.getEmail()) && Objects.equals(fromUser, user.getEmail())) {
+            if (Objects.equals(replyEmail, userEmail) && Objects.equals(fromUser, userEmail)) {
                 return ResultData.success();
             }
 
@@ -201,14 +190,12 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             selectWhereMap.put("commentId", comment.getId());
             selectWhereMap.put("replyCommentId", commentDTO.getReplyId());
 
-            // 回复人与被回复人不是站长本人的话就发送新增评论邮箱给站长
-            if (!Objects.equals(user.getEmail(), fromUser) && !Objects.equals(replyUser.getEmail(), fromUser)) {
+            if (!Objects.equals(userEmail, fromUser) && !Objects.equals(replyEmail, fromUser)) {
                 publicService.sendEmail(MailboxAlertsEnum.COMMENT_NOTIFICATION_EMAIL.getCodeStr(), fromUser, selectWhereMap);
             }
 
-            // 回复人不是站长本人并且不是自己回复自己，就发送回复通知
-            if (!Objects.equals(user.getEmail(), replyUser.getEmail())) {
-                publicService.sendEmail(MailboxAlertsEnum.REPLY_COMMENT_NOTIFICATION_EMAIL.getCodeStr(), replyUser.getEmail(), selectWhereMap);
+            if (!Objects.equals(userEmail, replyEmail)) {
+                publicService.sendEmail(MailboxAlertsEnum.REPLY_COMMENT_NOTIFICATION_EMAIL.getCodeStr(), replyEmail, selectWhereMap);
             }
         }
         return ResultData.success();
@@ -219,9 +206,10 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     public List<CommentListVO> getBackCommentList(SearchCommentDTO searchDTO) {
         LambdaQueryWrapper<Comment> wrapper = new LambdaQueryWrapper<>();
         if (StringUtils.isNotNull(searchDTO)) {
-            List<User> users = userMapper.selectList(new LambdaQueryWrapper<User>().like(User::getUsername, searchDTO.getCommentUserName()));
-            if (!users.isEmpty())
-                wrapper.in(StringUtils.isNotEmpty(searchDTO.getCommentUserName()), Comment::getCommentUserId, users.stream().map(User::getId).collect(Collectors.toList()));
+            ResultData<List<Long>> userIdsResult = userClient.searchUserIdsByUsername(searchDTO.getCommentUserName());
+            List<Long> userIds = userIdsResult.getData() != null ? userIdsResult.getData() : List.of();
+            if (!userIds.isEmpty())
+                wrapper.in(StringUtils.isNotEmpty(searchDTO.getCommentUserName()), Comment::getCommentUserId, userIds);
             else
                 wrapper.eq(StringUtils.isNotNull(searchDTO.getCommentUserName()), Comment::getCommentUserId, null);
 
@@ -230,8 +218,12 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                     .eq(StringUtils.isNotNull(searchDTO.getIsCheck()), Comment::getIsCheck, searchDTO.getIsCheck());
         }
 
-        return commentMapper.selectList(wrapper.orderByDesc(Comment::getCreateTime)).stream().map(comment -> comment.copyProperties(CommentListVO.class,
-                v -> v.setCommentUserName(userMapper.selectById(comment.getCommentUserId()).getUsername()))).collect(Collectors.toList());
+        return commentMapper.selectList(wrapper.orderByDesc(Comment::getCreateTime)).stream().map(comment -> {
+            CommentListVO vo = comment.copyProperties(CommentListVO.class);
+            ResultData<String> usernameResult = userClient.getUsernameById(comment.getCommentUserId());
+            vo.setCommentUserName(usernameResult.getData() != null ? usernameResult.getData() : "");
+            return vo;
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -275,23 +267,29 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     private List<ArticleCommentVO> getChildComment(List<ArticleCommentVO> comments, Long parentId) {
-
         return comments.stream()
                 .filter(comment -> {
                     if (Objects.isNull(comment.getParentId())) {
-                        User user = userMapper.selectById(comment.getCommentUserId());
-                        comment.setCommentUserNickname(user.getNickname())
-                                .setCommentUserAvatar(user.getAvatar())
-                                .setLikeCount(likeService.getLikeCount(LikeEnum.LIKE_TYPE_COMMENT.getType(), comment.getId()));
+                        ResultData<Map<String, Object>> userInfoResult = userClient.getUserInfoById(comment.getCommentUserId());
+                        Map<String, Object> userInfo = userInfoResult.getData();
+                        if (userInfo != null) {
+                            comment.setCommentUserNickname((String) userInfo.get("nickname"))
+                                    .setCommentUserAvatar((String) userInfo.get("avatar"));
+                        }
+                        comment.setLikeCount(likeService.getLikeCount(LikeEnum.LIKE_TYPE_COMMENT.getType(), comment.getId()));
                     }
                     return Objects.nonNull(comment.getParentId()) && Objects.equals(comment.getParentId(), parentId);
                 })
                 .peek(comment -> {
-                    User user = userMapper.selectById(comment.getCommentUserId());
-                    comment.setChildComment(getChildComment(comments, comment.getId()))
-                            .setCommentUserNickname(user.getNickname())
-                            .setCommentUserAvatar(user.getAvatar())
-                            .setReplyUserNickname(userMapper.selectById(comment.getReplyUserId()).getNickname())
+                    ResultData<Map<String, Object>> userInfoResult = userClient.getUserInfoById(comment.getCommentUserId());
+                    Map<String, Object> userInfo = userInfoResult.getData();
+                    if (userInfo != null) {
+                        comment.setCommentUserNickname((String) userInfo.get("nickname"))
+                                .setCommentUserAvatar((String) userInfo.get("avatar"));
+                    }
+                    ResultData<String> replyNicknameResult = userClient.getUsernameById(comment.getReplyUserId());
+                    comment.setReplyUserNickname(replyNicknameResult.getData() != null ? replyNicknameResult.getData() : "")
+                            .setChildComment(getChildComment(comments, comment.getId()))
                             .setLikeCount(likeService.getLikeCount(LikeEnum.LIKE_TYPE_COMMENT.getType(), comment.getId()));
                 }).toList();
     }

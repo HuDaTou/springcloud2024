@@ -1,15 +1,13 @@
 package com.overthinker.cloud.ai.config;
 
-import com.overthinker.cloud.ai.enums.MyModel;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.model.ChatModel;
-import org.springframework.ai.ollama.OllamaChatModel;
+
 import org.springframework.ai.ollama.api.OllamaApi;
-import org.springframework.ai.ollama.api.OllamaModel;
 
 
-import org.springframework.beans.factory.annotation.Qualifier;
+
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
