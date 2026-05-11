@@ -365,7 +365,537 @@ public class AuthController {
 }
 ```
 
+## 任务列表
+
+- [ ] **联调前后端的登录功能**
+  - 实现前后端分离的登录认证流程
+  - 确保 OAuth2 授权码模式正常运作
+  - 验证 Token 的正确获取和使用
+
+- [ ] **修改实体类转化方式为 MapStruct**
+  - 替换现有的 BeanUtils 或手动转换方式
+  - 定义 PO/DTO/VO 之间的映射关系
+  - 优化对象转换性能
+
+- [ ] **实现接口权限自动注册自动化鉴权方案**
+  - 设计权限自动扫描与上报机制
+  - 实现 MQ 消息队列异步通信
+  - 处理幂等性和去重问题
+  - 实现全量覆盖机制
+
+- [ ] **集成 SkyWalking 链路追踪**
+  - 配置 SkyWalking Agent
+  - 实现分布式链路追踪
+  - 关联权限注册链路
+
+## 接口权限自动注册方案
+
+### 一、方案概述
+
+本方案实现**接口权限自动注册**，通过自动化手段替代传统手动录入权限的繁琐工作，大幅提升开发效率。
+
+#### 核心流程
+
+```
+各业务微服务启动
+    ↓
+自动扫描所有 @PreAuthorize("hasAuthority('permission_code')") 注解
+    ↓
+提取权限标识、接口路径、接口标题、备注信息
+    ↓
+本地缓存对比去重（仅推送变更）
+    ↓
+通过 MQ 异步发送到 Auth 服务
+    ↓
+Auth 服务接收并处理：
+  - 存在则更新
+  - 不存在则新增
+  - 数据库中存在但本次未推送的权限自动禁用
+```
+
+### 二、方案优点
+
+| 优点 | 说明 |
+|------|------|
+| **完全自动化** | 开发写完接口加注解，重启服务自动入库，无需手动维护 |
+| **微服务解耦** | MQ 异步投递，业务服务不依赖 Auth 服务可用性 |
+| **零维护成本** | 不用每个人去后台手动建权限，减少人工错误 |
+| **精准性高** | 以代码注解为准，权限码零错误 |
+| **全量覆盖** | 自动禁用已删除接口的权限，避免垃圾权限和越权漏洞 |
+
+### 三、技术实现细节
+
+#### 1. 服务配置
+
+每个微服务需要在 `application.yml` 中配置唯一标识：
+
+```yaml
+spring:
+  application:
+    name: cloud-ai
+
+system:
+  auth:
+    module-name: cloud-ai          # 模块唯一标识
+    version: 1.0.0                  # 版本号
+    scan-enabled: true               # 是否开启权限扫描（生产环境可关闭）
+    mq-topic: permission-sync        # MQ 主题
+```
+
+#### 2. 注解扫描机制
+
+使用 Spring 的 `ComponentScan` 和 `反射` 机制扫描所有 Controller：
+
+```java
+public class PermissionScanner {
+    
+    @Resource
+    private ApplicationContext applicationContext;
+    
+    public List<PermissionDTO> scanPermissions() {
+        Map<String, Object> controllers = applicationContext.getBeansWithAnnotation(RestController.class);
+        List<PermissionDTO> permissions = new ArrayList<>();
+        
+        for (Object controller : controllers.values()) {
+            Method[] methods = controller.getClass().getDeclaredMethods();
+            for (Method method : methods) {
+                PreAuthorize preAuthorize = method.getAnnotation(PreAuthorize.class);
+                if (preAuthorize != null) {
+                    // 提取权限码
+                    String authority = extractAuthority(preAuthorize.value());
+                    // 提取接口信息
+                    permissions.add(buildPermissionDTO(authority, method, controller));
+                }
+            }
+        }
+        return permissions;
+    }
+}
+```
+
+#### 3. MQ 消息结构
+
+```java
+@Data
+public class PermissionSyncMessage {
+    private String moduleName;           // 模块名称
+    private String serviceVersion;       // 服务版本
+    private List<PermissionInfo> permissions;
+    private Long timestamp;
+    private String traceId;              // SkyWalking 链路追踪 ID
+}
+
+@Data
+public class PermissionInfo {
+    private String authority;            // 权限标识 (如: sys:user:list)
+    private String apiPath;              // 接口路径
+    private String title;                // 接口标题
+    private String description;          // 接口描述
+    private String httpMethod;           // HTTP 方法
+    private Integer status;              // 状态 (1: 启用, 0: 禁用)
+}
+```
+
+#### 4. 本地缓存与去重
+
+```java
+public class PermissionCache {
+    
+    private volatile Map<String, PermissionInfo> localCache = new ConcurrentHashMap<>();
+    
+    public List<PermissionInfo> getChangedPermissions(List<PermissionInfo> scanned) {
+        List<PermissionInfo> changed = new ArrayList<>();
+        for (PermissionInfo permission : scanned) {
+            PermissionInfo cached = localCache.get(permission.getAuthority());
+            if (cached == null || !cached.equals(permission)) {
+                changed.add(permission);
+            }
+        }
+        // 更新缓存
+        localCache.clear();
+        scanned.forEach(p -> localCache.put(p.getAuthority(), p));
+        return changed;
+    }
+}
+```
+
+#### 5. Auth 服务处理逻辑
+
+```java
+@RabbitListener(queues = "permission-sync-queue")
+public class PermissionSyncConsumer {
+    
+    @Resource
+    private PermissionService permissionService;
+    
+    public void handlePermissionSync(PermissionSyncMessage message) {
+        // 1. 链路追踪
+        String traceId = message.getTraceId();
+        
+        // 2. 幂等处理（使用 moduleName + authority 作为唯一键）
+        String idempotentKey = message.getModuleName() + ":" + message.getPermissions().size();
+        
+        // 3. 全量覆盖处理
+        permissionService.syncPermissions(message.getModuleName(), message.getPermissions());
+        
+        // 4. 自动禁用旧权限
+        permissionService.disableStalePermissions(message.getModuleName(), 
+            message.getPermissions().stream()
+                .map(PermissionInfo::getAuthority)
+                .collect(Collectors.toSet()));
+    }
+}
+```
+
+#### 6. 数据库处理策略
+
+```java
+@Override
+public void syncPermissions(String moduleName, List<PermissionInfo> newPermissions) {
+    List<SysPermission> existingPermissions = permissionMapper.selectByModuleName(moduleName);
+    Map<String, SysPermission> existingMap = existingPermissions.stream()
+        .collect(Collectors.toMap(SysPermission::getAuthority, Function.identity()));
+    
+    Set<String> newAuthoritySet = new HashSet<>();
+    
+    for (PermissionInfo info : newPermissions) {
+        newAuthoritySet.add(info.getAuthority());
+        SysPermission existing = existingMap.get(info.getAuthority());
+        
+        if (existing != null) {
+            // 更新
+            BeanUtils.copyProperties(info, existing);
+            existing.setStatus(1);
+            existing.setUpdateTime(LocalDateTime.now());
+            permissionMapper.updateById(existing);
+        } else {
+            // 新增
+            SysPermission newPermission = new SysPermission();
+            BeanUtils.copyProperties(info, newPermission);
+            newPermission.setModuleName(moduleName);
+            newPermission.setStatus(1);
+            permissionMapper.insert(newPermission);
+        }
+    }
+    
+    // 禁用旧权限（数据库中存在但本次未推送的）
+    for (SysPermission existing : existingPermissions) {
+        if (!newAuthoritySet.contains(existing.getAuthority())) {
+            existing.setStatus(0);
+            existing.setUpdateTime(LocalDateTime.now());
+            permissionMapper.updateById(existing);
+        }
+    }
+}
+```
+
+### 四、解决的关键问题
+
+#### 1. 幂等性保证
+
+- **问题**：MQ 重复消费导致数据错乱
+- **解决**：
+  - 使用 `moduleName + authority` 作为唯一键
+  - 消费前检查是否已处理
+  - 数据库层面使用 `ON CONFLICT DO UPDATE`
+
+#### 2. 防重复推送
+
+- **问题**：多实例部署时重复推送
+- **解决**：
+  - 本地缓存已扫描的权限信息
+  - 仅推送变更的权限
+  - 使用分布式锁控制（可选）
+
+#### 3. 旧权限自动禁用
+
+- **问题**：接口删除后权限残留
+- **解决**：采用**全量覆盖机制**，本次未推送的权限自动标记为禁用
+
+#### 4. 版本控制
+
+- **问题**：不知道权限属于哪个服务
+- **解决**：
+  - 每个服务配置 `module-name`
+  - 权限记录关联 `module_name` 字段
+  - 支持按服务维度查询和过滤
+
+### 五、与传统方案对比
+
+| 维度 | 手动后台录入 | 自动化注册方案 |
+|------|-------------|----------------|
+| 开发效率 | 低，每条手动加 | 极高，注解写完自动入库 |
+| 准确性 | 容易录错权限码 | 注解为准，零错误 |
+| 维护成本 | 高 | 几乎为 0 |
+| 微服务适配 | 极差 | 完美适配 |
+| 安全风险 | 一般 | 可控，规范后更安全 |
+| 旧接口处理 | 需手动删除 | 自动禁用 |
+
+### 六、生产环境注意事项
+
+#### 1. 开关控制
+
+```yaml
+system:
+  auth:
+    scan-enabled: ${SCAN_ENABLED:false}  # 生产环境默认关闭
+```
+
+#### 2. 灰度发布
+
+- 新服务上线时先在测试环境验证
+- 确认无误后再开启自动注册
+- 建议配合蓝绿部署使用
+
+#### 3. 监控告警
+
+- 监控 MQ 消息消费延迟
+- 监控权限同步失败的场景
+- 设置异常告警阈值
+
+## SkyWalking 链路追踪方案
+
+### 一、方案概述
+
+本项目集成 **SkyWalking** 实现分布式链路追踪，支持：
+
+- 全链路追踪（从网关到微服务）
+- 性能监控
+- 错误追踪
+- 权限注册链路追踪
+
+### 二、架构设计
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        SkyWalking UI                         │
+│                    (http://localhost:8080)                   │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              │ HTTP/gRPC
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    SkyWalking OAP Server                     │
+│                   (localhost:11800 gRPC)                    │
+└─────────────────────────────────────────────────────────────┘
+                              ▲
+                              │ Agent
+    ┌─────────────────────────┼─────────────────────────┐
+    │                         │                         │
+    ▼                         ▼                         ▼
+┌─────────┐            ┌──────────┐             ┌──────────┐
+│ Gateway │            │ Cloud-AI │             │ Cloud-Auth│
+│  :9527  │            │   :8080  │             │   :9000  │
+└─────────┘            └──────────┘             └──────────┘
+```
+
+### 三、配置说明
+
+#### 1. Agent 配置
+
+在每个微服务的 `agent.config` 或 JVM 参数中配置：
+
+```bash
+java -javaagent:skywalking-agent.jar \
+     -Dskywalking.agent.service_name=cloud-auth \
+     -Dskywalking.collector.backend_service=localhost:11800 \
+     -jar cloud-auth.jar
+```
+
+#### 2. Maven 配置（可选）
+
+在 `pom.xml` 中添加依赖（可选，用于代码层面的链路追踪）：
+
+```xml
+<dependency>
+    <groupId>org.apache.skywalking</groupId>
+    <artifactId>apm-toolkit-trace</artifactId>
+    <version>${skywalking.version}</version>
+</dependency>
+```
+
+### 四、使用示例
+
+#### 1. 基础链路追踪
+
+SkyWalking Agent 会自动追踪：
+
+- HTTP 请求
+- 数据库访问
+- 外部服务调用
+- MQ 消息发送/消费
+
+#### 2. 自定义链路追踪
+
+```java
+import org.apache.skywalking.apm.toolkit.trace.TraceContext;
+
+@Service
+public class PermissionScannerService {
+    
+    public void scanAndReport() {
+        // 获取当前 Trace ID
+        String traceId = TraceContext.traceId();
+        
+        // 添加自定义标签
+        TraceContext.tag("module-name", "cloud-ai");
+        TraceContext.tag("permission-count", String.valueOf(permissions.size()));
+        
+        // 添加链路追踪信息到 MQ 消息
+        PermissionSyncMessage message = new PermissionSyncMessage();
+        message.setTraceId(traceId);
+        
+        // 发送 MQ 消息
+        mqProducer.send(message);
+    }
+}
+```
+
+#### 3. MQ 链路追踪
+
+```java
+@Component
+public class PermissionMQProducer {
+    
+    @Resource
+    private RabbitTemplate rabbitTemplate;
+    
+    public void sendPermissionSync(PermissionSyncMessage message) {
+        // 注入当前链路的 Context
+        InjectorDTO injector = TracingContextInjector.injector();
+        Map<String, String> context = injector.inject();
+        
+        // 将链路上下文放入消息头
+        rabbitTemplate.convertAndSend(
+            "permission-sync-exchange",
+            "permission.sync",
+            message,
+            msg -> {
+                msg.getMessageProperties().setHeaders(context);
+                return msg;
+            }
+        );
+    }
+}
+
+@Component
+public class PermissionMQConsumer {
+    
+    @RabbitListener(queues = "permission-sync-queue")
+    public void handleMessage(PermissionSyncMessage message, 
+                              @Header(AmqpHeaders.DELIVERY_TAG) long tag,
+                              MessageHeaders headers) {
+        // 提取链路上下文并恢复追踪
+        Map<String, String> context = (Map<String, String>) headers.get("sw-context");
+        TracingContextExtractor extractor = TracingContextExtractor.extractor(context);
+        TracingContextUtils.restore(extractor);
+        
+        try {
+            // 处理业务逻辑
+            permissionService.syncPermissions(message);
+        } finally {
+            // 结束当前 span
+            TracingContextUtils.finishSpan();
+        }
+    }
+}
+```
+
+### 五、关键特性
+
+#### 1. 权限注册链路追踪
+
+```java
+@Slf4j
+@Service
+public class PermissionScannerService {
+    
+    public void scanAndReport() {
+        String traceId = TraceContext.traceId();
+        log.info("开始扫描权限, traceId: {}", traceId);
+        
+        try {
+            List<PermissionInfo> permissions = scanner.scan();
+            log.info("扫描到 {} 个权限, traceId: {}", permissions.size(), traceId);
+            
+            // 发送到 MQ
+            messageProducer.send(permissions, traceId);
+            log.info("权限已发送到 MQ, traceId: {}", traceId);
+            
+        } catch (Exception e) {
+            log.error("权限扫描失败, traceId: {}, error: {}", traceId, e.getMessage());
+            TraceContext.error("permission-scan-failed", e);
+            throw e;
+        }
+    }
+}
+```
+
+#### 2. 监控指标
+
+SkyWalking 会自动采集以下指标：
+
+| 指标 | 说明 |
+|------|------|
+| `trace_count` | 链路总数 |
+| `trace_success_rate` | 成功率 |
+| `response_time` | 响应时间 |
+| `jvm_memory` | JVM 内存 |
+| `jvm_gc` | GC 次数和时间 |
+
+#### 3. 告警配置
+
+```yaml
+# alarm-settings.yml
+rules:
+  # 权限同步失败告警
+  permission-sync-failure:
+    metrics-name: permission_sync_failure_count
+    op: ">"
+    threshold: 5
+    period: 10
+    count: 3
+    message: "权限同步失败超过阈值"
+  
+  # 链路追踪延迟告警
+  trace-latency:
+    metrics-name: trace_response_time
+    op: ">"
+    threshold: 3000
+    period: 5
+    count: 2
+    message: "链路响应时间超过 3 秒"
+```
+
+### 六、运维指南
+
+#### 1. 查看链路
+
+1. 访问 SkyWalking UI (http://localhost:8080)
+2. 选择 **拓扑图** 查看服务关系
+3. 选择 **追踪** 查看具体链路
+4. 使用 Trace ID 查询特定请求
+
+#### 2. 性能分析
+
+- 使用 ** flame graph ** 查看调用耗时分布
+- 使用 ** thread dump ** 分析线程问题
+- 使用 ** heap dump ** 分析内存问题
+
+#### 3. 常见问题
+
+| 问题 | 解决方案 |
+|------|---------|
+| Agent 未启动 | 检查 `-javaagent` 参数是否正确配置 |
+| 无法连接 OAP | 检查 `backend_service` 地址是否正确 |
+| 链路断裂 | 检查防火墙和端口是否开放 |
+| 数据丢失 | 增加 OAP Server 的存储容量 |
+
 ## 待办事项
 
 - [ ] 将所有 starter 移动到 cloud-common 里面
 - [ ] 在 cloud-system 中，设计新的模块用于后管接口
+- [ ] 联调前后端的登录功能
+- [ ] 修改实体类转化方式为 MapStruct
+- [ ] 实现接口权限自动注册自动化鉴权方案
+- [ ] 集成 SkyWalking 链路追踪
