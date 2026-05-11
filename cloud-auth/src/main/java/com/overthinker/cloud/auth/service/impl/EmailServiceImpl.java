@@ -5,16 +5,13 @@ import com.overthinker.cloud.auth.config.mq.RabbitEmailConfig;
 import com.overthinker.cloud.auth.entity.DTO.MailDTO;
 import com.overthinker.cloud.auth.entity.ENUMS.EmailCompolent;
 import com.overthinker.cloud.auth.service.EmailService;
-import com.overthinker.cloud.auth.utils.SpringContextUtils;
 import com.overthinker.cloud.common.core.constants.NumberConst;
 import com.overthinker.cloud.common.core.utils.MyStringUtils;
 import com.overthinker.cloud.redis.utils.MyRedisCache;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
