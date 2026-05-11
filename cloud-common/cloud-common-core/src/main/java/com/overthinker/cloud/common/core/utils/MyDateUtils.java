@@ -1,127 +1,257 @@
 package com.overthinker.cloud.common.core.utils;
 
-import com.overthinker.cloud.common.core.utils.Iutils.IDateUtils;
-
 import java.time.*;
+
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 
-public class MyDateUtils implements IDateUtils {
+/**
+ * 日期时间工具类
+ * <p>
+ * 提供基于 java.time 的日期时间操作方法，包括格式化、解析、计算、比较等功能
+ * </p>
+ *
+ * @author overthinker
+ * @since 2024-01-15
+ */
+public class MyDateUtils {
 
-    private static final MyDateUtils INSTANCE = new MyDateUtils();
+    /**
+     * 日期格式：yyyyMMdd
+     */
+    public static final String PATTERN_yyyyMMdd = "yyyyMMdd";
 
+    /**
+     * 日期格式：yyyy-MM-dd
+     */
+    public static final String PATTERN_yyyy_MM_dd = "yyyy-MM-dd";
+
+    /**
+     * 日期时间格式：yyyyMMddHHmmss
+     */
+    public static final String PATTERN_yyyyMMddHHmmss = "yyyyMMddHHmmss";
+
+    /**
+     * 日期时间格式：yyyy-MM-dd HH:mm:ss
+     */
+    public static final String PATTERN_yyyy_MM_dd_HH_mm_ss = "yyyy-MM-dd HH:mm:ss";
+
+    /**
+     * 时间格式：HH:mm:ss
+     */
+    public static final String PATTERN_HH_mm_ss = "HH:mm:ss";
+
+    /**
+     * 月份格式：yyyyMM
+     */
+    public static final String PATTERN_yyyyMM = "yyyyMM";
+
+    /**
+     * 月份格式：yyyy-MM
+     */
+    public static final String PATTERN_yyyy_MM = "yyyy-MM";
+
+    /** 默认日期时间格式化器 */
     private static final DateTimeFormatter DEFAULT_FORMATTER = DateTimeFormatter.ofPattern(PATTERN_yyyy_MM_dd_HH_mm_ss);
+
+    /** 日期格式化器 */
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern(PATTERN_yyyy_MM_dd);
+
+    /** 时间格式化器 */
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern(PATTERN_HH_mm_ss);
+
+    /** yyyyMMdd 格式化器 */
     private static final DateTimeFormatter yyyyMMdd_FORMATTER = DateTimeFormatter.ofPattern(PATTERN_yyyyMMdd);
 
+    /** 英文星期名称数组 */
     private static final String[] WEEK_NAMES = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+
+    /** 中文星期名称数组 */
     private static final String[] CHINESE_WEEK_NAMES = {"星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"};
 
+    /**
+     * 私有构造器，禁止实例化
+     */
     private MyDateUtils() {
     }
 
-    public static MyDateUtils getInstance() {
-        return INSTANCE;
-    }
-
-    @Override
-    public LocalDateTime now() {
+    /**
+     * 获取当前日期时间
+     *
+     * @return 当前日期时间的 LocalDateTime 对象
+     */
+    public static LocalDateTime now() {
         return LocalDateTime.now();
     }
 
-    @Override
-    public LocalDate today() {
+    /**
+     * 获取当前日期
+     *
+     * @return 当前日期的 LocalDate 对象
+     */
+    public static LocalDate today() {
         return LocalDate.now();
     }
 
-    @Override
-    public LocalTime nowTime() {
+    /**
+     * 获取当前时间
+     *
+     * @return 当前时间的 LocalTime 对象
+     */
+    public static LocalTime nowTime() {
         return LocalTime.now();
     }
 
-    @Override
-    public long currentTimeMillis() {
+    /**
+     * 获取当前时间戳（毫秒）
+     *
+     * @return 当前时间戳
+     */
+    public static long currentTimeMillis() {
         return System.currentTimeMillis();
     }
 
-    @Override
-    public String format(LocalDateTime dateTime) {
+    /**
+     * 使用默认格式（yyyy-MM-dd HH:mm:ss）格式化日期时间
+     *
+     * @param dateTime 要格式化的日期时间对象
+     * @return 格式化后的字符串，如果 dateTime 为 null 则返回空字符串
+     */
+    public static String format(LocalDateTime dateTime) {
         if (dateTime == null) {
             return "";
         }
         return dateTime.format(DEFAULT_FORMATTER);
     }
 
-    @Override
-    public String format(LocalDateTime dateTime, String pattern) {
+    /**
+     * 使用指定格式格式化日期时间
+     *
+     * @param dateTime 要格式化的日期时间对象
+     * @param pattern 日期时间格式模式（如 "yyyy-MM-dd HH:mm:ss"）
+     * @return 格式化后的字符串，如果 dateTime 或 pattern 为 null 则返回空字符串
+     */
+    public static String format(LocalDateTime dateTime, String pattern) {
         if (dateTime == null || pattern == null) {
             return "";
         }
         return dateTime.format(DateTimeFormatter.ofPattern(pattern));
     }
 
-    @Override
-    public String formatDate(LocalDate date) {
+    /**
+     * 使用默认格式（yyyy-MM-dd）格式化日期
+     *
+     * @param date 要格式化的日期对象
+     * @return 格式化后的字符串，如果 date 为 null 则返回空字符串
+     */
+    public static String formatDate(LocalDate date) {
         if (date == null) {
             return "";
         }
         return date.format(DATE_FORMATTER);
     }
 
-    @Override
-    public String formatDate(LocalDate date, String pattern) {
+    /**
+     * 使用指定格式格式化日期
+     *
+     * @param date    要格式化的日期对象
+     * @param pattern 日期格式模式（如 "yyyy-MM-dd"）
+     * @return 格式化后的字符串，如果 date 或 pattern 为 null 则返回空字符串
+     */
+    public static String formatDate(LocalDate date, String pattern) {
         if (date == null || pattern == null) {
             return "";
         }
         return date.format(DateTimeFormatter.ofPattern(pattern));
     }
 
-    @Override
-    public String formatTime(LocalTime time) {
+    /**
+     * 使用默认格式（HH:mm:ss）格式化时间
+     *
+     * @param time 要格式化的时间对象
+     * @return 格式化后的字符串，如果 time 为 null 则返回空字符串
+     */
+    public static String formatTime(LocalTime time) {
         if (time == null) {
             return "";
         }
         return time.format(TIME_FORMATTER);
     }
 
-    @Override
-    public String formatTime(LocalTime time, String pattern) {
+    /**
+     * 使用指定格式格式化时间
+     *
+     * @param time    要格式化的时间对象
+     * @param pattern 时间格式模式（如 "HH:mm:ss"）
+     * @return 格式化后的字符串，如果 time 或 pattern 为 null 则返回空字符串
+     */
+    public static String formatTime(LocalTime time, String pattern) {
         if (time == null || pattern == null) {
             return "";
         }
         return time.format(DateTimeFormatter.ofPattern(pattern));
     }
 
-    @Override
-    public String formatNow() {
+    /**
+     * 格式化当前日期时间（使用默认格式 yyyy-MM-dd HH:mm:ss）
+     *
+     * @return 格式化后的当前日期时间字符串
+     */
+    public static String formatNow() {
         return LocalDateTime.now().format(DEFAULT_FORMATTER);
     }
 
-    @Override
-    public LocalDateTime parse(String dateStr) {
+    /**
+     * 使用默认格式解析日期时间字符串
+     *
+     * @param dateStr 日期时间字符串
+     * @return 解析后的 LocalDateTime 对象，解析失败返回 null
+     */
+    public static LocalDateTime parse(String dateStr) {
         return parseToLocalDateTime(dateStr);
     }
 
-    @Override
-    public LocalDateTime parse(String dateStr, String pattern) {
+    /**
+     * 使用指定格式解析日期时间字符串
+     *
+     * @param dateStr 日期时间字符串
+     * @param pattern 日期时间格式模式
+     * @return 解析后的 LocalDateTime 对象，解析失败返回 null
+     */
+    public static LocalDateTime parse(String dateStr, String pattern) {
         return parseToLocalDateTime(dateStr, pattern);
     }
 
-    @Override
-    public LocalDate parseDate(String dateStr) {
+    /**
+     * 使用默认格式解析日期字符串
+     *
+     * @param dateStr 日期字符串
+     * @return 解析后的 LocalDate 对象，解析失败返回 null
+     */
+    public static LocalDate parseDate(String dateStr) {
         return parseToLocalDate(dateStr);
     }
 
-    @Override
-    public LocalDate parseDate(String dateStr, String pattern) {
+    /**
+     * 使用指定格式解析日期字符串
+     *
+     * @param dateStr 日期字符串
+     * @param pattern 日期格式模式
+     * @return 解析后的 LocalDate 对象，解析失败返回 null
+     */
+    public static LocalDate parseDate(String dateStr, String pattern) {
         return parseToLocalDate(dateStr, pattern);
     }
 
-    @Override
-    public LocalTime parseTime(String timeStr) {
+    /**
+     * 使用默认格式（HH:mm:ss）解析时间字符串
+     *
+     * @param timeStr 时间字符串
+     * @return 解析后的 LocalTime 对象，解析失败返回 null
+     */
+    public static LocalTime parseTime(String timeStr) {
         if (timeStr == null || timeStr.isEmpty()) {
             return null;
         }
@@ -132,8 +262,14 @@ public class MyDateUtils implements IDateUtils {
         }
     }
 
-    @Override
-    public LocalTime parseTime(String timeStr, String pattern) {
+    /**
+     * 使用指定格式解析时间字符串
+     *
+     * @param timeStr 时间字符串
+     * @param pattern 时间格式模式
+     * @return 解析后的 LocalTime 对象，解析失败返回 null
+     */
+    public static LocalTime parseTime(String timeStr, String pattern) {
         if (timeStr == null || timeStr.isEmpty() || pattern == null) {
             return null;
         }
@@ -144,8 +280,16 @@ public class MyDateUtils implements IDateUtils {
         }
     }
 
-    @Override
-    public LocalDateTime parseToLocalDateTime(String dateStr) {
+    /**
+     * 自动识别格式解析日期时间字符串
+     * <p>
+     * 支持的格式：yyyyMMdd、yyyy-MM-dd、yyyy-MM-dd HH:mm:ss
+     * </p>
+     *
+     * @param dateStr 日期时间字符串
+     * @return 解析后的 LocalDateTime 对象，解析失败返回 null
+     */
+    public static LocalDateTime parseToLocalDateTime(String dateStr) {
         if (dateStr == null || dateStr.isEmpty()) {
             return null;
         }
@@ -162,8 +306,14 @@ public class MyDateUtils implements IDateUtils {
         }
     }
 
-    @Override
-    public LocalDateTime parseToLocalDateTime(String dateStr, String pattern) {
+    /**
+     * 使用指定格式解析日期时间字符串
+     *
+     * @param dateStr 日期时间字符串
+     * @param pattern 日期时间格式模式
+     * @return 解析后的 LocalDateTime 对象，解析失败返回 null
+     */
+    public static LocalDateTime parseToLocalDateTime(String dateStr, String pattern) {
         if (dateStr == null || dateStr.isEmpty() || pattern == null) {
             return null;
         }
@@ -179,8 +329,16 @@ public class MyDateUtils implements IDateUtils {
         }
     }
 
-    @Override
-    public LocalDate parseToLocalDate(String dateStr) {
+    /**
+     * 自动识别格式解析日期字符串
+     * <p>
+     * 支持的格式：yyyyMMdd、yyyy-MM-dd
+     * </p>
+     *
+     * @param dateStr 日期字符串
+     * @return 解析后的 LocalDate 对象，解析失败返回 null
+     */
+    public static LocalDate parseToLocalDate(String dateStr) {
         if (dateStr == null || dateStr.isEmpty()) {
             return null;
         }
@@ -195,8 +353,14 @@ public class MyDateUtils implements IDateUtils {
         }
     }
 
-    @Override
-    public LocalDate parseToLocalDate(String dateStr, String pattern) {
+    /**
+     * 使用指定格式解析日期字符串
+     *
+     * @param dateStr 日期字符串
+     * @param pattern 日期格式模式
+     * @return 解析后的 LocalDate 对象，解析失败返回 null
+     */
+    public static LocalDate parseToLocalDate(String dateStr, String pattern) {
         if (dateStr == null || dateStr.isEmpty() || pattern == null) {
             return null;
         }
@@ -207,162 +371,277 @@ public class MyDateUtils implements IDateUtils {
         }
     }
 
-    @Override
-    public LocalDateTime plusDays(LocalDateTime dateTime, long days) {
+    /**
+     * 日期时间加天数
+     *
+     * @param dateTime 日期时间
+     * @param days     要增加的天数（可以为负数）
+     * @return 增加天数后的日期时间，dateTime 为 null 返回 null
+     */
+    public static LocalDateTime plusDays(LocalDateTime dateTime, long days) {
         if (dateTime == null) {
             return null;
         }
         return dateTime.plusDays(days);
     }
 
-    @Override
-    public LocalDateTime plusHours(LocalDateTime dateTime, long hours) {
+    /**
+     * 日期时间加小时
+     *
+     * @param dateTime 日期时间
+     * @param hours    要增加的小时数（可以为负数）
+     * @return 增加小时后的日期时间，dateTime 为 null 返回 null
+     */
+    public static LocalDateTime plusHours(LocalDateTime dateTime, long hours) {
         if (dateTime == null) {
             return null;
         }
         return dateTime.plusHours(hours);
     }
 
-    @Override
-    public LocalDateTime plusMinutes(LocalDateTime dateTime, long minutes) {
+    /**
+     * 日期时间加分钟
+     *
+     * @param dateTime 日期时间
+     * @param minutes  要增加的分钟数（可以为负数）
+     * @return 增加分钟后的日期时间，dateTime 为 null 返回 null
+     */
+    public static LocalDateTime plusMinutes(LocalDateTime dateTime, long minutes) {
         if (dateTime == null) {
             return null;
         }
         return dateTime.plusMinutes(minutes);
     }
 
-    @Override
-    public LocalDateTime plusSeconds(LocalDateTime dateTime, long seconds) {
+    /**
+     * 日期时间加秒
+     *
+     * @param dateTime 日期时间
+     * @param seconds  要增加的秒数（可以为负数）
+     * @return 增加秒后的日期时间，dateTime 为 null 返回 null
+     */
+    public static LocalDateTime plusSeconds(LocalDateTime dateTime, long seconds) {
         if (dateTime == null) {
             return null;
         }
         return dateTime.plusSeconds(seconds);
     }
 
-    @Override
-    public LocalDateTime plusMonths(LocalDateTime dateTime, long months) {
+    /**
+     * 日期时间加月数
+     *
+     * @param dateTime 日期时间
+     * @param months   要增加的月数（可以为负数）
+     * @return 增加月数后的日期时间，dateTime 为 null 返回 null
+     */
+    public static LocalDateTime plusMonths(LocalDateTime dateTime, long months) {
         if (dateTime == null) {
             return null;
         }
         return dateTime.plusMonths(months);
     }
 
-    @Override
-    public LocalDateTime plusYears(LocalDateTime dateTime, long years) {
+    /**
+     * 日期时间加年数
+     *
+     * @param dateTime 日期时间
+     * @param years    要增加的年数（可以为负数）
+     * @return 增加年数后的日期时间，dateTime 为 null 返回 null
+     */
+    public static LocalDateTime plusYears(LocalDateTime dateTime, long years) {
         if (dateTime == null) {
             return null;
         }
         return dateTime.plusYears(years);
     }
 
-    @Override
-    public LocalDateTime minusDays(LocalDateTime dateTime, long days) {
+    /**
+     * 日期时间减天数
+     *
+     * @param dateTime 日期时间
+     * @param days     要减少的天数（可以为负数）
+     * @return 减少天数后的日期时间，dateTime 为 null 返回 null
+     */
+    public static LocalDateTime minusDays(LocalDateTime dateTime, long days) {
         if (dateTime == null) {
             return null;
         }
         return dateTime.minusDays(days);
     }
 
-    @Override
-    public LocalDateTime minusHours(LocalDateTime dateTime, long hours) {
+    /**
+     * 日期时间减小时
+     *
+     * @param dateTime 日期时间
+     * @param hours    要减少的小时数（可以为负数）
+     * @return 减少小时后的日期时间，dateTime 为 null 返回 null
+     */
+    public static LocalDateTime minusHours(LocalDateTime dateTime, long hours) {
         if (dateTime == null) {
             return null;
         }
         return dateTime.minusHours(hours);
     }
 
-    @Override
-    public LocalDateTime minusMinutes(LocalDateTime dateTime, long minutes) {
+    /**
+     * 日期时间减分钟
+     *
+     * @param dateTime 日期时间
+     * @param minutes  要减少的分钟数（可以为负数）
+     * @return 减少分钟后的日期时间，dateTime 为 null 返回 null
+     */
+    public static LocalDateTime minusMinutes(LocalDateTime dateTime, long minutes) {
         if (dateTime == null) {
             return null;
         }
         return dateTime.minusMinutes(minutes);
     }
 
-    @Override
-    public LocalDateTime minusSeconds(LocalDateTime dateTime, long seconds) {
+    /**
+     * 日期时间减秒
+     *
+     * @param dateTime 日期时间
+     * @param seconds  要减少的秒数（可以为负数）
+     * @return 减少秒后的日期时间，dateTime 为 null 返回 null
+     */
+    public static LocalDateTime minusSeconds(LocalDateTime dateTime, long seconds) {
         if (dateTime == null) {
             return null;
         }
         return dateTime.minusSeconds(seconds);
     }
 
-    @Override
-    public LocalDateTime minusMonths(LocalDateTime dateTime, long months) {
+    /**
+     * 日期时间减月数
+     *
+     * @param dateTime 日期时间
+     * @param months   要减少的月数（可以为负数）
+     * @return 减少月数后的日期时间，dateTime 为 null 返回 null
+     */
+    public static LocalDateTime minusMonths(LocalDateTime dateTime, long months) {
         if (dateTime == null) {
             return null;
         }
         return dateTime.minusMonths(months);
     }
 
-    @Override
-    public LocalDateTime minusYears(LocalDateTime dateTime, long years) {
+    /**
+     * 日期时间减年数
+     *
+     * @param dateTime 日期时间
+     * @param years    要减少的年数（可以为负数）
+     * @return 减少年数后的日期时间，dateTime 为 null 返回 null
+     */
+    public static LocalDateTime minusYears(LocalDateTime dateTime, long years) {
         if (dateTime == null) {
             return null;
         }
         return dateTime.minusYears(years);
     }
 
-    @Override
-    public LocalDateTime yesterday() {
+    /**
+     * 获取昨天的日期时间
+     *
+     * @return 昨天的日期时间（当前时间减一天）
+     */
+    public static LocalDateTime yesterday() {
         return LocalDateTime.now().minusDays(1);
     }
 
-    @Override
-    public LocalDateTime tomorrow() {
+    /**
+     * 获取明天的日期时间
+     *
+     * @return 明天的日期时间（当前时间加一天）
+     */
+    public static LocalDateTime tomorrow() {
         return LocalDateTime.now().plusDays(1);
     }
 
-    @Override
-    public LocalDateTime beginOfDay(LocalDateTime dateTime) {
+    /**
+     * 获取日期时间的当天开始时间（00:00:00）
+     *
+     * @param dateTime 日期时间
+     * @return 当天开始时间，dateTime 为 null 返回 null
+     */
+    public static LocalDateTime beginOfDay(LocalDateTime dateTime) {
         if (dateTime == null) {
             return null;
         }
         return dateTime.toLocalDate().atStartOfDay();
     }
 
-    @Override
-    public LocalDateTime endOfDay(LocalDateTime dateTime) {
+    /**
+     * 获取日期时间的当天结束时间（23:59:59.999999999）
+     *
+     * @param dateTime 日期时间
+     * @return 当天结束时间，dateTime 为 null 返回 null
+     */
+    public static LocalDateTime endOfDay(LocalDateTime dateTime) {
         if (dateTime == null) {
             return null;
         }
         return dateTime.toLocalDate().atTime(LocalTime.MAX);
     }
 
-    @Override
-    public LocalDateTime beginOfWeek(LocalDateTime dateTime) {
+    /**
+     * 获取日期时间所在周的开始时间（周一 00:00:00）
+     *
+     * @param dateTime 日期时间
+     * @return 周开始时间，dateTime 为 null 返回 null
+     */
+    public static LocalDateTime beginOfWeek(LocalDateTime dateTime) {
         if (dateTime == null) {
             return null;
         }
         return dateTime.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)).toLocalDate().atStartOfDay();
     }
 
-    @Override
-    public LocalDateTime endOfWeek(LocalDateTime dateTime) {
+    /**
+     * 获取日期时间所在周的结束时间（周日 23:59:59.999999999）
+     *
+     * @param dateTime 日期时间
+     * @return 周结束时间，dateTime 为 null 返回 null
+     */
+    public static LocalDateTime endOfWeek(LocalDateTime dateTime) {
         if (dateTime == null) {
             return null;
         }
         return dateTime.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY)).toLocalDate().atTime(LocalTime.MAX);
     }
 
-    @Override
-    public LocalDateTime beginOfMonth(LocalDateTime dateTime) {
+    /**
+     * 获取日期时间所在月的开始时间（1日 00:00:00）
+     *
+     * @param dateTime 日期时间
+     * @return 月开始时间，dateTime 为 null 返回 null
+     */
+    public static LocalDateTime beginOfMonth(LocalDateTime dateTime) {
         if (dateTime == null) {
             return null;
         }
         return dateTime.with(TemporalAdjusters.firstDayOfMonth()).toLocalDate().atStartOfDay();
     }
 
-    @Override
-    public LocalDateTime endOfMonth(LocalDateTime dateTime) {
+    /**
+     * 获取日期时间所在月的结束时间（最后一日 23:59:59.999999999）
+     *
+     * @param dateTime 日期时间
+     * @return 月结束时间，dateTime 为 null 返回 null
+     */
+    public static LocalDateTime endOfMonth(LocalDateTime dateTime) {
         if (dateTime == null) {
             return null;
         }
         return dateTime.with(TemporalAdjusters.lastDayOfMonth()).toLocalDate().atTime(LocalTime.MAX);
     }
 
-    @Override
-    public LocalDateTime beginOfQuarter(LocalDateTime dateTime) {
+    /**
+     * 获取日期时间所在季度的开始时间
+     *
+     * @param dateTime 日期时间
+     * @return 季度开始时间，dateTime 为 null 返回 null
+     */
+    public static LocalDateTime beginOfQuarter(LocalDateTime dateTime) {
         if (dateTime == null) {
             return null;
         }
@@ -371,8 +650,13 @@ public class MyDateUtils implements IDateUtils {
         return dateTime.withMonth(quarterStartMonth).withDayOfMonth(1).toLocalDate().atStartOfDay();
     }
 
-    @Override
-    public LocalDateTime endOfQuarter(LocalDateTime dateTime) {
+    /**
+     * 获取日期时间所在季度的结束时间
+     *
+     * @param dateTime 日期时间
+     * @return 季度结束时间，dateTime 为 null 返回 null
+     */
+    public static LocalDateTime endOfQuarter(LocalDateTime dateTime) {
         if (dateTime == null) {
             return null;
         }
@@ -381,301 +665,499 @@ public class MyDateUtils implements IDateUtils {
         return dateTime.withMonth(quarterEndMonth).with(TemporalAdjusters.lastDayOfMonth()).toLocalDate().atTime(LocalTime.MAX);
     }
 
-    @Override
-    public LocalDateTime beginOfYear(LocalDateTime dateTime) {
+    /**
+     * 获取日期时间所在年度的开始时间（1月1日 00:00:00）
+     *
+     * @param dateTime 日期时间
+     * @return 年度开始时间，dateTime 为 null 返回 null
+     */
+    public static LocalDateTime beginOfYear(LocalDateTime dateTime) {
         if (dateTime == null) {
             return null;
         }
         return dateTime.with(TemporalAdjusters.firstDayOfYear()).toLocalDate().atStartOfDay();
     }
 
-    @Override
-    public LocalDateTime endOfYear(LocalDateTime dateTime) {
+    /**
+     * 获取日期时间所在年度的结束时间（12月31日 23:59:59.999999999）
+     *
+     * @param dateTime 日期时间
+     * @return 年度结束时间，dateTime 为 null 返回 null
+     */
+    public static LocalDateTime endOfYear(LocalDateTime dateTime) {
         if (dateTime == null) {
             return null;
         }
         return dateTime.with(TemporalAdjusters.lastDayOfYear()).toLocalDate().atTime(LocalTime.MAX);
     }
 
-    @Override
-    public long betweenDays(LocalDateTime start, LocalDateTime end) {
+    /**
+     * 计算两个日期时间之间的天数差
+     *
+     * @param start 开始日期时间
+     * @param end   结束日期时间
+     * @return 天数差的绝对值，任一参数为 null 返回 0
+     */
+    public static long betweenDays(LocalDateTime start, LocalDateTime end) {
         if (start == null || end == null) {
             return 0;
         }
         return Math.abs(ChronoUnit.DAYS.between(start, end));
     }
 
-    @Override
-    public long betweenHours(LocalDateTime start, LocalDateTime end) {
+    /**
+     * 计算两个日期时间之间的小时差
+     *
+     * @param start 开始日期时间
+     * @param end   结束日期时间
+     * @return 小时差的绝对值，任一参数为 null 返回 0
+     */
+    public static long betweenHours(LocalDateTime start, LocalDateTime end) {
         if (start == null || end == null) {
             return 0;
         }
         return Math.abs(ChronoUnit.HOURS.between(start, end));
     }
 
-    @Override
-    public long betweenMinutes(LocalDateTime start, LocalDateTime end) {
+    /**
+     * 计算两个日期时间之间的分钟差
+     *
+     * @param start 开始日期时间
+     * @param end   结束日期时间
+     * @return 分钟差的绝对值，任一参数为 null 返回 0
+     */
+    public static long betweenMinutes(LocalDateTime start, LocalDateTime end) {
         if (start == null || end == null) {
             return 0;
         }
         return Math.abs(ChronoUnit.MINUTES.between(start, end));
     }
 
-    @Override
-    public long betweenSeconds(LocalDateTime start, LocalDateTime end) {
+    /**
+     * 计算两个日期时间之间的秒数差
+     *
+     * @param start 开始日期时间
+     * @param end   结束日期时间
+     * @return 秒数差的绝对值，任一参数为 null 返回 0
+     */
+    public static long betweenSeconds(LocalDateTime start, LocalDateTime end) {
         if (start == null || end == null) {
             return 0;
         }
         return Math.abs(ChronoUnit.SECONDS.between(start, end));
     }
 
-    @Override
-    public long betweenMonths(LocalDateTime start, LocalDateTime end) {
+    /**
+     * 计算两个日期时间之间的月数差
+     *
+     * @param start 开始日期时间
+     * @param end   结束日期时间
+     * @return 月数差的绝对值，任一参数为 null 返回 0
+     */
+    public static long betweenMonths(LocalDateTime start, LocalDateTime end) {
         if (start == null || end == null) {
             return 0;
         }
         return Math.abs(ChronoUnit.MONTHS.between(start, end));
     }
 
-    @Override
-    public long betweenYears(LocalDateTime start, LocalDateTime end) {
+    /**
+     * 计算两个日期时间之间的年数差
+     *
+     * @param start 开始日期时间
+     * @param end   结束日期时间
+     * @return 年数差的绝对值，任一参数为 null 返回 0
+     */
+    public static long betweenYears(LocalDateTime start, LocalDateTime end) {
         if (start == null || end == null) {
             return 0;
         }
         return Math.abs(ChronoUnit.YEARS.between(start, end));
     }
 
-    @Override
-    public boolean isSameDay(LocalDateTime dateTime1, LocalDateTime dateTime2) {
+    /**
+     * 判断两个日期时间是否是同一天
+     *
+     * @param dateTime1 第一个日期时间
+     * @param dateTime2 第二个日期时间
+     * @return 如果是同一天返回 true，任一参数为 null 返回 false
+     */
+    public static boolean isSameDay(LocalDateTime dateTime1, LocalDateTime dateTime2) {
         if (dateTime1 == null || dateTime2 == null) {
             return false;
         }
         return dateTime1.toLocalDate().equals(dateTime2.toLocalDate());
     }
 
-    @Override
-    public boolean isSameDay(LocalDate date1, LocalDate date2) {
+    /**
+     * 判断两个日期是否是同一天
+     *
+     * @param date1 第一个日期
+     * @param date2 第二个日期
+     * @return 如果是同一天返回 true，任一参数为 null 返回 false
+     */
+    public static boolean isSameDay(LocalDate date1, LocalDate date2) {
         if (date1 == null || date2 == null) {
             return false;
         }
         return date1.equals(date2);
     }
 
-    @Override
-    public boolean isToday(LocalDateTime dateTime) {
+    /**
+     * 判断日期时间是否是今天
+     *
+     * @param dateTime 日期时间
+     * @return 如果是今天返回 true，dateTime 为 null 返回 false
+     */
+    public static boolean isToday(LocalDateTime dateTime) {
         if (dateTime == null) {
             return false;
         }
         return dateTime.toLocalDate().equals(LocalDate.now());
     }
 
-    @Override
-    public boolean isToday(LocalDate date) {
+    /**
+     * 判断日期是否是今天
+     *
+     * @param date 日期
+     * @return 如果是今天返回 true，date 为 null 返回 false
+     */
+    public static boolean isToday(LocalDate date) {
         if (date == null) {
             return false;
         }
         return date.equals(LocalDate.now());
     }
 
-    @Override
-    public boolean isYesterday(LocalDateTime dateTime) {
+    /**
+     * 判断日期时间是否是昨天
+     *
+     * @param dateTime 日期时间
+     * @return 如果是昨天返回 true，dateTime 为 null 返回 false
+     */
+    public static boolean isYesterday(LocalDateTime dateTime) {
         if (dateTime == null) {
             return false;
         }
         return dateTime.toLocalDate().equals(LocalDate.now().minusDays(1));
     }
 
-    @Override
-    public boolean isTomorrow(LocalDateTime dateTime) {
+    /**
+     * 判断日期时间是否是明天
+     *
+     * @param dateTime 日期时间
+     * @return 如果是明天返回 true，dateTime 为 null 返回 false
+     */
+    public static boolean isTomorrow(LocalDateTime dateTime) {
         if (dateTime == null) {
             return false;
         }
         return dateTime.toLocalDate().equals(LocalDate.now().plusDays(1));
     }
 
-    @Override
-    public boolean isLeapYear(LocalDateTime dateTime) {
+    /**
+     * 判断日期时间所在年份是否是闰年
+     *
+     * @param dateTime 日期时间
+     * @return 如果是闰年返回 true，dateTime 为 null 返回 false
+     */
+    public static boolean isLeapYear(LocalDateTime dateTime) {
         if (dateTime == null) {
             return false;
         }
         return dateTime.toLocalDate().isLeapYear();
     }
 
-    @Override
-    public boolean isLeapYear(LocalDate date) {
+    /**
+     * 判断日期所在年份是否是闰年
+     *
+     * @param date 日期
+     * @return 如果是闰年返回 true，date 为 null 返回 false
+     */
+    public static boolean isLeapYear(LocalDate date) {
         if (date == null) {
             return false;
         }
         return date.isLeapYear();
     }
 
-    @Override
-    public boolean isLeapYear(int year) {
+    /**
+     * 判断指定年份是否是闰年
+     *
+     * @param year 年份
+     * @return 如果是闰年返回 true
+     */
+    public static boolean isLeapYear(int year) {
         return Year.isLeap(year);
     }
 
-    @Override
-    public int getYear(LocalDateTime dateTime) {
+    /**
+     * 获取日期时间的年份
+     *
+     * @param dateTime 日期时间
+     * @return 年份，dateTime 为 null 返回 0
+     */
+    public static int getYear(LocalDateTime dateTime) {
         if (dateTime == null) {
             return 0;
         }
         return dateTime.getYear();
     }
 
-    @Override
-    public int getYear(LocalDate date) {
+    /**
+     * 获取日期的年份
+     *
+     * @param date 日期
+     * @return 年份，date 为 null 返回 0
+     */
+    public static int getYear(LocalDate date) {
         if (date == null) {
             return 0;
         }
         return date.getYear();
     }
 
-    @Override
-    public int getMonth(LocalDateTime dateTime) {
+    /**
+     * 获取日期时间的月份值（1-12）
+     *
+     * @param dateTime 日期时间
+     * @return 月份值，dateTime 为 null 返回 0
+     */
+    public static int getMonth(LocalDateTime dateTime) {
         if (dateTime == null) {
             return 0;
         }
         return dateTime.getMonthValue();
     }
 
-    @Override
-    public int getMonth(LocalDate date) {
+    /**
+     * 获取日期的月份值（1-12）
+     *
+     * @param date 日期
+     * @return 月份值，date 为 null 返回 0
+     */
+    public static int getMonth(LocalDate date) {
         if (date == null) {
             return 0;
         }
         return date.getMonthValue();
     }
 
-    @Override
-    public int getDayOfMonth(LocalDateTime dateTime) {
+    /**
+     * 获取日期时间在当月的天数（1-31）
+     *
+     * @param dateTime 日期时间
+     * @return 天数，dateTime 为 null 返回 0
+     */
+    public static int getDayOfMonth(LocalDateTime dateTime) {
         if (dateTime == null) {
             return 0;
         }
         return dateTime.getDayOfMonth();
     }
 
-    @Override
-    public int getDayOfMonth(LocalDate date) {
+    /**
+     * 获取日期在当月的天数（1-31）
+     *
+     * @param date 日期
+     * @return 天数，date 为 null 返回 0
+     */
+    public static int getDayOfMonth(LocalDate date) {
         if (date == null) {
             return 0;
         }
         return date.getDayOfMonth();
     }
 
-    @Override
-    public int getDayOfWeek(LocalDateTime dateTime) {
+    /**
+     * 获取日期时间在当周的星期几（1=Monday, 7=Sunday）
+     *
+     * @param dateTime 日期时间
+     * @return 星期几的值，dateTime 为 null 返回 0
+     */
+    public static int getDayOfWeek(LocalDateTime dateTime) {
         if (dateTime == null) {
             return 0;
         }
         return dateTime.getDayOfWeek().getValue();
     }
 
-    @Override
-    public int getDayOfWeek(LocalDate date) {
+    /**
+     * 获取日期在当周的星期几（1=Monday, 7=Sunday）
+     *
+     * @param date 日期
+     * @return 星期几的值，date 为 null 返回 0
+     */
+    public static int getDayOfWeek(LocalDate date) {
         if (date == null) {
             return 0;
         }
         return date.getDayOfWeek().getValue();
     }
 
-    @Override
-    public int getDayOfYear(LocalDateTime dateTime) {
+    /**
+     * 获取日期时间在当年的第几天
+     *
+     * @param dateTime 日期时间
+     * @return 当年第几天，dateTime 为 null 返回 0
+     */
+    public static int getDayOfYear(LocalDateTime dateTime) {
         if (dateTime == null) {
             return 0;
         }
         return dateTime.getDayOfYear();
     }
 
-    @Override
-    public int getDayOfYear(LocalDate date) {
+    /**
+     * 获取日期在当年的第几天
+     *
+     * @param date 日期
+     * @return 当年第几天，date 为 null 返回 0
+     */
+    public static int getDayOfYear(LocalDate date) {
         if (date == null) {
             return 0;
         }
         return date.getDayOfYear();
     }
 
-    @Override
-    public int getHour(LocalDateTime dateTime) {
+    /**
+     * 获取日期时间的小时数（0-23）
+     *
+     * @param dateTime 日期时间
+     * @return 小时数，dateTime 为 null 返回 0
+     */
+    public static int getHour(LocalDateTime dateTime) {
         if (dateTime == null) {
             return 0;
         }
         return dateTime.getHour();
     }
 
-    @Override
-    public int getHour(LocalTime time) {
+    /**
+     * 获取时间的小时数（0-23）
+     *
+     * @param time 时间
+     * @return 小时数，time 为 null 返回 0
+     */
+    public static int getHour(LocalTime time) {
         if (time == null) {
             return 0;
         }
         return time.getHour();
     }
 
-    @Override
-    public int getMinute(LocalDateTime dateTime) {
+    /**
+     * 获取日期时间的分钟数（0-59）
+     *
+     * @param dateTime 日期时间
+     * @return 分钟数，dateTime 为 null 返回 0
+     */
+    public static int getMinute(LocalDateTime dateTime) {
         if (dateTime == null) {
             return 0;
         }
         return dateTime.getMinute();
     }
 
-    @Override
-    public int getMinute(LocalTime time) {
+    /**
+     * 获取时间的分钟数（0-59）
+     *
+     * @param time 时间
+     * @return 分钟数，time 为 null 返回 0
+     */
+    public static int getMinute(LocalTime time) {
         if (time == null) {
             return 0;
         }
         return time.getMinute();
     }
 
-    @Override
-    public int getSecond(LocalDateTime dateTime) {
+    /**
+     * 获取日期时间的秒数（0-59）
+     *
+     * @param dateTime 日期时间
+     * @return 秒数，dateTime 为 null 返回 0
+     */
+    public static int getSecond(LocalDateTime dateTime) {
         if (dateTime == null) {
             return 0;
         }
         return dateTime.getSecond();
     }
 
-    @Override
-    public int getSecond(LocalTime time) {
+    /**
+     * 获取时间的秒数（0-59）
+     *
+     * @param time 时间
+     * @return 秒数，time 为 null 返回 0
+     */
+    public static int getSecond(LocalTime time) {
         if (time == null) {
             return 0;
         }
         return time.getSecond();
     }
 
-    @Override
-    public int getWeekOfMonth(LocalDateTime dateTime) {
+    /**
+     * 获取日期时间在当月的周数
+     *
+     * @param dateTime 日期时间
+     * @return 当月第几周，dateTime 为 null 返回 0
+     */
+    public static int getWeekOfMonth(LocalDateTime dateTime) {
         if (dateTime == null) {
             return 0;
         }
         return dateTime.get(WeekFields.ISO.weekOfMonth());
     }
 
-    @Override
-    public int getWeekOfMonth(LocalDate date) {
+    /**
+     * 获取日期在当月的周数
+     *
+     * @param date 日期
+     * @return 当月第几周，date 为 null 返回 0
+     */
+    public static int getWeekOfMonth(LocalDate date) {
         if (date == null) {
             return 0;
         }
         return date.get(WeekFields.ISO.weekOfMonth());
     }
 
-    @Override
-    public int getWeekOfYear(LocalDateTime dateTime) {
+    /**
+     * 获取日期时间在当年的周数
+     *
+     * @param dateTime 日期时间
+     * @return 当年第几周，dateTime 为 null 返回 0
+     */
+    public static int getWeekOfYear(LocalDateTime dateTime) {
         if (dateTime == null) {
             return 0;
         }
         return dateTime.get(WeekFields.ISO.weekOfYear());
     }
 
-    @Override
-    public int getWeekOfYear(LocalDate date) {
+    /**
+     * 获取日期在当年的周数
+     *
+     * @param date 日期
+     * @return 当年第几周，date 为 null 返回 0
+     */
+    public static int getWeekOfYear(LocalDate date) {
         if (date == null) {
             return 0;
         }
         return date.get(WeekFields.ISO.weekOfYear());
     }
 
-    @Override
-    public String getWeekName(LocalDateTime dateTime) {
+    /**
+     * 获取日期时间的星期英文名称
+     *
+     * @param dateTime 日期时间
+     * @return 星期英文名称（如 "Monday"），dateTime 为 null 返回空字符串
+     */
+    public static String getWeekName(LocalDateTime dateTime) {
         if (dateTime == null) {
             return "";
         }
@@ -683,8 +1165,13 @@ public class MyDateUtils implements IDateUtils {
         return dayOfWeek >= 1 && dayOfWeek <= 7 ? WEEK_NAMES[dayOfWeek - 1] : "";
     }
 
-    @Override
-    public String getWeekName(LocalDate date) {
+    /**
+     * 获取日期的星期英文名称
+     *
+     * @param date 日期
+     * @return 星期英文名称（如 "Monday"），date 为 null 返回空字符串
+     */
+    public static String getWeekName(LocalDate date) {
         if (date == null) {
             return "";
         }
@@ -692,8 +1179,13 @@ public class MyDateUtils implements IDateUtils {
         return dayOfWeek >= 1 && dayOfWeek <= 7 ? WEEK_NAMES[dayOfWeek - 1] : "";
     }
 
-    @Override
-    public String getChineseWeekName(LocalDateTime dateTime) {
+    /**
+     * 获取日期时间的中文星期名称
+     *
+     * @param dateTime 日期时间
+     * @return 中文星期名称（如 "星期一"），dateTime 为 null 返回空字符串
+     */
+    public static String getChineseWeekName(LocalDateTime dateTime) {
         if (dateTime == null) {
             return "";
         }
@@ -701,8 +1193,13 @@ public class MyDateUtils implements IDateUtils {
         return dayOfWeek >= 1 && dayOfWeek <= 7 ? CHINESE_WEEK_NAMES[dayOfWeek - 1] : "";
     }
 
-    @Override
-    public String getChineseWeekName(LocalDate date) {
+    /**
+     * 获取日期的中文星期名称
+     *
+     * @param date 日期
+     * @return 中文星期名称（如 "星期一"），date 为 null 返回空字符串
+     */
+    public static String getChineseWeekName(LocalDate date) {
         if (date == null) {
             return "";
         }
@@ -710,24 +1207,40 @@ public class MyDateUtils implements IDateUtils {
         return dayOfWeek >= 1 && dayOfWeek <= 7 ? CHINESE_WEEK_NAMES[dayOfWeek - 1] : "";
     }
 
-    @Override
-    public int getDaysInMonth(LocalDateTime dateTime) {
+    /**
+     * 获取日期时间所在月的天数
+     *
+     * @param dateTime 日期时间
+     * @return 所在月的天数，dateTime 为 null 返回 0
+     */
+    public static int getDaysInMonth(LocalDateTime dateTime) {
         if (dateTime == null) {
             return 0;
         }
         return dateTime.toLocalDate().lengthOfMonth();
     }
 
-    @Override
-    public int getDaysInMonth(LocalDate date) {
+    /**
+     * 获取日期所在月的天数
+     *
+     * @param date 日期
+     * @return 所在月的天数，date 为 null 返回 0
+     */
+    public static int getDaysInMonth(LocalDate date) {
         if (date == null) {
             return 0;
         }
         return date.lengthOfMonth();
     }
 
-    @Override
-    public int getDaysInMonth(int year, int month) {
+    /**
+     * 获取指定年月的天数
+     *
+     * @param year  年份
+     * @param month 月份（1-12）
+     * @return 所在月的天数，参数无效返回 0
+     */
+    public static int getDaysInMonth(int year, int month) {
         try {
             return YearMonth.of(year, month).lengthOfMonth();
         } catch (Exception e) {
@@ -735,8 +1248,14 @@ public class MyDateUtils implements IDateUtils {
         }
     }
 
-    @Override
-    public int compare(LocalDateTime dateTime1, LocalDateTime dateTime2) {
+    /**
+     * 比较两个日期时间
+     *
+     * @param dateTime1 第一个日期时间
+     * @param dateTime2 第二个日期时间
+     * @return 如果两个日期时间相等返回 0，第一个小于第二个返回负数，第一个大于第二个返回正数
+     */
+    public static int compare(LocalDateTime dateTime1, LocalDateTime dateTime2) {
         if (dateTime1 == null && dateTime2 == null) {
             return 0;
         }
@@ -749,8 +1268,14 @@ public class MyDateUtils implements IDateUtils {
         return dateTime1.compareTo(dateTime2);
     }
 
-    @Override
-    public int compare(LocalDate date1, LocalDate date2) {
+    /**
+     * 比较两个日期
+     *
+     * @param date1 第一个日期
+     * @param date2 第二个日期
+     * @return 如果两个日期相等返回 0，第一个小于第二个返回负数，第一个大于第二个返回正数
+     */
+    public static int compare(LocalDate date1, LocalDate date2) {
         if (date1 == null && date2 == null) {
             return 0;
         }
@@ -763,72 +1288,130 @@ public class MyDateUtils implements IDateUtils {
         return date1.compareTo(date2);
     }
 
-    @Override
-    public boolean isBefore(LocalDateTime dateTime1, LocalDateTime dateTime2) {
+    /**
+     * 判断第一个日期时间是否在第二个之前
+     *
+     * @param dateTime1 第一个日期时间
+     * @param dateTime2 第二个日期时间
+     * @return 如果第一个在第二个之前返回 true，任一参数为 null 返回 false
+     */
+    public static boolean isBefore(LocalDateTime dateTime1, LocalDateTime dateTime2) {
         if (dateTime1 == null || dateTime2 == null) {
             return false;
         }
         return dateTime1.isBefore(dateTime2);
     }
 
-    @Override
-    public boolean isBefore(LocalDate date1, LocalDate date2) {
+    /**
+     * 判断第一个日期是否在第二个之前
+     *
+     * @param date1 第一个日期
+     * @param date2 第二个日期
+     * @return 如果第一个在第二个之前返回 true，任一参数为 null 返回 false
+     */
+    public static boolean isBefore(LocalDate date1, LocalDate date2) {
         if (date1 == null || date2 == null) {
             return false;
         }
         return date1.isBefore(date2);
     }
 
-    @Override
-    public boolean isAfter(LocalDateTime dateTime1, LocalDateTime dateTime2) {
+    /**
+     * 判断第一个日期时间是否在第二个之后
+     *
+     * @param dateTime1 第一个日期时间
+     * @param dateTime2 第二个日期时间
+     * @return 如果第一个在第二个之后返回 true，任一参数为 null 返回 false
+     */
+    public static boolean isAfter(LocalDateTime dateTime1, LocalDateTime dateTime2) {
         if (dateTime1 == null || dateTime2 == null) {
             return false;
         }
         return dateTime1.isAfter(dateTime2);
     }
 
-    @Override
-    public boolean isAfter(LocalDate date1, LocalDate date2) {
+    /**
+     * 判断第一个日期是否在第二个之后
+     *
+     * @param date1 第一个日期
+     * @param date2 第二个日期
+     * @return 如果第一个在第二个之后返回 true，任一参数为 null 返回 false
+     */
+    public static boolean isAfter(LocalDate date1, LocalDate date2) {
         if (date1 == null || date2 == null) {
             return false;
         }
         return date1.isAfter(date2);
     }
 
-    @Override
-    public boolean isEqual(LocalDateTime dateTime1, LocalDateTime dateTime2) {
+    /**
+     * 判断两个日期时间是否相等
+     *
+     * @param dateTime1 第一个日期时间
+     * @param dateTime2 第二个日期时间
+     * @return 如果相等返回 true，任一参数为 null 返回 false
+     */
+    public static boolean isEqual(LocalDateTime dateTime1, LocalDateTime dateTime2) {
         if (dateTime1 == null || dateTime2 == null) {
             return false;
         }
         return dateTime1.isEqual(dateTime2);
     }
 
-    @Override
-    public boolean isEqual(LocalDate date1, LocalDate date2) {
+    /**
+     * 判断两个日期是否相等
+     *
+     * @param date1 第一个日期
+     * @param date2 第二个日期
+     * @return 如果相等返回 true，任一参数为 null 返回 false
+     */
+    public static boolean isEqual(LocalDate date1, LocalDate date2) {
         if (date1 == null || date2 == null) {
             return false;
         }
         return date1.isEqual(date2);
     }
 
-    @Override
-    public boolean isBetween(LocalDateTime dateTime, LocalDateTime begin, LocalDateTime end) {
+    /**
+     * 判断日期时间是否在指定范围内（包含两端）
+     *
+     * @param dateTime 要判断的日期时间
+     * @param begin    范围开始日期时间
+     * @param end      范围结束日期时间
+     * @return 如果在范围内返回 true，任一参数为 null 返回 false
+     */
+    public static boolean isBetween(LocalDateTime dateTime, LocalDateTime begin, LocalDateTime end) {
         if (dateTime == null || begin == null || end == null) {
             return false;
         }
         return !dateTime.isBefore(begin) && !dateTime.isAfter(end);
     }
 
-    @Override
-    public boolean isBetween(LocalDate date, LocalDate begin, LocalDate end) {
+    /**
+     * 判断日期是否在指定范围内（包含两端）
+     *
+     * @param date  要判断的日期
+     * @param begin 范围开始日期
+     * @param end  范围结束日期
+     * @return 如果在范围内返回 true，任一参数为 null 返回 false
+     */
+    public static boolean isBetween(LocalDate date, LocalDate begin, LocalDate end) {
         if (date == null || begin == null || end == null) {
             return false;
         }
         return !date.isBefore(begin) && !date.isAfter(end);
     }
 
-    @Override
-    public String formatDuration(long millis) {
+    /**
+     * 格式化时间段（毫秒）为中文描述
+     * <p>
+     * 例如：3600000 毫秒返回 "1时"
+     * </p>
+     *
+     * @param millis 毫秒数
+     * @return 中文描述的时间段（如 "1天2时3分4秒"）
+     */
+    public static String formatDuration(long millis) {
         if (millis <= 0) {
             return "0秒";
         }
@@ -853,8 +1436,14 @@ public class MyDateUtils implements IDateUtils {
         return sb.toString();
     }
 
-    @Override
-    public boolean isValid(String dateStr, String pattern) {
+    /**
+     * 验证字符串是否符合指定日期格式
+     *
+     * @param dateStr  日期字符串
+     * @param pattern 日期格式模式
+     * @return 如果符合格式返回 true，任一参数为 null 或空返回 false
+     */
+    public static boolean isValid(String dateStr, String pattern) {
         if (dateStr == null || dateStr.isEmpty() || pattern == null) {
             return false;
         }
@@ -871,13 +1460,23 @@ public class MyDateUtils implements IDateUtils {
         }
     }
 
-    @Override
-    public boolean isValidDate(String dateStr) {
+    /**
+     * 验证字符串是否是有效的日期格式
+     *
+     * @param dateStr 日期字符串
+     * @return 如果是有效日期返回 true
+     */
+    public static boolean isValidDate(String dateStr) {
         return parseDate(dateStr) != null;
     }
 
-    @Override
-    public boolean isValidDateTime(String dateTimeStr) {
+    /**
+     * 验证字符串是否是有效的日期时间格式
+     *
+     * @param dateTimeStr 日期时间字符串
+     * @return 如果是有效日期时间返回 true
+     */
+    public static boolean isValidDateTime(String dateTimeStr) {
         return parseToLocalDateTime(dateTimeStr) != null;
     }
 }

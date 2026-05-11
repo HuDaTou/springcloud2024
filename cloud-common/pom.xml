@@ -19,6 +19,7 @@
         <module>cloud-common-db</module>
         <module>cloud-common-web</module>
         <module>cloud-common-webflux</module>
+        <module>cloud-common-redis</module>
     </modules>
 
     <properties>

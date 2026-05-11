@@ -364,3 +364,8 @@ public class AuthController {
     }
 }
 ```
+
+## 待办事项
+
+- [ ] 将所有 starter 移动到 cloud-common 里面
+- [ ] 在 cloud-system 中，设计新的模块用于后管接口

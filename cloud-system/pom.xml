@@ -14,6 +14,7 @@
     <modules>
         <module>system-consul-starter</module>
         <module>system-auth-starter</module>
+        <module>system-auth-webflux-starter</module>
         <module>system-redis-starter</module>
         <module>system-audit-log-starter</module>
     </modules>
@@ -41,6 +42,11 @@
             <dependency>
                 <groupId>com.overthinker.cloud.system</groupId>
                 <artifactId>system-auth-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.overthinker.cloud.system</groupId>
+                <artifactId>system-auth-webflux-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
