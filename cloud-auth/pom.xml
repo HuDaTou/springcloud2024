@@ -24,13 +24,6 @@
             <artifactId>spring-boot-starter-oauth2-client</artifactId>
         </dependency>
 
-        <!-- Spring Security 安全框架 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-
-
         <!-- Consul 服务注册与发现 -->
         <dependency>
             <groupId>com.overthinker.cloud.system</groupId>

@@ -2,7 +2,7 @@ package com.overthinker.cloud.auth.token;
 
 import com.overthinker.cloud.auth.entity.PO.LoginUser;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenClaimsContext;
+import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 
 import java.util.List;
@@ -14,10 +14,10 @@ import java.util.stream.Collectors;
  * 下游微服务可以直接从Token中获取这些信息，无需再次查询数据库。
  */
 @Slf4j
-public class CustomOAuth2TokenCustomizer implements OAuth2TokenCustomizer<OAuth2TokenClaimsContext> {
+public class CustomOAuth2TokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext> {
 
     @Override
-    public void customize(OAuth2TokenClaimsContext context) {
+    public void customize(JwtEncodingContext context) {
         log.debug("Customizing OAuth2 Token for: {}", context.getPrincipal().getName());
         
         // 获取用户信息
