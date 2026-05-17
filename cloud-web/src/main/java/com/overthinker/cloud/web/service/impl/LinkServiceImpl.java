@@ -10,13 +10,13 @@ import com.overthinker.cloud.api.auth.api.UserClient;
 import com.overthinker.cloud.web.entity.PO.Link;
 import com.overthinker.cloud.web.entity.VO.LinkListVO;
 import com.overthinker.cloud.web.entity.VO.LinkVO;
-import com.overthinker.cloud.redis.constants.RedisConst;
+import com.overthinker.cloud.system.redis.constants.RedisConstants;
 import com.overthinker.cloud.web.entity.constants.SQLConst;
 import com.overthinker.cloud.web.entity.enums.MailboxAlertsEnum;
 import com.overthinker.cloud.web.mapper.LinkMapper;
 import com.overthinker.cloud.web.service.LinkService;
 import com.overthinker.cloud.web.service.PublicService;
-import com.overthinker.cloud.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.redis.utils.MyRedisCache;
 import com.overthinker.cloud.system.auth.utils.SecurityUtils;
 import com.overthinker.cloud.web.utils.StringUtils;
 import com.overthinker.cloud.web.utils.WebUtil;
@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * (Link)表服务实现类
@@ -153,14 +152,14 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
 
     @Override
     public String emailApplyLink(String verifyCode, HttpServletResponse response) {
-        if (myRedisCache.isHasKey(RedisConst.EMAIL_VERIFICATION_LINK + verifyCode)) {
+        if (myRedisCache.isHasKey(RedisConstants.EMAIL_VERIFICATION_LINK + verifyCode)) {
             // 通过该友链
-            String linkIdAndEmail = myRedisCache.getCacheObject(RedisConst.EMAIL_VERIFICATION_LINK + verifyCode);
+            String linkIdAndEmail = myRedisCache.getCacheObject(RedisConstants.EMAIL_VERIFICATION_LINK + verifyCode);
             // 空格切分
             String[] split = linkIdAndEmail.split(" ");
             if (linkMapper.updateById(Link.builder().id(Long.valueOf(split[0])).isCheck(SQLConst.IS_CHECK_YES).build()) > 0) {
                 // 清除
-                myRedisCache.deleteObject(RedisConst.EMAIL_VERIFICATION_LINK + verifyCode);
+                myRedisCache.deleteObject(RedisConstants.EMAIL_VERIFICATION_LINK + verifyCode);
                 if (passNotice) {
                     // 修改成功，发送邮件
                     publicService.sendEmail(MailboxAlertsEnum.FRIEND_LINK_APPLICATION_PASS.getCodeStr(), split[1], null);

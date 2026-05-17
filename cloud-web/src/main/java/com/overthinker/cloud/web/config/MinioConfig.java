@@ -1,11 +1,12 @@
 package com.overthinker.cloud.web.config;
 
 
-import com.overthinker.cloud.web.exception.MinioConnectionException;
 import io.minio.MinioClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.overthinker.cloud.common.core.exception.MinioConnectionException;
 
 /**
  * @author overH

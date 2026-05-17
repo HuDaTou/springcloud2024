@@ -13,7 +13,6 @@ import com.overthinker.cloud.auth.entity.ip.IpDetail;
 import com.overthinker.cloud.auth.mapper.BlackListMapper;
 import com.overthinker.cloud.auth.mapper.UserMapper;
 import com.overthinker.cloud.auth.service.IpService;
-import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;

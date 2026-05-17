@@ -2,8 +2,10 @@
 import vueDanmaku from 'vue3-danmaku'
 import {addTreeHole, getTreeHoleList} from "@/apis/treeHole";
 import {ElMessage} from "element-plus";
+import { getStorageUrl } from "@/config/storage";
 
 const treeHoleList = ref([])
+const bgUrl = getStorageUrl('banners/wallhaven-we1l5r_3840x1600.png')
 // 是否显示提交按钮
 const isShowSubmit = ref(false)
 const content = ref('')
@@ -40,7 +42,7 @@ function getTreeHole() {
 }
 </script>
 <template>
-  <div class="container">
+  <div class="container" :style="{ backgroundImage: `url(${bgUrl})` }">
     <div class="content_container">
       <div>树洞</div>
       <div>
@@ -70,7 +72,6 @@ function getTreeHole() {
 
 <style scoped lang="scss">
 .container {
-  background-image: url('http://minioapi.overthinker.top/cloud/banners/wallhaven-we1l5r_3840x1600.png');
   background-size: cover;
   background-position: center;
   min-width: 100vw;

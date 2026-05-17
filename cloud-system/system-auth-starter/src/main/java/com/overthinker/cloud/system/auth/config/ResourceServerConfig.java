@@ -18,7 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
  */
 @Configuration
 @EnableMethodSecurity // 启用方法级别的安全注解，如@PreAuthorize
-@EnableWebSecurity // <--- 必须有这个注解，它会触发 HttpSecurity 的创建
+@EnableWebSecurity
 public class ResourceServerConfig {
 
     /**

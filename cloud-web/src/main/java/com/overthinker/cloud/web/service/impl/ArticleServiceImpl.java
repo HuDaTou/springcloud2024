@@ -5,12 +5,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
+import com.overthinker.cloud.common.core.exception.BusinessException;
+import com.overthinker.cloud.common.core.exception.FileUploadException;
 import com.overthinker.cloud.common.core.resp.ResultData;
 
 import com.overthinker.cloud.common.core.resp.ReturnCodeEnum;
-import com.overthinker.cloud.redis.constants.RedisConst;
-import com.overthinker.cloud.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.redis.constants.RedisConstants;
+import com.overthinker.cloud.system.redis.utils.MyRedisCache;
 import com.overthinker.cloud.web.entity.DTO.ArticleDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchArticleDTO;
 import com.overthinker.cloud.web.entity.PO.*;
@@ -18,8 +19,6 @@ import com.overthinker.cloud.web.entity.VO.*;
 
 import com.overthinker.cloud.web.entity.constants.SQLConst;
 import com.overthinker.cloud.web.entity.enums.*;
-import com.overthinker.cloud.web.exception.BusinessException;
-import com.overthinker.cloud.web.exception.FileUploadException;
 import com.overthinker.cloud.web.mapper.*;
 import com.overthinker.cloud.web.service.*;
 import com.overthinker.cloud.system.auth.utils.SecurityUtils;
@@ -92,7 +91,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public PageVO<List<ArticleVO>> listAllArticle(Integer pageNum, Integer pageSize) {
-        boolean hasKey = myRedisCache.isHasKey(RedisConst.ARTICLE_COMMENT_COUNT) && myRedisCache.isHasKey(RedisConst.ARTICLE_FAVORITE_COUNT) && myRedisCache.isHasKey(RedisConst.ARTICLE_LIKE_COUNT);
+        boolean hasKey = myRedisCache.isHasKey(RedisConstants.ARTICLE_COMMENT_COUNT) && myRedisCache.isHasKey(RedisConstants.ARTICLE_FAVORITE_COUNT) && myRedisCache.isHasKey(RedisConstants.ARTICLE_LIKE_COUNT);
         // 文章
         Page<Article> page = new Page<>(pageNum, pageSize);
         this.page(page, new LambdaQueryWrapper<Article>().eq(Article::getStatus, SQLConst.PUBLIC_STATUS).orderByDesc(Article::getCreateTime));
@@ -119,9 +118,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         if (hasKey) {
             articleVOS = articleVOS.stream().peek(articleVO -> {
-                setArticleCount(articleVO, RedisConst.ARTICLE_FAVORITE_COUNT, CountTypeEnum.FAVORITE);
-                setArticleCount(articleVO, RedisConst.ARTICLE_LIKE_COUNT, CountTypeEnum.LIKE);
-                setArticleCount(articleVO, RedisConst.ARTICLE_COMMENT_COUNT, CountTypeEnum.COMMENT);
+                setArticleCount(articleVO, RedisConstants.ARTICLE_FAVORITE_COUNT, CountTypeEnum.FAVORITE);
+                setArticleCount(articleVO, RedisConstants.ARTICLE_LIKE_COUNT, CountTypeEnum.LIKE);
+                setArticleCount(articleVO, RedisConstants.ARTICLE_COMMENT_COUNT, CountTypeEnum.COMMENT);
             }).toList();
         }
 
@@ -238,9 +237,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public void addVisitCount(Long id) {
-        if (myRedisCache.isHasKey(RedisConst.ARTICLE_VISIT_COUNT + id))
-            myRedisCache.increment(RedisConst.ARTICLE_VISIT_COUNT + id, 1L);
-        else myRedisCache.setCacheObject(RedisConst.ARTICLE_VISIT_COUNT + id, 0);
+        if (myRedisCache.isHasKey(RedisConstants.ARTICLE_VISIT_COUNT + id))
+            myRedisCache.increment(RedisConstants.ARTICLE_VISIT_COUNT + id, 1L);
+        else myRedisCache.setCacheObject(RedisConstants.ARTICLE_VISIT_COUNT + id, 0);
     }
 
     @Override

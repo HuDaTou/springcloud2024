@@ -1,16 +1,15 @@
 package com.overthinker.cloud.auth.controller;
 
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
+import com.overthinker.cloud.auth.service.JwkService;
 import com.overthinker.cloud.common.core.resp.ResultData;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.interfaces.RSAPublicKey;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * JWKS (JSON Web Key Set) 控制器
@@ -19,32 +18,25 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/oauth2")
+@RequiredArgsConstructor
 public class JwksController {
 
-    private final JWKSet jwkSet;
+    private final JwkService jwkService;
 
-    public JwksController(RSAPublicKey rsaPublicKey) {
-        this.jwkSet = createJwkSet(rsaPublicKey);
-    }
 
     /**
      * JWKS 端点 - 发布公钥（标准接口）
-     * 
+     *
      * @return JWK Set JSON
      */
     @GetMapping("/jwks")
     public ResultData<Map<String, Object>> getJwks() {
-        log.debug("获取 JWKS 公钥");
-        return ResultData.success(jwkSet.toJSONObject());
-    }
-
-    /**
-     * 创建 JWK Set
-     */
-    private JWKSet createJwkSet(RSAPublicKey rsaPublicKey) {
-        RSAKey rsaKey = new RSAKey.Builder(rsaPublicKey)
-                .keyID("cloud-auth-jwe-key")
-                .build();
-        return new JWKSet(rsaKey);
+        try {
+            log.debug("获取 JWKS 公钥");
+            return ResultData.success(jwkService.getJwkSet().toJSONObject());
+        } catch (Exception e) {
+            log.error("获取 JWKS 失败", e);
+            return ResultData.failure("获取 JWKS 失败");
+        }
     }
 }

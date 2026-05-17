@@ -8,12 +8,12 @@ import com.overthinker.cloud.web.entity.DTO.SearchFavoriteDTO;
 import com.overthinker.cloud.api.auth.api.UserClient;
 import com.overthinker.cloud.web.entity.PO.Favorite;
 import com.overthinker.cloud.web.entity.VO.FavoriteListVO;
-import com.overthinker.cloud.redis.constants.RedisConst;
+import com.overthinker.cloud.system.redis.constants.RedisConstants;
 import com.overthinker.cloud.web.mapper.ArticleMapper;
 import com.overthinker.cloud.web.mapper.FavoriteMapper;
 import com.overthinker.cloud.web.mapper.LeaveWordMapper;
 import com.overthinker.cloud.web.service.FavoriteService;
-import com.overthinker.cloud.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.redis.utils.MyRedisCache;
 import com.overthinker.cloud.system.auth.utils.SecurityUtils;
 import com.overthinker.cloud.web.utils.StringUtils;
 import jakarta.annotation.Resource;
@@ -60,7 +60,7 @@ public class FavoriteServiceImpl extends ServiceImpl<FavoriteMapper, Favorite> i
                 .userId(SecurityUtils.getUserId())
                 .type(type)
                 .typeId(typeId).build();
-        myRedisCache.incrementCacheMapValue(RedisConst.ARTICLE_FAVORITE_COUNT, typeId.toString(), 1);
+        myRedisCache.incrementCacheMapValue(RedisConstants.ARTICLE_FAVORITE_COUNT, typeId.toString(), 1);
         if (this.save(Savefavorite)) return ResultData.success();
         return ResultData.failure();
     }
@@ -77,7 +77,7 @@ public class FavoriteServiceImpl extends ServiceImpl<FavoriteMapper, Favorite> i
                 .eq(Favorite::getUserId, SecurityUtils.getUserId())
                 .eq(Favorite::getType, type)
                 .eq(Favorite::getTypeId, typeId));
-        myRedisCache.incrementCacheMapValue(RedisConst.ARTICLE_FAVORITE_COUNT, typeId.toString(), -1);
+        myRedisCache.incrementCacheMapValue(RedisConstants.ARTICLE_FAVORITE_COUNT, typeId.toString(), -1);
         if (cancelFavorite) return ResultData.success();
         return ResultData.failure();
     }

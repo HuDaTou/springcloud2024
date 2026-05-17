@@ -1,13 +1,9 @@
 package com.overthinker.cloud.auth.entity.ENUMS;
 
-import com.overthinker.cloud.auth.config.mq.RabbitEmailConfig;
 import com.overthinker.cloud.auth.entity.DTO.MailDTO;
-import com.overthinker.cloud.auth.entity.DTO.UserRegisterDTO;
-import com.overthinker.cloud.auth.utils.SpringContextUtils;
 import com.overthinker.cloud.common.core.constants.NumberConst;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import java.util.Arrays;
 import java.util.HashMap;

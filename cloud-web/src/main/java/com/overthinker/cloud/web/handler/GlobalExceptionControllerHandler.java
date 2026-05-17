@@ -1,10 +1,11 @@
 package com.overthinker.cloud.web.handler;
 
+import com.overthinker.cloud.common.core.exception.BusinessException;
+import com.overthinker.cloud.common.core.exception.FileUploadException;
+import com.overthinker.cloud.common.core.exception.ServerException;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.common.core.resp.ReturnCodeEnum;
-import com.overthinker.cloud.web.exception.BusinessException;
-import com.overthinker.cloud.web.exception.FileUploadException;
-import com.overthinker.cloud.web.exception.ServerException;
+
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.BindingResult;

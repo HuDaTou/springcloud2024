@@ -1,1 +1,2 @@
-export const loadingImg = "http://minioapi.overthinker.top/cloud/loading/loading.gif"
+import { getStorageUrl } from "@/config/storage";
+export const loadingImg = getStorageUrl('loading/loading.gif')

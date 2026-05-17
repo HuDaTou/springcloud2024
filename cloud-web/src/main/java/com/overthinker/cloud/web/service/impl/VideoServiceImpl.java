@@ -12,14 +12,13 @@ import com.overthinker.cloud.web.entity.PO.Tag;
 import com.overthinker.cloud.web.entity.PO.Video;
 import com.overthinker.cloud.web.entity.PO.VideoTag;
 import com.overthinker.cloud.web.entity.VO.VideoInfoVO;
-import com.overthinker.cloud.redis.constants.RedisConst;
+import com.overthinker.cloud.system.redis.constants.RedisConstants;
 import com.overthinker.cloud.web.entity.enums.UploadEnum;
 import com.overthinker.cloud.api.auth.api.UserClient;
-import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.web.mapper.*;
 import com.overthinker.cloud.web.service.VideoService;
 import com.overthinker.cloud.web.service.VideoTagService;
-import com.overthinker.cloud.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.redis.utils.MyRedisCache;
 import com.overthinker.cloud.system.auth.utils.SecurityUtils;
 import com.overthinker.cloud.web.utils.StringUtils;
 import com.overthinker.cloud.web.utils.VideoUploadUtils;
@@ -168,9 +167,9 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
 
     @Override
     public void addVisitCount(Long id) {
-        if (myRedisCache.isHasKey(RedisConst.VIDEO_VISIT_COUNT + id))
-            myRedisCache.increment(RedisConst.VIDEO_VISIT_COUNT + id, 1L);
-        else myRedisCache.setCacheObject(RedisConst.VIDEO_VISIT_COUNT + id, 0);
+        if (myRedisCache.isHasKey(RedisConstants.VIDEO_VISIT_COUNT + id))
+            myRedisCache.increment(RedisConstants.VIDEO_VISIT_COUNT + id, 1L);
+        else myRedisCache.setCacheObject(RedisConstants.VIDEO_VISIT_COUNT + id, 0);
     }
 
     @Override

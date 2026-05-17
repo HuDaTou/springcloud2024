@@ -11,18 +11,26 @@ export interface LoginMobileParams {
 }
 
 export interface LoginResultModel {
+  code: number
+  msg: string
   token: string
   expire: string
-  code: number
 }
 
 export function loginApi(params: LoginParams | LoginMobileParams) {
-  return usePost<LoginResultModel, LoginParams | LoginMobileParams>('/user/login', params, {
-    // 设置为false的时候不会携带token
+  const formData = new URLSearchParams()
+  
+  if ('username' in params) {
+    formData.append('username', params.username)
+    formData.append('password', params.password || '')
+  }
+  else {
+    formData.append('mobile', params.mobile || '')
+    formData.append('code', params.code || '')
+  }
+  
+  return usePost<LoginResultModel, string>('/cloud-auth/auth/login', formData.toString(), {
     token: false,
-    // 开发模式下使用自定义的接口
-    // customDev: true,
-    // 是否开启全局请求loading
     loading: true,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -32,5 +40,5 @@ export function loginApi(params: LoginParams | LoginMobileParams) {
 }
 
 export function logoutApi() {
-  return useGet('/user/logout')
+  return useGet('/cloud-auth/auth/logout')
 }

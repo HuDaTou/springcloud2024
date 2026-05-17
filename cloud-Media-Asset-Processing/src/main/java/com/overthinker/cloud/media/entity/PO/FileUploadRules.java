@@ -9,6 +9,7 @@ import com.overthinker.cloud.common.core.entity.BasecopyProperties;
 import com.overthinker.cloud.common.db.BaseData;
 import com.overthinker.cloud.common.db.handler.mybatisTypeHandler.StringListTypeHandler;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
  */
 @TableName(value ="file_upload_rules")
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class FileUploadRules extends BaseData implements BasecopyProperties {
     /**
      * 

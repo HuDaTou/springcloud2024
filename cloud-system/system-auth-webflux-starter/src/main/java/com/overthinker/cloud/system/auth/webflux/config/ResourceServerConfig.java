@@ -2,12 +2,20 @@ package com.overthinker.cloud.system.auth.webflux.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import reactor.core.publisher.Flux;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * WebFlux 资源服务器安全配置
@@ -52,15 +60,27 @@ public class ResourceServerConfig {
      */
     @Bean
     public ReactiveJwtAuthenticationConverter jwtAuthenticationConverter() {
-        JwtGrantedAuthoritiesConverter grantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        // 设置从JWT的"authorities"声明中提取权限，而不是默认的"scope"或"scp"
-        grantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
-        // 移除默认的"SCOPE_"前缀，如果你的权限字符串没有这个前缀
-        grantedAuthoritiesConverter.setAuthorityPrefix("");
-
-        // 创建响应式的JWT认证转换器
         ReactiveJwtAuthenticationConverter jwtAuthenticationConverter = new ReactiveJwtAuthenticationConverter();
-        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
+        
+        // 配置自定义的权限提取器
+        jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(new Converter<Jwt, Flux<GrantedAuthority>>() {
+            @Override
+            public Flux<GrantedAuthority> convert(Jwt jwt) {
+                // 从JWT的"authorities"声明中提取权限
+                List<String> authorities = jwt.getClaimAsStringList("authorities");
+                if (authorities == null) {
+                    authorities = new ArrayList<>();
+                }
+                
+                // 转换为GrantedAuthority列表
+                List<GrantedAuthority> grantedAuthorities = authorities.stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+                
+                return Flux.fromIterable(grantedAuthorities);
+            }
+        });
+        
         return jwtAuthenticationConverter;
     }
 }

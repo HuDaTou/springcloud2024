@@ -7,11 +7,11 @@ import http from "@/utils/http.ts";
  */
 export function sendEmail(email: any, type: any) {
     return http({
-        url: '/public/ask-code',
-        params: {
+        url: '/cloud-auth/auth/send-code',
+        data: {
             email: email,
             type: type
         },
-        method: 'get'
+        method: 'post'
     })
 }

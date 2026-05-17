@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import com.overthinker.cloud.common.db.BaseData;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
@@ -15,6 +16,7 @@ import lombok.experimental.Accessors;
  */
 @TableName(value ="media_asset")
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 public class MediaAsset extends BaseData {
 

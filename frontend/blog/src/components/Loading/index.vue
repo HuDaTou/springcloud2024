@@ -1,7 +1,7 @@
 <template>
   <div class="loading loading-active" v-show="loadingStore.isLoading">
     <div class="load-box">
-      <img class="loading-img" src="http://minioapi.overthinker.top/cloud/loading/loading.gif" alt="Loading">
+      <img class="loading-img" :src="loadingImgUrl" alt="Loading">
       <span>正在带着数据走向你~~</span>
     </div>
   </div>
@@ -9,8 +9,9 @@
 
 <script setup lang="ts">
 import useLoadingStore from "@/store/modules/loading.ts";
+import { getStorageUrl } from "@/config/storage";
 const loadingStore = useLoadingStore()
-
+const loadingImgUrl = getStorageUrl('loading/loading.gif')
 </script>
 
 <style scoped lang="scss">

@@ -7,10 +7,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.overthinker.cloud.common.core.entity.BasecopyProperties;
 import com.overthinker.cloud.common.db.BaseData;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 
@@ -21,8 +19,7 @@ import lombok.experimental.Accessors;
  * @since 2023-11-17 16:33:52
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("sys_user_role")
 public class UserRole extends BaseData implements BasecopyProperties {

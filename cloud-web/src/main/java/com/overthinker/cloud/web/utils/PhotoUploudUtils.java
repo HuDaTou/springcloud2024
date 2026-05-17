@@ -1,8 +1,9 @@
 package com.overthinker.cloud.web.utils;
 
+import com.overthinker.cloud.common.core.exception.FileUploadException;
 import com.overthinker.cloud.web.entity.constants.Const;
 import com.overthinker.cloud.web.entity.enums.UploadEnum;
-import com.overthinker.cloud.web.exception.FileUploadException;
+
 import io.minio.*;
 import io.minio.errors.*;
 import io.minio.messages.DeleteError;

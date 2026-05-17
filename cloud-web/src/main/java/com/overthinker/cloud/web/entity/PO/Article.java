@@ -8,9 +8,10 @@ import com.overthinker.cloud.common.core.entity.BasecopyProperties;
 import com.overthinker.cloud.common.db.BaseData;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 
 /**
@@ -19,10 +20,10 @@ import lombok.NoArgsConstructor;
  * @author overH
  * @since 2023-10-15 02:38:48
  */
-@SuppressWarnings("serial")
 @Data
+@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
-@Builder
+@Accessors(chain = true)
 @NoArgsConstructor
 @TableName("t_article")
 public class Article extends BaseData implements BasecopyProperties {

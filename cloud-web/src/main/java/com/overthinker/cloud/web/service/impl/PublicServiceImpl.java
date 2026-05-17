@@ -1,8 +1,8 @@
 package com.overthinker.cloud.web.service.impl;
 
-import com.overthinker.cloud.redis.constants.RedisConst;
+import com.overthinker.cloud.system.redis.constants.RedisConstants;
 import com.overthinker.cloud.web.service.PublicService;
-import com.overthinker.cloud.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.redis.utils.MyRedisCache;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -48,7 +48,7 @@ public class PublicServiceImpl implements PublicService {
             // 生成验证码
             String verifyCode = String.valueOf((int) ((Math.random() * 9 + 1) * 100000));
             // 保存到redis，设置过期时间为5分钟
-            myRedisCache.setCacheObject(RedisConst.VERIFY_CODE + type + RedisConst.SEPARATOR + email, verifyCode, RedisConst.VERIFY_CODE_EXPIRATION, TimeUnit.MINUTES);
+            myRedisCache.setCacheObject(RedisConstants.VERIFY_CODE + type + RedisConstants.SEPARATOR + email, verifyCode, RedisConstants.VERIFY_CODE_EXPIRATION, TimeUnit.MINUTES);
             // 发送邮件
             Map<String, Object> senEmail = Map.of("email", email, "code", verifyCode, "type", type);
             rabbitTemplate.convertAndSend(exchange, routingKey, senEmail);

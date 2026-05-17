@@ -6,17 +6,14 @@ import com.overthinker.cloud.auth.entity.DTO.UserResetPasswordDTO;
 import com.overthinker.cloud.auth.entity.PO.SysRole;
 import com.overthinker.cloud.auth.entity.PO.User;
 import com.overthinker.cloud.auth.entity.PO.UserRole;
-import com.overthinker.cloud.auth.entity.VO.UserRegisterBuildVO;
 import com.overthinker.cloud.auth.mapper.UserRoleMapper;
 import com.overthinker.cloud.auth.service.AuthService;
 import com.overthinker.cloud.auth.service.RoleService;
 import com.overthinker.cloud.common.core.resp.ResultData;
-import com.overthinker.cloud.system.redis.constant.RedisConstants;
+import com.overthinker.cloud.system.redis.constants.RedisConstants;
+
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -62,7 +59,6 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 消息队列模板（用于异步发送邮件/短信）
      */
-    private final RabbitTemplate rabbitTemplate;
 
 
     @Override
@@ -86,8 +82,6 @@ public class AuthServiceImpl implements AuthService {
         user.setNickname(dto.getUsername()); // 默认昵称同用户名
         user.setEmail(dto.getEmail());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        user.setCreateTime(LocalDateTime.now());
-        user.setUpdateTime(LocalDateTime.now());
         // TODO 这里需要从minio中拿取
         user.setAvatar("""
                 https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png""");

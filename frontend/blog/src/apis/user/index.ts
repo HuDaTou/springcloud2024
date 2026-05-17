@@ -18,7 +18,7 @@ export interface UserInfo {
 // 用户登录
 export function login(data: any) {
     return http({
-        url: '/user/login',
+        url: '/cloud-auth/auth/login',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
@@ -63,7 +63,7 @@ export function getUserInfo():Promise<AxiosResponse<UserInfo>> {
 // 用户注册
 export function register(data: any) {
     return http({
-        url: '/user/register',
+        url: '/cloud-auth/auth/register',
         data: data,
         method: 'post'
     })

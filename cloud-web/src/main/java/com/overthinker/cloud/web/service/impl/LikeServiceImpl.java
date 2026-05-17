@@ -4,11 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.web.entity.PO.Like;
-import com.overthinker.cloud.redis.constants.RedisConst;
+import com.overthinker.cloud.system.redis.constants.RedisConstants;
 import com.overthinker.cloud.web.entity.enums.LikeEnum;
 import com.overthinker.cloud.web.mapper.LikeMapper;
 import com.overthinker.cloud.web.service.LikeService;
-import com.overthinker.cloud.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.redis.utils.MyRedisCache;
 import com.overthinker.cloud.system.auth.utils.SecurityUtils;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -44,7 +44,7 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like> implements Li
                 .type(type)
                 .typeId(typeId).build();
         if (Objects.equals(type, LikeEnum.LIKE_TYPE_ARTICLE.getType()))
-            myRedisCache.incrementCacheMapValue(RedisConst.ARTICLE_LIKE_COUNT, typeId.toString(), 1);
+            myRedisCache.incrementCacheMapValue(RedisConstants.ARTICLE_LIKE_COUNT, typeId.toString(), 1);
         if (this.save(saveLike)) return ResultData.success();
         return ResultData.failure();
     }
@@ -62,7 +62,7 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like> implements Li
                 .eq(Like::getType, type)
                 .eq(Like::getTypeId, typeId));
         if (Objects.equals(type, LikeEnum.LIKE_TYPE_ARTICLE.getType()))
-            myRedisCache.incrementCacheMapValue(RedisConst.ARTICLE_LIKE_COUNT, typeId.toString(), -1);
+            myRedisCache.incrementCacheMapValue(RedisConstants.ARTICLE_LIKE_COUNT, typeId.toString(), -1);
         if (like) return ResultData.success();
         return ResultData.failure();
     }

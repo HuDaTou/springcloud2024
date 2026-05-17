@@ -4,13 +4,20 @@ import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
+@EnableRabbit
 public class RabbitEmailConfig {
 
     // 交换机名称
@@ -19,6 +26,30 @@ public class RabbitEmailConfig {
     public static final String MAIL_QUEUE = "mail.queue";
 
     public static final String MAIL_ROUTING_KEY = "mail.routing.key";
+
+    /**
+     * 配置消息转换器
+     * 使用 Jackson2JsonMessageConverter 替代默认的 SimpleMessageConverter
+     * 解决 Spring AMQP 3.2+ 的反序列化安全限制问题
+     */
+    @Bean
+    @Primary
+    public MessageConverter jsonMessageConverter() {
+        return new Jackson2JsonMessageConverter();
+    }
+
+    /**
+     * 配置 RabbitMQ 监听容器工厂
+     * 指定使用 JSON 消息转换器
+     */
+    @Bean
+    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory,
+                                                                              MessageConverter jsonMessageConverter) {
+        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+        factory.setConnectionFactory(connectionFactory);
+        factory.setMessageConverter(jsonMessageConverter);
+        return factory;
+    }
 
     /**
      * 声明交换机
@@ -34,6 +65,7 @@ public class RabbitEmailConfig {
      * 声明队列
      */
     @Bean
+    @Primary
     public Queue mailQueue() {
         // 参数：name, durable(持久化)
         // 你之前问过有序性，如果想开启单活消费者，可以在这里加参数

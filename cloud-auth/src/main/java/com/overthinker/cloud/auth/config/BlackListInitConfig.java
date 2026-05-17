@@ -3,7 +3,7 @@ package com.overthinker.cloud.auth.config;
 import com.overthinker.cloud.auth.constants.BlackListConst;
 import com.overthinker.cloud.auth.entity.PO.BlackList;
 import com.overthinker.cloud.auth.mapper.BlackListMapper;
-import com.overthinker.cloud.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.redis.utils.MyRedisCache;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +40,7 @@ public class BlackListInitConfig {
                 log.info("--------没有黑名单数据，跳过初始化--------");
             }
         } catch (Exception e) {
-            log.error("--------初始化黑名单缓存失败--------", e);
+            log.warn("--------初始化黑名单缓存失败，可能表不存在，请手动执行 sql/t_black_list.sql 创建表--------", e.getMessage());
         }
     }
 }

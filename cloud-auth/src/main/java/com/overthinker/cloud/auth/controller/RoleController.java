@@ -2,19 +2,18 @@ package com.overthinker.cloud.auth.controller;
 
 import com.overthinker.cloud.auth.entity.PO.SysRole;
 import com.overthinker.cloud.auth.service.RoleService;
+import lombok.RequiredArgsConstructor;
 
 import com.overthinker.cloud.common.core.resp.ResultData;
-import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/roles")
+@RequiredArgsConstructor
 public class RoleController {
-
-    @Resource
-    private RoleService roleService;
+    private final RoleService roleService;
 
     @GetMapping
     public ResultData<List<SysRole>> getAllRoles() {

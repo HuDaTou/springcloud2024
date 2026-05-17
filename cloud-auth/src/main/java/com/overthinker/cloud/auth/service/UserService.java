@@ -138,4 +138,21 @@ public interface UserService extends IService<User>, UserDetailsService {
     List<String> getUserAuthorities(Long userId);
 
     List<String> getUserRoleNames(Long userId);
+
+    /**
+     * 管理员创建用户
+     *
+     * @param adminCreateUserDTO 创建用户参数
+     * @return 是否成功
+     */
+    ResultData<Void> adminCreateUser(AdminCreateUserDTO adminCreateUserDTO);
+    
+    /**
+     * 更新用户登录信息
+     *
+     * @param userId 用户ID
+     * @param loginIp 登录IP
+     * @param userAgent 用户代理
+     */
+    void updateLoginInfo(Long userId, String loginIp, String userAgent);
 }

@@ -21,7 +21,7 @@ import com.overthinker.cloud.auth.service.IpService;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.common.web.utils.ServletUtils;
 import com.overthinker.cloud.common.core.utils.MyStringUtils;
-import com.overthinker.cloud.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.redis.utils.MyRedisCache;
 
 import com.overthinker.cloud.auth.entity.PO.User;
 

@@ -16,7 +16,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Builder
 public class ResultData<T> {
-    private Integer code;
+    private String code;
     private String msg;
     private T data;
 
@@ -55,11 +55,11 @@ public class ResultData<T> {
         return ResultData.<T>builder().code(ReturnCodeEnum.FAILURE.getCode()).msg(ReturnCodeEnum.FAILURE.getMsg()).data(data).build();
     }
 
-    public static <T> ResultData<T> failure(Integer code, String msg) {
+    public static <T> ResultData<T> failure(String code, String msg) {
         return ResultData.<T>builder().code(code).msg(msg).data(null).build();
     }
 
-    public static <T> ResultData<T> failure(Integer code, String msg, T data) {
+    public static <T> ResultData<T> failure(String code, String msg, T data) {
         return ResultData.<T>builder().code(code).msg(msg).data(data).build();
     }
 

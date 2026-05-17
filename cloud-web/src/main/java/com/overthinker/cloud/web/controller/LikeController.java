@@ -4,7 +4,7 @@ import com.overthinker.cloud.common.core.annotation.CheckBlacklist;
 import com.overthinker.cloud.common.core.base.BaseController;
 import com.overthinker.cloud.common.core.resp.ResultData;
 
-import com.overthinker.cloud.redis.annotation.AccessLimit;
+import com.overthinker.cloud.system.redis.annotation.AccessLimit;
 import com.overthinker.cloud.web.entity.PO.Like;
 import com.overthinker.cloud.web.service.LikeService;
 import io.swagger.v3.oas.annotations.Operation;

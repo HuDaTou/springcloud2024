@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -20,10 +20,10 @@ import java.io.IOException;
 @Slf4j
 @Component
 @RabbitListener(queues = "mail.queue") // 指定监听的队列名
+@RequiredArgsConstructor
 public class EmailListener {
 
-    @Autowired
-    private MailUtils mailUtils;
+    private final MailUtils mailUtils;
 
 
     /**

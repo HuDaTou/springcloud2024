@@ -6,18 +6,25 @@ import com.overthinker.cloud.common.core.resp.ResultData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+
+/**
+ * (SysPermission)表控制层
+ *
+ * @author overH
+ * @since 2024-09-05 16:13:19
+ */
 @Tag(name = "权限管理", description = "系统权限数据的增删改查及注册接口")
 @RestController
 @RequestMapping("/permissions")
+@RequiredArgsConstructor
 public class PermissionController {
-
-    @Resource
-    private PermissionService permissionService;
+    private final PermissionService permissionService;
 
     @Operation(summary = "获取所有权限", description = "获取系统中所有的权限列表")
     @GetMapping

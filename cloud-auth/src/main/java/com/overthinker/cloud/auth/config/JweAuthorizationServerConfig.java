@@ -13,7 +13,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
@@ -50,7 +49,6 @@ import java.util.UUID;
  * 使用 JWE 加密 Token，确保 Token 内容不可被篡改和泄露
  */
 @Configuration
-@EnableWebSecurity
 public class JweAuthorizationServerConfig {
 
     private final KeyPair jweKeyPair;
@@ -117,16 +115,23 @@ public class JweAuthorizationServerConfig {
      */
     @Bean
     public JWKSource<SecurityContext> jweJwkSource() {
+        return new ImmutableJWKSet<>(jwkSet());
+    }
+
+    /**
+     * JWK Set Bean，直接供其他组件使用
+     */
+    @Bean
+    public JWKSet jwkSet() {
         RSAPublicKey publicKey = (RSAPublicKey) jweKeyPair.getPublic();
         RSAPrivateKey privateKey = (RSAPrivateKey) jweKeyPair.getPrivate();
-        
+
         RSAKey rsaKey = new RSAKey.Builder(publicKey)
                 .privateKey(privateKey)
                 .keyID(UUID.randomUUID().toString())
                 .build();
-        
-        JWKSet jwkSet = new JWKSet(rsaKey);
-        return new ImmutableJWKSet<>(jwkSet);
+
+        return new JWKSet(rsaKey);
     }
 
     /**
@@ -197,6 +202,14 @@ public class JweAuthorizationServerConfig {
     @Bean
     public OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer() {
         return new CustomOAuth2TokenCustomizer();
+    }
+
+    /**
+     * 暴露 RSA 私钥供其他组件使用
+     */
+    @Bean
+    public RSAPrivateKey jwePrivateKey() {
+        return (RSAPrivateKey) jweKeyPair.getPrivate();
     }
 
     /**

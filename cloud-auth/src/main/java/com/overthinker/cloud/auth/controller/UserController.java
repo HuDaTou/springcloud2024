@@ -4,6 +4,7 @@ package com.overthinker.cloud.auth.controller;
 import com.overthinker.cloud.common.core.base.BaseController;
 
 import com.overthinker.cloud.auth.entity.DTO.*;
+import com.overthinker.cloud.auth.entity.DTO.AdminCreateUserDTO;
 import com.overthinker.cloud.auth.entity.VO.UserAccountVO;
 import com.overthinker.cloud.auth.entity.VO.UserDetailsVO;
 import com.overthinker.cloud.auth.entity.VO.UserListVO;
@@ -14,7 +15,7 @@ import com.overthinker.cloud.common.core.resp.ResultData;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,10 +28,10 @@ import java.util.stream.Collectors;
 @Tag(name = "用户管理", description = "用户账户管理、信息修改、注册及管理后台用户操作接口")
 @RestController
 @RequestMapping("/user")
+@RequiredArgsConstructor
 public class UserController extends BaseController {
 
-    @Resource
-    private UserService userService;
+    private final UserService userService;
 
 
     @Operation(summary = "获取当前用户信息", description = "获取当前登录用户的账号详细信息")
@@ -93,6 +94,12 @@ public class UserController extends BaseController {
     @DeleteMapping("/delete")
     public ResultData<Void> deleteUser(@RequestBody UserDeleteDTO userDeleteDTO) {
         return userService.deleteUser(userDeleteDTO.getIds());
+    }
+
+    @Operation(summary = "管理员创建用户", description = "【管理员】直接创建新用户，无需验证码")
+    @PostMapping("/admin/create")
+    public ResultData<Void> adminCreateUser(@RequestBody @Valid AdminCreateUserDTO adminCreateUserDTO) {
+        return userService.adminCreateUser(adminCreateUserDTO);
     }
 
     @GetMapping("/internal/api/v1/user/count")

@@ -4,12 +4,13 @@ defineProps({
   subtitle: String
 })
 
-
+import { getStorageUrl } from "@/config/storage";
+const bannerBgUrl = getStorageUrl('banners/wallhaven-v9v3r5_1920x1080.png')
 </script>
 
 <template>
   <div>
-    <div class="header">
+    <div class="header" :style="{ backgroundImage: `url(${bannerBgUrl})` }">
       <h2 class="title">{{ title }}</h2>
       <h3 class="subtitle"><span>{{ subtitle }}</span></h3>
     </div>
@@ -26,7 +27,6 @@ defineProps({
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  background-image: url("http://minioapi.overthinker.top/cloud/banners/wallhaven-v9v3r5_1920x1080.png");
   background-size: cover;
   background-position: center;
 

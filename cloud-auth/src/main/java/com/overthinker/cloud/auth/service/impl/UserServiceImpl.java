@@ -14,11 +14,8 @@ import com.overthinker.cloud.auth.utils.SecurityUtils;
 import com.overthinker.cloud.common.core.resp.ResultData;
 
 import com.overthinker.cloud.auth.constants.AuthRedisConst;
-import com.overthinker.cloud.redis.utils.MyRedisCache;
-import jakarta.annotation.Resource;
+import com.overthinker.cloud.system.redis.utils.MyRedisCache;
 import lombok.extern.slf4j.Slf4j;
-import org.glassfish.jaxb.core.v2.TODO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,35 +30,34 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
+import lombok.RequiredArgsConstructor;
 
 @Slf4j
 @Service("userService")
+@RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
-    @Resource
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
-    @Resource
-    private UserRoleMapper userRoleMapper;
+    private final UserRoleMapper userRoleMapper;
 
-    @Resource
-    private RolePermissionMapper rolePermissionMapper;
+        
+    private final RolePermissionMapper rolePermissionMapper;
 
-    @Resource
-    private SysPermissionMapper sysPermissionMapper;
+    
+    private final SysPermissionMapper sysPermissionMapper;
 
 
 
-    @Resource
-    private RoleMapper roleMapper;
+    
+    private final RoleMapper roleMapper;
 
-    @Resource
-    private MyRedisCache myRedisCache;
+    
+    private final MyRedisCache myRedisCache;
 
-    @Resource
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private BlackListServiceImpl blackListService;
+    private final PasswordEncoder passwordEncoder;
+
+    private final BlackListServiceImpl blackListService;
 
     @Override
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
@@ -376,5 +372,80 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         List<Long> roleIds = userRoles.stream().map(UserRole::getRoleId).toList();
         return roleMapper.selectBatchIds(roleIds).stream().map(SysRole::getRoleName).toList();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ResultData<Void> adminCreateUser(AdminCreateUserDTO adminCreateUserDTO) {
+        // 检查用户名是否已存在
+        User existingUser = userMapper.selectOne(new LambdaQueryWrapper<User>()
+                .eq(User::getUsername, adminCreateUserDTO.getUsername()));
+        if (Objects.nonNull(existingUser)) {
+            return ResultData.failure("用户名已存在");
+        }
+
+        // 检查邮箱是否已存在（如果提供了邮箱）
+        if (StringUtils.isNotBlank(adminCreateUserDTO.getEmail())) {
+            User existingEmail = userMapper.selectOne(new LambdaQueryWrapper<User>()
+                    .eq(User::getEmail, adminCreateUserDTO.getEmail()));
+            if (Objects.nonNull(existingEmail)) {
+                return ResultData.failure("邮箱已存在");
+            }
+        }
+
+        // 创建用户
+        User user = new User();
+        user.setUsername(adminCreateUserDTO.getUsername());
+        user.setNickname(StringUtils.isNotBlank(adminCreateUserDTO.getNickname()) 
+                ? adminCreateUserDTO.getNickname() 
+                : adminCreateUserDTO.getUsername());
+        user.setEmail(adminCreateUserDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(adminCreateUserDTO.getPassword()));
+        user.setIsDisable(adminCreateUserDTO.getIsDisable() ? 1 : 0);
+        user.setCreateTime(LocalDateTime.now());
+        user.setUpdateTime(LocalDateTime.now());
+        user.setAvatar("https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png");
+        user.setRegisterType(0);
+
+        userMapper.insert(user);
+
+        // 分配角色
+        List<Long> roleIds = adminCreateUserDTO.getRoleIds();
+        if (roleIds != null && !roleIds.isEmpty()) {
+            for (Long roleId : roleIds) {
+                UserRole userRole = new UserRole();
+                userRole.setUserId(user.getId());
+                userRole.setRoleId(roleId);
+                userRoleMapper.insert(userRole);
+            }
+        } else {
+            // 如果没有指定角色，分配默认角色
+            SysRole defaultRole = roleMapper.selectOne(new LambdaQueryWrapper<SysRole>()
+                    .eq(SysRole::getRoleKey, "USER"));
+            if (Objects.nonNull(defaultRole)) {
+                UserRole userRole = new UserRole();
+                userRole.setUserId(user.getId());
+                userRole.setRoleId(defaultRole.getId());
+                userRoleMapper.insert(userRole);
+            }
+        }
+
+        return ResultData.success();
+    }
+    
+    @Override
+    public void updateLoginInfo(Long userId, String loginIp, String userAgent) {
+        User user = userMapper.selectById(userId);
+        if (Objects.isNull(user)) {
+            log.warn("更新登录信息失败：用户不存在，userId: {}", userId);
+            return;
+        }
+        
+        user.setLoginIp(loginIp);
+        user.setLoginTime(LocalDateTime.now());
+        user.setUpdateTime(LocalDateTime.now());
+        
+        userMapper.updateById(user);
+        log.info("更新用户登录信息成功：userId: {}, loginIp: {}", userId, loginIp);
     }
 }

@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
  * @since 2023-12-27 14:07:33
  */
 @Data
+@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor

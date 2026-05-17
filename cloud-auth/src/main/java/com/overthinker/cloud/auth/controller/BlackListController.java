@@ -12,16 +12,16 @@ import com.overthinker.cloud.common.core.base.BaseController;
 
 
 import com.overthinker.cloud.common.core.resp.ResultData;
-import com.overthinker.cloud.redis.annotation.AccessLimit;
+import com.overthinker.cloud.system.redis.annotation.AccessLimit;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import com.overthinker.cloud.auth.exception.BlackListException;
+import lombok.RequiredArgsConstructor;
 
 /**
  * (BlackList)表控制层
@@ -31,12 +31,12 @@ import com.overthinker.cloud.auth.exception.BlackListException;
  */
 @RestController
 @RequestMapping("blackList")
+@RequiredArgsConstructor
 public class BlackListController extends BaseController {
     /**
      * 服务对象
      */
-    @Resource
-    private BlackListService blackListService;
+    private final BlackListService blackListService;
 
     /**
      * 增加黑名单

@@ -8,7 +8,7 @@ import com.overthinker.cloud.common.core.base.BaseController;
 import com.overthinker.cloud.common.core.resp.ResultData;
 
 
-import com.overthinker.cloud.redis.annotation.AccessLimit;
+import com.overthinker.cloud.system.redis.annotation.AccessLimit;
 import com.overthinker.cloud.web.entity.DTO.CategoryDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchCategoryDTO;
 import com.overthinker.cloud.web.entity.VO.CategoryVO;

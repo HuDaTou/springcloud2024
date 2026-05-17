@@ -10,5 +10,5 @@ public interface EmailService {
      * @param type  邮件模板
      * @return
      */
-    void getEmailCode(String email, String type);
+    void sendEmailCode(String email, String type);
 }

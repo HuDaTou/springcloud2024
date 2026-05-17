@@ -16,7 +16,7 @@ import com.overthinker.cloud.web.entity.PO.Like;
 import com.overthinker.cloud.web.entity.VO.ArticleCommentVO;
 import com.overthinker.cloud.web.entity.VO.CommentListVO;
 import com.overthinker.cloud.web.entity.VO.PageVO;
-import com.overthinker.cloud.redis.constants.RedisConst;
+import com.overthinker.cloud.system.redis.constants.RedisConstants;
 import com.overthinker.cloud.web.entity.constants.SQLConst;
 import com.overthinker.cloud.web.entity.enums.CommentEnum;
 import com.overthinker.cloud.web.entity.enums.LikeEnum;
@@ -27,7 +27,7 @@ import com.overthinker.cloud.web.mapper.LikeMapper;
 import com.overthinker.cloud.web.service.CommentService;
 import com.overthinker.cloud.web.service.LikeService;
 import com.overthinker.cloud.web.service.PublicService;
-import com.overthinker.cloud.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.redis.utils.MyRedisCache;
 import com.overthinker.cloud.system.auth.utils.SecurityUtils;
 import com.overthinker.cloud.web.utils.StringUtils;
 import jakarta.annotation.Resource;
@@ -152,7 +152,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
      * @return ResultData
      */
     public ResultData<String> commentEmailReminder(UserCommentDTO commentDTO, String userEmail, Comment comment) {
-        myRedisCache.incrementCacheMapValue(RedisConst.ARTICLE_COMMENT_COUNT, commentDTO.getTypeId().toString(), 1);
+        myRedisCache.incrementCacheMapValue(RedisConstants.ARTICLE_COMMENT_COUNT, commentDTO.getTypeId().toString(), 1);
         if (StringUtils.isNull(commentDTO.getReplyId())) {
             if ((commentDTO.getType() == 1 && !articleEmailNotice) || commentDTO.getType() == 2 && !messageEmailNotice)
                 return ResultData.success();
@@ -242,9 +242,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                                     .eq(Comment::getType, CommentEnum.COMMENT_TYPE_ARTICLE.getType())).getTypeId();
             // 2.修改redis数量
             if (Objects.equals(isCheckDTO.getIsCheck(), SQLConst.COMMENT_IS_CHECK)) {
-                myRedisCache.incrementCacheMapValue(RedisConst.ARTICLE_COMMENT_COUNT, articleId.toString(), updateCount);
+                myRedisCache.incrementCacheMapValue(RedisConstants.ARTICLE_COMMENT_COUNT, articleId.toString(), updateCount);
             } else {
-                myRedisCache.incrementCacheMapValue(RedisConst.ARTICLE_COMMENT_COUNT, articleId.toString(), -updateCount);
+                myRedisCache.incrementCacheMapValue(RedisConstants.ARTICLE_COMMENT_COUNT, articleId.toString(), -updateCount);
             }
             return ResultData.success();
         }

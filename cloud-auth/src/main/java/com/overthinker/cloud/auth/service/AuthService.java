@@ -5,7 +5,6 @@ import com.overthinker.cloud.auth.entity.DTO.UserResetConfirmDTO;
 import com.overthinker.cloud.auth.entity.DTO.UserResetPasswordDTO;
 
 
-import com.overthinker.cloud.auth.entity.VO.UserRegisterBuildVO;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import org.springframework.security.core.userdetails.UserDetails;
 

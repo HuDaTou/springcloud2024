@@ -52,7 +52,8 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
-        <!-- Redis 缓存支持 (用于存储Token等) -->
+
+        <!-- Redis Starter -->
         <dependency>
             <groupId>com.overthinker.cloud.system</groupId>
             <artifactId>system-redis-starter</artifactId>

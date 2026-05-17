@@ -2,13 +2,9 @@ package com.overthinker.cloud.auth.controller;
 
 import com.overthinker.cloud.auth.entity.DTO.EmailCodeDTO;
 import com.overthinker.cloud.auth.service.EmailService;
-import com.overthinker.cloud.common.core.annotation.LogAnnotation;
-import com.overthinker.cloud.common.core.annotation.LogConst;
-
-import com.overthinker.cloud.redis.annotation.AccessLimit;
+import com.overthinker.cloud.common.core.resp.ResultData;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,15 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmailCodeController {
     private final EmailService emailService;
 
-    /**
-     * 通过邮件发送验证码
-     */
-    @Operation(summary = "通过邮箱获取验证码")
-    @Parameter(name = "email-code", description = "验证码")
-    @LogAnnotation(module = "黑名单管理", operation = LogConst.GET)
-    @AccessLimit(seconds = 60, maxCount = 30)
-    @PostMapping("/getCode")
-    public void sendEmailCode(@RequestBody EmailCodeDTO emailCodeDTO) {
-        emailService.getEmailCode(emailCodeDTO.getEmail(), emailCodeDTO.getType());
+    @Operation(summary = "发送邮箱验证码", description = "发送注册或重置密码的验证码")
+    @PostMapping("/send-code")
+    public ResultData<Void> sendCode(@RequestBody @Valid EmailCodeDTO emailCodeDTO) {
+        emailService.sendEmailCode(emailCodeDTO.getEmail(), emailCodeDTO.getType());
+        return ResultData.success();
     }
 }

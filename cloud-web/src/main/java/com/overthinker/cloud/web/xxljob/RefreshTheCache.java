@@ -1,8 +1,8 @@
 package com.overthinker.cloud.web.xxljob;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.overthinker.cloud.redis.constants.RedisConst;
-import com.overthinker.cloud.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.redis.constants.RedisConstants;
+import com.overthinker.cloud.system.redis.utils.MyRedisCache;
 import com.overthinker.cloud.web.entity.PO.Article;
 import com.overthinker.cloud.web.mapper.ArticleMapper;
 import com.xxl.job.core.context.XxlJobHelper;
@@ -34,7 +34,7 @@ public class RefreshTheCache  {
         try {
             List<Long> articleIds = articleMapper.selectList(null).stream().map(Article::getId).toList();
             articleIds.forEach(id -> {
-                Object cacheObj = redisCache.getCacheObject(RedisConst.ARTICLE_VISIT_COUNT + id);
+                Object cacheObj = redisCache.getCacheObject(RedisConstants.ARTICLE_VISIT_COUNT + id);
                 if (cacheObj != null) {
                     Long cacheObject = ((Number) cacheObj).longValue();
                     articleMapper.update(null, new LambdaUpdateWrapper<Article>().eq(Article::getId, id).set(Article::getVisitCount, cacheObject));

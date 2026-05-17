@@ -22,11 +22,9 @@ public class SecurityConfig {
             // 1. 配置路径拦截规则
             .authorizeExchange(exchanges -> exchanges
                 // 放行白名单路径 (如登录页、静态资源、认证服务的端点)
-                // 注意：/auth/** 需要放行，让用户能访问 cloud-auth 去登录
+                // 注意：/cloud-auth/** 需要放行，让用户能访问认证服务
                 .pathMatchers("/actuator/**",
-                        "/cloud-auth/oauth2/jwks", // 获取公钥端点
-                        "/cloud-auth/auth/**",      // 你的认证逻辑路径
-                        "/cloud-auth/login/**"      // 你的登录路径
+                        "/cloud-auth/**"  // 放行 cloud-auth 服务的所有端点
                                  ).permitAll()
                 // 其他所有请求都必须经过认证 (必须带有效Token)
                 .anyExchange().authenticated()
