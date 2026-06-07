@@ -6,7 +6,6 @@ import org.springframework.data.redis.core.BoundSetOperations;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -17,7 +16,6 @@ import java.util.concurrent.TimeUnit;
  * 这是我自己实现的redis 工具模板
  */
 @SuppressWarnings(value = {"unchecked", "rawtypes"})
-@Component
 @RequiredArgsConstructor
 public class MyRedisCache {
     private final RedisTemplate<String, Object> redisTemplate;

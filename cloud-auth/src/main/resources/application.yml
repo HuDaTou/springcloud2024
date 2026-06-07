@@ -7,6 +7,12 @@ spring:
     oauth2:
       authorizationserver:
         issuer: http://localhost:9000 # 授权服务器的Issuer URI，与AuthorizationServerConfig中配置的保持一致
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
+      timeout: 10000
   mail:
     host: smtp.qq.com
     port: 465
@@ -52,6 +58,13 @@ server:
 
 justauth:
   enabled: false
+
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: isDeleted
+      logic-delete-value: "true"
+      logic-not-delete-value: "false"
 
 # Logging Configuration (Log4j2 will pick up log4j2-spring.xml from common-core)
 logging:

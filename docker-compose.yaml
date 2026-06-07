@@ -1,19 +1,19 @@
 services:
 
-  devcontainer:
-    build:
-      context: ..
-      dockerfile: ../../.devcontainer/Dockerfile
-    container_name: springcloud-dev-container
-    volumes:
-      # Mount the project source code
-      - .:/workspace:cached
-      # Persist maven repository to speed up subsequent builds
-      - maven_repo:/root/.m2
-    networks:
-      - SpringCloudNet
-    # Keep the container running for interactive development
-    command: sleep infinity
+  # devcontainer:
+  #   build:
+  #     context: ..
+  #     dockerfile: ../../.devcontainer/Dockerfile
+  #   container_name: springcloud-dev-container
+  #   volumes:
+  #     # Mount the project source code
+  #     - .:/workspace:cached
+  #     # Persist maven repository to speed up subsequent builds
+  #     - maven_repo:/root/.m2
+  #   networks:
+  #     - SpringCloudNet
+  #   # Keep the container running for interactive development
+  #   command: sleep infinity
 
   consul:
     image: hashicorp/consul

@@ -17,6 +17,9 @@ import java.util.List;
 @Data
 @Schema(name = "UserAccountVO", description = "前台用户账户VO")
 public class UserAccountVO implements BasecopyProperties {
+    //用户ID
+    @Schema(description = "用户ID")
+    private Long id;
     //用户昵称
     @Schema(description = "用户昵称")
     private String nickname;
