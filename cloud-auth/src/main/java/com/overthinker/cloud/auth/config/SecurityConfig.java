@@ -41,7 +41,7 @@ public class SecurityConfig {
             .authorizeHttpRequests((authorize) -> authorize
                 .requestMatchers("/actuator/**", "/css/**", "/js/**", "/favicon.ico", "/error", "/internal/**").permitAll()
                 .requestMatchers("/oauth2/jwks", "/oauth2/token", "/oauth2/authorize", "/oauth2/logout").permitAll()
-                .requestMatchers("/auth/register", "/auth/send-code", "/auth/captcha").permitAll()
+                .requestMatchers("/auth/register", "/auth/send-code", "/auth/captcha", "/auth/login", "/auth/logout").permitAll()
                 .anyRequest().authenticated()
             )
             // 2. 添加验证码校验过滤器（在用户名密码认证之前）
