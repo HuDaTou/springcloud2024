@@ -4,8 +4,9 @@ import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONWriter;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
  * 通用结果类型
@@ -13,30 +14,39 @@ import lombok.Data;
  * @param <T>
  */
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Accessors(chain = true)
 public class ResultData<T> {
     private String code;
     private String msg;
     private T data;
 
-    @Builder.Default
     private long timestamp = System.currentTimeMillis();
 
     /**
      * 成功响应，不需要返回数据
      */
     public static <T> ResultData<T> success() {
-        return ResultData.<T>builder().code(ReturnCodeEnum.RC200.getCode()).msg(ReturnCodeEnum.RC200.getMsg()).data(null).build();
+        return new ResultData<T>()
+                .setCode(ReturnCodeEnum.SUCCESS.getCode())
+                .setMsg(ReturnCodeEnum.SUCCESS.getMsg())
+                .setData(null);
     }
 
 
     public static <T> ResultData<T> success(T data) {
-        return ResultData.<T>builder().code(ReturnCodeEnum.RC200.getCode()).msg(ReturnCodeEnum.RC200.getMsg()).data(data).build();
+        return new ResultData<T>()
+                .setCode(ReturnCodeEnum.SUCCESS.getCode())
+                .setMsg(ReturnCodeEnum.SUCCESS.getMsg())
+                .setData(data);
     }
 
     public static <T> ResultData<T> success(T data, String message) {
-        return ResultData.<T>builder().code(ReturnCodeEnum.RC200.getCode()).msg(message).data(data).build();
+        return new ResultData<T>()
+                .setCode(ReturnCodeEnum.SUCCESS.getCode())
+                .setMsg(message)
+                .setData(data);
     }
 
 
@@ -44,36 +54,75 @@ public class ResultData<T> {
      * 失败响应，不需要返回数据
      */
     public static <T> ResultData<T> failure() {
-        return ResultData.<T>builder().code(ReturnCodeEnum.FAILURE.getCode()).msg(ReturnCodeEnum.FAILURE.getMsg()).data(null).build();
+        return new ResultData<T>()
+                .setCode(ReturnCodeEnum.FAILURE.getCode())
+                .setMsg(ReturnCodeEnum.FAILURE.getMsg())
+                .setData(null);
     }
 
     public static <T> ResultData<T> failure(String msg) {
-        return ResultData.<T>builder().code(ReturnCodeEnum.FAILURE.getCode()).msg(msg).data(null).build();
+        return new ResultData<T>()
+                .setCode(ReturnCodeEnum.FAILURE.getCode())
+                .setMsg(msg)
+                .setData(null);
     }
 
     public static <T> ResultData<T> failure(T data) {
-        return ResultData.<T>builder().code(ReturnCodeEnum.FAILURE.getCode()).msg(ReturnCodeEnum.FAILURE.getMsg()).data(data).build();
+        return new ResultData<T>()
+                .setCode(ReturnCodeEnum.FAILURE.getCode())
+                .setMsg(ReturnCodeEnum.FAILURE.getMsg())
+                .setData(data);
     }
 
     public static <T> ResultData<T> failure(String code, String msg) {
-        return ResultData.<T>builder().code(code).msg(msg).data(null).build();
+        return new ResultData<T>()
+                .setCode(code)
+                .setMsg(msg)
+                .setData(null);
     }
 
     public static <T> ResultData<T> failure(String code, String msg, T data) {
-        return ResultData.<T>builder().code(code).msg(msg).data(data).build();
+        return new ResultData<T>()
+                .setCode(code)
+                .setMsg(msg)
+                .setData(data);
     }
 
     public static <T> ResultData<T> failure(ReturnCodeEnum returnCodeEnum) {
-        return ResultData.<T>builder().code(returnCodeEnum.getCode()).msg(returnCodeEnum.getMsg()).data(null).build();
+        return new ResultData<T>()
+                .setCode(returnCodeEnum.getCode())
+                .setMsg(returnCodeEnum.getMsg())
+                .setData(null);
     }
 
     public static <T> ResultData<T> failure(ReturnCodeEnum returnCodeEnum, T data) {
-        return ResultData.<T>builder().code(returnCodeEnum.getCode()).msg(returnCodeEnum.getMsg()).data(data).build();
+        return new ResultData<T>()
+                .setCode(returnCodeEnum.getCode())
+                .setMsg(returnCodeEnum.getMsg())
+                .setData(data);
     }
 
     public static <T> ResultData<T> failure(ReturnCodeEnum returnCodeEnum, String msg) {
-        return ResultData.<T>builder().code(returnCodeEnum.getCode()).msg(msg).data(null).build();
+        if (msg == null) {
+            msg = returnCodeEnum.getMsg();
+        }
+        return new ResultData<T>()
+                .setCode(returnCodeEnum.getCode())
+                .setMsg(msg)
+                .setData(null);
     }
+
+        public static <T> ResultData<T> failure(ReturnCodeEnum returnCodeEnum, T data,String msg) {
+        if (msg == null) {
+            msg = returnCodeEnum.getMsg();
+        }
+        return new ResultData<T>()
+                .setCode(returnCodeEnum.getCode())
+                .setMsg(msg)
+                .setData(data);
+    }
+
+
 
 
     public String asJsonString() {
