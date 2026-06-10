@@ -1,8 +1,6 @@
 ---
 alwaysApply: false
-globs: 
-  - "**/service/**/*.java"
-  - "!**/test/**/*"
+globs: **/service/**/*.java
 ---
 # Service 层规范
 
@@ -238,9 +236,66 @@ return article.copyProperties(ArticleDetailVO.class, vo -> {
 });
 ```
 
+
+
+### 1. Service 层使用链式组装对象
+
+```java
+// ✅ 推荐：使用 @Accessors(chain = true) 链式组装对象
+@Override
+@Transactional
+public ResultData<Void> createUser(UserCreateDTO dto) {
+    User user = new User()
+            .setUsername(dto.getUsername())
+            .setNickname(dto.getNickname())
+            .setEmail(dto.getEmail())
+            .setPhone(dto.getPhone());
+    
+    userMapper.insert(user);
+    return ResultData.success();
+}
+
+❌ 禁止：不使用链式调用，代码冗长
+// User user = new User();
+// user.setUsername(dto.getUsername());
+// user.setNickname(dto.getNickname());
+// user.setEmail(dto.getEmail());
+```
+
+### 3. 复杂对象组装
+
+```java
+// ✅ 复杂对象组装示例
+@Override
+@Transactional
+public ResultData<Void> createOrder(OrderCreateDTO dto) {
+    Order order = new Order()
+            .setUserId(dto.getUserId())
+            .setOrderNo(generateOrderNo())
+            .setTotalAmount(dto.getTotalAmount())
+            .setStatus(OrderStatus.PENDING)
+            .setCreateTime(LocalDateTime.now());
+    
+    orderMapper.insert(order);
+    
+    // 批量插入订单明细
+    List<OrderItem> items = dto.getItems().stream()
+            .map(itemDTO -> new OrderItem()
+                    .setOrderId(order.getId())
+                    .setProductId(itemDTO.getProductId())
+                    .setQuantity(itemDTO.getQuantity())
+                    .setPrice(itemDTO.getPrice()))
+            .toList();
+    
+    orderItemMapper.insertBatchSomeColumn(items);
+    return ResultData.success();
+}
+```
+
 ## 禁止行为
 
 ❌ **禁止**：在 Service 层直接返回 Entity，应转换为 VO
 ❌ **禁止**：在 Service 层处理 HTTP 请求/响应
 ❌ **禁止**：在 Service 层使用 `System.out.println()`
 ❌ **禁止**：业务逻辑写在 Controller 层
+❌ **禁止**：不使用 `@Accessors(chain = true)` 链式调用组装对象

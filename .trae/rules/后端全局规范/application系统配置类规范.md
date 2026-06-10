@@ -1,8 +1,6 @@
 ---
 alwaysApply: false
-globs: 
-  - "**/config/*Config.java"
-  - "!**/test/**/*"
+globs: **/config/*Config.java
 ---
 # 配置类规范
 

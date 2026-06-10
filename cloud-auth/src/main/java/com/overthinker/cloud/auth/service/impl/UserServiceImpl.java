@@ -12,10 +12,14 @@ import com.overthinker.cloud.auth.service.UserService;
 import com.overthinker.cloud.auth.utils.SecurityUtils;
 
 import com.overthinker.cloud.common.core.resp.ResultData;
+import com.overthinker.cloud.common.core.utils.MyDateUtils;
+import com.overthinker.cloud.common.core.utils.MyStringUtils;
 
 import com.overthinker.cloud.auth.constants.AuthRedisConst;
 import com.overthinker.cloud.system.redis.utils.MyRedisCache;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,13 +27,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.StringUtils;
 import lombok.RequiredArgsConstructor;
 
 @Slf4j
@@ -38,25 +40,12 @@ import lombok.RequiredArgsConstructor;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     private final UserMapper userMapper;
-
     private final UserRoleMapper userRoleMapper;
-
-        
     private final RolePermissionMapper rolePermissionMapper;
-
-    
     private final SysPermissionMapper sysPermissionMapper;
-
-
-
-    
     private final RoleMapper roleMapper;
-
-    
     private final MyRedisCache myRedisCache;
-
     private final PasswordEncoder passwordEncoder;
-
     private final BlackListServiceImpl blackListService;
 
     @Override
@@ -65,14 +54,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (Objects.isNull(user)) {
             throw new UsernameNotFoundException("用户不存在");
         }
-        
-        if (user.getIsDisable() != null && user.getIsDisable() == 1) {
-            throw new UsernameNotFoundException("用户已被禁用");
+
+        if (Boolean.TRUE.equals(user.getIsDisable())) {
+            throw new DisabledException("账户已被禁用");
         }
 
         BlackList byId = blackListService.getById(user.getId());
         if (Objects.nonNull(byId)) {
-            throw new UsernameNotFoundException("用户已被封禁");
+            throw new LockedException("账户已被封禁");
         }
 
         return new LoginUser(user, this.getUserAuthorities(user.getId()));
@@ -98,7 +87,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = userMapper.selectById(id);
         if (Objects.nonNull(user)) {
             user.setLoginType(type);
-            user.setLoginTime(LocalDateTime.now());
+            user.setLoginTime(MyDateUtils.now());
             userMapper.updateById(user);
         }
     }
@@ -122,25 +111,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return ResultData.failure("用户名或邮箱已存在");
         }
 
-        User user = new User();
-        user.setUsername(userRegisterDTO.getUsername());
-        user.setNickname(userRegisterDTO.getUsername());
-        user.setEmail(userRegisterDTO.getEmail());
-        user.setPassword(passwordEncoder.encode(userRegisterDTO.getPassword()));
-        user.setCreateTime(LocalDateTime.now());
-        user.setUpdateTime(LocalDateTime.now());
-        user.setAvatar("https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png");
-        user.setRegisterType(0);
-        user.setIsDisable(0);
-        
+        User user = new User()
+                .setUsername(userRegisterDTO.getUsername())
+                .setNickname(userRegisterDTO.getUsername())
+                .setEmail(userRegisterDTO.getEmail())
+                .setPassword(passwordEncoder.encode(userRegisterDTO.getPassword()))
+                .setAvatar("https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png")
+                .setRegisterType(0)
+                .setIsDisable(false);
+
         userMapper.insert(user);
 
         SysRole defaultRole = roleMapper.selectOne(new LambdaQueryWrapper<SysRole>()
                 .eq(SysRole::getRoleKey, "ROLE_USER"));
         if (Objects.nonNull(defaultRole)) {
-            UserRole userRole = new UserRole();
-            userRole.setUserId(user.getId());
-            userRole.setRoleId(defaultRole.getId());
+            UserRole userRole = new UserRole()
+                    .setUserId(user.getId())
+                    .setRoleId(defaultRole.getId());
             userRoleMapper.insert(userRole);
         }
 
@@ -178,9 +165,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
         user.setPassword(passwordEncoder.encode(userResetDTO.getPassword()));
-        user.setUpdateTime(LocalDateTime.now());
         userMapper.updateById(user);
-        
+
         myRedisCache.deleteObject(codeKey);
         return ResultData.success();
     }
@@ -188,11 +174,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public List<UserListVO> getUserOrSearch(UserSearchDTO userSearchDTO) {
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        
-        if (StringUtils.isNotBlank(userSearchDTO.getUsername())) {
+
+        if (MyStringUtils.isNotBlank(userSearchDTO.getUsername())) {
             queryWrapper.like(User::getUsername, userSearchDTO.getUsername());
         }
-        if (StringUtils.isNotBlank(userSearchDTO.getEmail())) {
+        if (MyStringUtils.isNotBlank(userSearchDTO.getEmail())) {
             queryWrapper.like(User::getEmail, userSearchDTO.getEmail());
         }
         if (userSearchDTO.getIsDisable() != null) {
@@ -204,22 +190,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (userSearchDTO.getCreateTimeEnd() != null) {
             queryWrapper.le(User::getCreateTime, userSearchDTO.getCreateTimeEnd());
         }
-        
+
         queryWrapper.orderByDesc(User::getCreateTime);
-        
+
         List<User> users = userMapper.selectList(queryWrapper);
-        return users.stream().map(user -> {
-            UserListVO vo = new UserListVO();
-            vo.setId(user.getId());
-            vo.setUsername(user.getUsername());
-            vo.setAvatar(user.getAvatar());
-            vo.setEmail(user.getEmail());
-            vo.setRegisterType(user.getRegisterType());
-            vo.setLoginAddress(user.getLoginAddress());
-            vo.setIsDisable(user.getIsDisable());
-            vo.setCreateTime(user.getCreateTime());
-            return vo;
-        }).collect(Collectors.toList());
+        return users.stream()
+                .map(user -> user.copyProperties(UserListVO.class))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -229,8 +206,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (Objects.isNull(user)) {
             return ResultData.failure("用户不存在");
         }
-        user.setIsDisable(status);
-        user.setUpdateTime(LocalDateTime.now());
+        user.setIsDisable(status == 1);
         userMapper.updateById(user);
         return ResultData.success();
     }
@@ -241,27 +217,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (Objects.isNull(user)) {
             return null;
         }
-        
-        UserDetailsVO vo = new UserDetailsVO();
-        vo.setId(user.getId());
-        vo.setNickname(user.getNickname());
-        vo.setUsername(user.getUsername());
+
+        UserDetailsVO vo = user.copyProperties(UserDetailsVO.class);
         vo.setRoles(this.getUserRoleNames(id));
-        vo.setGender(user.getGender());
-        vo.setAvatar(user.getAvatar());
-        vo.setIntro(user.getIntro());
-        vo.setEmail(user.getEmail());
-        vo.setRegisterType(user.getRegisterType());
-        vo.setRegisterIp(user.getRegisterIp());
-        vo.setRegisterAddress(user.getRegisterAddress());
-        vo.setLoginType(user.getLoginType());
-        vo.setLoginIp(user.getLoginIp());
-        vo.setLoginAddress(user.getLoginAddress());
-        vo.setIsDisable(user.getIsDisable());
-        vo.setLoginTime(user.getLoginTime());
-        vo.setCreateTime(user.getCreateTime());
-        vo.setUpdateTime(user.getUpdateTime());
-        
         return vo;
     }
 
@@ -281,13 +239,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (Objects.isNull(user)) {
             return ResultData.failure("用户不存在");
         }
-        
-        user.setNickname(userUpdateDTO.getNickname());
-        user.setGender(userUpdateDTO.getGender());
-        user.setAvatar(userUpdateDTO.getAvatar());
-        user.setIntro(userUpdateDTO.getIntro());
-        user.setUpdateTime(LocalDateTime.now());
-        
+
+        user.copyFrom(userUpdateDTO);
         userMapper.updateById(user);
         return ResultData.success();
     }
@@ -319,7 +272,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
         user.setEmail(updateEmailDTO.getEmail());
-        user.setUpdateTime(LocalDateTime.now());
         userMapper.updateById(user);
         myRedisCache.deleteObject(AuthRedisConst.EMAIL_VERIFY_CODE_KEY + updateEmailDTO.getEmail());
         return ResultData.success();
@@ -377,15 +329,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultData<Void> adminCreateUser(AdminCreateUserDTO adminCreateUserDTO) {
-        // 检查用户名是否已存在
         User existingUser = userMapper.selectOne(new LambdaQueryWrapper<User>()
                 .eq(User::getUsername, adminCreateUserDTO.getUsername()));
         if (Objects.nonNull(existingUser)) {
             return ResultData.failure("用户名已存在");
         }
 
-        // 检查邮箱是否已存在（如果提供了邮箱）
-        if (StringUtils.isNotBlank(adminCreateUserDTO.getEmail())) {
+        if (MyStringUtils.isNotBlank(adminCreateUserDTO.getEmail())) {
             User existingEmail = userMapper.selectOne(new LambdaQueryWrapper<User>()
                     .eq(User::getEmail, adminCreateUserDTO.getEmail()));
             if (Objects.nonNull(existingEmail)) {
@@ -393,46 +343,41 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
         }
 
-        // 创建用户
-        User user = new User();
-        user.setUsername(adminCreateUserDTO.getUsername());
-        user.setNickname(StringUtils.isNotBlank(adminCreateUserDTO.getNickname()) 
-                ? adminCreateUserDTO.getNickname() 
-                : adminCreateUserDTO.getUsername());
-        user.setEmail(adminCreateUserDTO.getEmail());
-        user.setPassword(passwordEncoder.encode(adminCreateUserDTO.getPassword()));
-        user.setIsDisable(adminCreateUserDTO.getIsDisable() ? 1 : 0);
-        user.setCreateTime(LocalDateTime.now());
-        user.setUpdateTime(LocalDateTime.now());
-        user.setAvatar("https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png");
-        user.setRegisterType(0);
+        User user = new User()
+                .setUsername(adminCreateUserDTO.getUsername())
+                .setNickname(MyStringUtils.isNotBlank(adminCreateUserDTO.getNickname())
+                        ? adminCreateUserDTO.getNickname()
+                        : adminCreateUserDTO.getUsername())
+                .setEmail(adminCreateUserDTO.getEmail())
+                .setPassword(passwordEncoder.encode(adminCreateUserDTO.getPassword()))
+                .setIsDisable(adminCreateUserDTO.getIsDisable())
+                .setAvatar("https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png")
+                .setRegisterType(0);
 
         userMapper.insert(user);
 
-        // 分配角色
         List<Long> roleIds = adminCreateUserDTO.getRoleIds();
         if (roleIds != null && !roleIds.isEmpty()) {
             for (Long roleId : roleIds) {
-                UserRole userRole = new UserRole();
-                userRole.setUserId(user.getId());
-                userRole.setRoleId(roleId);
+                UserRole userRole = new UserRole()
+                        .setUserId(user.getId())
+                        .setRoleId(roleId);
                 userRoleMapper.insert(userRole);
             }
         } else {
-            // 如果没有指定角色，分配默认角色
             SysRole defaultRole = roleMapper.selectOne(new LambdaQueryWrapper<SysRole>()
                     .eq(SysRole::getRoleKey, "USER"));
             if (Objects.nonNull(defaultRole)) {
-                UserRole userRole = new UserRole();
-                userRole.setUserId(user.getId());
-                userRole.setRoleId(defaultRole.getId());
+                UserRole userRole = new UserRole()
+                        .setUserId(user.getId())
+                        .setRoleId(defaultRole.getId());
                 userRoleMapper.insert(userRole);
             }
         }
 
         return ResultData.success();
     }
-    
+
     @Override
     public void updateLoginInfo(Long userId, String loginIp, String userAgent) {
         User user = userMapper.selectById(userId);
@@ -440,11 +385,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             log.warn("更新登录信息失败：用户不存在，userId: {}", userId);
             return;
         }
-        
+
         user.setLoginIp(loginIp);
-        user.setLoginTime(LocalDateTime.now());
-        user.setUpdateTime(LocalDateTime.now());
-        
+        user.setLoginTime(MyDateUtils.now());
         userMapper.updateById(user);
         log.info("更新用户登录信息成功：userId: {}, loginIp: {}", userId, loginIp);
     }

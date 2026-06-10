@@ -1,4 +1,4 @@
-import { baseRequestClient, requestClient } from '#/api/request';
+import { requestClient } from '#/api/request';
 
 export namespace AuthApi {
   /** 登录接口参数 */
@@ -7,44 +7,45 @@ export namespace AuthApi {
     username?: string;
   }
 
-  /** 登录接口返回值 */
+  /** 登录接口返回的 data 字段内容 */
   export interface LoginResult {
     accessToken: string;
+    expire?: string;
   }
 
   export interface RefreshTokenResult {
     data: string;
     status: number;
   }
+
+  /** 注册接口参数 */
+  export interface RegisterParams {
+    username: string;
+    password: string;
+    email: string;
+    code: string;
+  }
+
+  /** 发送邮箱验证码参数 */
+  export interface SendEmailCodeParams {
+    email: string;
+    type: string;
+  }
+
 }
 
 /**
  * 登录
  */
 export async function loginApi(data: AuthApi.LoginParams) {
-  const formData = new FormData();
-  if (data.username) formData.append('username', data.username);
-  if (data.password) formData.append('password', data.password);
-
-  const result = await baseRequestClient.post<{
-    code: string;
-    token: string;
-    msg: string;
-    expire: string;
-  }>('/cloud-auth/auth/login', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
-
-  return {
-    accessToken: result.token,
-  };
+  return requestClient.post<AuthApi.LoginResult>('/cloud-auth/auth/login', data);
 }
 
 /**
  * 刷新accessToken
  */
 export async function refreshTokenApi() {
-  return baseRequestClient.post<AuthApi.RefreshTokenResult>('/cloud-auth/auth/refresh', {
+  return requestClient.post<AuthApi.RefreshTokenResult>('/cloud-auth/auth/refresh', {
     withCredentials: true,
   });
 }
@@ -53,7 +54,7 @@ export async function refreshTokenApi() {
  * 退出登录
  */
 export async function logoutApi() {
-  return baseRequestClient.post('/cloud-auth/auth/logout', {
+  return requestClient.post('/cloud-auth/auth/logout', {
     withCredentials: true,
   });
 }
@@ -63,4 +64,18 @@ export async function logoutApi() {
  */
 export async function getAccessCodesApi() {
   return requestClient.get<string[]>('/cloud-auth/auth/codes');
+}
+
+/**
+ * 注册
+ */
+export async function registerApi(data: AuthApi.RegisterParams) {
+  return requestClient.post<void>('/cloud-auth/auth/register', data);
+}
+
+/**
+ * 发送邮箱验证码
+ */
+export async function sendEmailCodeApi(data: AuthApi.SendEmailCodeParams) {
+  return requestClient.post<void>('/cloud-auth/Email/send-code', data);
 }

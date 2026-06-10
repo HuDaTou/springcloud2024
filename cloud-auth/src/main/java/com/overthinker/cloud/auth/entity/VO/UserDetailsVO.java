@@ -41,7 +41,7 @@ public class UserDetailsVO {
     // 登录地址
     private String loginAddress;
     //是否禁用 0 否 1 是
-    private Integer isDisable;
+    private Boolean isDisable;
     //用户最近登录时间
     private LocalDateTime loginTime;
     //用户创建时间

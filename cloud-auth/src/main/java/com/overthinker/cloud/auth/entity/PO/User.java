@@ -21,7 +21,6 @@ import lombok.experimental.Accessors;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Accessors(chain = true)
 @TableName("sys_user")
 public class User extends BaseData implements BasecopyProperties {
@@ -69,8 +68,8 @@ public class User extends BaseData implements BasecopyProperties {
     @Schema(description = "最后登录地址", example = "上海市")
     private String loginAddress;
 
-    @Schema(description = "是否禁用：0-否 1-是", allowableValues = {"0", "1"}, example = "0")
-    private Integer isDisable;
+    @Schema(description = "是否禁用：false-否 true-是", allowableValues = {"false", "true"}, example = "false")
+    private Boolean isDisable;
 
     @Schema(description = "最后登录时间", example = "2023-06-01T12:00:00Z")
     private LocalDateTime loginTime;

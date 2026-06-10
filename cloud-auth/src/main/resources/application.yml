@@ -56,6 +56,9 @@ spring:
 server:
   port: 9123 # 服务端口
 
+# 本地验证码模式：true=不真实发送邮件，验证码固定为123456
+local-code-verify: true
+
 justauth:
   enabled: false
 

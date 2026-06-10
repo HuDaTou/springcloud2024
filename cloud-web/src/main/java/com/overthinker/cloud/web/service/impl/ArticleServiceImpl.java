@@ -392,7 +392,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             commentMapper.delete(new LambdaQueryWrapper<Comment>().eq(Comment::getType, CommentEnum.COMMENT_TYPE_ARTICLE.getType()).and(a -> a.in(Comment::getTypeId, ids)));
 
         } else {
-            throw new BusinessException(ReturnCodeEnum.RC999);
+            throw new BusinessException(ReturnCodeEnum.OPERATION_FAILED);
         }
         return null;
 

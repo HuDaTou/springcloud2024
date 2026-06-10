@@ -1,8 +1,6 @@
 ---
 alwaysApply: false
-globs: 
-  - "**/controller/*Controller.java"
-  - "!**/test/**/*"
+globs: **/controller/*Controller.java
 ---
 # API 设计规范
 

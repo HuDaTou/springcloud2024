@@ -43,13 +43,9 @@ public class SysRole extends BaseData implements BasecopyProperties {
     @Schema(description = "角色标识", example = "admin")
     private String roleKey;
 
-    // 是否删除（0：未删除，1：已删除）
-    @Schema(description = "是否删除（0：未删除，1：已删除）", example = "0")
-    private Integer isDeleted;
-
     // 状态（0：正常，1：停用）
     @Schema(description = "角色状态：0-正常 1-停用", allowableValues = {"0", "1"}, example = "0")
-    private Integer status;
+    private int status;
 
     // 顺序
     @Schema(description = "角色排序", example = "1")

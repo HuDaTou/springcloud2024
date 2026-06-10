@@ -1,6 +1,8 @@
 package com.overthinker.cloud.common.core.utils;
 
 import com.overthinker.cloud.common.core.constants.HttpConst;
+import com.overthinker.cloud.common.core.exception.BusinessException;
+import com.overthinker.cloud.common.core.resp.ReturnCodeEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.AntPathMatcher;
 
@@ -573,14 +575,32 @@ public class MyStringUtils {
      * @return 格式化的 Redis Key（如 user:token:12345）
      */
     public static String buildRedisKey(String... segments) {
-        if (segments == null || segments.length == 0) return NULLSTR;
+        if (segments == null || segments.length == 0) {
+            throw new BusinessException(ReturnCodeEnum.REDIS_KEY_INVALID, "Redis Key 片段不能为空");
+        }
         List<String> list = new ArrayList<>();
         for (String segment : segments) {
             if (isNotBlank(segment)) {
-                list.add(toUnderScoreCase(segment));
+                String trimmed = segment;
+                if (trimmed.startsWith(":")) {
+                    trimmed = trimmed.substring(1);
+                }
+                if (trimmed.endsWith(":")) {
+                    trimmed = trimmed.substring(0, trimmed.length() - 1);
+                }
+                if (isNotBlank(trimmed)) {
+                    list.add(toUnderScoreCase(trimmed));
+                }
             }
         }
-        return String.join(":", list);
+        if (list.isEmpty()) {
+            throw new BusinessException(ReturnCodeEnum.REDIS_KEY_INVALID, "Redis Key 片段全部为空");
+        }
+        String key = String.join(":", list);
+        if (isBlank(key)) {
+            throw new BusinessException(ReturnCodeEnum.REDIS_KEY_INVALID, "Redis Key 生成结果为空");
+        }
+        return key;
     }
 
     /**

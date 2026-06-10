@@ -34,6 +34,6 @@ public class AdminCreateUserDTO {
     private List<Long> roleIds;
 
     @Schema(description = "是否禁用", defaultValue = "false")
-    private Boolean isDisable = false;
+    private Boolean  isDisable = false;
 
 }

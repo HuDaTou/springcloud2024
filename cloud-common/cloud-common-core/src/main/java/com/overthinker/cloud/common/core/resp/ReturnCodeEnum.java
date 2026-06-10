@@ -136,6 +136,11 @@ public enum ReturnCodeEnum {
      */
     TYPE_NOT_RECOGNIZED(StatusConst.RC_1017, "未识别到type类型"),
 
+    /**
+     * Redis Key 非法
+     */
+    REDIS_KEY_INVALID(StatusConst.RC_1018, "Redis Key 非法"),
+
     ;
 
     private final String code;

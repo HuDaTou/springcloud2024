@@ -10,11 +10,12 @@ import com.overthinker.cloud.auth.mapper.UserRoleMapper;
 import com.overthinker.cloud.auth.service.AuthService;
 import com.overthinker.cloud.auth.service.RoleService;
 import com.overthinker.cloud.common.core.resp.ResultData;
+import com.overthinker.cloud.common.core.utils.MyStringUtils;
 import com.overthinker.cloud.system.redis.constants.RedisConstants;
+import com.overthinker.cloud.system.redis.utils.MyRedisCache;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,16 +31,15 @@ public class AuthServiceImpl implements AuthService {
 
 
 
-
     /**
      * 密码加密工具
      */
     private final PasswordEncoder passwordEncoder;
 
     /**
-     * Redis 操作模板（用于验证码存储、Token管理等）
+     * Redis 操作工具（用于验证码存储、Token管理等）
      */
-    private final StringRedisTemplate redisTemplate;
+    private final MyRedisCache myRedisCache;
 
     /**
      * 用户基本信息服务
@@ -65,11 +65,19 @@ public class AuthServiceImpl implements AuthService {
     @Transactional(rollbackFor = Exception.class)
     public ResultData<Void> register(UserRegisterDTO dto) {
         // 1. 校验验证码
-        String codeKey = RedisConstants.USER_CODE_KEY_PREFIX + dto.getEmail();
-        String cachedCode = redisTemplate.opsForValue().get(codeKey);
-        if (cachedCode == null || !cachedCode.equals(dto.getCode())) {
+        String codeKey = MyStringUtils.buildRedisKey(RedisConstants.REGISTER_CODE_KEY_PREFIX, dto.getEmail());
+        String cachedCode = myRedisCache.getCacheObject(codeKey);
+        String code = dto.getCode();
+        if (MyStringUtils.isBlank(code)) {
+            return ResultData.failure("验证码不能为空");
+        }
+        if (MyStringUtils.isEmpty(cachedCode)) {
+            return ResultData.failure("验证码不存在");
+        }
+        if (!code.equals(cachedCode)) {
             return ResultData.failure("验证码错误或已过期");
         }
+
 
         // 2. 检查用户名或邮箱是否已存在
         User accountByNameOrEmail = userService.findAccountByNameOrEmail(dto.getUsername(), dto.getEmail());
@@ -77,14 +85,18 @@ public class AuthServiceImpl implements AuthService {
 
 
         // 4. 创建用户
-        User user = new User();
-        user.setUsername(dto.getUsername());
-        user.setNickname(dto.getUsername()); // 默认昵称同用户名
-        user.setEmail(dto.getEmail());
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        // TODO 这里需要从minio中拿取
-        user.setAvatar("""
-                https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png""");
+        User user = new User()
+                .setUsername(dto.getUsername())
+                .setNickname(dto.getUsername())
+                .setEmail(dto.getEmail())
+                .setPassword(passwordEncoder.encode(dto.getPassword()))
+                .setAvatar("""
+                        https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png""")
+                .setRegisterType(0)
+                .setRegisterIp("127.0.0.1")
+                .setRegisterAddress("未知")
+                .setIsDisable(false)
+                .setLoginTime(LocalDateTime.now());
 
         userService.save(user);
 
@@ -96,7 +108,7 @@ public class AuthServiceImpl implements AuthService {
 
 
         // 6. 删除验证码
-        redisTemplate.delete(codeKey);
+        myRedisCache.deleteObject(codeKey);
 
         return ResultData.success();
     }
@@ -110,11 +122,11 @@ public class AuthServiceImpl implements AuthService {
             return ResultData.failure("该邮箱未注册");
         }
 
-        String codeKey = RedisConstants.USER_CODE_KEY_PREFIX + email;
-        String cachedCode = redisTemplate.opsForValue().get(codeKey);
+        String codeKey = MyStringUtils.buildRedisKey(RedisConstants.USER_CODE_KEY_PREFIX, email);
+        String cachedCode = myRedisCache.getCacheObject(codeKey);
         
         if (cachedCode != null && cachedCode.equals(userResetDTO.getCode())) {
-            redisTemplate.delete(codeKey);
+            myRedisCache.deleteObject(codeKey);
             return ResultData.success();
         }
         
@@ -133,8 +145,8 @@ public class AuthServiceImpl implements AuthService {
             return ResultData.failure("该邮箱未注册");
         }
 
-        String codeKey = RedisConstants.USER_CODE_KEY_PREFIX + email;
-        String cachedCode = redisTemplate.opsForValue().get(codeKey);
+        String codeKey = MyStringUtils.buildRedisKey(RedisConstants.USER_CODE_KEY_PREFIX, email);
+        String cachedCode = myRedisCache.getCacheObject(codeKey);
         
         if (cachedCode == null || !cachedCode.equals(code)) {
             return ResultData.failure("验证码错误或已过期");
@@ -144,7 +156,7 @@ public class AuthServiceImpl implements AuthService {
         user.setUpdateTime(LocalDateTime.now());
         userService.updateById(user);
         
-        redisTemplate.delete(codeKey);
+        myRedisCache.deleteObject(codeKey);
         
         return ResultData.success();
     }

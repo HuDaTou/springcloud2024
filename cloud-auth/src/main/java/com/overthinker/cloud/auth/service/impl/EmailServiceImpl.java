@@ -29,7 +29,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendEmailCode(String email, String type) {
-        EmailEnum emailEnum = EmailEnum.getByCode(type);
+        EmailEnum emailEnum = EmailEnum.getByType(type);
 
         String redisKey = MyStringUtils.buildRedisKey(emailEnum.getCodeType(), email);
         String cacheObject = myRedisCache.getCacheObject(redisKey);

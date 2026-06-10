@@ -10,7 +10,8 @@ import { resetAllStores, useAccessStore, useUserStore } from '@vben/stores';
 import { notification } from 'ant-design-vue';
 import { defineStore } from 'pinia';
 
-import { getAccessCodesApi, getUserInfoApi, loginApi, logoutApi } from '#/api';
+import type { AuthApi } from '#/api';
+import { getAccessCodesApi, getUserInfoApi, loginApi, registerApi, logoutApi, sendEmailCodeApi } from '#/api';
 import { $t } from '#/locales';
 
 export const useAuthStore = defineStore('auth', () => {
@@ -103,6 +104,34 @@ export const useAuthStore = defineStore('auth', () => {
     return userInfo;
   }
 
+  /**
+   * 异步处理注册操作
+   * @param params 注册表单数据
+   */
+  async function authRegister(
+    params: AuthApi.RegisterParams,
+    onSuccess?: () => Promise<void> | void,
+  ) {
+    try {
+      loginLoading.value = true;
+      await registerApi(params);
+
+      notification.success({
+        description: $t('authentication.registerSuccessDesc'),
+        duration: 3,
+        message: $t('authentication.registerSuccess'),
+      });
+
+      if (onSuccess) {
+        await onSuccess?.();
+      } else {
+        await router.push(LOGIN_PATH);
+      }
+    } finally {
+      loginLoading.value = false;
+    }
+  }
+
   function $reset() {
     loginLoading.value = false;
   }
@@ -110,6 +139,7 @@ export const useAuthStore = defineStore('auth', () => {
   return {
     $reset,
     authLogin,
+    authRegister,
     fetchUserInfo,
     loginLoading,
     logout,

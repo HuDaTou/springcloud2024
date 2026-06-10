@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, SysRole> implements RoleService {
     @Override
     public SysRole getDfalultRole() {
-        return null;
+        return this.getById(1L);
     }
 
     @Override
