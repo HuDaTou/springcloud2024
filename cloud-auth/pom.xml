@@ -80,6 +80,11 @@
             <artifactId>cloud-api</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.overthinker.cloud.system</groupId>
+            <artifactId>system-auth-starter</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

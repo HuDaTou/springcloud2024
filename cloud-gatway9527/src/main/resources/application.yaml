@@ -11,11 +11,6 @@ spring:
         locator:
           enabled: true # 开启根据服务发现的自动路由功能
           lower-case-service-id: true # 将服务名转为小写
-      routes:
-        - id: auth_route
-          uri: lb://cloud-auth
-          predicates:
-            - Path=/auth/**
   # Security Configuration for Resource Server (JWT Validation)
   security:
     oauth2:
@@ -23,8 +18,8 @@ spring:
         jwt:
           # 配置授权服务器的JWK Set URI，网关将从这里获取公钥来验证JWT签名
           # 假设cloud-auth运行在9000端口
-          issuer-uri: http://localhost:9000 # cloud-auth的Issuer URI
-          jwk-set-uri: http://localhost:9000/oauth2/jwks # cloud-auth的JWK Set端点
+          issuer-uri: http://localhost:9123 # cloud-auth的Issuer URI
+          jwk-set-uri: http://localhost:9123/oauth2/jwks # cloud-auth的JWK Set端点
 
 
 knife4j:

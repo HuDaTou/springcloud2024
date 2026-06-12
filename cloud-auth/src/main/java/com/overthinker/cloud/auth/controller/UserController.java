@@ -10,8 +10,8 @@ import com.overthinker.cloud.auth.entity.VO.UserDetailsVO;
 import com.overthinker.cloud.auth.entity.VO.UserListVO;
 
 import com.overthinker.cloud.auth.service.UserService;
-import com.overthinker.cloud.auth.utils.SecurityUtils;
 import com.overthinker.cloud.common.core.resp.ResultData;
+import com.overthinker.cloud.system.auth.utils.SecurityUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

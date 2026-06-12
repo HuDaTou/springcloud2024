@@ -3,11 +3,13 @@ package com.overthinker.cloud.auth.filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.overthinker.cloud.auth.entity.PO.LoginUser;
 import com.overthinker.cloud.auth.service.UserService;
+import com.overthinker.cloud.common.core.resp.ResultData;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -20,6 +22,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -55,20 +58,21 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             // 3. 生成 Token
             String token = generateToken(loginUser);
             Instant expireTime = Instant.now().plus(TOKEN_EXPIRE_MINUTES, ChronoUnit.MINUTES);
-            
-            // 4. 构建响应
-            Map<String, Object> result = new HashMap<>();
-            result.put("code", 200);
-            result.put("msg", "登录成功");
-            result.put("token", token);
-            result.put("expire", expireTime.toString());
-            
-            // 5. 异步处理：记录登录日志
+
+            // 4. 构建响应数据
+            Map<String, Object> data = new HashMap<>();
+            data.put("accessToken", token);
+            data.put("expire", expireTime.toString());
+
+            // 5. 使用 ResultData 包装响应
+            ResultData<Map<String, Object>> result = ResultData.success(data, "登录成功");
+
+            // 6. 异步处理：记录登录日志
             CompletableFuture.runAsync(() -> {
                 saveLoginLog(loginUser, request, "成功");
             });
-            
-            // 6. 发送响应
+
+            // 7. 发送响应
             sendJsonResponse(response, result);
             
             log.info("用户登录成功: {}", authentication.getName());
@@ -84,10 +88,10 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
      */
     private String generateToken(LoginUser loginUser) {
         Instant now = Instant.now();
-        
-        String authorities = loginUser.getAuthorities().stream()
+
+        List<String> authorities = loginUser.getAuthorities().stream()
                 .map(auth -> auth.getAuthority())
-                .collect(Collectors.joining(","));
+                .collect(Collectors.toList());
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer(TOKEN_ISSUER)
@@ -152,21 +156,18 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     /**
      * 发送 JSON 响应
      */
-    private void sendJsonResponse(HttpServletResponse response, Map<String, Object> result) throws IOException {
+    private void sendJsonResponse(HttpServletResponse response, Object result) throws IOException {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter().write(objectMapper.writeValueAsString(result));
     }
-    
+
     /**
      * 处理异常
      */
     private void handleException(HttpServletResponse response, Exception e) throws IOException {
-        Map<String, Object> errorResult = new HashMap<>();
-        errorResult.put("code", 500);
-        errorResult.put("msg", "服务器内部错误");
-        
+        ResultData<Object> errorResult = ResultData.failure("服务器内部错误");
         sendJsonResponse(response, errorResult);
     }
 }

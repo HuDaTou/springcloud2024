@@ -16,9 +16,9 @@ spring:
       resourceserver:
         jwt:
           # 配置授权服务器的JWK Set URI，网关将从这里获取公钥来验证JWT签名
-          # 假设cloud-auth运行在9000端口
-          issuer-uri: http://localhost:9000 # cloud-auth的Issuer URI
-          jwk-set-uri: http://localhost:9000/oauth2/jwks # cloud-auth的JWK Set端点
+          # cloud-auth运行在9123端口
+          issuer-uri: http://localhost:9123 # cloud-auth的Issuer URI
+          jwk-set-uri: http://localhost:9123/oauth2/jwks # cloud-auth的JWK Set端点
 
 
 

@@ -6,7 +6,11 @@ spring:
   security:
     oauth2:
       authorizationserver:
-        issuer: http://localhost:9000 # 授权服务器的Issuer URI，与AuthorizationServerConfig中配置的保持一致
+        issuer: http://localhost:9123 # 授权服务器的Issuer URI，与AuthorizationServerConfig中配置的保持一致
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9123 # 资源服务器验证JWT的Issuer URI
+          jwk-set-uri: http://localhost:9123/oauth2/jwks # 资源服务器获取公钥的地址
   data:
     redis:
       host: localhost

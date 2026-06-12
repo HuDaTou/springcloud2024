@@ -12,6 +12,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -24,6 +25,7 @@ public class SecurityConfig {
     private final LoginFailureHandler loginFailureHandler;
     private final ObjectMapper objectMapper;
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final JwtAuthenticationConverter jwtAuthenticationConverter;
 
     @Bean
     public JsonUsernamePasswordAuthenticationFilter jsonAuthenticationFilter() throws Exception {
@@ -47,6 +49,9 @@ public class SecurityConfig {
                 .requestMatchers("/oauth2/jwks", "/oauth2/token", "/oauth2/authorize", "/oauth2/logout").permitAll()
                 .requestMatchers("/auth/register", "/auth/send-code", "/auth/captcha", "/auth/login", "/auth/logout", "/Email/send-code").permitAll()
                 .anyRequest().authenticated()
+            )
+            .oauth2ResourceServer(oauth2ResourceServer ->
+                oauth2ResourceServer.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter))
             )
             .addFilterAt(jsonAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
             .logout(logout -> logout
