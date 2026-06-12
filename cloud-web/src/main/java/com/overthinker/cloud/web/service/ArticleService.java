@@ -152,7 +152,7 @@ public interface ArticleService extends IService<Article> {
      * @param id 文章id
      * @return 是否成功
      */
-    Void deleteArticle(List<Long> id);
+    ResultData<Void> deleteArticle(List<Long> id);
 
     /**
      * 初始化搜索文章标题

@@ -20,10 +20,10 @@ import com.overthinker.cloud.web.service.VideoService;
 import com.overthinker.cloud.web.service.VideoTagService;
 import com.overthinker.cloud.system.redis.utils.MyRedisCache;
 import com.overthinker.cloud.system.auth.utils.SecurityUtils;
-import com.overthinker.cloud.web.utils.StringUtils;
+import com.overthinker.cloud.common.core.utils.MyStringUtils;
 import com.overthinker.cloud.web.utils.VideoUploadUtils;
-import jakarta.annotation.Resource;
 import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,36 +34,20 @@ import java.util.Map;
 
 @Slf4j
 @Service("videoService")
+@RequiredArgsConstructor
 public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements VideoService {
 
-
-    @Resource
-    VideoUploadUtils videoUploadUtils;
-
-
-    @Resource
-    MyRedisCache myRedisCache;
-
-    @Resource
-    VideoMapper videoMapper;
-
-    // ... 已有注入...
-    @Resource
-    private CategoryMapper categoryMapper;
-
-    @Resource
-    private UserClient userClient;
-
-    @Resource
-    private VideoTagMapper videoTagMapper;
-
-    @Resource
-    private TagMapper tagMapper;
+    private final VideoUploadUtils videoUploadUtils;
+    private final MyRedisCache myRedisCache;
+    private final VideoMapper videoMapper;
+    private final CategoryMapper categoryMapper;
+    private final UserClient userClient;
+    private final VideoTagMapper videoTagMapper;
+    private final TagMapper tagMapper;
+    private final VideoTagService videoTagService;
 
     private final UploadEnum videoUploadEnum = UploadEnum.VIDEO_PATH;
     private final UploadEnum videoCoverUploadEnum = UploadEnum.VEDIO_COVER;
-    @Resource
-    private VideoTagService videoTagService;
 
     @Override
     public Map<String, Object> uploadVideo(MultipartFile videoFile) {
@@ -130,23 +114,20 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
     }
 
 
+    @Transactional
     @Override
     public ResultData<Void> deleteVideo(List<Long> ids) {
         // 删除视频
         // 创建更新条件
         LambdaUpdateWrapper<Video> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper.set(Video::getIsDeleted, true)  // 将isDeleted设置为true
-                .in(Video::getId, ids);          // 条件：id在传入的ids列表中
+        updateWrapper.set(Video::getIsDeleted, true)
+                .in(Video::getId, ids);
 
         // 执行更新操作
         boolean result = this.update(updateWrapper);
         if (result) {
             // 删除标签关系
             videoTagMapper.delete(new LambdaQueryWrapper<VideoTag>().in(VideoTag::getVideoId, ids));
-            // 删除点赞、收藏、评论
-//            likeMapper.delete(new LambdaQueryWrapper<Like>().eq(Like::getType, LikeEnum.LIKE_TYPE_ARTICLE.getType()).and(a -> a.in(Like::getTypeId, ids)));
-//            favoriteMapper.delete(new LambdaQueryWrapper<Favorite>().eq(Favorite::getType, FavoriteEnum.FAVORITE_TYPE_ARTICLE.getType()).and(a -> a.in(Favorite::getTypeId, ids)));
-//            commentMapper.delete(new LambdaQueryWrapper<Comment>().eq(Comment::getType, CommentEnum.COMMENT_TYPE_ARTICLE.getType()).and(a -> a.in(Comment::getTypeId, ids)));
             return ResultData.success();
         }
         return ResultData.failure();
@@ -175,9 +156,9 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
     @Override
     public List<VideoInfoVO> searchVideoInfo(SearchVideoDTO searchVideoDTO) {
         LambdaQueryWrapper<Video> wrapper = new LambdaQueryWrapper<>();
-        wrapper.like(StringUtils.isNotNull(searchVideoDTO.getVideoTitle()), Video::getVideoTitle, searchVideoDTO.getVideoTitle())
-                .eq(StringUtils.isNotNull(searchVideoDTO.getCategoryId()), Video::getCategoryId, searchVideoDTO.getCategoryId())
-                .eq(StringUtils.isNotNull(searchVideoDTO.getPermission()), Video::getPermission, searchVideoDTO.getPermission());
+        wrapper.like(MyStringUtils.isNotNull(searchVideoDTO.getVideoTitle()), Video::getVideoTitle, searchVideoDTO.getVideoTitle())
+                .eq(MyStringUtils.isNotNull(searchVideoDTO.getCategoryId()), Video::getCategoryId, searchVideoDTO.getCategoryId())
+                .eq(MyStringUtils.isNotNull(searchVideoDTO.getPermission()), Video::getPermission, searchVideoDTO.getPermission());
         List<VideoInfoVO> videoInfoVOS = videoMapper.selectList(wrapper).stream().map(video -> video.copyProperties(VideoInfoVO.class)).toList();
         if (!videoInfoVOS.isEmpty()) {
             videoInfoVOS.forEach(videoInfoVO -> {
@@ -213,7 +194,6 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
     }
 
     @Override
-    @Transactional
     public Void updateVideoPermission(Long videoId, boolean permission) {
         // 构建更新条件
         LambdaUpdateWrapper<Video> updateWrapper = new LambdaUpdateWrapper<>();

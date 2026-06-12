@@ -1,5 +1,6 @@
 package com.overthinker.cloud.web.utils;
 
+import com.overthinker.cloud.common.core.utils.MyStringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.net.InetAddress;
@@ -60,7 +61,7 @@ public class IpUtils {
      * @return 结果
      */
     private static boolean internalIp(byte[] addr) {
-        if (StringUtils.isNull(addr) || addr.length < 2) {
+        if (MyStringUtils.isNull(addr) || addr.length < 2) {
             return true;
         }
         final byte b0 = addr[0];
@@ -217,6 +218,6 @@ public class IpUtils {
      * @return 是否未知
      */
     public static boolean isUnknown(String checkString) {
-        return StringUtils.isBlank(checkString) || "unknown".equalsIgnoreCase(checkString);
+        return MyStringUtils.isBlank(checkString) || "unknown".equalsIgnoreCase(checkString);
     }
 }

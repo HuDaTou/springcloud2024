@@ -13,8 +13,9 @@ import com.overthinker.cloud.web.entity.constants.SQLConst;
 import com.overthinker.cloud.web.mapper.TreeHoleMapper;
 import com.overthinker.cloud.web.service.TreeHoleService;
 import com.overthinker.cloud.system.auth.utils.SecurityUtils;
-import com.overthinker.cloud.web.utils.StringUtils;
-import jakarta.annotation.Resource;
+import com.overthinker.cloud.common.core.utils.MyStringUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,14 +28,13 @@ import java.util.stream.Collectors;
  * @author overH
  * @since 2023-10-30 11:14:14
  */
+@Slf4j
 @Service("treeHoleService")
+@RequiredArgsConstructor
 public class TreeHoleServiceImpl extends ServiceImpl<TreeHoleMapper, TreeHole> implements TreeHoleService {
 
-    @Resource
-    private UserClient userClient;
-
-    @Resource
-    private TreeHoleMapper treeHoleMapper;
+    private final UserClient userClient;
+    private final TreeHoleMapper treeHoleMapper;
 
     @Override
     public ResultData<Void> addTreeHole(String content) {
@@ -64,16 +64,16 @@ public class TreeHoleServiceImpl extends ServiceImpl<TreeHoleMapper, TreeHole> i
     @Override
     public List<TreeHoleListVO> getBackTreeHoleList(SearchTreeHoleDTO searchDTO) {
         LambdaQueryWrapper<TreeHole> wrapper = new LambdaQueryWrapper<>();
-        if (StringUtils.isNotNull(searchDTO)) {
+        if (MyStringUtils.isNotNull(searchDTO)) {
             ResultData<List<Long>> userIdsResult = userClient.searchUserIdsByUsername(searchDTO.getUserName());
             List<Long> userIds = userIdsResult.getData() != null ? userIdsResult.getData() : List.of();
             if (!userIds.isEmpty())
-                wrapper.in(StringUtils.isNotEmpty(searchDTO.getUserName()), TreeHole::getUserId, userIds);
+                wrapper.in(MyStringUtils.isNotEmpty(searchDTO.getUserName()), TreeHole::getUserId, userIds);
             else
-                wrapper.eq(StringUtils.isNotNull(searchDTO.getUserName()), TreeHole::getUserId, null);
+                wrapper.eq(MyStringUtils.isNotNull(searchDTO.getUserName()), TreeHole::getUserId, null);
 
-            wrapper.eq(StringUtils.isNotNull(searchDTO.getIsCheck()), TreeHole::getIsCheck, searchDTO.getIsCheck());
-            if (StringUtils.isNotNull(searchDTO.getStartTime()) && StringUtils.isNotNull(searchDTO.getEndTime()))
+            wrapper.eq(MyStringUtils.isNotNull(searchDTO.getIsCheck()), TreeHole::getIsCheck, searchDTO.getIsCheck());
+            if (MyStringUtils.isNotNull(searchDTO.getStartTime()) && MyStringUtils.isNotNull(searchDTO.getEndTime()))
                 wrapper.between(TreeHole::getCreateTime, searchDTO.getStartTime(), searchDTO.getEndTime());
         }
         List<TreeHole> treeHoles = treeHoleMapper.selectList(wrapper);

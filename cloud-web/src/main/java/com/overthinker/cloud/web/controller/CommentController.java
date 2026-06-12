@@ -1,6 +1,7 @@
 package com.overthinker.cloud.web.controller;
 
 
+import com.overthinker.cloud.api.auth.dto.UserCommentDTO;
 import com.overthinker.cloud.common.core.annotation.CheckBlacklist;
 import com.overthinker.cloud.common.core.annotation.LogAnnotation;
 import com.overthinker.cloud.common.core.annotation.LogConst;
@@ -8,7 +9,6 @@ import com.overthinker.cloud.common.core.base.BaseController;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.system.redis.annotation.AccessLimit;
 import com.overthinker.cloud.web.entity.DTO.CommentIsCheckDTO;
-import com.overthinker.cloud.web.entity.DTO.UserCommentDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchCommentDTO;
 import com.overthinker.cloud.web.entity.VO.ArticleCommentVO;
 import com.overthinker.cloud.web.entity.VO.CommentListVO;

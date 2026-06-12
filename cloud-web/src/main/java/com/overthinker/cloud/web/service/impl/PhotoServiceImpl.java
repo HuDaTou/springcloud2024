@@ -16,11 +16,10 @@ import com.overthinker.cloud.web.mapper.PhotoMapper;
 import com.overthinker.cloud.web.service.PhotoService;
 import com.overthinker.cloud.web.utils.PhotoUploudUtils;
 import com.overthinker.cloud.system.auth.utils.SecurityUtils;
-import com.overthinker.cloud.web.utils.StringUtils;
-import jakarta.annotation.Resource;
+import com.overthinker.cloud.common.core.utils.MyStringUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -31,13 +30,11 @@ import static com.overthinker.cloud.web.entity.constants.SQLConst.ORDER_BY_CREAT
 
 @Log4j2
 @Service("photosService")
+@RequiredArgsConstructor
 public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements PhotoService {
 
-    @Resource
-    private PhotoMapper photoMapper;
-
-    @Resource
-    private PhotoUploudUtils photoUploudUtils;
+    private final PhotoMapper photoMapper;
+    private final PhotoUploudUtils photoUploudUtils;
 
     @Override
     public PageVO<List<PhotoAndAlbumListVO>> getBackPhotoList(Long pageNum, Long pageSize, Long parentId) {
@@ -99,7 +96,6 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
         return ResultData.failure();
     }
 
-    @Transactional
     @Override
     public ResultData<Void> uploadPhoto(MultipartFile file, String name, Long parentId) {
         try {
@@ -117,7 +113,7 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
 
             String bannerUrl;
             // 查询父相册的名称
-            if (StringUtils.isNotNull(parentId)) {
+            if (MyStringUtils.isNotNull(parentId)) {
                 // 递归查询父相册并组合路径
                 String albumPath = buildAlbumPath(photoMapper, parentId);
                 bannerUrl = photoUploudUtils.upload(UploadEnum.PHOTO_ALBUM, file, name, albumPath);
@@ -185,7 +181,6 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
         return ResultData.failure();
     }
 
-    @Transactional
     @Override
     public ResultData<Void> deletePhotoOrAlbum(DeletePhotoOrAlbumDTO deletePhotoOrAlbum) {
         if (Objects.equals(deletePhotoOrAlbum.getType(), AlbumOrPhotoEnum.ALBUM.getCode())) {
@@ -202,7 +197,7 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
             // 查询照片名称
             Photo photo = photoMapper.selectById(deletePhotoOrAlbum.getId());
             // 查询父相册
-            if (StringUtils.isNotNull(photo.getParentId())) {
+            if (MyStringUtils.isNotNull(photo.getParentId())) {
                 Photo album = photoMapper.selectById(deletePhotoOrAlbum.getParentId());
                 photoUploudUtils.deleteFile(UploadEnum.PHOTO_ALBUM.getDir() + album.getName() + "/", photoUploudUtils.getFileName(photo.getUrl()));
             } else {

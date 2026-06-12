@@ -18,13 +18,14 @@ import com.overthinker.cloud.web.service.LinkService;
 import com.overthinker.cloud.web.service.PublicService;
 import com.overthinker.cloud.system.redis.utils.MyRedisCache;
 import com.overthinker.cloud.system.auth.utils.SecurityUtils;
-import com.overthinker.cloud.web.utils.StringUtils;
+import com.overthinker.cloud.common.core.utils.MyStringUtils;
 import com.overthinker.cloud.web.utils.WebUtil;
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,20 +37,15 @@ import java.util.Objects;
  * @author overH
  * @since 2023-11-14 08:43:35
  */
+@Slf4j
 @Service("linkService")
+@RequiredArgsConstructor
 public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements LinkService {
 
-    @Resource
-    private LinkMapper linkMapper;
-
-    @Resource
-    private PublicService publicService;
-
-    @Resource
-    private UserClient userClient;
-
-    @Resource
-    private MyRedisCache myRedisCache;
+    private final LinkMapper linkMapper;
+    private final PublicService publicService;
+    private final UserClient userClient;
+    private final MyRedisCache myRedisCache;
 
     @Value("${spring.mail.username}")
     private String email;
@@ -101,17 +97,17 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
     @Override
     public List<LinkListVO> getBackLinkList(SearchLinkDTO searchDTO) {
         LambdaQueryWrapper<Link> wrapper = new LambdaQueryWrapper<>();
-        if (StringUtils.isNotNull(searchDTO)) {
+        if (MyStringUtils.isNotNull(searchDTO)) {
             ResultData<List<Long>> userIdsResult = userClient.searchUserIdsByUsername(searchDTO.getUserName());
             List<Long> userIds = userIdsResult.getData() != null ? userIdsResult.getData() : List.of();
             if (!userIds.isEmpty())
-                wrapper.in(StringUtils.isNotEmpty(searchDTO.getUserName()), Link::getUserId, userIds);
+                wrapper.in(MyStringUtils.isNotEmpty(searchDTO.getUserName()), Link::getUserId, userIds);
             else
-                wrapper.eq(StringUtils.isNotNull(searchDTO.getUserName()), Link::getUserId, null);
+                wrapper.eq(MyStringUtils.isNotNull(searchDTO.getUserName()), Link::getUserId, null);
 
-            wrapper.like(StringUtils.isNotEmpty(searchDTO.getName()), Link::getName, searchDTO.getName())
-                    .eq(StringUtils.isNotNull(searchDTO.getIsCheck()), Link::getIsCheck, searchDTO.getIsCheck());
-            if (StringUtils.isNotNull(searchDTO.getStartTime()) && StringUtils.isNotNull(searchDTO.getEndTime()))
+            wrapper.like(MyStringUtils.isNotEmpty(searchDTO.getName()), Link::getName, searchDTO.getName())
+                    .eq(MyStringUtils.isNotNull(searchDTO.getIsCheck()), Link::getIsCheck, searchDTO.getIsCheck());
+            if (MyStringUtils.isNotNull(searchDTO.getStartTime()) && MyStringUtils.isNotNull(searchDTO.getEndTime()))
                 wrapper.between(Link::getCreateTime, searchDTO.getStartTime(), searchDTO.getEndTime());
         }
         List<Link> links = linkMapper.selectList(wrapper);

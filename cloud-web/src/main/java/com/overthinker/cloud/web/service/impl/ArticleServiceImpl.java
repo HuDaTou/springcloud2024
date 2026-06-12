@@ -5,11 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.overthinker.cloud.common.core.exception.BusinessException;
 import com.overthinker.cloud.common.core.exception.FileUploadException;
 import com.overthinker.cloud.common.core.resp.ResultData;
-
-import com.overthinker.cloud.common.core.resp.ReturnCodeEnum;
 import com.overthinker.cloud.system.redis.constants.RedisConstants;
 import com.overthinker.cloud.system.redis.utils.MyRedisCache;
 import com.overthinker.cloud.web.entity.DTO.ArticleDTO;
@@ -24,8 +21,8 @@ import com.overthinker.cloud.web.service.*;
 import com.overthinker.cloud.system.auth.utils.SecurityUtils;
 import com.overthinker.cloud.web.utils.FileUploadUtils;
 
-import com.overthinker.cloud.web.utils.StringUtils;
-import jakarta.annotation.Resource;
+import com.overthinker.cloud.common.core.utils.MyStringUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,47 +44,26 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
 
-    @Resource
-    private CategoryMapper categoryMapper;
+    private final CategoryMapper categoryMapper;
+    private final ArticleTagMapper articleTagMapper;
+    private final TagMapper tagMapper;
+    private final ArticleMapper articleMapper;
+    private final FavoriteService favoriteService;
+    private final LikeService likeService;
+    private final CommentService commentService;
+    private final MyRedisCache myRedisCache;
+    private final FileUploadUtils fileUploadUtils;
+    private final com.overthinker.cloud.api.auth.api.UserClient userClient;
+    private final LikeMapper likeMapper;
+    private final FavoriteMapper favoriteMapper;
+    private final CommentMapper commentMapper;
+    private final ArticleTagService articleTagService;
 
-    @Resource
-    private ArticleTagMapper articleTagMapper;
-
-    @Resource
-    private TagMapper tagMapper;
-
-    @Resource
-    private ArticleMapper articleMapper;
-
-    @Resource
-    private FavoriteService favoriteService;
-
-    @Resource
-    private LikeService likeService;
-
-    @Resource
-    private CommentService commentService;
-
-    @Resource
-    private MyRedisCache myRedisCache;
-
-    @Resource
-    private FileUploadUtils fileUploadUtils;
-
-    @Resource
-    private com.overthinker.cloud.api.auth.api.UserClient userClient;
-
-    @Resource
-    private LikeMapper likeMapper;
-
-    @Resource
-    private FavoriteMapper favoriteMapper;
-
-    @Resource
-    private CommentMapper commentMapper;
-
+    @Value("${minio.bucketName}")
+    private String bucketName;
 
     @Override
     public PageVO<List<ArticleVO>> listAllArticle(Integer pageNum, Integer pageSize) {
@@ -166,7 +142,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public ArticleDetailVO getArticleDetail(Integer id) {
         Article article = articleMapper.selectOne(new LambdaQueryWrapper<Article>().eq(Article::getStatus, SQLConst.PUBLIC_STATUS).and(i -> i.eq(Article::getId, id)));
-        if (StringUtils.isNull(article)) return null;
+        if (MyStringUtils.isNull(article)) return null;
         // 文章分类
         Category category = categoryMapper.selectById(article.getCategoryId());
         // 文章关系
@@ -251,7 +227,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             } catch (FileUploadException e) {
                 return ResultData.failure(e.getMessage());
             }
-            if (StringUtils.isNotNull(articleCoverUrl))
+            if (MyStringUtils.isNotNull(articleCoverUrl))
                 return ResultData.success(articleCoverUrl);
             else
                 return ResultData.failure("上传格式错误");
@@ -260,9 +236,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             return ResultData.failure("文章封面上传失败");
         }
     }
-
-    @Resource
-    private ArticleTagService articleTagService;
 
     @Transactional
     @Override
@@ -283,9 +256,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         return ResultData.failure();
     }
 
-    @Value("${minio.bucketName}")
-    private String bucketName;
-
     @Override
     public ResultData<Void> deleteArticleCover(String articleCoverUrl) {
         try {
@@ -303,7 +273,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public ResultData<String> uploadArticleImage(MultipartFile articleImage) {
         try {
             String url = fileUploadUtils.uploadImage(UploadEnum.ARTICLE_IMAGE, articleImage);
-            if (StringUtils.isNotNull(url))
+            if (MyStringUtils.isNotNull(url))
                 return ResultData.success(url);
             else
                 return ResultData.failure("上传格式错误");
@@ -334,10 +304,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public List<ArticleListVO> searchArticle(SearchArticleDTO searchArticleDTO) {
         LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
-        wrapper.like(StringUtils.isNotNull(searchArticleDTO.getArticleTitle()), Article::getArticleTitle, searchArticleDTO.getArticleTitle())
-                .eq(StringUtils.isNotNull(searchArticleDTO.getCategoryId()), Article::getCategoryId, searchArticleDTO.getCategoryId())
-                .eq(StringUtils.isNotNull(searchArticleDTO.getStatus()), Article::getStatus, searchArticleDTO.getStatus())
-                .eq(StringUtils.isNotNull(searchArticleDTO.getIsTop()), Article::getIsTop, searchArticleDTO.getIsTop());
+        wrapper.like(MyStringUtils.isNotNull(searchArticleDTO.getArticleTitle()), Article::getArticleTitle, searchArticleDTO.getArticleTitle())
+                .eq(MyStringUtils.isNotNull(searchArticleDTO.getCategoryId()), Article::getCategoryId, searchArticleDTO.getCategoryId())
+                .eq(MyStringUtils.isNotNull(searchArticleDTO.getStatus()), Article::getStatus, searchArticleDTO.getStatus())
+                .eq(MyStringUtils.isNotNull(searchArticleDTO.getIsTop()), Article::getIsTop, searchArticleDTO.getIsTop());
         List<ArticleListVO> articleListVOS = articleMapper.selectList(wrapper).stream().map(article -> article.copyProperties(ArticleListVO.class)).toList();
         if (!articleListVOS.isEmpty()) {
             articleListVOS.forEach(articleListVO -> {
@@ -371,7 +341,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public ArticleDTO getArticleDTO(Long id) {
         ArticleDTO articleDTO = articleMapper.selectById(id).copyProperties(ArticleDTO.class);
-        if (StringUtils.isNotNull(articleDTO)) {
+        if (MyStringUtils.isNotNull(articleDTO)) {
             List<Long> tagIds = articleTagMapper.selectList(new LambdaQueryWrapper<ArticleTag>().eq(ArticleTag::getArticleId, articleDTO.getId())).stream().map(ArticleTag::getTagId).toList();
             articleDTO.setTagId(tagIds);
             return articleDTO;
@@ -381,8 +351,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Transactional
     @Override
-    public Void deleteArticle(List<Long> ids) {
-
+    public ResultData<Void> deleteArticle(List<Long> ids) {
         if (removeByIds(ids)) {
             // 删除标签关系
             articleTagMapper.delete(new LambdaQueryWrapper<ArticleTag>().in(ArticleTag::getArticleId, ids));
@@ -390,12 +359,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             likeMapper.delete(new LambdaQueryWrapper<Like>().eq(Like::getType, LikeEnum.LIKE_TYPE_ARTICLE.getType()).and(a -> a.in(Like::getTypeId, ids)));
             favoriteMapper.delete(new LambdaQueryWrapper<Favorite>().eq(Favorite::getType, FavoriteEnum.FAVORITE_TYPE_ARTICLE.getType()).and(a -> a.in(Favorite::getTypeId, ids)));
             commentMapper.delete(new LambdaQueryWrapper<Comment>().eq(Comment::getType, CommentEnum.COMMENT_TYPE_ARTICLE.getType()).and(a -> a.in(Comment::getTypeId, ids)));
-
+            return ResultData.success();
         } else {
-            throw new BusinessException(ReturnCodeEnum.OPERATION_FAILED);
+            return ResultData.failure();
         }
-        return null;
-
     }
 
     @Override

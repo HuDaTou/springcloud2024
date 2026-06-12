@@ -12,10 +12,10 @@ import com.overthinker.cloud.web.entity.constants.FunctionConst;
 import com.overthinker.cloud.web.mapper.ArticleMapper;
 import com.overthinker.cloud.web.mapper.CategoryMapper;
 import com.overthinker.cloud.web.service.CategoryService;
-import com.overthinker.cloud.web.utils.StringUtils;
-import jakarta.annotation.Resource;
+import com.overthinker.cloud.common.core.utils.MyStringUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,14 +25,13 @@ import java.util.List;
  * @author overH
  * @since 2023-10-15 02:29:14
  */
+@Slf4j
 @Service("categoryService")
+@RequiredArgsConstructor
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements CategoryService {
 
-    @Resource
-    private ArticleMapper articleMapper;
-
-    @Resource
-    private CategoryMapper categoryMapper;
+    private final ArticleMapper articleMapper;
+    private final CategoryMapper categoryMapper;
 
     @Override
     public List<CategoryVO> listAllCategory() {
@@ -53,8 +52,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     @Override
     public List<CategoryVO> searchCategory(SearchCategoryDTO searchCategoryDTO) {
         LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(StringUtils.isNotEmpty(searchCategoryDTO.getCategoryName()), Category::getCategoryName, searchCategoryDTO.getCategoryName());
-        if (StringUtils.isNotNull(searchCategoryDTO.getStartTime()) && StringUtils.isNotNull(searchCategoryDTO.getEndTime()))
+        queryWrapper.like(MyStringUtils.isNotEmpty(searchCategoryDTO.getCategoryName()), Category::getCategoryName, searchCategoryDTO.getCategoryName());
+        if (MyStringUtils.isNotNull(searchCategoryDTO.getStartTime()) && MyStringUtils.isNotNull(searchCategoryDTO.getEndTime()))
             queryWrapper.between(Category::getCreateTime, searchCategoryDTO.getStartTime(), searchCategoryDTO.getEndTime());
 
         return categoryMapper.selectList(queryWrapper)
@@ -71,7 +70,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         return categoryMapper.selectById(id).copyProperties(CategoryVO.class);
     }
 
-    @Transactional
     @Override
     public ResultData<Void> addOrUpdateCategory(CategoryDTO categoryDTO) {
         if (this.saveOrUpdate(categoryDTO.copyProperties(Category.class))) return ResultData.success();

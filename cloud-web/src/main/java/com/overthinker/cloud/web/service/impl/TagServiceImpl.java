@@ -12,10 +12,10 @@ import com.overthinker.cloud.web.entity.constants.FunctionConst;
 import com.overthinker.cloud.web.mapper.ArticleTagMapper;
 import com.overthinker.cloud.web.mapper.TagMapper;
 import com.overthinker.cloud.web.service.TagService;
-import com.overthinker.cloud.web.utils.StringUtils;
-import jakarta.annotation.Resource;
+import com.overthinker.cloud.common.core.utils.MyStringUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,14 +25,13 @@ import java.util.List;
  * @author overH
  * @since 2023-10-15 02:29:14
  */
+@Slf4j
 @Service("tagService")
+@RequiredArgsConstructor
 public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagService {
 
-    @Resource
-    private ArticleTagMapper articleTagMapper;
-
-    @Resource
-    private TagMapper tagMapper;
+    private final ArticleTagMapper articleTagMapper;
+    private final TagMapper tagMapper;
 
     @Override
     public List<TagVO> listAllTag() {
@@ -48,8 +47,8 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     @Override
     public List<TagVO> searchTag(SearchTagDTO searchTagDTO) {
         LambdaQueryWrapper<Tag> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(StringUtils.isNotEmpty(searchTagDTO.getTagName()), Tag::getTagName, searchTagDTO.getTagName());
-        if (StringUtils.isNotNull(searchTagDTO.getStartTime()) && StringUtils.isNotNull(searchTagDTO.getEndTime()))
+        queryWrapper.like(MyStringUtils.isNotEmpty(searchTagDTO.getTagName()), Tag::getTagName, searchTagDTO.getTagName());
+        if (MyStringUtils.isNotNull(searchTagDTO.getStartTime()) && MyStringUtils.isNotNull(searchTagDTO.getEndTime()))
             queryWrapper.between(Tag::getCreateTime, searchTagDTO.getStartTime(), searchTagDTO.getEndTime());
 
         return tagMapper.selectList(queryWrapper)
@@ -66,14 +65,12 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         return tagMapper.selectById(id).copyProperties(TagVO.class);
     }
 
-    @Transactional
     @Override
     public ResultData<Void> addOrUpdateTag(TagDTO tagDTO) {
         if (this.saveOrUpdate(tagDTO.copyProperties(Tag.class))) return ResultData.success();
         return ResultData.failure();
     }
 
-    @Transactional
     @Override
     public ResultData<Void> deleteTagByIds(List<Long> ids) {
         // 是否有剩下文章

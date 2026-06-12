@@ -13,9 +13,9 @@ import com.overthinker.cloud.web.mapper.BannersMapper;
 import com.overthinker.cloud.web.service.BannersService;
 import com.overthinker.cloud.web.utils.FileUploadUtils;
 import com.overthinker.cloud.system.auth.utils.SecurityUtils;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -26,14 +26,13 @@ import java.util.List;
  * @author overH
  * @since 2024-08-28 09:51:22
  */
+@Slf4j
 @Service("bannersService")
+@RequiredArgsConstructor
 public class BannersServiceImpl extends ServiceImpl<BannersMapper, Banners> implements BannersService {
 
-    @Resource
-    private BannersMapper bannersMapper;
-
-    @Resource
-    private FileUploadUtils fileUploadUtils;
+    private final BannersMapper bannersMapper;
+    private final FileUploadUtils fileUploadUtils;
 
     @Override
     public List<String> getBanners() {
@@ -51,7 +50,6 @@ public class BannersServiceImpl extends ServiceImpl<BannersMapper, Banners> impl
         return List.of();
     }
 
-    @Transactional
     @Override
     public ResultData<Banners> uploadBannerImage(MultipartFile bannerImage) {
         try {

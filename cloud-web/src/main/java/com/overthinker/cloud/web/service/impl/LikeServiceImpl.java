@@ -10,7 +10,8 @@ import com.overthinker.cloud.web.mapper.LikeMapper;
 import com.overthinker.cloud.web.service.LikeService;
 import com.overthinker.cloud.system.redis.utils.MyRedisCache;
 import com.overthinker.cloud.system.auth.utils.SecurityUtils;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,14 +23,13 @@ import java.util.Objects;
  * @author overH
  * @since 2023-10-18 19:41:19
  */
+@Slf4j
 @Service("likeService")
+@RequiredArgsConstructor
 public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like> implements LikeService {
 
-    @Resource
-    private LikeMapper likeMapper;
-
-    @Resource
-    private MyRedisCache myRedisCache;
+    private final LikeMapper likeMapper;
+    private final MyRedisCache myRedisCache;
 
     @Override
     public ResultData<Void> userLike(Integer type, Integer typeId) {

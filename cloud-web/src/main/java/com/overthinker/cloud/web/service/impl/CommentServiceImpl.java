@@ -5,11 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.overthinker.cloud.api.auth.api.UserClient;
+import com.overthinker.cloud.api.auth.dto.UserCommentDTO;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.web.entity.DTO.CommentIsCheckDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchCommentDTO;
-import com.overthinker.cloud.web.entity.DTO.UserCommentDTO;
-import com.overthinker.cloud.api.auth.api.UserClient;
 import com.overthinker.cloud.web.entity.PO.Comment;
 import com.overthinker.cloud.web.entity.PO.LeaveWord;
 import com.overthinker.cloud.web.entity.PO.Like;
@@ -29,8 +29,9 @@ import com.overthinker.cloud.web.service.LikeService;
 import com.overthinker.cloud.web.service.PublicService;
 import com.overthinker.cloud.system.redis.utils.MyRedisCache;
 import com.overthinker.cloud.system.auth.utils.SecurityUtils;
-import com.overthinker.cloud.web.utils.StringUtils;
-import jakarta.annotation.Resource;
+import com.overthinker.cloud.common.core.utils.MyStringUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -45,23 +46,33 @@ import java.util.stream.Collectors;
  *
  * @author overH
  */
+@Slf4j
 @Service("commentService")
+@RequiredArgsConstructor
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
 
-    @Resource
-    private CommentMapper commentMapper;
+    private final CommentMapper commentMapper;
+    private final UserClient userClient;
+    private final LikeService likeService;
+    private final MyRedisCache myRedisCache;
+    private final LikeMapper likeMapper;
+    private final PublicService publicService;
+    private final LeaveWordMapper leaveWordMapper;
 
-    @Resource
-    private UserClient userClient;
+    @Value("${spring.mail.username}")
+    private String fromUser;
 
-    @Resource
-    private LikeService likeService;
+    @Value("${mail.article-email-notice}")
+    private Boolean articleEmailNotice;
 
-    @Resource
-    private MyRedisCache myRedisCache;
+    @Value("${mail.article-reply-notice}")
+    private Boolean articleReplyNotice;
 
-    @Resource
-    private LikeMapper likeMapper;
+    @Value("${mail.message-email-notice}")
+    private Boolean messageEmailNotice;
+
+    @Value("${mail.message-reply-notice}")
+    private Boolean messageReplyNotice;
 
     @Override
     public PageVO<List<ArticleCommentVO>> getComment(Integer type, Integer typeId, Integer pageNum, Integer pageSize) {
@@ -109,33 +120,12 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         return new PageVO<>(collect, commentMapper.selectCount(countWrapper));
     }
 
-    @Resource
-    private PublicService publicService;
-
-    @Resource
-    private LeaveWordMapper leaveWordMapper;
-
-    @Value("${spring.mail.username}")
-    private String fromUser;
-
-    @Value("${mail.article-email-notice}")
-    private Boolean articleEmailNotice;
-
-    @Value("${mail.article-reply-notice}")
-    private Boolean articleReplyNotice;
-
-    @Value("${mail.message-email-notice}")
-    private Boolean messageEmailNotice;
-
-    @Value("${mail.message-reply-notice}")
-    private Boolean messageReplyNotice;
-
     @Override
     public ResultData<String> userComment(UserCommentDTO commentDTO) {
         Comment comment = commentDTO.copyProperties(Comment.class, commentDto -> commentDto.setCommentUserId(SecurityUtils.getUserId()));
         if (this.save(comment)) {
             ResultData<String> emailResult = userClient.getEmailById(SecurityUtils.getUserId());
-            if (StringUtils.isEmpty(emailResult.getData())) {
+            if (MyStringUtils.isEmpty(emailResult.getData())) {
                 return ResultData.success("检测到您尚未绑定邮箱,无法开启邮箱提醒，请先绑定邮箱");
             }
             return this.commentEmailReminder(commentDTO, emailResult.getData(), comment);
@@ -153,7 +143,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
      */
     public ResultData<String> commentEmailReminder(UserCommentDTO commentDTO, String userEmail, Comment comment) {
         myRedisCache.incrementCacheMapValue(RedisConstants.ARTICLE_COMMENT_COUNT, commentDTO.getTypeId().toString(), 1);
-        if (StringUtils.isNull(commentDTO.getReplyId())) {
+        if (MyStringUtils.isNull(commentDTO.getReplyId())) {
             if ((commentDTO.getType() == 1 && !articleEmailNotice) || commentDTO.getType() == 2 && !messageEmailNotice)
                 return ResultData.success();
 
@@ -170,7 +160,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 LeaveWord leaveWord = leaveWordMapper.selectOne(new LambdaQueryWrapper<LeaveWord>().eq(LeaveWord::getId, commentDTO.getTypeId()));
                 ResultData<String> replyEmailResult = userClient.getEmailById(leaveWord.getUserId());
                 String replyEmail = replyEmailResult.getData();
-                if (StringUtils.isEmpty(replyEmail) || Objects.equals(replyEmail, userEmail))
+                if (MyStringUtils.isEmpty(replyEmail) || Objects.equals(replyEmail, userEmail))
                     return ResultData.success();
                 publicService.sendEmail(MailboxAlertsEnum.COMMENT_NOTIFICATION_EMAIL.getCodeStr(), replyEmail, selectWhereMap);
             }
@@ -205,17 +195,17 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     @Override
     public List<CommentListVO> getBackCommentList(SearchCommentDTO searchDTO) {
         LambdaQueryWrapper<Comment> wrapper = new LambdaQueryWrapper<>();
-        if (StringUtils.isNotNull(searchDTO)) {
+        if (MyStringUtils.isNotNull(searchDTO)) {
             ResultData<List<Long>> userIdsResult = userClient.searchUserIdsByUsername(searchDTO.getCommentUserName());
             List<Long> userIds = userIdsResult.getData() != null ? userIdsResult.getData() : List.of();
             if (!userIds.isEmpty())
-                wrapper.in(StringUtils.isNotEmpty(searchDTO.getCommentUserName()), Comment::getCommentUserId, userIds);
+                wrapper.in(MyStringUtils.isNotEmpty(searchDTO.getCommentUserName()), Comment::getCommentUserId, userIds);
             else
-                wrapper.eq(StringUtils.isNotNull(searchDTO.getCommentUserName()), Comment::getCommentUserId, null);
+                wrapper.eq(MyStringUtils.isNotNull(searchDTO.getCommentUserName()), Comment::getCommentUserId, null);
 
-            wrapper.like(StringUtils.isNotEmpty(searchDTO.getCommentContent()), Comment::getCommentContent, searchDTO.getCommentContent())
-                    .eq(StringUtils.isNotNull(searchDTO.getType()), Comment::getType, searchDTO.getType())
-                    .eq(StringUtils.isNotNull(searchDTO.getIsCheck()), Comment::getIsCheck, searchDTO.getIsCheck());
+            wrapper.like(MyStringUtils.isNotEmpty(searchDTO.getCommentContent()), Comment::getCommentContent, searchDTO.getCommentContent())
+                    .eq(MyStringUtils.isNotNull(searchDTO.getType()), Comment::getType, searchDTO.getType())
+                    .eq(MyStringUtils.isNotNull(searchDTO.getIsCheck()), Comment::getIsCheck, searchDTO.getIsCheck());
         }
 
         return commentMapper.selectList(wrapper.orderByDesc(Comment::getCreateTime)).stream().map(comment -> {
@@ -251,6 +241,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
         return ResultData.failure();
     }
+
 
     @Override
     public ResultData<Void> deleteComment(Long id) {

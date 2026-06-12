@@ -3,7 +3,7 @@ package com.overthinker.cloud.web.service.impl;
 import com.overthinker.cloud.system.redis.constants.RedisConstants;
 import com.overthinker.cloud.web.service.PublicService;
 import com.overthinker.cloud.system.redis.utils.MyRedisCache;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,13 +20,11 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class PublicServiceImpl implements PublicService {
 
-    @Resource
-    private MyRedisCache myRedisCache;
-
-    @Resource
-    private RabbitTemplate rabbitTemplate;
+    private final MyRedisCache myRedisCache;
+    private final RabbitTemplate rabbitTemplate;
 
     @Value("${spring.rabbitmq.routingKey.email}")
     private String routingKey;

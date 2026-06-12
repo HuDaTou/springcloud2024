@@ -1,10 +1,13 @@
 package com.overthinker.cloud.web.entity.server;
 
+import com.overthinker.cloud.common.core.utils.MyDateUtils;
 import com.overthinker.cloud.web.utils.Arith;
-import com.overthinker.cloud.web.utils.DateUtils;
 import lombok.Setter;
 
 import java.lang.management.ManagementFactory;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 /**
  * JVM相关信息
@@ -77,14 +80,18 @@ public class Jvm {
      * JDK启动时间
      */
     public String getStartTime() {
-        return DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS, DateUtils.getServerStartDate());
+        LocalDateTime startTime = LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(ManagementFactory.getRuntimeMXBean().getStartTime()),
+                ZoneId.systemDefault());
+        return MyDateUtils.format(startTime, MyDateUtils.PATTERN_yyyy_MM_dd_HH_mm_ss);
     }
 
     /**
      * JDK运行时间
      */
     public String getRunTime() {
-        return DateUtils.timeDistance(DateUtils.getNowDate(), DateUtils.getServerStartDate());
+        long runtimeMs = System.currentTimeMillis() - ManagementFactory.getRuntimeMXBean().getStartTime();
+        return MyDateUtils.formatDuration(runtimeMs);
     }
 
     /**

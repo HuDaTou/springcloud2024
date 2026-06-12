@@ -13,7 +13,7 @@ import com.overthinker.cloud.web.entity.enums.LikeEnum;
 import com.overthinker.cloud.web.mapper.*;
 import com.overthinker.cloud.web.service.RedisService;
 import com.overthinker.cloud.system.redis.utils.MyRedisCache;
-import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -29,13 +29,14 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class RedisServiceImpl implements RedisService {
 
-    @Resource
-    private MyRedisCache myRedisCache;
-
-    @Resource
-    private ArticleMapper articleMapper;
+    private final MyRedisCache myRedisCache;
+    private final ArticleMapper articleMapper;
+    private final FavoriteMapper favoriteMapper;
+    private final LikeMapper likeMapper;
+    private final CommentMapper commentMapper;
 
     @Override
     public void articleCountClear() {
@@ -69,15 +70,6 @@ public class RedisServiceImpl implements RedisService {
         }
 
     }
-
-    @Resource
-    private FavoriteMapper favoriteMapper;
-
-    @Resource
-    private LikeMapper likeMapper;
-
-    @Resource
-    private CommentMapper commentMapper;
 
     @Override
     public void initCount() {

@@ -15,8 +15,9 @@ import com.overthinker.cloud.web.mapper.LeaveWordMapper;
 import com.overthinker.cloud.web.service.FavoriteService;
 import com.overthinker.cloud.system.redis.utils.MyRedisCache;
 import com.overthinker.cloud.system.auth.utils.SecurityUtils;
-import com.overthinker.cloud.web.utils.StringUtils;
-import jakarta.annotation.Resource;
+import com.overthinker.cloud.common.core.utils.MyStringUtils;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,23 +30,16 @@ import java.util.Objects;
  * @author overH
  * @since 2023-10-18 14:12:25
  */
+@Slf4j
 @Service("favoriteService")
+@RequiredArgsConstructor
 public class FavoriteServiceImpl extends ServiceImpl<FavoriteMapper, Favorite> implements FavoriteService {
 
-    @Resource
-    private FavoriteMapper favoriteMapper;
-
-    @Resource
-    private MyRedisCache myRedisCache;
-
-    @Resource
-    private UserClient userClient;
-
-    @Resource
-    private ArticleMapper articleMapper;
-
-    @Resource
-    private LeaveWordMapper leaveWordMapper;
+    private final FavoriteMapper favoriteMapper;
+    private final MyRedisCache myRedisCache;
+    private final UserClient userClient;
+    private final ArticleMapper articleMapper;
+    private final LeaveWordMapper leaveWordMapper;
 
     @Override
     public ResultData<Void> userFavorite(Integer type, Long typeId) {
@@ -54,7 +48,7 @@ public class FavoriteServiceImpl extends ServiceImpl<FavoriteMapper, Favorite> i
                 .eq(Favorite::getUserId, SecurityUtils.getUserId())
                 .eq(Favorite::getType, type)
                 .eq(Favorite::getTypeId, typeId));
-        if (StringUtils.isNotNull(favorite)) return ResultData.failure();
+        if (MyStringUtils.isNotNull(favorite)) return ResultData.failure();
         Favorite Savefavorite = Favorite.builder()
                 .id(null)
                 .userId(SecurityUtils.getUserId())
@@ -98,17 +92,17 @@ public class FavoriteServiceImpl extends ServiceImpl<FavoriteMapper, Favorite> i
     @Override
     public List<FavoriteListVO> getBackFavoriteList(SearchFavoriteDTO searchDTO) {
         LambdaQueryWrapper<Favorite> wrapper = new LambdaQueryWrapper<>();
-        if (StringUtils.isNotNull(searchDTO)) {
+        if (MyStringUtils.isNotNull(searchDTO)) {
             ResultData<List<Long>> userIdsResult = userClient.searchUserIdsByUsername(searchDTO.getUserName());
             List<Long> userIds = userIdsResult.getData() != null ? userIdsResult.getData() : List.of();
             if (!userIds.isEmpty())
-                wrapper.in(StringUtils.isNotEmpty(searchDTO.getUserName()), Favorite::getUserId, userIds);
+                wrapper.in(MyStringUtils.isNotEmpty(searchDTO.getUserName()), Favorite::getUserId, userIds);
             else
-                wrapper.eq(StringUtils.isNotNull(searchDTO.getUserName()), Favorite::getUserId, null);
+                wrapper.eq(MyStringUtils.isNotNull(searchDTO.getUserName()), Favorite::getUserId, null);
 
-            wrapper.eq(StringUtils.isNotNull(searchDTO.getIsCheck()), Favorite::getIsCheck, searchDTO.getIsCheck())
-                    .eq(StringUtils.isNotNull(searchDTO.getType()), Favorite::getType, searchDTO.getType());
-            if (StringUtils.isNotNull(searchDTO.getStartTime()) && StringUtils.isNotNull(searchDTO.getEndTime()))
+            wrapper.eq(MyStringUtils.isNotNull(searchDTO.getIsCheck()), Favorite::getIsCheck, searchDTO.getIsCheck())
+                    .eq(MyStringUtils.isNotNull(searchDTO.getType()), Favorite::getType, searchDTO.getType());
+            if (MyStringUtils.isNotNull(searchDTO.getStartTime()) && MyStringUtils.isNotNull(searchDTO.getEndTime()))
                 wrapper.between(Favorite::getCreateTime, searchDTO.getStartTime(), searchDTO.getEndTime());
         }
         List<Favorite> favorites = favoriteMapper.selectList(wrapper);

@@ -19,11 +19,15 @@ import com.overthinker.cloud.web.entity.enums.MailboxAlertsEnum;
 import com.overthinker.cloud.web.mapper.*;
 import com.overthinker.cloud.web.service.LeaveWordService;
 import com.overthinker.cloud.web.service.PublicService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import com.overthinker.cloud.system.auth.utils.SecurityUtils;
-import com.overthinker.cloud.web.utils.StringUtils;
-import jakarta.annotation.Resource;
+import com.overthinker.cloud.common.core.utils.MyStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,23 +40,23 @@ import java.util.Objects;
  * @author overH
  * @since 2023-11-03 15:01:11
  */
+@Slf4j
 @Service("leaveWordService")
+@RequiredArgsConstructor
 public class LeaveWordServiceImpl extends ServiceImpl<LeaveWordMapper, LeaveWord> implements LeaveWordService {
 
-    @Resource
-    private UserClient userClient;
+    private final UserClient userClient;
+    private final CommentMapper commentMapper;
+    private final LikeMapper likeMapper;
+    private final FavoriteMapper favoriteMapper;
+    private final LeaveWordMapper leaveWordMapper;
+    private final PublicService publicService;
 
-    @Resource
-    private CommentMapper commentMapper;
+    @Value("${spring.mail.username}")
+    private String email;
 
-    @Resource
-    private LikeMapper likeMapper;
-
-    @Resource
-    private FavoriteMapper favoriteMapper;
-
-    @Resource
-    private LeaveWordMapper leaveWordMapper;
+    @Value("${mail.message-new-notice}")
+    private Boolean messageNewNotice;
 
     @Override
     public List<LeaveWordVO> getLeaveWordList(String id) {
@@ -74,15 +78,6 @@ public class LeaveWordServiceImpl extends ServiceImpl<LeaveWordMapper, LeaveWord
                     return vo;
                 }).toList();
     }
-
-    @Resource
-    private PublicService publicService;
-
-    @Value("${spring.mail.username}")
-    private String email;
-
-    @Value("${mail.message-new-notice}")
-    private Boolean messageNewNotice;
 
     @Override
     public ResultData<Void> userLeaveWord(String content) {
@@ -110,16 +105,16 @@ public class LeaveWordServiceImpl extends ServiceImpl<LeaveWordMapper, LeaveWord
     @Override
     public List<LeaveWordListVO> getBackLeaveWordList(SearchLeaveWordDTO searchDTO) {
         LambdaQueryWrapper<LeaveWord> wrapper = new LambdaQueryWrapper<>();
-        if (StringUtils.isNotNull(searchDTO)) {
+        if (MyStringUtils.isNotNull(searchDTO)) {
             ResultData<List<Long>> userIdsResult = userClient.searchUserIdsByUsername(searchDTO.getUserName());
             List<Long> userIds = userIdsResult.getData() != null ? userIdsResult.getData() : List.of();
             if (!userIds.isEmpty())
-                wrapper.in(StringUtils.isNotEmpty(searchDTO.getUserName()), LeaveWord::getUserId, userIds);
+                wrapper.in(MyStringUtils.isNotEmpty(searchDTO.getUserName()), LeaveWord::getUserId, userIds);
             else
-                wrapper.eq(StringUtils.isNotNull(searchDTO.getUserName()), LeaveWord::getUserId, null);
+                wrapper.eq(MyStringUtils.isNotNull(searchDTO.getUserName()), LeaveWord::getUserId, null);
 
-            wrapper.eq(StringUtils.isNotNull(searchDTO.getIsCheck()), LeaveWord::getIsCheck, searchDTO.getIsCheck());
-            if (StringUtils.isNotNull(searchDTO.getStartTime()) && StringUtils.isNotNull(searchDTO.getEndTime()))
+            wrapper.eq(MyStringUtils.isNotNull(searchDTO.getIsCheck()), LeaveWord::getIsCheck, searchDTO.getIsCheck());
+            if (MyStringUtils.isNotNull(searchDTO.getStartTime()) && MyStringUtils.isNotNull(searchDTO.getEndTime()))
                 wrapper.between(LeaveWord::getCreateTime, searchDTO.getStartTime(), searchDTO.getEndTime());
         }
         List<LeaveWord> leaveWords = leaveWordMapper.selectList(wrapper);
@@ -142,6 +137,7 @@ public class LeaveWordServiceImpl extends ServiceImpl<LeaveWordMapper, LeaveWord
         return ResultData.failure();
     }
 
+    @Transactional
     @Override
     public ResultData<Void> deleteLeaveWord(List<Long> ids) {
         if (leaveWordMapper.deleteBatchIds(ids) > 0) {

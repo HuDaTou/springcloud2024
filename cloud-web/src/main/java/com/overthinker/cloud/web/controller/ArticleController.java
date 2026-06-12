@@ -285,6 +285,6 @@ public class ArticleController extends BaseController {
     @AccessLimit(seconds = 60, maxCount = 30)
     @DeleteMapping("/back/delete")
     public ResultData<Void> deleteArticle(@RequestBody List<Long> ids) {
-        return messageHandler(() -> articleService.deleteArticle(ids));
+        return articleService.deleteArticle(ids);
     }
 }
