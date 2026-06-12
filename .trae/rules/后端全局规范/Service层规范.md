@@ -62,16 +62,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 ### 2. 依赖注入
 
 ```java
-// ✅ 使用 @RequiredArgsConstructor（推荐）
+// ✅ 使用 @RequiredArgsConstructor（唯一推荐）
 @RequiredArgsConstructor
 public class ArticleServiceImpl implements ArticleService {
     private final ArticleMapper articleMapper;
     private final CategoryMapper categoryMapper;
 }
 
-// ✅ 或使用 @Resource
-@Resource
-private CategoryMapper categoryMapper;
+// ❌ 禁止使用 @Resource
+// @Resource
+// private CategoryMapper categoryMapper;
 ```
 
 ### 3. 查询单个
@@ -147,7 +147,6 @@ public List<UserVO> searchUsers(UserSearchDTO dto) {
 
 ```java
 @Override
-@Transactional
 public ResultData<Void> createUser(UserCreateDTO dto) {
     // 1. 校验
     User existing = userMapper.selectOne(new LambdaQueryWrapper<User>()
@@ -174,7 +173,6 @@ public ResultData<Void> createUser(UserCreateDTO dto) {
 
 ```java
 @Override
-@Transactional
 public ResultData<Void> updateUser(Long id, UserUpdateDTO dto) {
     User user = userMapper.selectById(id);
     if (Objects.isNull(user)) {
@@ -206,13 +204,44 @@ public ResultData<Void> deleteUser(List<Long> ids) {
 
 ## 事务处理
 
+### 1. 什么时候需要事务
+
+| 场景 | 是否需要 @Transactional |
+|------|-------------------------|
+| 单个简单插入/更新/删除 | ❌ 不需要 |
+| 多个表操作（如插入主表+明细表） | ✅ 需要 |
+| 需要保证原子性的业务逻辑 | ✅ 需要 |
+| 调用多个 Mapper 方法 | ✅ 需要 |
+| 异常时需要回滚数据 | ✅ 需要 |
+
+### 2. 事务使用示例
+
 ```java
-// ✅ 使用 @Transactional（增删改必须加事务）
+// ❌ 不需要事务：单表简单插入
+@Override
+public ResultData<Void> createUser(UserDTO dto) {
+    User user = new User();
+    user.setUsername(dto.getUsername());
+    userMapper.insert(user);
+    return ResultData.success();
+}
+
+// ✅ 需要事务：多表操作需要原子性保证
 @Override
 @Transactional
-public ResultData<Void> createUser(UserDTO dto) {
+public ResultData<Void> createUserWithRole(UserDTO dto) {
     userMapper.insert(user);
     userRoleMapper.insert(userRole);
+    return ResultData.success();
+}
+
+// ✅ 需要事务：批量删除关联数据
+@Override
+@Transactional
+public ResultData<Void> deleteUser(List<Long> ids) {
+    userRoleMapper.delete(new LambdaQueryWrapper<UserRole>()
+            .in(UserRole::getUserId, ids));
+    userMapper.deleteBatchIds(ids);
     return ResultData.success();
 }
 
@@ -243,7 +272,6 @@ return article.copyProperties(ArticleDetailVO.class, vo -> {
 ```java
 // ✅ 推荐：使用 @Accessors(chain = true) 链式组装对象
 @Override
-@Transactional
 public ResultData<Void> createUser(UserCreateDTO dto) {
     User user = new User()
             .setUsername(dto.getUsername())
@@ -265,7 +293,7 @@ public ResultData<Void> createUser(UserCreateDTO dto) {
 ### 3. 复杂对象组装
 
 ```java
-// ✅ 复杂对象组装示例
+// ✅ 复杂对象组装示例（多表操作需要事务）
 @Override
 @Transactional
 public ResultData<Void> createOrder(OrderCreateDTO dto) {
@@ -299,3 +327,5 @@ public ResultData<Void> createOrder(OrderCreateDTO dto) {
 ❌ **禁止**：在 Service 层使用 `System.out.println()`
 ❌ **禁止**：业务逻辑写在 Controller 层
 ❌ **禁止**：不使用 `@Accessors(chain = true)` 链式调用组装对象
+❌ **禁止**：给所有增删改方法都加 `@Transactional`，只在多表操作或需要原子性时使用
+❌ **禁止**：使用 `@Resource` 注入依赖，必须使用 `@RequiredArgsConstructor`
