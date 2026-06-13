@@ -1,7 +1,7 @@
 package com.overthinker.cloud.system.auth.webflux.service;
 
 import com.overthinker.cloud.api.auth.api.AuthClient;
-import com.overthinker.cloud.api.auth.dto.PermissionDTO;
+import com.overthinker.cloud.api.auth.mq.PermissionDTO;
 
 import java.util.List;
 import java.util.logging.Level;

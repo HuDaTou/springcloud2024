@@ -2,13 +2,13 @@ package com.overthinker.cloud.system.auth.webflux.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.overthinker.cloud.api.auth.dto.PermissionDTO;
+import com.overthinker.cloud.api.auth.mq.PermissionDTO;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -17,7 +17,6 @@ import java.util.List;
  * 负责在应用启动后扫描权限，并通过RabbitMQ将权限信息异步发送给权限管理服务。
  */
 @Slf4j
-@Component
 public class PermissionSender implements ApplicationRunner {
 
     private final PermissionScanner permissionScanner;

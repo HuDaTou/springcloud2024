@@ -4,11 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.overthinker.cloud.system.auth.webflux.service.PermissionScanner;
 import com.overthinker.cloud.system.auth.webflux.service.PermissionSender;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
 /**
@@ -16,7 +16,7 @@ import org.springframework.core.env.Environment;
  * 负责自动装配权限扫描器和发送器。
  * 当属性 permission.scanner.enabled 为 true 时（或缺省时）启用。
  */
-@Configuration
+@AutoConfiguration
 @ConditionalOnProperty(name = "permission.scanner.enabled", havingValue = "true", matchIfMissing = true)
 public class PermissionAutoConfiguration {
 

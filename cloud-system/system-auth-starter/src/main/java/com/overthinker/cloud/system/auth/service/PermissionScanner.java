@@ -1,14 +1,15 @@
 package com.overthinker.cloud.system.auth.service;
 
-import com.overthinker.cloud.api.auth.dto.PermissionDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.util.StringUtils;
+import com.overthinker.cloud.common.core.utils.MyStringUtils;
 import org.springframework.web.bind.annotation.*;
+
+import com.overthinker.cloud.api.auth.mq.PermissionDTO;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -27,12 +28,13 @@ public class PermissionScanner {
     private final ApplicationContext applicationContext;
     private final Environment environment;
 
-    // 正则表达式，用于从 @PreAuthorize("hasAuthority('xxx')") 中提取 'xxx'
-    private static final Pattern PRE_AUTHORIZE_PATTERN = Pattern.compile("hasAuthority\\('([^']+)'\\)");
+    // 正则表达式，用于从 @PreAuthorize 注解中提取第一个单引号包裹的内容（权限标识）
+    private static final Pattern PRE_AUTHORIZE_PATTERN = Pattern.compile("'([^']+)'");
 
     public PermissionScanner(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
         this.environment = applicationContext.getEnvironment();
+        log.info("========== PermissionScanner 已实例化 ==========");
     }
 
     /**
@@ -70,7 +72,7 @@ public class PermissionScanner {
                 // 如果没有@PreAuthorize注解，视为公开接口或未配置权限控制接口，暂时跳过或记录为默认
                 // 这里选择：如果没有显式权限控制，不纳入权限管理表
                 if (code == null) {
-                    log.debug("跳过未配置 @PreAuthorize 的方法: {}", controllerClass.getSimpleName(), method.getName());
+                    log.debug("跳过未配置 @PreAuthorize 的方法: {}#{}", controllerClass.getSimpleName(), method.getName());
                     continue;
                 }
 
@@ -80,19 +82,30 @@ public class PermissionScanner {
                     operationName = method.getName(); // 降级使用方法名
                 }
 
-                // 4. 组装完整路径
+                // 4. 组装完整路径（确保各段之间有斜杠分隔）
                 String methodPath = getMethodPath(method);
-                String fullPath = (servicePathPrefix + controllerBasePath + methodPath).replaceAll("//+", "/");
+                StringBuilder pathBuilder = new StringBuilder(servicePathPrefix);
+                if (MyStringUtils.isNotBlank(controllerBasePath)) {
+                    if (!controllerBasePath.startsWith("/")) {
+                        pathBuilder.append("/");
+                    }
+                    pathBuilder.append(controllerBasePath);
+                }
+                if (MyStringUtils.isNotBlank(methodPath)) {
+                    if (!methodPath.startsWith("/")) {
+                        pathBuilder.append("/");
+                    }
+                    pathBuilder.append(methodPath);
+                }
+                String fullPath = pathBuilder.toString().replaceAll("/+", "/");
 
-                PermissionDTO dto = new PermissionDTO(
-                        serviceName,
-                        category,
-                        operationName,
-                        code,
-                        httpMethod,
-                        fullPath,
-                        code
-                );
+                PermissionDTO dto = new PermissionDTO()
+                        .setServiceName(serviceName)
+                        .setCategory(category)
+                        .setName(operationName)
+                        .setHttpMethod(httpMethod)
+                        .setPath(fullPath)
+                        .setPermissonCode(code);
                 permissions.add(dto);
             }
         }
@@ -102,12 +115,12 @@ public class PermissionScanner {
 
     private String getCategory(Class<?> clazz) {
         Tag tag = clazz.getAnnotation(Tag.class);
-        return (tag != null && StringUtils.hasText(tag.name())) ? tag.name() : clazz.getSimpleName();
+        return (tag != null && MyStringUtils.isNotBlank(tag.name())) ? tag.name() : clazz.getSimpleName();
     }
 
     private String getOperationName(Method method) {
         Operation operation = method.getAnnotation(Operation.class);
-        return (operation != null && StringUtils.hasText(operation.summary())) ? operation.summary() : null;
+        return (operation != null && MyStringUtils.isNotBlank(operation.summary())) ? operation.summary() : null;
     }
 
     /**

@@ -2,13 +2,13 @@ package com.overthinker.cloud.system.auth.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.overthinker.cloud.api.auth.dto.PermissionDTO;
+import com.overthinker.cloud.api.auth.mq.PermissionDTO;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -17,8 +17,12 @@ import java.util.List;
  * 负责在应用启动后扫描权限，并通过RabbitMQ将权限信息异步发送给权限管理服务。
  */
 @Slf4j
-@Component
 public class PermissionSender implements ApplicationRunner {
+
+    /**
+     * 单次执行标志位，确保整个 JVM 生命周期内只执行一次
+     */
+    private static volatile boolean executed = false;
 
     private final PermissionScanner permissionScanner;
     private final RabbitTemplate rabbitTemplate;
@@ -37,11 +41,25 @@ public class PermissionSender implements ApplicationRunner {
         this.rabbitTemplate = rabbitTemplate;
         this.objectMapper = objectMapper;
         this.environment = environment;
+        log.info("========== PermissionSender 已实例化 ==========");
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        // 确保只在非测试环境下执行权限扫描和发送
+        // 1. 确保只执行一次（防止热重启/热部署多次触发）
+        if (executed) {
+            log.info("权限发送器已执行过一次，跳过本次执行");
+            return;
+        }
+        synchronized (PermissionSender.class) {
+            if (executed) {
+                log.info("权限发送器已执行过一次，跳过本次执行");
+                return;
+            }
+            executed = true;
+        }
+
+        // 2. 确保只在非测试环境下执行权限扫描和发送
         String[] activeProfiles = environment.getActiveProfiles();
         boolean isTestProfile = false;
         for (String profile : activeProfiles) {
