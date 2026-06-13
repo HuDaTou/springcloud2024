@@ -49,11 +49,11 @@ public class FavoriteServiceImpl extends ServiceImpl<FavoriteMapper, Favorite> i
                 .eq(Favorite::getType, type)
                 .eq(Favorite::getTypeId, typeId));
         if (MyStringUtils.isNotNull(favorite)) return ResultData.failure();
-        Favorite Savefavorite = Favorite.builder()
-                .id(null)
-                .userId(SecurityUtils.getUserId())
-                .type(type)
-                .typeId(typeId).build();
+        Favorite Savefavorite = new Favorite()
+                .setId(null)
+                .setUserId(SecurityUtils.getUserId())
+                .setType(type)
+                .setTypeId(typeId);
         myRedisCache.incrementCacheMapValue(RedisConstants.ARTICLE_FAVORITE_COUNT, typeId.toString(), 1);
         if (this.save(Savefavorite)) return ResultData.success();
         return ResultData.failure();
@@ -123,7 +123,7 @@ public class FavoriteServiceImpl extends ServiceImpl<FavoriteMapper, Favorite> i
 
     @Override
     public ResultData<Void> isCheckFavorite(FavoriteIsCheckDTO isCheckDTO) {
-        if (favoriteMapper.updateById(Favorite.builder().id(isCheckDTO.getId()).isCheck(isCheckDTO.getIsCheck()).build()) > 0)
+        if (favoriteMapper.updateById(new Favorite().setId(isCheckDTO.getId()).setIsCheck(isCheckDTO.getIsCheck())) > 0)
             return ResultData.success();
         return ResultData.failure();
     }
