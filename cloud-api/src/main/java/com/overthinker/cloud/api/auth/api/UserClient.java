@@ -11,18 +11,18 @@ import java.util.Map;
 @FeignClient(name = "cloud-auth")
 public interface UserClient {
 
-    @GetMapping("/internal/api/v1/user/count")
+    @GetMapping("/internal/api/user/count")
     ResultData<Long> getUserCount();
 
-    @GetMapping("/internal/api/v1/user/username")
+    @GetMapping("/internal/api/user/username")
     ResultData<String> getUsernameById(@RequestParam Long userId);
 
-    @GetMapping("/internal/api/v1/user/email")
+    @GetMapping("/internal/api/user/email")
     ResultData<String> getEmailById(@RequestParam Long userId);
 
-    @GetMapping("/internal/api/v1/user/info")
+    @GetMapping("/internal/api/user/info")
     ResultData<Map<String, Object>> getUserInfoById(@RequestParam Long userId);
 
-    @GetMapping("/internal/api/v1/user/search")
+    @GetMapping("/internal/api/user/search")
     ResultData<List<Long>> searchUserIdsByUsername(@RequestParam String username);
 }
