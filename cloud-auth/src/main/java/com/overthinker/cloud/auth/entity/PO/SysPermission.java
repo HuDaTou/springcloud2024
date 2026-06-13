@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
 public class SysPermission extends BaseData implements BasecopyProperties {
 
     @Schema(description = "权限ID，主键", example = "1")
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
     @Schema(description = "菜单ID", example = "2")
@@ -41,4 +41,7 @@ public class SysPermission extends BaseData implements BasecopyProperties {
 
     @Schema(description = "权限的完整请求路径", example = "/api/menu/list")
     private String path;
+
+    @Schema(description = "所属服务名称", example = "cloud-auth")
+    private String serviceName;
 }
