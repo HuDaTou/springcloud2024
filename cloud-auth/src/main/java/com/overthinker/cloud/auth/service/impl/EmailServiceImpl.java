@@ -4,6 +4,7 @@ import cn.hutool.core.util.RandomUtil;
 import com.overthinker.cloud.auth.config.mq.RabbitEmailConfig;
 import com.overthinker.cloud.auth.entity.DTO.MailDTO;
 import com.overthinker.cloud.auth.entity.ENUMS.EmailEnum;
+import com.overthinker.cloud.auth.entity.ENUMS.EmailNotificationEnum;
 import com.overthinker.cloud.auth.service.EmailService;
 import com.overthinker.cloud.common.core.constants.NumberConst;
 import com.overthinker.cloud.common.core.utils.MyStringUtils;
@@ -14,6 +15,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -51,6 +53,14 @@ public class EmailServiceImpl implements EmailService {
 
         MailDTO send = emailEnum.send(email, cacheObject);
         enqueue(send);
+    }
+
+    @Override
+    public void sendEmailNotification(String email, String type, Map<String, Object> content) {
+        EmailNotificationEnum notificationEnum = EmailNotificationEnum.getByType(type);
+        MailDTO mailDTO = notificationEnum.toMailDTO(email, content);
+        enqueue(mailDTO);
+        log.info("邮件通知消息已入队，类型：{}，收件人：{}", type, email);
     }
 
     private void enqueue(MailDTO mailDTO) {
