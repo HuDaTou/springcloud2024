@@ -18,7 +18,7 @@ FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 
 # Expose the port the application runs on
-EXPOSE 8082
+EXPOSE 8788
 
 # Copy the built JAR from the builder stage to the final image
 COPY --from=builder /workspace/cloud-AI/target/*.jar app.jar

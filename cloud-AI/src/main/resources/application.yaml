@@ -12,10 +12,15 @@ spring:
         options:
           model: all-minilm
 
-  r2dbc:
-    url: r2dbc:postgresql://localhost:5432/mydatabase?cloud-ai
-    username: root
-    password: 123456
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        service-name: ${spring.application.name}
+        prefer-ip-address: true
+        heartbeat:
+          enabled: true
 
 server:
   port: 8788
