@@ -15,7 +15,7 @@ import com.overthinker.cloud.web.entity.enums.UploadEnum;
 import com.overthinker.cloud.web.mapper.PhotoMapper;
 import com.overthinker.cloud.web.service.PhotoService;
 import com.overthinker.cloud.web.utils.PhotoUploudUtils;
-import com.overthinker.cloud.system.auth.utils.SecurityUtils;
+import com.overthinker.cloud.system.starter.auth.utils.SecurityUtils;
 import com.overthinker.cloud.common.core.utils.MyStringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

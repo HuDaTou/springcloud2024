@@ -3,6 +3,7 @@ package com.overthinker.cloud.web.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.overthinker.cloud.api.auth.api.EmailClient;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.web.entity.DTO.LeaveWordIsCheckDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchLeaveWordDTO;
@@ -18,12 +19,11 @@ import com.overthinker.cloud.web.entity.enums.LikeEnum;
 import com.overthinker.cloud.web.entity.enums.MailboxAlertsEnum;
 import com.overthinker.cloud.web.mapper.*;
 import com.overthinker.cloud.web.service.LeaveWordService;
-import com.overthinker.cloud.web.service.PublicService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import com.overthinker.cloud.system.auth.utils.SecurityUtils;
+import com.overthinker.cloud.system.starter.auth.utils.SecurityUtils;
 import com.overthinker.cloud.common.core.utils.MyStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -50,7 +50,7 @@ public class LeaveWordServiceImpl extends ServiceImpl<LeaveWordMapper, LeaveWord
     private final LikeMapper likeMapper;
     private final FavoriteMapper favoriteMapper;
     private final LeaveWordMapper leaveWordMapper;
-    private final PublicService publicService;
+    private final EmailClient emailClient;
 
     @Value("${spring.mail.username}")
     private String email;
@@ -95,7 +95,7 @@ public class LeaveWordServiceImpl extends ServiceImpl<LeaveWordMapper, LeaveWord
 
             Map<String, Object> map = new HashMap<>();
             map.put("messageId", build.getId());
-            publicService.sendEmail(MailboxAlertsEnum.MESSAGE_NOTIFICATION_EMAIL.getCodeStr(), email, map);
+            emailClient.sendEmailNotification(email, MailboxAlertsEnum.MESSAGE_NOTIFICATION_EMAIL.getCodeStr(), map);
 
             return ResultData.success();
         }

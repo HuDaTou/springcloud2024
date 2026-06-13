@@ -2,6 +2,7 @@ package com.overthinker.cloud.web.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.overthinker.cloud.api.auth.api.EmailClient;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.web.entity.DTO.LinkDTO;
 import com.overthinker.cloud.web.entity.DTO.LinkIsCheckDTO;
@@ -10,14 +11,13 @@ import com.overthinker.cloud.api.auth.api.UserClient;
 import com.overthinker.cloud.web.entity.PO.Link;
 import com.overthinker.cloud.web.entity.VO.LinkListVO;
 import com.overthinker.cloud.web.entity.VO.LinkVO;
-import com.overthinker.cloud.system.redis.constants.RedisConstants;
+import com.overthinker.cloud.system.starter.redis.constants.RedisConstants;
 import com.overthinker.cloud.web.entity.constants.SQLConst;
 import com.overthinker.cloud.web.entity.enums.MailboxAlertsEnum;
 import com.overthinker.cloud.web.mapper.LinkMapper;
 import com.overthinker.cloud.web.service.LinkService;
-import com.overthinker.cloud.web.service.PublicService;
-import com.overthinker.cloud.system.redis.utils.MyRedisCache;
-import com.overthinker.cloud.system.auth.utils.SecurityUtils;
+import com.overthinker.cloud.system.starter.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.starter.auth.utils.SecurityUtils;
 import com.overthinker.cloud.common.core.utils.MyStringUtils;
 import com.overthinker.cloud.web.utils.WebUtil;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +43,7 @@ import java.util.Objects;
 public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements LinkService {
 
     private final LinkMapper linkMapper;
-    private final PublicService publicService;
+    private final EmailClient emailClient;
     private final UserClient userClient;
     private final MyRedisCache myRedisCache;
 
@@ -71,8 +71,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
             content.put("linkId", link.getId());
 
             if (applyNotice) {
-                // 2.向站长发送邮件
-                publicService.sendEmail(MailboxAlertsEnum.FRIEND_LINK_APPLICATION.getCodeStr(), email, content);
+                emailClient.sendEmailNotification(email, MailboxAlertsEnum.FRIEND_LINK_APPLICATION.getCodeStr(), content);
             }
             return ResultData.success();
         }
@@ -128,7 +127,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
             // 修改成功，发送邮件
             if (Objects.equals(isCheckDTO.getIsCheck(), SQLConst.STATUS_PUBLIC)) {
                 if (passNotice) {
-                    publicService.sendEmail(MailboxAlertsEnum.FRIEND_LINK_APPLICATION_PASS.getCodeStr(), linkMapper.selectById(isCheckDTO.getId()).getEmail(), null);
+                    emailClient.sendEmailNotification(linkMapper.selectById(isCheckDTO.getId()).getEmail(), MailboxAlertsEnum.FRIEND_LINK_APPLICATION_PASS.getCodeStr(), null);
                     return ResultData.success(null, "操作成功，已发送通知邮件");
                 }
             }
@@ -157,8 +156,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
                 // 清除
                 myRedisCache.deleteObject(RedisConstants.EMAIL_VERIFICATION_LINK + verifyCode);
                 if (passNotice) {
-                    // 修改成功，发送邮件
-                    publicService.sendEmail(MailboxAlertsEnum.FRIEND_LINK_APPLICATION_PASS.getCodeStr(), split[1], null);
+                    emailClient.sendEmailNotification(split[1], MailboxAlertsEnum.FRIEND_LINK_APPLICATION_PASS.getCodeStr(), null);
                     return WebUtil.renderString(response, "操作成功，已发送通知邮件");
                 }
                 return WebUtil.renderString(response, "操作成功");

@@ -12,7 +12,7 @@ import com.overthinker.cloud.web.entity.enums.UploadEnum;
 import com.overthinker.cloud.web.mapper.BannersMapper;
 import com.overthinker.cloud.web.service.BannersService;
 import com.overthinker.cloud.web.utils.FileUploadUtils;
-import com.overthinker.cloud.system.auth.utils.SecurityUtils;
+import com.overthinker.cloud.system.starter.auth.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

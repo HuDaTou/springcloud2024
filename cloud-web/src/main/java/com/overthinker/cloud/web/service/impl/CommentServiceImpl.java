@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.overthinker.cloud.api.auth.api.EmailClient;
 import com.overthinker.cloud.api.auth.api.UserClient;
 import com.overthinker.cloud.api.auth.dto.UserCommentDTO;
 import com.overthinker.cloud.common.core.resp.ResultData;
@@ -16,7 +17,7 @@ import com.overthinker.cloud.web.entity.PO.Like;
 import com.overthinker.cloud.web.entity.VO.ArticleCommentVO;
 import com.overthinker.cloud.web.entity.VO.CommentListVO;
 import com.overthinker.cloud.web.entity.VO.PageVO;
-import com.overthinker.cloud.system.redis.constants.RedisConstants;
+import com.overthinker.cloud.system.starter.redis.constants.RedisConstants;
 import com.overthinker.cloud.web.entity.constants.SQLConst;
 import com.overthinker.cloud.web.entity.enums.CommentEnum;
 import com.overthinker.cloud.web.entity.enums.LikeEnum;
@@ -26,9 +27,8 @@ import com.overthinker.cloud.web.mapper.LeaveWordMapper;
 import com.overthinker.cloud.web.mapper.LikeMapper;
 import com.overthinker.cloud.web.service.CommentService;
 import com.overthinker.cloud.web.service.LikeService;
-import com.overthinker.cloud.web.service.PublicService;
-import com.overthinker.cloud.system.redis.utils.MyRedisCache;
-import com.overthinker.cloud.system.auth.utils.SecurityUtils;
+import com.overthinker.cloud.system.starter.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.starter.auth.utils.SecurityUtils;
 import com.overthinker.cloud.common.core.utils.MyStringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +56,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     private final LikeService likeService;
     private final MyRedisCache myRedisCache;
     private final LikeMapper likeMapper;
-    private final PublicService publicService;
+    private final EmailClient emailClient;
     private final LeaveWordMapper leaveWordMapper;
 
     @Value("${spring.mail.username}")
@@ -153,7 +153,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
             if (commentDTO.getType() == 1) {
                 if (Objects.equals(fromUser, userEmail)) return ResultData.success();
-                publicService.sendEmail(MailboxAlertsEnum.COMMENT_NOTIFICATION_EMAIL.getCodeStr(), fromUser, selectWhereMap);
+                emailClient.sendEmailNotification(fromUser, MailboxAlertsEnum.COMMENT_NOTIFICATION_EMAIL.getCodeStr(), selectWhereMap);
             }
 
             if (commentDTO.getType() == 2) {
@@ -162,7 +162,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
                 String replyEmail = replyEmailResult.getData();
                 if (MyStringUtils.isEmpty(replyEmail) || Objects.equals(replyEmail, userEmail))
                     return ResultData.success();
-                publicService.sendEmail(MailboxAlertsEnum.COMMENT_NOTIFICATION_EMAIL.getCodeStr(), replyEmail, selectWhereMap);
+                emailClient.sendEmailNotification(replyEmail, MailboxAlertsEnum.COMMENT_NOTIFICATION_EMAIL.getCodeStr(), selectWhereMap);
             }
         }
         if (Objects.nonNull(commentDTO.getReplyId())) {
@@ -181,11 +181,11 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             selectWhereMap.put("replyCommentId", commentDTO.getReplyId());
 
             if (!Objects.equals(userEmail, fromUser) && !Objects.equals(replyEmail, fromUser)) {
-                publicService.sendEmail(MailboxAlertsEnum.COMMENT_NOTIFICATION_EMAIL.getCodeStr(), fromUser, selectWhereMap);
+                emailClient.sendEmailNotification(fromUser, MailboxAlertsEnum.COMMENT_NOTIFICATION_EMAIL.getCodeStr(), selectWhereMap);
             }
 
             if (!Objects.equals(userEmail, replyEmail)) {
-                publicService.sendEmail(MailboxAlertsEnum.REPLY_COMMENT_NOTIFICATION_EMAIL.getCodeStr(), replyEmail, selectWhereMap);
+                emailClient.sendEmailNotification(replyEmail, MailboxAlertsEnum.REPLY_COMMENT_NOTIFICATION_EMAIL.getCodeStr(), selectWhereMap);
             }
         }
         return ResultData.success();

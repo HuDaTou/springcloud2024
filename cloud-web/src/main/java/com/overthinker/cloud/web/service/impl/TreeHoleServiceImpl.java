@@ -12,7 +12,7 @@ import com.overthinker.cloud.web.entity.VO.TreeHoleVO;
 import com.overthinker.cloud.web.entity.constants.SQLConst;
 import com.overthinker.cloud.web.mapper.TreeHoleMapper;
 import com.overthinker.cloud.web.service.TreeHoleService;
-import com.overthinker.cloud.system.auth.utils.SecurityUtils;
+import com.overthinker.cloud.system.starter.auth.utils.SecurityUtils;
 import com.overthinker.cloud.common.core.utils.MyStringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

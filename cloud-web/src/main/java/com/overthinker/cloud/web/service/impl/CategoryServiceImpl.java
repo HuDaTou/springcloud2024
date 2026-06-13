@@ -76,7 +76,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         return ResultData.failure();
     }
 
-    @Transactional
     @Override
     public ResultData<Void> deleteCategoryByIds(List<Long> ids) {
         // 是否有剩下文章
