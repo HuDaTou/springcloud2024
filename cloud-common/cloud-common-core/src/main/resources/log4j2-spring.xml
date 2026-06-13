@@ -16,8 +16,8 @@ Key features:
         <Property name="LOG_FILE_BASE_NAME" value="${LOG_PATH}/${APP_NAME}"/>
 
         <!-- Log Patterns -->
-        <Property name="CONSOLE_PATTERN" value="%clr{%d{yyyy-MM-dd HH:mm:ss.SSS}}{faint} %clr{%5p} %clr{%pid}{magenta} %clr{---}{faint} %clr{[%15.15t]}{faint} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n%xwEx"/>
-        <Property name="FILE_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5p %pid --- [%t] %-40.40c{1.} : %m%n%xwEx"/>
+        <Property name="CONSOLE_PATTERN" value="%clr{%d{yyyy-MM-dd HH:mm:ss.SSS}}{faint} %clr{%5p} %clr{[%${APP_NAME}]}{green} %clr{[%X{traceId:-},%X{spanId:-}]}{yellow} %clr{%pid}{magenta} %clr{[%t]}{faint} %clr{%c{1.}}{cyan} %clr{:}{faint} %m%n%xwEx"/>
+        <Property name="FILE_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5p [%${APP_NAME}] [%X{traceId:-},%X{spanId:-}] %pid [%t] %c{1.} : %m%n%xwEx"/>
     </Properties>
 
     <Appenders>
@@ -53,7 +53,7 @@ Key features:
 
     <Loggers>
         <!-- Application specific logger -->
-        <Logger name="com.overthinker.cloud" level="DEBUG"/>
+        <Logger name="com.overthinker.cloud" level="INFO"/>
 
         <!-- Framework loggers -->
         <Logger name="org.springframework" level="WARN"/>
