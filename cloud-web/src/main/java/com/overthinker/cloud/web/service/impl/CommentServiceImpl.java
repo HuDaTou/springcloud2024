@@ -220,7 +220,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     public ResultData<Void> isCheckComment(CommentIsCheckDTO isCheckDTO) {
         LambdaUpdateWrapper<Comment> wrapper = new LambdaUpdateWrapper<>();
         wrapper.eq(Comment::getId, isCheckDTO.getId()).or().eq(Comment::getParentId, isCheckDTO.getId());
-        int updateCount = commentMapper.update(Comment.builder().id(isCheckDTO.getId()).isCheck(isCheckDTO.getIsCheck()).build(), wrapper);
+        int updateCount = commentMapper.update(new Comment().setId(isCheckDTO.getId()).setIsCheck(isCheckDTO.getIsCheck()), wrapper);
         if (updateCount > 0) {
             // 同步redis评论数量
             // 如果是文章评论，则改变redis中文章数量

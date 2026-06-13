@@ -8,10 +8,10 @@ import com.overthinker.cloud.common.core.entity.BasecopyProperties;
 import com.overthinker.cloud.common.db.BaseData;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 
 /**
@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Accessors(chain = true)
 @TableName("t_banners")
 public class Banners extends BaseData implements BasecopyProperties {
 
@@ -32,23 +32,18 @@ public class Banners extends BaseData implements BasecopyProperties {
     @Schema(description = "图片主键ID", example = "1234567890123456789")
     private Long id;
 
-    // 图片路径
     @Schema(description = "图片存储路径", example = "/upload/images/2023/06/12345.jpg")
     private String path;
 
-    // 图片大小 (字节)
     @Schema(description = "图片大小（字节）", example = "204800")
     private Long size;
 
-    // 图片类型 (MIME)
     @Schema(description = "图片MIME类型", example = "image/jpeg")
     private String type;
 
-    // 上传人id
     @Schema(description = "上传用户ID", example = "10001")
     private Long userId;
 
-    // 图片顺序
     @Schema(description = "图片显示顺序", example = "1")
     private Integer sortOrder;
 }

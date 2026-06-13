@@ -7,11 +7,10 @@ import com.overthinker.cloud.common.core.entity.BasecopyProperties;
 import com.overthinker.cloud.common.db.BaseData;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
+import lombok.experimental.Accessors;
 
 /**
  * (Favorite)表实体类
@@ -21,31 +20,25 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 @TableName("t_favorite")
 public class Favorite extends BaseData implements BasecopyProperties {
 
-    // 收藏id
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     @Schema(description = "收藏记录ID", example = "1234567890123456789")
     private Long id;
 
-    // 收藏的用户id
     @Schema(description = "用户ID", example = "10001")
     private Long userId;
 
-    // 收藏类型(1,文章 2,留言板)
-    @Schema(description = "收藏类型：1-文章 2-留言板", allowableValues = {"1", "2"}, example = "1")
+    @Schema(description = "收藏类型：1-文章 2-留言板", allowableValues = { "1", "2" }, example = "1")
     private Integer type;
 
-    // 类型id
     @Schema(description = "对应类型的ID（如文章ID、留言板ID）", example = "1001")
     private Long typeId;
 
-    // 是否有效 (0否 1是)
     @Schema(description = "收藏是否有效（0：无效，1：有效）", example = "1")
     private Integer isCheck;
 }
-

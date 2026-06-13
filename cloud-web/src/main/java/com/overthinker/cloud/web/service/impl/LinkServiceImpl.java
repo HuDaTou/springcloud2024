@@ -123,7 +123,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
 
     @Override
     public ResultData<Void> isCheckLink(LinkIsCheckDTO isCheckDTO) {
-        if (linkMapper.updateById(Link.builder().id(isCheckDTO.getId()).isCheck(isCheckDTO.getIsCheck()).build()) > 0) {
+        if (linkMapper.updateById(new Link().setId(isCheckDTO.getId()).setIsCheck(isCheckDTO.getIsCheck())) > 0) {
             // 修改成功，发送邮件
             if (Objects.equals(isCheckDTO.getIsCheck(), SQLConst.STATUS_PUBLIC)) {
                 if (passNotice) {
@@ -152,7 +152,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
             String linkIdAndEmail = myRedisCache.getCacheObject(RedisConstants.EMAIL_VERIFICATION_LINK + verifyCode);
             // 空格切分
             String[] split = linkIdAndEmail.split(" ");
-            if (linkMapper.updateById(Link.builder().id(Long.valueOf(split[0])).isCheck(SQLConst.IS_CHECK_YES).build()) > 0) {
+            if (linkMapper.updateById(new Link().setId(Long.valueOf(split[0])).setIsCheck(SQLConst.IS_CHECK_YES)) > 0) {
                 // 清除
                 myRedisCache.deleteObject(RedisConstants.EMAIL_VERIFICATION_LINK + verifyCode);
                 if (passNotice) {

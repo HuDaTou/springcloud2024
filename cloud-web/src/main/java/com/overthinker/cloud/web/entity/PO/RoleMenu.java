@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 
 /**
@@ -22,19 +23,17 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 @TableName("sys_role_menu")
 public class RoleMenu extends BaseData implements BasecopyProperties {
 
-    // 主键
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     @Schema(description = "关联ID", example = "1")
     private Integer id;
 
-    // 角色id
     @Schema(description = "角色ID", example = "1001")
     private Long roleId;
 
-    // 菜单id
     @Schema(description = "菜单ID", example = "2001")
     private Long menuId;
 

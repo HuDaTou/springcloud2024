@@ -85,8 +85,8 @@ public class LeaveWordServiceImpl extends ServiceImpl<LeaveWordMapper, LeaveWord
         if (parse.length() > FunctionConst.LEAVE_WORD_CONTENT_LENGTH) {
             return ResultData.failure("留言内容过长");
         }
-        LeaveWord build = LeaveWord.builder().content(parse)
-                .userId(SecurityUtils.getUserId()).build();
+        LeaveWord build = new LeaveWord().setContent(parse)
+                .setUserId(SecurityUtils.getUserId());
 
         if (this.save(build)) {
             ResultData<String> userEmailResult = userClient.getEmailById(SecurityUtils.getUserId());
@@ -131,7 +131,7 @@ public class LeaveWordServiceImpl extends ServiceImpl<LeaveWordMapper, LeaveWord
 
     @Override
     public ResultData<Void> isCheckLeaveWord(LeaveWordIsCheckDTO isCheckDTO) {
-        if (leaveWordMapper.updateById(LeaveWord.builder().id(isCheckDTO.getId()).isCheck(isCheckDTO.getIsCheck()).build()) > 0)
+        if (leaveWordMapper.updateById(new LeaveWord().setId(isCheckDTO.getId()).setIsCheck(isCheckDTO.getIsCheck())) > 0)
             return ResultData.success();
 
         return ResultData.failure();

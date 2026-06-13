@@ -83,13 +83,12 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
             return ResultData.failure("相册名称存在重复");
         }
         if (
-                photoMapper.insert(Photo.builder()
-                        .userId(SecurityUtils.getUserId())
-                        .parentId(albumDTO.getParentId())
-                        .name(albumDTO.getName())
-                        .description(albumDTO.getDescription())
-                        .type(AlbumOrPhotoEnum.ALBUM.getCode())
-                        .build()
+                photoMapper.insert(new Photo()
+                        .setUserId(SecurityUtils.getUserId())
+                        .setParentId(albumDTO.getParentId())
+                        .setName(albumDTO.getName())
+                        .setDescription(albumDTO.getDescription())
+                        .setType(AlbumOrPhotoEnum.ALBUM.getCode())
                 ) > 0) {
             return ResultData.success();
         }
@@ -122,14 +121,13 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
             }
 
             //添加数据库
-            photoMapper.insert(Photo.builder()
-                    .userId(SecurityUtils.getUserId())
-                    .parentId(parentId)
-                    .name(name)
-                    .url(bannerUrl)
-                    .type(AlbumOrPhotoEnum.PHOTO.getCode())
-                    .size(photoUploudUtils.convertFileSizeToMB(file.getSize()))
-                    .build());
+            photoMapper.insert(new Photo()
+                    .setUserId(SecurityUtils.getUserId())
+                    .setParentId(parentId)
+                    .setName(name)
+                    .setUrl(bannerUrl)
+                    .setType(AlbumOrPhotoEnum.PHOTO.getCode())
+                    .setSize(photoUploudUtils.convertFileSizeToMB(file.getSize())));
 
             return ResultData.success();
         } catch (FileUploadException e) {
@@ -170,11 +168,10 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
     @Override
     public ResultData<Void> updateAlbum(PhotoAlbumDTO albumDTO) {
         if (
-                photoMapper.updateById(Photo.builder()
-                        .id(albumDTO.getId())
-                        .name(albumDTO.getName())
-                        .description(albumDTO.getDescription())
-                        .build()
+                photoMapper.updateById(new Photo()
+                        .setId(albumDTO.getId())
+                        .setName(albumDTO.getName())
+                        .setDescription(albumDTO.getDescription())
                 ) > 0) {
             return ResultData.success();
         }

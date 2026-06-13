@@ -7,10 +7,10 @@ import com.overthinker.cloud.common.core.entity.BasecopyProperties;
 import com.overthinker.cloud.common.db.BaseData;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 
 /**
@@ -23,28 +23,20 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Accessors(chain = true)
 @TableName("t_tree_hole")
 public class TreeHole extends BaseData implements BasecopyProperties {
 
-    // 树洞表id
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     @Schema(description = "树洞ID", example = "1234567890123456789")
     private Long id;
 
-    // 用户id
     @Schema(description = "发布用户ID", example = "10001")
     private Long userId;
 
-    // 内容
     @Schema(description = "树洞内容", example = "今天天气真好！")
     private String content;
 
-    // 是否通过
     @Schema(description = "审核状态：0-未通过 1-通过", allowableValues = {"0", "1"}, example = "1")
     private Integer isCheck;
-
-    // 是否删除（0：未删除，1：已删除）
-    @Schema(description = "是否删除（0：未删除，1：已删除）", example = "0")
-    private Integer isDeleted;
 }

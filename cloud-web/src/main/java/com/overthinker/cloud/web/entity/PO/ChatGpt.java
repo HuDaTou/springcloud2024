@@ -7,10 +7,10 @@ import com.overthinker.cloud.common.core.entity.BasecopyProperties;
 import com.overthinker.cloud.common.db.BaseData;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 
 /**
@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Accessors(chain = true)
 @TableName("t_chat_gpt")
 public class ChatGpt extends BaseData implements BasecopyProperties {
     // id

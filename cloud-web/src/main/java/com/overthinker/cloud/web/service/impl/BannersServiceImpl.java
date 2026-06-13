@@ -60,11 +60,11 @@ public class BannersServiceImpl extends ServiceImpl<BannersMapper, Banners> impl
                     return ResultData.failure(RespConst.BANNER_MAX_COUNT_MSG);
                 }
                 bannerUrl = fileUploadUtils.uploadImage(UploadEnum.UI_BANNERS, bannerImage);
-                Banners banner = Banners.builder().size(bannerImage.getSize())
-                        .type(bannerImage.getContentType())
-                        .userId(SecurityUtils.getUserId())
-                        .sortOrder((int) (bannersMapper.selectCount(null) + 1))
-                        .path(bannerUrl).build();
+                Banners banner = new Banners().setSize(bannerImage.getSize())
+                        .setType(bannerImage.getContentType())
+                        .setUserId(SecurityUtils.getUserId())
+                        .setSortOrder((int) (bannersMapper.selectCount(null) + 1))
+                        .setPath(bannerUrl);
                 bannersMapper.insert(banner);
                 return ResultData.success(banner);
             } catch (FileUploadException e) {

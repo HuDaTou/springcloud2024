@@ -7,17 +7,17 @@ import com.overthinker.cloud.common.core.entity.BasecopyProperties;
 import com.overthinker.cloud.common.db.BaseData;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 
 @Data
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
-@Builder
 @NoArgsConstructor
+@Accessors(chain = true)
 @TableName("t_video")
 public class Video extends BaseData implements BasecopyProperties {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
@@ -56,8 +56,4 @@ public class Video extends BaseData implements BasecopyProperties {
 
     @Schema(description = "视频访问量", example = "1000")
     private Long videoVisit;
-
-    // 是否删除（0：未删除，1：已删除）
-    @Schema(description = "是否删除（0：未删除，1：已删除）", example = "0")
-    private Integer isDeleted;
 }

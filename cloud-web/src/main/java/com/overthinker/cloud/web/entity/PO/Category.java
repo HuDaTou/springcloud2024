@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 
 /**
@@ -24,19 +25,13 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 @TableName("t_category")
 public class Category extends BaseData implements BasecopyProperties {
-    // 分类id
-    // 表id
     @TableId(value = "id", type = IdType.ASSIGN_ID)
     @Schema(description = "分类主键ID", example = "1234567890123456789")
     private Long id;
 
-    // 分类名
     @Schema(description = "分类名称", example = "电子产品")
     private String categoryName;
-
-    // 是否删除（0：未删除，1：已删除）
-    @Schema(description = "是否删除（0：未删除，1：已删除）", example = "0")
-    private Integer isDeleted;
 }

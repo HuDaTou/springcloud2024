@@ -8,9 +8,9 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.overthinker.cloud.common.core.entity.BasecopyProperties;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Accessors(chain = true)
 @TableName("t_video_tag")
 public class VideoTag implements BasecopyProperties {
     // 关系表id

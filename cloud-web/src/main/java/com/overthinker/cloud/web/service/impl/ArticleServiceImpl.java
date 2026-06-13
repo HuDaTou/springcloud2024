@@ -249,7 +249,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             // 清除标签关系
             articleTagMapper.deleteById(article.getId());
             // 新增标签关系
-            List<ArticleTag> articleTags = articleDTO.getTagId().stream().map(tagId -> ArticleTag.builder().articleId(article.getId()).tagId(tagId).build()).toList();
+            List<ArticleTag> articleTags = articleDTO.getTagId().stream().map(tagId -> new ArticleTag().setArticleId(article.getId()).setTagId(tagId)).toList();
             articleTagService.saveBatch(articleTags);
             return ResultData.success();
         }

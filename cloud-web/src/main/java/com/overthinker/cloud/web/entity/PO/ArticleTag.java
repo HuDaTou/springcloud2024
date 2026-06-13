@@ -7,10 +7,10 @@ import com.overthinker.cloud.common.core.entity.BasecopyProperties;
 import com.overthinker.cloud.common.db.BaseData;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 
 /**
@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Accessors(chain = true)
 @TableName("t_article_tag")
 public class ArticleTag extends BaseData implements BasecopyProperties {
 
@@ -32,14 +32,9 @@ public class ArticleTag extends BaseData implements BasecopyProperties {
     @Schema(description = "主键ID", example = "1234567890123456789")
     private Long id;
 
-//    @TableId
     @Schema(description = "文章ID", example = "9876543210987654321")
     private Long articleId;
 
     @Schema(description = "标签ID", example = "4567890123456789012")
     private Long tagId;
-
-    // 是否删除（0：未删除，1：已删除）
-    @Schema(description = "是否删除（0：未删除，1：已删除）", example = "0")
-    private Integer isDeleted;
 }

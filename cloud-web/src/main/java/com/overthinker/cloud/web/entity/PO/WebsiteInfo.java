@@ -7,10 +7,10 @@ import com.overthinker.cloud.common.core.entity.BasecopyProperties;
 import com.overthinker.cloud.common.db.BaseData;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 
@@ -24,8 +24,8 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
-@Builder
 @NoArgsConstructor
+@Accessors(chain = true)
 @TableName("sys_website_info")
 public class WebsiteInfo extends BaseData implements BasecopyProperties {
     @TableId(value = "id", type = IdType.ASSIGN_ID)
@@ -64,7 +64,4 @@ public class WebsiteInfo extends BaseData implements BasecopyProperties {
 
     @Schema(description = "网站开始运行时间", example = "2023-01-01T00:00:00Z")
     private LocalDateTime startTime;
-
-    @Schema(description = "是否删除（0：未删除，1：已删除）", example = "0")
-    private Integer isDeleted;
 }

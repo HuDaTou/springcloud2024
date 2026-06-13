@@ -71,7 +71,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
             // 处理标签
             videoTagMapper.delete(new LambdaQueryWrapper<VideoTag>().eq(VideoTag::getVideoId, video.getId()));
 //            新增标签
-            List<VideoTag> tags = videoInfoTDO.getTagId().stream().map(tagId -> VideoTag.builder().videoId(video.getId()).tagId(tagId).build()).toList();
+            List<VideoTag> tags = videoInfoTDO.getTagId().stream().map(tagId -> new VideoTag().setVideoId(video.getId()).setTagId(tagId)).toList();
             videoTagService.saveBatch(tags);
             return ResultData.success();
         }
@@ -120,7 +120,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         // 删除视频
         // 创建更新条件
         LambdaUpdateWrapper<Video> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper.set(Video::getIsDeleted, true)
+        updateWrapper.set(Video::isDeleted, true)
                 .in(Video::getId, ids);
 
         // 执行更新操作

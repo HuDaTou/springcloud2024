@@ -38,7 +38,7 @@ public class TreeHoleServiceImpl extends ServiceImpl<TreeHoleMapper, TreeHole> i
 
     @Override
     public ResultData<Void> addTreeHole(String content) {
-        if (this.save(TreeHole.builder().userId(SecurityUtils.getUserId()).content(content).build())) {
+        if (this.save(new TreeHole().setUserId(SecurityUtils.getUserId()).setContent(content))) {
             return ResultData.success();
         }
         return ResultData.failure();
@@ -90,7 +90,7 @@ public class TreeHoleServiceImpl extends ServiceImpl<TreeHoleMapper, TreeHole> i
 
     @Override
     public ResultData<Void> isCheckTreeHole(TreeHoleIsCheckDTO isCheckDTO) {
-        if (treeHoleMapper.updateById(TreeHole.builder().id(isCheckDTO.getId()).isCheck(isCheckDTO.getIsCheck()).build()) > 0)
+        if (treeHoleMapper.updateById(new TreeHole().setId(isCheckDTO.getId()).setIsCheck(isCheckDTO.getIsCheck())) > 0)
             return ResultData.success();
 
         return ResultData.failure();

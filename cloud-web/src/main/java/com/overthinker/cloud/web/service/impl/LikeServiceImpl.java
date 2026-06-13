@@ -39,10 +39,10 @@ public class LikeServiceImpl extends ServiceImpl<LikeMapper, Like> implements Li
                 .eq(Like::getType, type)
                 .eq(Like::getTypeId, typeId));
         if (like != null) return ResultData.failure();
-        Like saveLike = Like.builder()
-                .userId(SecurityUtils.getUserId())
-                .type(type)
-                .typeId(typeId).build();
+        Like saveLike = new Like()
+                .setUserId(SecurityUtils.getUserId())
+                .setType(type)
+                .setTypeId(typeId);
         if (Objects.equals(type, LikeEnum.LIKE_TYPE_ARTICLE.getType()))
             myRedisCache.incrementCacheMapValue(RedisConstants.ARTICLE_LIKE_COUNT, typeId.toString(), 1);
         if (this.save(saveLike)) return ResultData.success();
