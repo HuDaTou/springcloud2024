@@ -1,4 +1,4 @@
-package com.overthinker.cloud.api.auth.dto;
+package com.overthinker.cloud.api.apis.auth.dto;
 
 import com.overthinker.cloud.common.core.entity.BasecopyProperties;
 import jakarta.validation.constraints.NotNull;

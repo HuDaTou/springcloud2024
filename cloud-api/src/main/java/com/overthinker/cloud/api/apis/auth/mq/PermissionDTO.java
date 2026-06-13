@@ -1,4 +1,4 @@
-package com.overthinker.cloud.api.auth.mq;
+package com.overthinker.cloud.api.apis.auth.mq;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

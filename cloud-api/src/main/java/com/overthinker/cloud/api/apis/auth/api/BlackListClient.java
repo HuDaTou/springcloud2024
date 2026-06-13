@@ -1,11 +1,12 @@
-package com.overthinker.cloud.api.auth.api;
+package com.overthinker.cloud.api.apis.auth.api;
 
-import com.overthinker.cloud.api.auth.dto.AddBlackListRequest;
-import com.overthinker.cloud.api.auth.dto.BlackListCheckResponse;
+import com.overthinker.cloud.api.apis.auth.dto.AddBlackListRequest;
+import com.overthinker.cloud.api.apis.auth.dto.BlackListCheckResponse;
+import com.overthinker.cloud.api.config.FeignClientCredentialsConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "cloud-auth")
+@FeignClient(name = "cloud-auth", configuration = FeignClientCredentialsConfig.class)
 public interface BlackListClient {
 
     @GetMapping("/internal/api/blacklist/check")

@@ -1,4 +1,4 @@
-package com.overthinker.cloud.api.auth.dto;
+package com.overthinker.cloud.api.apis.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

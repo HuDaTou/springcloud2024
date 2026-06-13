@@ -1,5 +1,6 @@
-package com.overthinker.cloud.api.auth.api;
+package com.overthinker.cloud.api.apis.auth.api;
 
+import com.overthinker.cloud.api.config.FeignClientCredentialsConfig;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 import java.util.Map;
 
-@FeignClient(name = "cloud-auth")
+@FeignClient(name = "cloud-auth", configuration = FeignClientCredentialsConfig.class)
 public interface UserClient {
 
     @GetMapping("/internal/api/user/count")
