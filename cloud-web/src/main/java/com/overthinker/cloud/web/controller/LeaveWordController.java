@@ -9,7 +9,7 @@ import com.overthinker.cloud.common.core.base.BaseController;
 import com.overthinker.cloud.common.core.resp.ResultData;
 
 
-import com.overthinker.cloud.system.redis.annotation.AccessLimit;
+import com.overthinker.cloud.system.starter.redis.annotation.AccessLimit;
 import com.overthinker.cloud.web.entity.DTO.LeaveWordIsCheckDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchLeaveWordDTO;
 import com.overthinker.cloud.web.entity.VO.LeaveWordListVO;

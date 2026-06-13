@@ -2,7 +2,7 @@ package com.overthinker.cloud.web.controller;
 
 import com.overthinker.cloud.common.core.base.BaseController;
 import com.overthinker.cloud.common.core.resp.ResultData;
-import com.overthinker.cloud.system.auth.utils.SecurityUtils;
+import com.overthinker.cloud.system.starter.auth.utils.SecurityUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.validation.annotation.Validated;
