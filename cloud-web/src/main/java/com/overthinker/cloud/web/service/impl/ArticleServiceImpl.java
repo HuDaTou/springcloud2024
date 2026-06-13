@@ -56,7 +56,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     private final CommentService commentService;
     private final MyRedisCache myRedisCache;
     private final FileUploadUtils fileUploadUtils;
-    private final com.overthinker.cloud.api.auth.api.UserClient userClient;
+    private final com.overthinker.cloud.api.apis.auth.api.UserClient userClient;
     private final LikeMapper likeMapper;
     private final FavoriteMapper favoriteMapper;
     private final CommentMapper commentMapper;

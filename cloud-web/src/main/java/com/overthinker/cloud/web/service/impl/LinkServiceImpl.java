@@ -2,12 +2,12 @@ package com.overthinker.cloud.web.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.overthinker.cloud.api.auth.api.EmailClient;
+import com.overthinker.cloud.api.apis.auth.api.EmailClient;
+import com.overthinker.cloud.api.apis.auth.api.UserClient;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.web.entity.DTO.LinkDTO;
 import com.overthinker.cloud.web.entity.DTO.LinkIsCheckDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchLinkDTO;
-import com.overthinker.cloud.api.auth.api.UserClient;
 import com.overthinker.cloud.web.entity.PO.Link;
 import com.overthinker.cloud.web.entity.VO.LinkListVO;
 import com.overthinker.cloud.web.entity.VO.LinkVO;

@@ -1,7 +1,7 @@
 package com.overthinker.cloud.web.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.overthinker.cloud.api.auth.dto.UserCommentDTO;
+import com.overthinker.cloud.api.apis.auth.dto.UserCommentDTO;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.web.entity.DTO.CommentIsCheckDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchCommentDTO;

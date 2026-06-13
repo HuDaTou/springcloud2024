@@ -1,6 +1,6 @@
 package com.overthinker.cloud.web.controller;
 
-import com.overthinker.cloud.api.auth.api.UserClient;
+import com.overthinker.cloud.api.apis.auth.api.UserClient;
 import com.overthinker.cloud.common.core.base.BaseController;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.web.entity.VO.SseDataVO;

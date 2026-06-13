@@ -2,10 +2,10 @@ package com.overthinker.cloud.web.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.overthinker.cloud.api.apis.auth.api.UserClient;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.web.entity.DTO.FavoriteIsCheckDTO;
 import com.overthinker.cloud.web.entity.DTO.SearchFavoriteDTO;
-import com.overthinker.cloud.api.auth.api.UserClient;
 import com.overthinker.cloud.web.entity.PO.Favorite;
 import com.overthinker.cloud.web.entity.VO.FavoriteListVO;
 import com.overthinker.cloud.system.starter.redis.constants.RedisConstants;

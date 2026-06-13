@@ -1,7 +1,7 @@
 package com.overthinker.cloud.web.controller;
 
 
-import com.overthinker.cloud.api.auth.dto.UserCommentDTO;
+import com.overthinker.cloud.api.apis.auth.dto.UserCommentDTO;
 import com.overthinker.cloud.common.core.annotation.CheckBlacklist;
 import com.overthinker.cloud.common.core.annotation.LogAnnotation;
 import com.overthinker.cloud.common.core.annotation.LogConst;
