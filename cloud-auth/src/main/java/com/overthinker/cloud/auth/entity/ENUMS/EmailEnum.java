@@ -4,7 +4,7 @@ import com.overthinker.cloud.auth.entity.DTO.MailDTO;
 import com.overthinker.cloud.common.core.constants.NumberConst;
 import com.overthinker.cloud.common.core.exception.BusinessException;
 import com.overthinker.cloud.common.core.resp.ReturnCodeEnum;
-import com.overthinker.cloud.system.redis.constants.RedisConstants;
+import com.overthinker.cloud.system.starter.redis.constants.RedisConstants;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

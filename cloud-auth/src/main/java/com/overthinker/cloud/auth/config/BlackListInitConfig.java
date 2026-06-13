@@ -3,7 +3,7 @@ package com.overthinker.cloud.auth.config;
 import com.overthinker.cloud.auth.constants.BlackListConst;
 import com.overthinker.cloud.auth.entity.PO.BlackList;
 import com.overthinker.cloud.auth.mapper.BlackListMapper;
-import com.overthinker.cloud.system.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.starter.redis.utils.MyRedisCache;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

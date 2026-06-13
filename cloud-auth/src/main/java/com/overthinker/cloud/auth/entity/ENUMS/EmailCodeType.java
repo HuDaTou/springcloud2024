@@ -3,7 +3,7 @@ package com.overthinker.cloud.auth.entity.ENUMS;
 import com.overthinker.cloud.common.core.constants.NumberConst;
 import com.overthinker.cloud.common.core.exception.BusinessException;
 import com.overthinker.cloud.common.core.resp.ReturnCodeEnum;
-import com.overthinker.cloud.system.redis.constants.RedisConstants;
+import com.overthinker.cloud.system.starter.redis.constants.RedisConstants;
 
 /**
  * 邮箱验证码类型

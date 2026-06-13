@@ -1,9 +1,10 @@
 package com.overthinker.cloud.api.auth.api;
 
-import com.overthinker.cloud.api.auth.dto.PermissionDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import com.overthinker.cloud.api.auth.mq.PermissionDTO;
 
 import java.util.List;
 

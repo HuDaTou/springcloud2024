@@ -6,7 +6,9 @@ import com.overthinker.cloud.common.core.resp.ResultData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,29 +28,33 @@ public class PermissionController {
     private final PermissionService permissionService;
 
     @Operation(summary = "获取所有权限", description = "获取系统中所有的权限列表")
+    @PreAuthorize("hasAuthority('auth:permission:list')")
     @GetMapping
     public ResultData<List<SysPermission>> getAllPermissions() {
         return ResultData.success(permissionService.list());
     }
 
     @Operation(summary = "创建权限", description = "手动创建一个新的权限")
+    @PreAuthorize("hasAuthority('auth:permission:add')")
     @PostMapping
-    public ResultData<Void> createPermission(@RequestBody SysPermission permission) {
+    public ResultData<Void> createPermission(@RequestBody @Valid SysPermission permission) {
         permissionService.save(permission);
         return ResultData.success();
     }
 
     @Operation(summary = "更新权限", description = "根据ID更新权限信息")
+    @PreAuthorize("hasAuthority('auth:permission:edit')")
     @PutMapping("/{id}")
     public ResultData<Void> updatePermission(
             @Parameter(description = "权限ID", required = true) @PathVariable Long id,
-            @RequestBody SysPermission permission) {
+            @RequestBody @Valid SysPermission permission) {
         permission.setId(id);
         permissionService.updateById(permission);
         return ResultData.success();
     }
 
     @Operation(summary = "删除权限", description = "根据ID删除权限")
+    @PreAuthorize("hasAuthority('auth:permission:delete')")
     @DeleteMapping("/{id}")
     public ResultData<Void> deletePermission(
             @Parameter(description = "权限ID", required = true) @PathVariable Long id) {

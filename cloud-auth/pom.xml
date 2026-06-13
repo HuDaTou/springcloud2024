@@ -26,7 +26,7 @@
 
         <!-- Consul 服务注册与发现 -->
         <dependency>
-            <groupId>com.overthinker.cloud.system</groupId>
+            <groupId>com.overthinker.cloud.system.starter</groupId>
             <artifactId>system-consul-starter</artifactId>
         </dependency>
 
@@ -55,7 +55,7 @@
 
         <!-- Redis Starter -->
         <dependency>
-            <groupId>com.overthinker.cloud.system</groupId>
+            <groupId>com.overthinker.cloud.system.starter</groupId>
             <artifactId>system-redis-starter</artifactId>
         </dependency>
 
@@ -81,7 +81,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.overthinker.cloud.system</groupId>
+            <groupId>com.overthinker.cloud.system.starter</groupId>
             <artifactId>system-auth-starter</artifactId>
         </dependency>
 

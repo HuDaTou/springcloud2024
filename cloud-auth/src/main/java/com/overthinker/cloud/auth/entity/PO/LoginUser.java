@@ -3,7 +3,7 @@ package com.overthinker.cloud.auth.entity.PO;
 
 
 import com.alibaba.fastjson2.annotation.JSONField;
-import com.overthinker.cloud.system.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.starter.redis.utils.MyRedisCache;
 import jakarta.annotation.Resource;
 import lombok.AllArgsConstructor;
 import lombok.Data;

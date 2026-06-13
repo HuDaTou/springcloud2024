@@ -10,12 +10,12 @@ import com.overthinker.cloud.auth.entity.VO.UserListVO;
 import com.overthinker.cloud.auth.mapper.*;
 import com.overthinker.cloud.auth.service.UserService;
 import com.overthinker.cloud.common.core.resp.ResultData;
-import com.overthinker.cloud.system.auth.utils.SecurityUtils;
+import com.overthinker.cloud.system.starter.auth.utils.SecurityUtils;
 import com.overthinker.cloud.common.core.utils.MyDateUtils;
 import com.overthinker.cloud.common.core.utils.MyStringUtils;
 
 import com.overthinker.cloud.auth.constants.AuthRedisConst;
-import com.overthinker.cloud.system.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.starter.redis.utils.MyRedisCache;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;

@@ -7,7 +7,7 @@ import com.overthinker.cloud.auth.entity.ENUMS.EmailEnum;
 import com.overthinker.cloud.auth.service.EmailService;
 import com.overthinker.cloud.common.core.constants.NumberConst;
 import com.overthinker.cloud.common.core.utils.MyStringUtils;
-import com.overthinker.cloud.system.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.starter.redis.utils.MyRedisCache;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

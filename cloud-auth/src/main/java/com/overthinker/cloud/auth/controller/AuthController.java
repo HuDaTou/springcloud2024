@@ -3,11 +3,12 @@ package com.overthinker.cloud.auth.controller;
 import com.overthinker.cloud.auth.entity.DTO.UserRegisterDTO;
 import com.overthinker.cloud.auth.service.AuthService;
 import com.overthinker.cloud.common.core.resp.ResultData;
-import com.overthinker.cloud.system.auth.utils.SecurityUtils;
+import com.overthinker.cloud.system.starter.auth.utils.SecurityUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "认证服务", description = "用户注册、登录、密码重置等公开认证接口")
+@Tag(name = "认证管理", description = "用户注册、登录、密码重置等公开认证接口")
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -31,6 +32,7 @@ public class AuthController {
     }
 
     @Operation(summary = "获取用户权限码", description = "获取当前登录用户的权限码列表")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/codes")
     public ResultData<List<String>> getCodes() {
         return ResultData.success(SecurityUtils.getAuthorities());

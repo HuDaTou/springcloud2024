@@ -11,12 +11,13 @@ import com.overthinker.cloud.auth.entity.VO.UserListVO;
 
 import com.overthinker.cloud.auth.service.UserService;
 import com.overthinker.cloud.common.core.resp.ResultData;
-import com.overthinker.cloud.system.auth.utils.SecurityUtils;
+import com.overthinker.cloud.system.starter.auth.utils.SecurityUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -67,36 +68,42 @@ public class UserController extends BaseController {
 
 
     @Operation(summary = "获取用户列表", description = "【管理员】获取系统所有用户列表")
+    @PreAuthorize("hasAuthority('auth:user:list')")
     @GetMapping("/list")
     public ResultData<List<UserListVO>> getUserList() {
         return messageHandler(() -> userService.getUserOrSearch(null));
     }
 
     @Operation(summary = "搜索用户列表", description = "【管理员】根据条件搜索用户")
+    @PreAuthorize("hasAuthority('auth:user:list')")
     @PostMapping("/search")
     public ResultData<List<UserListVO>> searchUserList(@RequestBody UserSearchDTO userSearchDTO) {
         return messageHandler(() -> userService.getUserOrSearch(userSearchDTO));
     }
 
     @Operation(summary = "更新用户状态", description = "【管理员】启用或禁用用户")
+    @PreAuthorize("hasAuthority('auth:user:edit')")
     @PostMapping("/update/status")
     public ResultData<Void> updateStatus(@RequestBody @Valid UpdateRoleStatusDTO updateRoleStatusDTO) {
         return userService.updateStatus(updateRoleStatusDTO.getId(), updateRoleStatusDTO.getStatus());
     }
 
     @Operation(summary = "获取用户详细信息", description = "【管理员】根据ID获取用户详细信息")
+    @PreAuthorize("hasAuthority('auth:user:query')")
     @GetMapping("/details/{id}")
     public ResultData<UserDetailsVO> getUserDetails(@PathVariable("id") Long id) {
         return messageHandler(() -> userService.findUserDetailsById(id));
     }
 
     @Operation(summary = "删除用户", description = "【管理员】批量删除用户")
+    @PreAuthorize("hasAuthority('auth:user:delete')")
     @DeleteMapping("/delete")
     public ResultData<Void> deleteUser(@RequestBody UserDeleteDTO userDeleteDTO) {
         return userService.deleteUser(userDeleteDTO.getIds());
     }
 
     @Operation(summary = "管理员创建用户", description = "【管理员】直接创建新用户，无需验证码")
+    @PreAuthorize("hasAuthority('auth:user:add')")
     @PostMapping("/admin/create")
     public ResultData<Void> adminCreateUser(@RequestBody @Valid AdminCreateUserDTO adminCreateUserDTO) {
         return userService.adminCreateUser(adminCreateUserDTO);

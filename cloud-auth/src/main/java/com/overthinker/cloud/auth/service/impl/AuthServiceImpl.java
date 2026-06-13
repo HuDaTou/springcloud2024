@@ -11,8 +11,8 @@ import com.overthinker.cloud.auth.service.AuthService;
 import com.overthinker.cloud.auth.service.RoleService;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.common.core.utils.MyStringUtils;
-import com.overthinker.cloud.system.redis.constants.RedisConstants;
-import com.overthinker.cloud.system.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.starter.redis.constants.RedisConstants;
+import com.overthinker.cloud.system.starter.redis.utils.MyRedisCache;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
