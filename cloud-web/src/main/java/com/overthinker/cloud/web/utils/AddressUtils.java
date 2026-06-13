@@ -3,7 +3,7 @@ package com.overthinker.cloud.web.utils;
 import com.alibaba.fastjson.JSONObject;
 import com.overthinker.cloud.common.core.constants.HttpConst;
 import com.overthinker.cloud.common.core.utils.HttpUtils;
-import io.micrometer.common.util.StringUtils;
+import com.overthinker.cloud.common.core.utils.MyStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +29,7 @@ public class AddressUtils {
         //ture：获取ip地址开关
         try {
             String rspStr = HttpUtils.sendGet(IP_URL, "ip=" + ip + "&json=true", HttpConst.GBK);
-            if (StringUtils.isEmpty(rspStr)) {
+            if (MyStringUtils.isEmpty(rspStr)) {
                 log.error("获取地理位置异常 {}", ip);
                 return UNKNOWN;
             }

@@ -17,11 +17,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 @RefreshScope //consul配置动态刷新
 @EnableScheduling
 @EnableMethodSecurity
-public class bilibiliWeb {
+public class cloudWebApplication {
 
 
     public static void main(String[] args) {
-        SpringApplication.run(bilibiliWeb.class, args);
+        SpringApplication.run(cloudWebApplication.class, args);
 
 
         log.info(

@@ -30,13 +30,17 @@
 
         <!-- Redis Starter -->
         <dependency>
-            <groupId>com.overthinker.cloud.system</groupId>
+            <groupId>com.overthinker.cloud.system.starter</groupId>
             <artifactId>system-redis-starter</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.overthinker.cloud.system</groupId>
+        <!-- <dependency>
+            <groupId>com.overthinker.cloud.system.starter</groupId>
             <artifactId>system-audit-log-starter</artifactId>
+        </dependency> -->
+        <dependency>
+            <groupId>com.overthinker.cloud.system.starter</groupId>
+            <artifactId>system-auth-starter</artifactId>
         </dependency>
 
 
@@ -161,7 +165,7 @@
 
 
         <dependency>
-            <groupId>com.overthinker.cloud.system</groupId>
+            <groupId>com.overthinker.cloud.system.starter</groupId>
             <artifactId>system-auth-starter</artifactId>
         </dependency>
 

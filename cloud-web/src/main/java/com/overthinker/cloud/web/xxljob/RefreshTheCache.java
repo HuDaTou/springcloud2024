@@ -1,8 +1,8 @@
 package com.overthinker.cloud.web.xxljob;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.overthinker.cloud.system.redis.constants.RedisConstants;
-import com.overthinker.cloud.system.redis.utils.MyRedisCache;
+import com.overthinker.cloud.system.starter.redis.constants.RedisConstants;
+import com.overthinker.cloud.system.starter.redis.utils.MyRedisCache;
 import com.overthinker.cloud.web.entity.PO.Article;
 import com.overthinker.cloud.web.mapper.ArticleMapper;
 import com.xxl.job.core.context.XxlJobHelper;
