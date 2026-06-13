@@ -60,7 +60,6 @@ public class MyJsonUtils {
      * @param <T>   列表元素类型
      * @return 反序列化后的列表，json 为空或 null 时返回 null
      */
-    @SuppressWarnings("unchecked")
     public static <T> List<T> fromJsonArray(String json, Class<T> clazz) {
         if (json == null || json.isEmpty()) {
             return null;
@@ -89,7 +88,6 @@ public class MyJsonUtils {
      * @param <T>        Map 值类型
      * @return 解析后的 Map，json 为空或 null 时返回 null
      */
-    @SuppressWarnings("unchecked")
     public static <T> Map<String, T> parseMap(String json, Class<T> valueClass) {
         if (json == null || json.isEmpty()) {
             return null;
@@ -106,7 +104,6 @@ public class MyJsonUtils {
      * @return 转换后的对象，fromValue 或 toValueType 为 null 时返回 null
      * @throws IllegalArgumentException 当 toValueType 为 null 时抛出
      */
-    @SuppressWarnings("unchecked")
     public static <T> T convertValue(Object fromValue, Class<T> toValueType) {
         if (fromValue == null) {
             return null;
