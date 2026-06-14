@@ -2,6 +2,7 @@ package com.overthinker.cloud.auth.controller;
 
 import com.overthinker.cloud.api.apis.auth.mq.PermissionDTO;
 import com.overthinker.cloud.auth.entity.PO.SysPermission;
+import com.overthinker.cloud.auth.entity.VO.PermissionTreeVO;
 import com.overthinker.cloud.auth.service.PermissionService;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,7 +13,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -61,6 +65,38 @@ public class PermissionController {
             @Parameter(description = "权限ID", required = true) @PathVariable Long id) {
         permissionService.removeById(id);
         return ResultData.success();
+    }
+
+    @Operation(summary = "获取权限树", description = "按分类分组返回权限树结构，用于角色分配权限时的树形选择")
+    @PreAuthorize("hasAuthority('auth:permission:list')")
+    @GetMapping("/tree")
+    public ResultData<List<PermissionTreeVO>> getPermissionTree() {
+        List<SysPermission> allPermissions = permissionService.list();
+
+        Map<String, List<SysPermission>> grouped = allPermissions.stream()
+                .collect(Collectors.groupingBy(p ->
+                        p.getCategory() != null ? p.getCategory() : "未分类"));
+
+        List<PermissionTreeVO> tree = grouped.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .map(entry -> {
+                    List<PermissionTreeVO> children = entry.getValue().stream()
+                            .sorted(Comparator.comparing(SysPermission::getName, Comparator.nullsLast(Comparator.naturalOrder())))
+                            .map(p -> PermissionTreeVO.builder()
+                                    .label(p.getName())
+                                    .value(p.getPermissonCode())
+                                    .id(p.getId())
+                                    .build())
+                            .collect(Collectors.toList());
+                    return PermissionTreeVO.builder()
+                            .label(entry.getKey())
+                            .value(entry.getKey())
+                            .children(children)
+                            .build();
+                })
+                .collect(Collectors.toList());
+
+        return ResultData.success(tree);
     }
 
     @Operation(summary = "注册权限（内部调用）", description = "批量注册其他服务的权限数据")

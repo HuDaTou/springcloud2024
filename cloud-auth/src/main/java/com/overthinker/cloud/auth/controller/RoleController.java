@@ -1,6 +1,7 @@
 package com.overthinker.cloud.auth.controller;
 
 import com.overthinker.cloud.auth.entity.PO.SysRole;
+import com.overthinker.cloud.auth.service.RolePermissionService;
 import com.overthinker.cloud.auth.service.RoleService;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoleController {
     private final RoleService roleService;
+    private final RolePermissionService rolePermissionService;
 
     @Operation(summary = "获取所有角色", description = "获取系统中所有的角色列表")
     @PreAuthorize("hasAuthority('auth:role:list')")
@@ -52,6 +54,24 @@ public class RoleController {
     public ResultData<Void> deleteRole(
             @Parameter(description = "角色ID", required = true) @PathVariable Long id) {
         roleService.removeById(id);
+        return ResultData.success();
+    }
+
+    @Operation(summary = "获取角色权限ID列表", description = "根据角色ID获取该角色拥有的权限ID列表")
+    @PreAuthorize("hasAuthority('auth:role:permission:query')")
+    @GetMapping("/{roleId}/permissions")
+    public ResultData<List<Long>> getPermissionIdsByRoleId(
+            @Parameter(description = "角色ID", required = true) @PathVariable Long roleId) {
+        return ResultData.success(rolePermissionService.getPermissionIdsByRoleId(roleId));
+    }
+
+    @Operation(summary = "分配权限给角色", description = "为指定角色分配权限列表")
+    @PreAuthorize("hasAuthority('auth:role:permission:edit')")
+    @PutMapping("/{roleId}/permissions")
+    public ResultData<Void> assignPermissionsToRole(
+            @Parameter(description = "角色ID", required = true) @PathVariable Long roleId,
+            @Parameter(description = "权限ID列表", required = true) @RequestBody @Valid List<Long> permissionIds) {
+        rolePermissionService.assignPermissionsToRole(roleId, permissionIds);
         return ResultData.success();
     }
 }
