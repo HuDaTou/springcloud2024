@@ -6,102 +6,77 @@ globs: frontend/vue-vben-admin/**/adapter/**/*.ts
 
 > **适用范围**：`frontend/vue-vben-admin/` 目录下所有 `adapter/**/*.ts` 文件
 
-## 一、强制要求（AI必须100%遵守，违反即错误）
+## 一、强制要求
 
-1. **必须使用TypeScript**：所有适配器必须使用TypeScript编写
-2. **必须封装第三方组件**：必须对第三方组件进行封装
-3. **必须提供统一接口**：适配器必须提供统一的API接口
+1. **必须使用TypeScript**
+2. **适配器分三个文件**：`vxe-table.ts`（表格）、`form.ts`（表单）、`component/index.ts`（组件类型定义和注册）
 
-## 二、推荐做法（AI优先采用，效果更好）
+## 二、推荐做法
 
-1. **使用组合式函数**：使用useXXX形式的组合式函数封装组件
-2. **使用泛型**：为适配器添加泛型支持
-3. **提供默认配置**：为适配器提供合理的默认配置
+1. `vxe-table.ts`：用 `setupVbenVxeTable` 全局配置，注册自定义渲染器（CellImage/CellTag/CellSwitch/CellOperation），导出 `useVbenVxeGrid`
+2. `form.ts`：用 `setupVbenForm` 全局配置 `modelPropNameMap` 和校验规则（`required`/`selectRequired`），导出 `useVbenForm`
+3. `component/index.ts`：定义 `ComponentType`（所有组件名的联合类型）和 `ComponentPropsMap`（组件→Props类型映射），用 `globalShareState.setComponents()` 注册，输入组件用 `withDefaultPlaceholder()` 包装自动添加 placeholder
 
-## 三、禁止行为（AI绝对不能生成）
+## 三、禁止行为
 
-1. **禁止直接使用第三方组件**：禁止在业务组件中直接使用第三方组件
-2. **禁止硬编码配置**：禁止在适配器中硬编码配置
+1. **禁止直接使用第三方组件**：业务组件必须通过adapter
+2. **禁止硬编码配置**
 
-## 四、目录结构
+## 四、核心模式
 
-```
-src/adapter/
-├── index.ts                # 适配器统一导出
-├── vxe-table/              # VXE Table适配器
-├── form/                   # 表单适配器
-└── component/              # 组件适配器
-```
-
-## 五、标准代码示例
-
-### VXE Table适配器
+### 表格适配器结构
 ```typescript
-import { useVxeGrid } from '@vben/adapter-vxe-table';
+// adapter/vxe-table.ts
+import { setupVbenVxeTable, useVbenVxeGrid as useGrid } from '@vben/plugins/vxe-table';
+import { Button, Image, Popconfirm, Switch, Tag } from 'antdv-next';
 
-export function useVbenVxeGrid<T = any>(options: GridOptions<T>) {
-  const { Grid, api } = useVxeGrid({
-    ...options,
-    gridOptions: {
-      border: true,
-      showHeader: true,
-      ...options.gridOptions,
+// 1. 全局配置 + 注册渲染器
+setupVbenVxeTable({
+  configVxeTable: (vxeUI) => {
+    vxeUI.setConfig({ grid: { align: 'center', border: false, /* ... */ } });
+    vxeUI.renderer.add('CellTag', { /* ... */ });
+    vxeUI.renderer.add('CellSwitch', { /* ... */ });
+    vxeUI.renderer.add('CellOperation', { /* ... */ });
+  },
+});
+
+// 2. 导出封装
+export const useVbenVxeGrid = <T extends Record<string, any>>(
+  ...rest: Parameters<typeof useGrid<T, ComponentType, ComponentPropsMap>>
+) => useGrid<T, ComponentType, ComponentPropsMap>(...rest);
+```
+
+### 表单适配器结构
+```typescript
+// adapter/form.ts
+import { setupVbenForm, useVbenForm as useForm, z } from '@vben/common-ui';
+
+// 全局配置：modelPropNameMap + 校验规则
+async function initSetupVbenForm() {
+  setupVbenForm<ComponentType>({
+    config: {
+      baseModelPropName: 'value',
+      modelPropNameMap: { Checkbox: 'checked', Radio: 'checked', Switch: 'checked', Upload: 'fileList' },
+    },
+    defineRules: {
+      required: (value, _params, ctx) => { /* $t('ui.formRules.required', [ctx.label]) */ },
+      selectRequired: (value, _params, ctx) => { /* $t('ui.formRules.selectRequired', [ctx.label]) */ },
     },
   });
-
-  return { Grid, api };
 }
 
-interface GridOptions<T> {
-  gridOptions?: Partial<VxeGridOptions<T>>;
-}
+const useVbenForm = useForm<ComponentType, ComponentPropsMap>;
+export { initSetupVbenForm, useVbenForm, z };
+export type VbenFormSchema = FormSchema<ComponentType, ComponentPropsMap>;
 ```
 
-### 表单适配器
+### 组件适配器结构
 ```typescript
-import { useForm } from '@vben/adapter-form';
-
-export function useVbenForm<T = any>(options: FormOptions<T>) {
-  const { Form, api } = useForm({
-    ...options,
-    formOptions: {
-      labelWidth: '120px',
-      layout: 'horizontal',
-      ...options.formOptions,
-    },
-  });
-
-  return { Form, api };
-}
-
-interface FormOptions<T> {
-  schema: FormSchema[];
-  formOptions?: Partial<FormConfig>;
-}
-```
-
-### 组件适配器
-```typescript
-import { Button } from 'antdv-next';
-
-export function VbenButton(props: ButtonProps) {
-  return h(Button, {
-    type: props.type || 'default',
-    size: props.size || 'middle',
-    ...props,
-  });
-}
-
-interface ButtonProps {
-  type?: 'primary' | 'default' | 'danger';
-  size?: 'small' | 'middle' | 'large';
-  onClick?: () => void;
-}
-```
-
-### 适配器统一导出
-```typescript
-export { useVbenVxeGrid } from './vxe-table';
-export { useVbenForm } from './form';
-export { VbenButton } from './component';
+// adapter/component/index.ts
+// 1. 定义 ComponentType（所有可用组件名称的联合类型）
+// 2. 定义 ComponentPropsMap（组件名 → Props类型的映射）
+// 3. 用 defineAsyncComponent 导入组件
+// 4. 用 withDefaultPlaceholder 包装输入组件（自动添加 placeholder）
+// 5. 用 globalShareState.setComponents() 注册所有组件
+// 6. 导出 initComponentAdapter 在 bootstrap.ts 中调用
 ```
