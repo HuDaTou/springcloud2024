@@ -26,7 +26,7 @@
 
         <!-- Consul 服务注册与发现 -->
         <dependency>
-            <groupId>com.overthinker.cloud.system</groupId>
+            <groupId>com.overthinker.cloud.system.starter</groupId>
             <artifactId>system-consul-starter</artifactId>
         </dependency>
 
@@ -41,18 +41,16 @@
             <artifactId>springdoc-openapi-starter-common</artifactId>
         </dependency>
 
-        <!-- PostgreSQL Driver -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
-        </dependency>
         <dependency>
             <groupId>com.overthinker.cloud.common</groupId>
             <artifactId>cloud-common-db</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.overthinker.cloud.system</groupId>
+            <groupId>com.overthinker.cloud.system.starter</groupId>
+            <artifactId>system-auth-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.overthinker.cloud.system.starter</groupId>
             <artifactId>system-redis-starter</artifactId>
         </dependency>
     </dependencies>

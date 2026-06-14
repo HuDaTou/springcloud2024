@@ -1,25 +1,25 @@
 package com.overthinker.cloud.media.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.overthinker.cloud.common.core.exception.BusinessException;
+import com.overthinker.cloud.common.core.exception.FileUploadException;
+import com.overthinker.cloud.common.core.resp.ReturnCodeEnum;
 import com.overthinker.cloud.media.config.MinioProperties;
-import com.overthinker.cloud.media.constants.MediaStatus;
 import com.overthinker.cloud.media.entity.DTO.InitiateMultipartUploadDTO;
 import com.overthinker.cloud.media.entity.PO.FileUploadRules;
 import com.overthinker.cloud.media.entity.PO.MediaAsset;
+import com.overthinker.cloud.media.entity.VO.MediaAssetVO;
+import com.overthinker.cloud.media.enums.MediaStatusEnum;
 import com.overthinker.cloud.media.mapper.MediaAssetMapper;
 import com.overthinker.cloud.media.service.FileUploadRulesService;
 import com.overthinker.cloud.media.service.MediaAssetService;
 import com.overthinker.cloud.media.service.UploadService;
-
-import com.overthinker.cloud.system.redis.utils.MyRedisCache;
-import io.minio.messages.Part;
-import io.minio.ListPartsResponse;
-
+import com.overthinker.cloud.media.utils.MediaUtils;
+import com.overthinker.cloud.system.starter.redis.utils.MyRedisCache;
 import io.minio.*;
-
-
 import io.minio.http.Method;
+import io.minio.messages.Part;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,6 +32,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+/**
+ * 文件上传服务实现类
+ *
+ * @author overthinker
+ * @since 2025-08-02
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -42,81 +48,85 @@ public class UploadServiceImpl implements UploadService {
     private final MinioProperties minioProperties;
     private final MediaAssetMapper mediaAssetMapper;
     private final MyRedisCache redisCache;
-    private final MediaAssetService MediaAssetService; // 注入媒体处理服务
-
-    private static final String UPLOAD_ID_CACHE_PREFIX = "media:uploadId:";
+    private final MediaAssetService mediaAssetService;
     private final FileUploadRulesService fileUploadRulesService;
 
+    private static final String UPLOAD_ID_CACHE_PREFIX = "media:uploadId:";
+
     @Override
-    @Transactional
-    public Map<String, Object> handleFirstPartAndGenerateUrls(Long userId, InitiateMultipartUploadDTO DTO) throws Exception {
+    @Transactional(rollbackFor = Exception.class)
+    public Map<String, Object> handleFirstPartAndGenerateUrls(Long userId, InitiateMultipartUploadDTO dto) throws Exception {
+        log.info("开始初始化分片上传，用户ID: {}, 文件名: {}", userId, dto.filename());
 
-
-
-
-
-
-        // 1. 配置校验
-        FileUploadRules fileUploadRules = fileUploadRulesService.getById(DTO.fileType());
-
-
-
-        // 使用注入的 mediaProperties 进行校验
-        if (DTO.fileSize() > fileUploadRules.getMaxSizeKb()) {
-            throw new IllegalArgumentException("文件大小超过 " + (fileUploadRules.getMaxSizeKb() / 1024 / 1024) + "MB 限制");
-        }
-        if (!fileUploadRules.getAllowedExtensions().contains(DTO.contentType())) {
-            throw new IllegalArgumentException("不支持的文件类型: " + DTO.contentType());
+        FileUploadRules fileUploadRules = fileUploadRulesService.getById(dto.fileType());
+        if (fileUploadRules == null) {
+            throw new BusinessException(ReturnCodeEnum.PARAM_ERROR, "文件类型规则不存在，文件类型ID: " + dto.fileType());
         }
 
+        long maxSizeBytes = fileUploadRules.getMaxSizeKb() * 1024L;
+        if (dto.fileSize() > maxSizeBytes) {
+            throw new FileUploadException(
+                    "文件大小超过限制，最大允许: " + MediaUtils.formatFileSize(maxSizeBytes) + 
+                    ", 当前文件: " + MediaUtils.formatFileSize(dto.fileSize()),
+                    ReturnCodeEnum.FILE_SIZE_ERROR
+            );
+        }
 
+        if (fileUploadRules.getAllowedExtensions() != null && 
+            !fileUploadRules.getAllowedExtensions().isEmpty() && 
+            !fileUploadRules.getAllowedExtensions().contains(dto.contentType())) {
+            throw new FileUploadException(
+                    "不支持的文件类型: " + dto.contentType() + 
+                    "，允许的类型: " + String.join(", ", fileUploadRules.getAllowedExtensions()),
+                    ReturnCodeEnum.FILE_TYPE_ERROR
+            );
+        }
 
-        // 2. 秒传功能实现
-        // 根据MD5查找是否已存在相同文件
-        MediaAsset existingAsset = mediaAssetMapper.selectOne(new QueryWrapper<MediaAsset>()
-                .eq("file_md5", DTO.fileMd5())
-                .eq("status", MediaStatus.UPLOADED)
-                .last("LIMIT 1"));
+        MediaAsset existingAsset = mediaAssetMapper.selectOne(
+                new LambdaQueryWrapper<MediaAsset>()
+                        .eq(MediaAsset::getFileMd5, dto.fileMd5())
+                        .eq(MediaAsset::getStatus, MediaStatusEnum.UPLOADED.getCode())
+                        .last("LIMIT 1")
+        );
 
         if (existingAsset != null) {
-            log.info("文件秒传命中，MD5: {}。直接复用现有文件: {}", DTO.fileMd5(), existingAsset.getObjectName());
-            // 创建一条新的媒体记录，但指向同一个MinIO对象
+            log.info("文件秒传命中，MD5: {}。直接复用现有文件: {}", dto.fileMd5(), existingAsset.getObjectName());
             MediaAsset newAsset = new MediaAsset()
-                    .setFileName(DTO.filename())
-                    .setObjectName(existingAsset.getObjectName()) // 指向已存在的文件
+                    .setFileName(dto.filename())
+                    .setObjectName(existingAsset.getObjectName())
                     .setBucketName(existingAsset.getBucketName())
                     .setFileSize(existingAsset.getFileSize())
                     .setFileType(existingAsset.getFileType())
-                    .setFileMd5(DTO.fileMd5())
+                    .setFileMd5(dto.fileMd5())
                     .setUploaderId(userId)
-                    .setStatus(MediaStatus.UPLOADED); // 直接设为已上传
+                    .setStatus(MediaStatusEnum.UPLOADED.getCode());
             mediaAssetMapper.insert(newAsset);
-            Long id = newAsset.getId();
 
-
-            // 返回一个特殊标记，表示秒传成功，前端无需再上传
             Map<String, Object> result = new HashMap<>();
             result.put("instantUpload", true);
             result.put("objectName", newAsset.getObjectName());
+            result.put("assetId", newAsset.getId());
             return result;
         }
 
-        // 3. 正常分片上传流程
-        String fileExtension = DTO.filename().substring(DTO.filename().lastIndexOf("."));
-        String objectName = UUID.randomUUID().toString().replace("-", "") + fileExtension;
+        String fileExtension = MediaUtils.getFileExtension(dto.filename());
+        if (fileExtension.isEmpty()) {
+            fileExtension = "." + dto.contentType().split("/")[1];
+        }
+        String prefix = fileUploadRules.getStoragePrefix() != null ? fileUploadRules.getStoragePrefix() : "";
+        String objectName = prefix + UUID.randomUUID().toString().replace("-", "") + fileExtension;
 
         MediaAsset asset = new MediaAsset()
-                .setFileName(DTO.filename())
+                .setFileName(dto.filename())
                 .setObjectName(objectName)
                 .setBucketName(minioProperties.getBucketName())
-                .setFileSize(DTO.fileSize())
-                .setFileType(DTO.contentType())
-                .setFileMd5(DTO.fileMd5())
+                .setFileSize(dto.fileSize())
+                .setFileType(dto.contentType())
+                .setFileMd5(dto.fileMd5())
                 .setUploaderId(userId)
-                .setStatus(MediaStatus.UPLOADING);
+                .setStatus(MediaStatusEnum.UPLOADING.getCode());
         mediaAssetMapper.insert(asset);
 
-//        初始化分片上传任务
         CreateMultipartUploadResponse response = minioAsyncClient.createMultipartUploadAsync(
                 minioProperties.getBucketName(),
                 null,
@@ -126,22 +136,20 @@ public class UploadServiceImpl implements UploadService {
         ).join();
 
         String uploadId = response.result().uploadId();
-        log.info("为文件 {} 生成分片上传任务ID: {} for object: {}", DTO.filename(), uploadId, objectName);
+        log.info("为文件 {} 生成分片上传任务ID: {} for object: {}", dto.filename(), uploadId, objectName);
 
-        // 将 objectName 和 MD5 存入缓存，以便完成时校验
         Map<String, String> cacheValue = new HashMap<>();
         cacheValue.put("objectName", objectName);
-        cacheValue.put("fileMd5", DTO.fileMd5());
+        cacheValue.put("fileMd5", dto.fileMd5());
         redisCache.setCacheObject(UPLOAD_ID_CACHE_PREFIX + uploadId, cacheValue, 2, TimeUnit.HOURS);
 
         Map<Integer, String> presignedUrls = new LinkedHashMap<>();
-        for (int partNumber = 1; partNumber <= DTO.totalParts(); partNumber++) {
-            String url = null;
+        for (int partNumber = 1; partNumber <= dto.totalParts(); partNumber++) {
             Map<String, String> queryParams = new HashMap<>();
             queryParams.put("uploadId", uploadId);
             queryParams.put("partNumber", String.valueOf(partNumber));
             try {
-                url = minioAsyncClient.getPresignedObjectUrl(
+                String url = minioAsyncClient.getPresignedObjectUrl(
                         GetPresignedObjectUrlArgs.builder()
                                 .method(Method.PUT)
                                 .bucket(minioProperties.getBucketName())
@@ -149,32 +157,35 @@ public class UploadServiceImpl implements UploadService {
                                 .expiry(2, TimeUnit.HOURS)
                                 .extraQueryParams(queryParams)
                                 .build());
+                presignedUrls.put(partNumber, url);
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                log.error("生成预签名URL失败，partNumber: {}", partNumber, e);
+                throw new FileUploadException("生成预签名URL失败: " + e.getMessage(), ReturnCodeEnum.FILE_UPLOAD_ERROR);
             }
-            presignedUrls.put(partNumber, url);
         }
 
         Map<String, Object> result = new HashMap<>();
         result.put("instantUpload", false);
         result.put("uploadId", uploadId);
         result.put("objectName", objectName);
+        result.put("assetId", asset.getId());
         result.put("presignedUrls", presignedUrls);
         return result;
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void completeMultipartUpload(String uploadId) {
+        log.info("开始完成分片上传，uploadId: {}", uploadId);
+
         Map<String, String> cacheValue = redisCache.getCacheObject(UPLOAD_ID_CACHE_PREFIX + uploadId);
         if (cacheValue == null || cacheValue.get("objectName") == null) {
-            throw new RuntimeException("上传会话已过期或uploadId无效: " + uploadId);
+            throw new BusinessException(ReturnCodeEnum.PARAM_ERROR, "上传会话已过期或uploadId无效: " + uploadId);
         }
         String objectName = cacheValue.get("objectName");
         String originalMd5 = cacheValue.get("fileMd5");
 
         try {
-            // 1. 查询已上传的分片
             CompletableFuture<ListPartsResponse> future = minioAsyncClient.listPartsAsync(
                     minioProperties.getBucketName(),
                     null,
@@ -186,60 +197,58 @@ public class UploadServiceImpl implements UploadService {
                     null
             );
 
-            // ✅ 调用 .join() 获取结果
             ListPartsResponse listPartsResponse = future.join();
 
-            // 2. 提取 partNumber 和 ETag
             List<Part> completeParts = listPartsResponse.result().partList().stream()
                     .map(part -> new Part(part.partNumber(), part.etag()))
                     .collect(Collectors.toList());
 
-
-            // 3. 使用 completeMultipartUploadAsync（不是 completeMultipartUpload）
             CompletableFuture<ObjectWriteResponse> completeFuture = minioAsyncClient.completeMultipartUploadAsync(
-                    minioProperties.getBucketName(),  // bucketName
-                    null,                            // region - 一般为 null
-                    objectName,                      // objectName
-                    uploadId,                        // uploadId
-                    completeParts.toArray(new Part[0]), // parts 数组
-                    null,                            // extraHeaders
-                    null                             // extraQueryParams
+                    minioProperties.getBucketName(),
+                    null,
+                    objectName,
+                    uploadId,
+                    completeParts.toArray(new Part[0]),
+                    null,
+                    null
             );
-            // 调用 .join() 获取结果
-            ObjectWriteResponse completeResponse = completeFuture.join();
+            completeFuture.join();
 
+            log.info("分片合并成功，文件已生成：{}", objectName);
 
-            log.info("分片合并成功，文件已生成：{}", completeResponse.object());
-            // 2. 完整性校验
-            // 从MinIO获取刚上传完成的文件并计算其MD5
             String serverSideMd5 = calculateMinioObjectMd5(objectName);
 
             if (!serverSideMd5.equalsIgnoreCase(originalMd5)) {
                 log.error("文件完整性校验失败！客户端MD5: {}, 服务端MD5: {}. 文件: {}", originalMd5, serverSideMd5, objectName);
-                // 校验失败，删除MinIO中刚上传的文件，并将数据库状态更新为FAILED
-                minioClient.removeObject(RemoveObjectArgs.builder().bucket(minioProperties.getBucketName()).object(objectName).build());
-                MediaAsset assetUpdate = new MediaAsset().setStatus(MediaStatus.FAILED);
-                mediaAssetMapper.update(assetUpdate, new QueryWrapper<MediaAsset>().eq("object_name", objectName));
-                throw new RuntimeException("文件完整性校验失败");
+                minioClient.removeObject(RemoveObjectArgs.builder()
+                        .bucket(minioProperties.getBucketName())
+                        .object(objectName)
+                        .build());
+                MediaAsset assetUpdate = new MediaAsset().setStatus(MediaStatusEnum.FAILED.getCode());
+                mediaAssetMapper.update(assetUpdate, new LambdaQueryWrapper<MediaAsset>()
+                        .eq(MediaAsset::getObjectName, objectName));
+                throw new FileUploadException("文件完整性校验失败", ReturnCodeEnum.FILE_UPLOAD_ERROR);
             }
 
-            // 3. 更新数据库状态
             MediaAsset assetUpdate = new MediaAsset()
-                    .setStatus(MediaStatus.UPLOADED);
-            mediaAssetMapper.update(assetUpdate, new QueryWrapper<MediaAsset>().eq("object_name", objectName));
+                    .setStatus(MediaStatusEnum.UPLOADED.getCode());
+            mediaAssetMapper.update(assetUpdate, new LambdaQueryWrapper<MediaAsset>()
+                    .eq(MediaAsset::getObjectName, objectName));
 
             log.info("成功完成文件分片上传并校验通过: objectName: {}, uploadId: {}", objectName, uploadId);
 
-            // 4. 触发异步媒体处理
-            // 获取完整的资产信息以传递给异步服务
-            MediaAsset completedAsset = mediaAssetMapper.selectOne(new QueryWrapper<MediaAsset>().eq("object_name", objectName));
-            MediaAssetService.processMediaAsset(completedAsset);
+            MediaAsset completedAsset = mediaAssetMapper.selectOne(
+                    new LambdaQueryWrapper<MediaAsset>().eq(MediaAsset::getObjectName, objectName));
+            mediaAssetService.processMediaAsset(completedAsset);
 
+        } catch (BusinessException | FileUploadException e) {
+            throw e;
         } catch (Exception e) {
             log.error("完成文件分片上传失败: objectName: {}, uploadId: {}", objectName, uploadId, e);
-            MediaAsset assetUpdate = new MediaAsset().setStatus(MediaStatus.FAILED);
-            mediaAssetMapper.update(assetUpdate, new QueryWrapper<MediaAsset>().eq("object_name", objectName));
-            throw new RuntimeException("完成分片上传失败", e);
+            MediaAsset assetUpdate = new MediaAsset().setStatus(MediaStatusEnum.FAILED.getCode());
+            mediaAssetMapper.update(assetUpdate, new LambdaQueryWrapper<MediaAsset>()
+                    .eq(MediaAsset::getObjectName, objectName));
+            throw new FileUploadException("完成分片上传失败: " + e.getMessage(), ReturnCodeEnum.FILE_UPLOAD_ERROR);
         } finally {
             redisCache.deleteObject(UPLOAD_ID_CACHE_PREFIX + uploadId);
         }
@@ -256,15 +265,56 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
-    public Page<MediaAsset> listFiles(int pageNum, int pageSize) {
-        return mediaAssetMapper.selectPage(new Page<>(pageNum, pageSize), new QueryWrapper<MediaAsset>().orderByDesc("created_at"));
+    public Page<MediaAssetVO> listFiles(int pageNum, int pageSize) {
+        Page<MediaAsset> page = new Page<>(pageNum, pageSize);
+        Page<MediaAsset> assetPage = mediaAssetMapper.selectPage(page, 
+                new LambdaQueryWrapper<MediaAsset>()
+                        .orderByDesc(MediaAsset::getCreateTime));
+
+        Page<MediaAssetVO> voPage = new Page<>(pageNum, pageSize, assetPage.getTotal());
+        List<MediaAssetVO> voList = assetPage.getRecords().stream()
+                .map(this::convertToVO)
+                .collect(Collectors.toList());
+        voPage.setRecords(voList);
+        return voPage;
+    }
+
+    @Override
+    public MediaAssetVO getAssetById(Long id) {
+        MediaAsset asset = mediaAssetMapper.selectById(id);
+        if (asset == null) {
+            throw new BusinessException(ReturnCodeEnum.NOT_FOUND, "媒体资产不存在，ID: " + id);
+        }
+        MediaAssetVO vo = convertToVO(asset);
+        vo.setDownloadUrl(getPresignedFileUrl(asset.getObjectName()));
+        if (asset.getThumbnailName() != null) {
+            vo.setThumbnailUrl(getPresignedThumbnailUrl(asset.getThumbnailName()));
+        }
+        return vo;
+    }
+
+    private MediaAssetVO convertToVO(MediaAsset asset) {
+        MediaAssetVO vo = asset.copyProperties(MediaAssetVO.class);
+        if (asset.getFileSize() != null) {
+            vo.setFileSizeFormatted(MediaUtils.formatFileSize(asset.getFileSize()));
+        }
+        if (asset.getStatus() != null) {
+            try {
+                MediaStatusEnum statusEnum = MediaStatusEnum.fromCode(asset.getStatus());
+                vo.setStatusDesc(statusEnum.getDesc());
+            } catch (IllegalArgumentException e) {
+                vo.setStatusDesc(asset.getStatus());
+            }
+        }
+        return vo;
     }
 
     @Override
     public String getPresignedFileUrl(String objectName) {
-        MediaAsset asset = mediaAssetMapper.selectOne(new QueryWrapper<MediaAsset>().eq("object_name", objectName));
+        MediaAsset asset = mediaAssetMapper.selectOne(
+                new LambdaQueryWrapper<MediaAsset>().eq(MediaAsset::getObjectName, objectName));
         if (asset == null) {
-            throw new RuntimeException("文件不存在: " + objectName);
+            throw new BusinessException(ReturnCodeEnum.NOT_FOUND, "文件不存在: " + objectName);
         }
 
         try {
@@ -277,28 +327,225 @@ public class UploadServiceImpl implements UploadService {
                             .build());
         } catch (Exception e) {
             log.error("获取文件预签名URL失败: {}", objectName, e);
-            throw new RuntimeException("获取文件预签名URL失败", e);
+            throw new BusinessException(ReturnCodeEnum.INTERNAL_SERVER_ERROR, "获取文件下载链接失败");
         }
     }
 
     @Override
-    @Transactional
-    public void deleteFile(Long userId, String objectName) {
-        MediaAsset asset = mediaAssetMapper.selectOne(new QueryWrapper<MediaAsset>().eq("object_name", objectName).eq("uploader_id", userId));
+    public String getPresignedThumbnailUrl(String thumbnailName) {
+        if (thumbnailName == null || thumbnailName.isEmpty()) {
+            return null;
+        }
+        try {
+            return minioClient.getPresignedObjectUrl(
+                    GetPresignedObjectUrlArgs.builder()
+                            .method(Method.GET)
+                            .bucket(minioProperties.getBucketName())
+                            .object(thumbnailName)
+                            .expiry(1, TimeUnit.HOURS)
+                            .build());
+        } catch (Exception e) {
+            log.error("获取缩略图预签名URL失败: {}", thumbnailName, e);
+            return null;
+        }
+    }
+
+    @Override
+    public String getPresignedDownloadUrl(String objectName) {
+        MediaAsset asset = mediaAssetMapper.selectOne(
+                new LambdaQueryWrapper<MediaAsset>().eq(MediaAsset::getObjectName, objectName));
         if (asset == null) {
-            log.warn("尝试删除一个不存在或不属于用户 {} 的媒体资产记录: {}", userId, objectName);
-            throw new SecurityException("文件不存在或您没有权限删除此文件");
+            throw new BusinessException(ReturnCodeEnum.NOT_FOUND, "文件不存在: " + objectName);
         }
 
-        // 先删除数据库记录
+        try {
+            Map<String, String> extraQueryParams = new HashMap<>();
+            String encodedFileName = java.net.URLEncoder.encode(asset.getFileName(), "UTF-8")
+                    .replace("+", "%20");
+            extraQueryParams.put("response-content-disposition",
+                    "attachment; filename=\"" + encodedFileName + "\"; filename*=UTF-8''" + encodedFileName);
+
+            return minioClient.getPresignedObjectUrl(
+                    GetPresignedObjectUrlArgs.builder()
+                            .method(Method.GET)
+                            .bucket(asset.getBucketName())
+                            .object(asset.getObjectName())
+                            .expiry(1, TimeUnit.HOURS)
+                            .extraQueryParams(extraQueryParams)
+                            .build());
+        } catch (Exception e) {
+            log.error("获取文件强制下载URL失败: {}", objectName, e);
+            throw new BusinessException(ReturnCodeEnum.INTERNAL_SERVER_ERROR, "获取文件下载链接失败");
+        }
+    }
+
+    @Override
+    public Map<String, Object> getPresignedUploadUrl(Long userId, String fileName, long fileSize, String contentType, String fileMd5, Long fileType) {
+        log.info("开始生成普通上传预签名URL，用户ID: {}, 文件名: {}", userId, fileName);
+
+        String storagePrefix = "";
+        if (fileType != null) {
+            FileUploadRules fileUploadRules = fileUploadRulesService.getById(fileType);
+            if (fileUploadRules == null) {
+                throw new BusinessException(ReturnCodeEnum.PARAM_ERROR, "文件类型规则不存在，文件类型ID: " + fileType);
+            }
+
+            long maxSizeBytes = fileUploadRules.getMaxSizeKb() * 1024L;
+            if (fileSize > maxSizeBytes) {
+                throw new FileUploadException(
+                        "文件大小超过限制，最大允许: " + MediaUtils.formatFileSize(maxSizeBytes) +
+                        ", 当前文件: " + MediaUtils.formatFileSize(fileSize),
+                        ReturnCodeEnum.FILE_SIZE_ERROR
+                );
+            }
+
+            if (fileUploadRules.getAllowedExtensions() != null &&
+                !fileUploadRules.getAllowedExtensions().isEmpty() &&
+                !fileUploadRules.getAllowedExtensions().contains(contentType)) {
+                throw new FileUploadException(
+                        "不支持的文件类型: " + contentType +
+                        "，允许的类型: " + String.join(", ", fileUploadRules.getAllowedExtensions()),
+                        ReturnCodeEnum.FILE_TYPE_ERROR
+                );
+            }
+
+            storagePrefix = fileUploadRules.getStoragePrefix() != null ? fileUploadRules.getStoragePrefix() : "";
+        }
+
+        MediaAsset existingAsset = mediaAssetMapper.selectOne(
+                new LambdaQueryWrapper<MediaAsset>()
+                        .eq(MediaAsset::getFileMd5, fileMd5)
+                        .eq(MediaAsset::getStatus, MediaStatusEnum.UPLOADED.getCode())
+                        .last("LIMIT 1")
+        );
+
+        if (existingAsset != null) {
+            log.info("文件秒传命中，MD5: {}。直接复用现有文件: {}", fileMd5, existingAsset.getObjectName());
+            MediaAsset newAsset = new MediaAsset()
+                    .setFileName(fileName)
+                    .setObjectName(existingAsset.getObjectName())
+                    .setBucketName(existingAsset.getBucketName())
+                    .setFileSize(existingAsset.getFileSize())
+                    .setFileType(existingAsset.getFileType())
+                    .setFileMd5(fileMd5)
+                    .setUploaderId(userId)
+                    .setStatus(MediaStatusEnum.UPLOADED.getCode());
+            mediaAssetMapper.insert(newAsset);
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("instantUpload", true);
+            result.put("objectName", newAsset.getObjectName());
+            result.put("assetId", newAsset.getId());
+            return result;
+        }
+
+        String fileExtension = MediaUtils.getFileExtension(fileName);
+        if (fileExtension.isEmpty() && contentType != null && !contentType.isEmpty()) {
+            String[] parts = contentType.split("/");
+            if (parts.length == 2) {
+                fileExtension = "." + parts[1];
+            }
+        }
+        String objectName = storagePrefix + UUID.randomUUID().toString().replace("-", "") + fileExtension;
+
+        MediaAsset asset = new MediaAsset()
+                .setFileName(fileName)
+                .setObjectName(objectName)
+                .setBucketName(minioProperties.getBucketName())
+                .setFileSize(fileSize)
+                .setFileType(contentType)
+                .setFileMd5(fileMd5)
+                .setUploaderId(userId)
+                .setStatus(MediaStatusEnum.UPLOADING.getCode());
+        mediaAssetMapper.insert(asset);
+
+        try {
+            Map<String, String> headers = new HashMap<>();
+            if (contentType != null && !contentType.isEmpty()) {
+                headers.put("Content-Type", contentType);
+            }
+
+            String presignedUrl = minioClient.getPresignedObjectUrl(
+                    GetPresignedObjectUrlArgs.builder()
+                            .method(Method.PUT)
+                            .bucket(minioProperties.getBucketName())
+                            .object(objectName)
+                            .expiry(1, TimeUnit.HOURS)
+                            .extraHeaders(headers)
+                            .build());
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("instantUpload", false);
+            result.put("objectName", objectName);
+            result.put("assetId", asset.getId());
+            result.put("presignedUrl", presignedUrl);
+            log.info("成功生成普通上传预签名URL，objectName: {}, assetId: {}", objectName, asset.getId());
+            return result;
+        } catch (Exception e) {
+            log.error("生成普通上传预签名URL失败: {}", objectName, e);
+            mediaAssetMapper.deleteById(asset.getId());
+            throw new BusinessException(ReturnCodeEnum.INTERNAL_SERVER_ERROR, "生成上传链接失败: " + e.getMessage());
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void completeUpload(String objectName) {
+        log.info("开始完成普通上传，objectName: {}", objectName);
+
+        MediaAsset asset = mediaAssetMapper.selectOne(
+                new LambdaQueryWrapper<MediaAsset>().eq(MediaAsset::getObjectName, objectName));
+        if (asset == null) {
+            throw new BusinessException(ReturnCodeEnum.NOT_FOUND, "文件不存在: " + objectName);
+        }
+
+        try {
+            boolean objectExists = minioClient.statObject(
+                    StatObjectArgs.builder()
+                            .bucket(asset.getBucketName())
+                            .object(asset.getObjectName())
+                            .build()) != null;
+            if (!objectExists) {
+                throw new BusinessException(ReturnCodeEnum.NOT_FOUND, "文件在存储中不存在: " + objectName);
+            }
+        } catch (Exception e) {
+            log.warn("检查文件是否存在时出错: {}", objectName, e);
+            throw new BusinessException(ReturnCodeEnum.NOT_FOUND, "文件在存储中不存在: " + objectName);
+        }
+
+        MediaAsset assetUpdate = new MediaAsset()
+                .setStatus(MediaStatusEnum.UPLOADED.getCode());
+        mediaAssetMapper.update(assetUpdate,
+                new LambdaQueryWrapper<MediaAsset>()
+                        .eq(MediaAsset::getObjectName, objectName));
+
+        MediaAsset completedAsset = mediaAssetMapper.selectOne(
+                new LambdaQueryWrapper<MediaAsset>().eq(MediaAsset::getObjectName, objectName));
+        mediaAssetService.processMediaAsset(completedAsset);
+
+        log.info("成功完成普通上传: objectName: {}", objectName);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteFile(Long userId, String objectName) {
+        log.info("开始删除文件，用户ID: {}, objectName: {}", userId, objectName);
+
+        MediaAsset asset = mediaAssetMapper.selectOne(
+                new LambdaQueryWrapper<MediaAsset>()
+                        .eq(MediaAsset::getObjectName, objectName)
+                        .eq(MediaAsset::getUploaderId, userId));
+        if (asset == null) {
+            throw new BusinessException(ReturnCodeEnum.FORBIDDEN, "文件不存在或您没有权限删除此文件");
+        }
+
         mediaAssetMapper.deleteById(asset.getId());
         log.info("成功删除媒体资产数据库记录: id={}, objectName={}", asset.getId(), objectName);
 
-        // 检查是否还有其他记录引用此MinIO对象
-        Long remainingReferences = mediaAssetMapper.selectCount(new QueryWrapper<MediaAsset>().eq("object_name", objectName));
+        Long remainingReferences = mediaAssetMapper.selectCount(
+                new LambdaQueryWrapper<MediaAsset>().eq(MediaAsset::getObjectName, objectName));
 
         if (remainingReferences == 0) {
-            // 这是最后一个引用，可以安全地删除物理文件
             log.info("对象 {} 的最后一个数据库引用已被删除，准备从MinIO中删除物理文件。", objectName);
             try {
                 minioClient.removeObject(
@@ -307,10 +554,18 @@ public class UploadServiceImpl implements UploadService {
                                 .object(asset.getObjectName())
                                 .build());
                 log.info("成功从MinIO删除文件: {}", objectName);
+
+                if (asset.getThumbnailName() != null) {
+                    minioClient.removeObject(
+                            RemoveObjectArgs.builder()
+                                    .bucket(asset.getBucketName())
+                                    .object(asset.getThumbnailName())
+                                    .build());
+                    log.info("成功从MinIO删除缩略图: {}", asset.getThumbnailName());
+                }
             } catch (Exception e) {
-                log.error("从MinIO删除文件 {} 失败。数据库记录已回滚。", objectName, e);
-                // 注意：由于@Transactional注解，此处的RuntimeException会触发整个方法的回滚
-                throw new RuntimeException("从MinIO删除文件失败", e);
+                log.error("从MinIO删除文件 {} 失败。", objectName, e);
+                throw new BusinessException(ReturnCodeEnum.INTERNAL_SERVER_ERROR, "删除文件失败: " + e.getMessage());
             }
         } else {
             log.info("对象 {} 仍有 {} 个数据库引用，本次不删除MinIO物理文件。", objectName, remainingReferences);

@@ -11,6 +11,7 @@
             <result property="allowedExtensions" column="allowed_extensions" />
             <result property="maxSizeKb" column="max_size_kb" />
             <result property="storagePath" column="storage_path" />
+            <result property="storagePrefix" column="storage_prefix" />
             <result property="isActive" column="is_active" />
             <result property="description" column="description" />
             <result property="createTime" column="create_time" />
@@ -18,7 +19,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,rule_name,file_category,allowed_extensions,max_size_kb,storage_path,
+        id,rule_name,file_category,allowed_extensions,max_size_kb,storage_path,storage_prefix,
         is_active,description,create_time,update_time,is_deleted
     </sql>
 </mapper>

@@ -24,8 +24,11 @@ public class FileUploadRulesInfoDTO {
     @Schema(description = "单个文件的最大大小（单位：KB）", example = "10240", minimum = "1")
     private Integer maxSizeKb;
 
-    @Schema(description = "文件在对象存储（如 MinIO）中的存储路径或前缀", example = "uploads/documents/")
+    @Schema(description = "文件在对象存储（如 MinIO）中的存储路径", example = "uploads/documents/")
     private String storagePath;
+
+    @Schema(description = "文件在对象存储中的存储前缀", example = "documents/")
+    private String storagePrefix;
 
     @Schema(description = "规则是否生效", example = "true")
     private Boolean isActive;
