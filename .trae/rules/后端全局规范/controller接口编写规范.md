@@ -5,7 +5,9 @@ globs: **/controller/*Controller.java
 # Spring Cloud Java 后端项目开发规范 - Controller 接口编写规范
 ## 一、强制要求（AI必须严格遵守，违反即错误）
 1. **类结构与注解**
-   - 必须使用 `@RestController` + `@RequestMapping("/api/v{version}/[模块名]")` 统一前缀和版本号
+   <!-- - 必须使用 `@RestController` + `@RequestMapping("/api/v{version}/[模块名]")` 统一前缀和版本号 -->
+      - 必须使用 `@RestController` + `@RequestMapping("/api/[模块名]")` 统一前缀
+
    - 必须添加 `@Tag(name = "[模块名]管理", description = "[模块名]相关接口")` Swagger文档注解
    - 必须使用 `@RequiredArgsConstructor` 注入依赖，**绝对禁止使用 `@Autowired`**
    - 所有依赖必须声明为 `private final`
@@ -51,7 +53,7 @@ globs: **/controller/*Controller.java
 ## 四、标准代码示例
 ```java
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/users")
 @Tag(name = "用户管理", description = "用户相关接口")
 @RequiredArgsConstructor
 @Slf4j
