@@ -12,10 +12,10 @@ import java.util.Map;
 @FeignClient(name = "cloud-auth", configuration = FeignClientCredentialsConfig.class)
 public interface EmailClient {
 
-    @PostMapping("/internal/api/email/send-code")
+    @PostMapping("/Email/send-code")
     ResultData<Void> sendEmailCode(@RequestParam String email, @RequestParam String type);
 
-    @PostMapping("/internal/api/email/send-notification")
+    @PostMapping("/Email/send-notification")
     ResultData<Void> sendEmailNotification(@RequestParam String email,
                                             @RequestParam String type,
                                             @RequestBody(required = false) Map<String, Object> content);

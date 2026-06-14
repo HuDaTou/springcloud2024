@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.*;
 @FeignClient(name = "cloud-auth", configuration = FeignClientCredentialsConfig.class)
 public interface BlackListClient {
 
-    @GetMapping("/internal/api/blacklist/check")
+    @GetMapping("/blackList/check")
     BlackListCheckResponse checkBlacklist(@RequestParam String ip, @RequestParam(required = false) Long userId);
 
-    @PostMapping("/internal/api/blacklist/add")
+    @PostMapping("/blackList/api-add")
     void addBlacklist(@RequestBody AddBlackListRequest request);
 
-    @DeleteMapping("/internal/api/blacklist/expire")
+    @DeleteMapping("/blackList/expire")
     void expireBlacklist(@RequestParam(required = false) String ip, @RequestParam(required = false) Long userId);
 }

@@ -14,6 +14,6 @@ import java.util.List;
 @FeignClient(name = "cloud-auth", configuration = FeignClientCredentialsConfig.class)
 public interface AuthClient {
 
-    @PostMapping("/internal/api/permissions/register")
+    @PostMapping("/permissions/register")
     void registerPermissions(@RequestBody List<PermissionDTO> permissions);
 }
