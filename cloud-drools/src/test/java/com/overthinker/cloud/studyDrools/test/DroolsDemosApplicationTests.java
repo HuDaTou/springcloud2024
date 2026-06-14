@@ -116,20 +116,6 @@ class DroolsDemosApplicationTests {
                 .type("换电")
                 .build();
 
-        // 第一个订单
-        Order order3 = Order.builder()
-                .orderNo("123")
-                .amout(1000)
-                .score(0)
-                .type("充电")
-                .build();
-        // 第二个订单
-        Order order4 = Order.builder()
-                .orderNo("1234")
-                .amout(2000)
-                .score(0)
-                .type("换电")
-                .build();
 
         // 将Order对象插入到工作内存中
         session.insert(order1);

@@ -9,7 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import com.overthinker.cloud.common.core.utils.MyStringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import com.overthinker.cloud.api.auth.mq.PermissionDTO;
+import com.overthinker.cloud.api.apis.auth.mq.PermissionDTO;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

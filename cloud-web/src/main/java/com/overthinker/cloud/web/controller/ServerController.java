@@ -43,7 +43,7 @@ public class ServerController extends BaseController {
         return messageHandler(() -> server);
     }
 
-    private final static Map<String, SseEmitter> SSE_CACHE = new ConcurrentHashMap<>();
+    // private final static Map<String, SseEmitter> SSE_CACHE = new ConcurrentHashMap<>();
 
 
 //    @CrossOrigin(origins = "*", maxAge = 3600)
