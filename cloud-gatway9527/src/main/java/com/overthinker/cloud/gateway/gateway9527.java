@@ -1,4 +1,4 @@
-package com.overthinker.cloud;
+package com.overthinker.cloud.gateway;
 
 
 import org.springframework.boot.SpringApplication;

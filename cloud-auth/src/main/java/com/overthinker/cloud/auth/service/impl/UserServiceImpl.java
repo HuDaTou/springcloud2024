@@ -172,6 +172,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public List<UserListVO> getUserOrSearch(UserSearchDTO userSearchDTO) {
+        if (userSearchDTO == null) {
+            userSearchDTO = new UserSearchDTO();
+        }
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
 
         if (MyStringUtils.isNotBlank(userSearchDTO.getUsername())) {

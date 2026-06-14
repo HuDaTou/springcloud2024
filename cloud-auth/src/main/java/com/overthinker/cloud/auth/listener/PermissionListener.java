@@ -3,7 +3,7 @@ package com.overthinker.cloud.auth.listener;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.overthinker.cloud.api.auth.mq.PermissionDTO;
+import com.overthinker.cloud.api.apis.auth.mq.PermissionDTO;
 import com.overthinker.cloud.auth.entity.PO.SysPermission;
 import com.overthinker.cloud.auth.service.PermissionService;
 import lombok.extern.slf4j.Slf4j;

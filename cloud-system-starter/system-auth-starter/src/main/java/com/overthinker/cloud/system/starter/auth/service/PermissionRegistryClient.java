@@ -1,7 +1,7 @@
 package com.overthinker.cloud.system.starter.auth.service;
 
-import com.overthinker.cloud.api.auth.api.AuthClient;
-import com.overthinker.cloud.api.auth.mq.PermissionDTO;
+import com.overthinker.cloud.api.apis.auth.api.AuthClient;
+import com.overthinker.cloud.api.apis.auth.mq.PermissionDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 

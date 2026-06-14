@@ -109,22 +109,22 @@ public class UserController extends BaseController {
         return userService.adminCreateUser(adminCreateUserDTO);
     }
 
-    @GetMapping("/internal/api/v1/user/count")
+    @GetMapping("/count")
     public ResultData<Long> getUserCount() {
         return messageHandler(() -> userService.count());
     }
 
-    @GetMapping("/internal/api/v1/user/username")
+    @GetMapping("/username")
     public ResultData<String> getUsernameById(@RequestParam Long userId) {
         return messageHandler(() -> userService.findAccountById(userId).getUsername());
     }
 
-    @GetMapping("/internal/api/v1/user/email")
+    @GetMapping("/email")
     public ResultData<String> getEmailById(@RequestParam Long userId) {
         return messageHandler(() -> userService.findAccountById(userId).getEmail());
     }
 
-    @GetMapping("/internal/api/v1/user/info")
+    @GetMapping("/info")
     public ResultData<Map<String, Object>> getUserInfoById(@RequestParam Long userId) {
         UserAccountVO account = userService.findAccountById(userId);
         Map<String, Object> info = new HashMap<>();
@@ -135,7 +135,7 @@ public class UserController extends BaseController {
         return ResultData.success(info);
     }
 
-    @GetMapping("/internal/api/v1/user/search")
+    @GetMapping("/search")
     public ResultData<List<Long>> searchUserIdsByUsername(@RequestParam String username) {
         UserSearchDTO searchDTO = new UserSearchDTO();
         searchDTO.setUsername(username);

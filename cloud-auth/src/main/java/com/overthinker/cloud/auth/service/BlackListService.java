@@ -1,8 +1,8 @@
 package com.overthinker.cloud.auth.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.overthinker.cloud.api.auth.dto.AddBlackListRequest;
-import com.overthinker.cloud.api.auth.dto.BlackListCheckResponse;
+import com.overthinker.cloud.api.apis.auth.dto.AddBlackListRequest;
+import com.overthinker.cloud.api.apis.auth.dto.BlackListCheckResponse;
 import com.overthinker.cloud.auth.entity.DTO.AddBlackListDTO;
 import com.overthinker.cloud.auth.entity.DTO.SearchBlackListDTO;
 import com.overthinker.cloud.auth.entity.DTO.UpdateBlackListDTO;

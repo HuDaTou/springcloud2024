@@ -1,5 +1,6 @@
 package com.overthinker.cloud.auth.controller;
 
+import com.overthinker.cloud.api.apis.auth.mq.PermissionDTO;
 import com.overthinker.cloud.auth.entity.PO.SysPermission;
 import com.overthinker.cloud.auth.service.PermissionService;
 import com.overthinker.cloud.common.core.resp.ResultData;
@@ -60,5 +61,18 @@ public class PermissionController {
             @Parameter(description = "权限ID", required = true) @PathVariable Long id) {
         permissionService.removeById(id);
         return ResultData.success();
+    }
+
+    @Operation(summary = "注册权限（内部调用）", description = "批量注册其他服务的权限数据")
+    @PostMapping("/register")
+    public void registerPermissions(@RequestBody List<PermissionDTO> permissions) {
+        List<SysPermission> sysPermissions = permissions.stream().map(p -> {
+            SysPermission sp = new SysPermission();
+            sp.setPermissonCode(p.getPermissonCode());
+            sp.setName(p.getName());
+            sp.setCategory(p.getCategory());
+            return sp;
+        }).toList();
+        permissionService.saveBatch(sysPermissions);
     }
 }

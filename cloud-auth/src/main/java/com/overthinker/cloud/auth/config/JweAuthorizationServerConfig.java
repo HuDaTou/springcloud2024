@@ -167,7 +167,20 @@ public class JweAuthorizationServerConfig {
                 .tokenSettings(tokenSettings())
                 .build();
 
-        return new InMemoryRegisteredClientRepository(oidcClient);
+        // Internal service client for inter-service communication via client_credentials
+        RegisteredClient internalServiceClient = RegisteredClient.withId("internal-service")
+                .clientId("internal-service")
+                .clientSecret("{noop}internal-secret")
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                .scope("internal")
+                .clientSettings(ClientSettings.builder()
+                        .requireAuthorizationConsent(false)
+                        .build())
+                .tokenSettings(tokenSettings())
+                .build();
+
+        return new InMemoryRegisteredClientRepository(oidcClient, internalServiceClient);
     }
 
     /**

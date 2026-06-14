@@ -1,6 +1,6 @@
 package com.overthinker.cloud.auth.controller;
 
-import com.overthinker.cloud.api.auth.api.EmailClient;
+import com.overthinker.cloud.api.apis.auth.api.EmailClient;
 import com.overthinker.cloud.auth.entity.DTO.EmailCodeDTO;
 import com.overthinker.cloud.auth.entity.DTO.EmailNotificationDTO;
 import com.overthinker.cloud.auth.service.EmailService;
@@ -22,7 +22,6 @@ import java.util.Map;
  * 同时提供：
  * <ul>
  *   <li>对外 HTTP 接口：供前端/网关直接调用</li>
- *   <li>内部 Feign 接口：供其他微服务通过 OpenFeign 调用（路径 /internal/api/email/*）</li>
  * </ul>
  * 内部接口的访问控制由 SecurityConfig 中的 IP 白名单限制
  * </p>

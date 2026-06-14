@@ -106,6 +106,12 @@ public class SecurityConst {
     public static final String ROLE_PREFIX = "ROLE_";
 
     /**
+     * 内部服务调用角色标识
+     * 持有此角色的请求被视为微服务间内部调用，绕过所有权限检查
+     */
+    public static final String ROLE_INTERNAL_SERVICE = "ROLE_INTERNAL_SERVICE";
+
+    /**
      * 测试账号
      */
     public static final String ROLE_TESTER = "Test";

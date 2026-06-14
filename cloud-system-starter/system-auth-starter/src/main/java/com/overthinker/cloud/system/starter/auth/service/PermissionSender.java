@@ -2,7 +2,7 @@ package com.overthinker.cloud.system.starter.auth.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.overthinker.cloud.api.auth.mq.PermissionDTO;
+import com.overthinker.cloud.api.apis.auth.mq.PermissionDTO;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

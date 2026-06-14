@@ -220,11 +220,11 @@ SecurityConfig.generateToken()
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET | `/internal/api/v1/user/count` | 获取用户总数 |
-| GET | `/internal/api/v1/user/username` | 根据ID获取用户名 |
-| GET | `/internal/api/v1/user/email` | 根据ID获取邮箱 |
-| GET | `/internal/api/v1/user/info` | 根据ID获取用户信息 |
-| GET | `/internal/api/v1/user/search` | 根据用户名搜索用户ID |
+| GET | `/internal/api/user/count` | 获取用户总数 |
+| GET | `/internal/api/user/username` | 根据ID获取用户名 |
+| GET | `/internal/api/user/email` | 根据ID获取邮箱 |
+| GET | `/internal/api/user/info` | 根据ID获取用户信息 |
+| GET | `/internal/api/user/search` | 根据用户名搜索用户ID |
 
 ---
 
@@ -280,9 +280,9 @@ SecurityConfig.generateToken()
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| GET | `/internal/api/v1/blacklist/check` | 检查IP/用户是否在黑名单 |
-| POST | `/internal/api/v1/blacklist/add` | 内部添加黑名单 |
-| DELETE | `/internal/api/v1/blacklist/expire` | 内部解除黑名单 |
+| GET | `/internal/api/blacklist/check` | 检查IP/用户是否在黑名单 |
+| POST | `/internal/api/blacklist/add` | 内部添加黑名单 |
+| DELETE | `/internal/api/blacklist/expire` | 内部解除黑名单 |
 
 ---
 

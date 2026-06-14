@@ -1,5 +1,6 @@
 package com.overthinker.cloud.auth.service;
 
+import java.util.Map;
 
 public interface EmailService {
 
@@ -8,7 +9,15 @@ public interface EmailService {
      * 
      * @param email 邮箱
      * @param type  邮件模板
-     * @return
      */
     void sendEmailCode(String email, String type);
+
+    /**
+     * 发送邮件通知
+     *
+     * @param email   收件人邮箱
+     * @param type    邮件类型
+     * @param content 邮件内容变量
+     */
+    void sendEmailNotification(String email, String type, Map<String, Object> content);
 }
