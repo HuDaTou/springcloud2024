@@ -19,6 +19,13 @@ export const overridesPreferences = defineOverridesPreferences({
   // overrides
   app: {
     name: import.meta.env.VITE_APP_TITLE,
+    /** 权限模式：backend = 全部由后端动态菜单控制 */
+    accessMode: 'backend',
+  },
+  /** 关闭页面切换过渡动画，避免动态路由模式下 parentNode null 错误 */
+  transition: {
+    enable: false,
+    progress: false,
   },
 });
 

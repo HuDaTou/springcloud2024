@@ -8,6 +8,7 @@ import { AuthenticationRegister, z } from '@vben/common-ui';
 import { $t } from '@vben/locales';
 import { Button, message } from 'ant-design-vue';
 
+import type { AuthApi } from '#/api';
 import { useAuthStore } from '#/store';
 import { sendEmailCodeApi } from '#/api';
 
@@ -223,9 +224,9 @@ const formSchema = computed((): VbenFormSchema[] => {
   ];
 });
 
-function handleSubmit(value: Recordable<any>) {
+async function handleSubmit(value: Recordable<any>) {
   const { confirmPassword, agreePolicy, ...params } = value;
-  authStore.authRegister(params);
+  await authStore.authRegister(params as AuthApi.RegisterParams);
 }
 </script>
 
