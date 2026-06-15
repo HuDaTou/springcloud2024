@@ -84,7 +84,7 @@ export default defineConfig(({ mode }: ConfigEnv) => {
             }
         },
         server: {
-            port: 99,
+            port: 5199,
             host: '0.0.0.0',
             proxy: {
                 '/api': {

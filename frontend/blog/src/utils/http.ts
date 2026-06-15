@@ -1,6 +1,6 @@
 // 封装axios
 import axios, {AxiosError, AxiosInstance, InternalAxiosRequestConfig} from 'axios'
-import {ElMessage} from "element-plus"
+import {ElMessage, ElNotification} from "element-plus"
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import {Jwt_Prefix} from "@/const/Jwt";
@@ -72,7 +72,11 @@ http.interceptors.response.use(
             }
         } else NProgress.done();
 
-        if(response.data.code === 1012){
+        if (response.data && typeof response.data.code === 'string') {
+            response.data.code = Number(response.data.code)
+        }
+
+        if(response.data && response.data.code === 1012){
             ElNotification({
                 title: '账号已被封禁',
                 message: response.data.msg,

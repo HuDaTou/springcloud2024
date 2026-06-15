@@ -7,11 +7,16 @@ import {SET_TOKEN} from "@/utils/auth";
 import {ElMessage} from "element-plus";
 import useUserStore from "@/store/modules/user.ts";
 
+interface LoginForm {
+  username: string;
+  password: string;
+  remember: boolean;
+}
 
 const formRef = ref();
 const env = import.meta.env;
 
-const form = reactive({
+const form = reactive<LoginForm>({
   username: '',
   password: '',
   remember: false
@@ -27,11 +32,14 @@ const rule = {
 }
 const userStore = useUserStore()
 function userLogin() {
-  formRef.value.validate((valid) => {
+  formRef.value.validate((valid: boolean) => {
     if (valid) {
-      login(form).then(res => {
+      login({
+        username: form.username,
+        password: form.password
+      }).then(res => {
         if (res.code === 200) {
-          SET_TOKEN(res.data.token, res.data.expire, form.remember)
+          SET_TOKEN(res.data.accessToken, res.data.expire, form.remember)
           ElMessage.success('登录成功')
           router.push('/')
           userStore.getInfo()

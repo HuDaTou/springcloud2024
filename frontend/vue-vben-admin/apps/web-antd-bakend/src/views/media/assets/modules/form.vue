@@ -31,7 +31,7 @@ const [Modal, modalApi] = useVbenModal({
   onConfirm: handleSubmit,
   async onOpenChange(isOpen) {
     if (isOpen) {
-      const data = modalApi.getData<{ id: string } | null>();
+      const data = modalApi.getData<{ id?: string }>();
       editingId = data?.id ?? null;
       isUpdate.value = !!editingId;
       if (editingId) {

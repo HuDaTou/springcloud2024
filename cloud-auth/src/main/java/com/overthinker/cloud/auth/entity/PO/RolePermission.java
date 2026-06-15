@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 @Data
 @TableName("sys_role_permission")
 public class RolePermission implements BasecopyProperties {
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
     private Long roleId;

@@ -17,7 +17,7 @@
         <module>spring-study</module>
         <module>cloud-drools</module>
         <module>cloud-api</module>
-        <module>cloud-system</module>
+        <module>cloud-system-starter</module>
         <module>cloud-AI</module>
         <module>cloud-auth</module>
         <module>cloud-common</module>
@@ -42,7 +42,7 @@
         <revision>1.0-SNAPSHOT</revision>
 
         <!--    依赖集中管理信息 - Java 21 兼容版本-->
-        <spring.boot.version>3.5.4</spring.boot.version>
+        <spring.boot.version>3.5.15</spring.boot.version>
         <spring.cloud.version>2025.0.1</spring.cloud.version>
         <spring.cloud.alibaba.version>2025.0.0.0</spring.cloud.alibaba.version>
         <boot.validation.version>3.4.11</boot.validation.version>
@@ -126,32 +126,32 @@
 
 <!--            starter 管理-->
             <dependency>
-                <groupId>com.overthinker.cloud.system</groupId>
+                <groupId>com.overthinker.cloud.system.starter</groupId>
                 <artifactId>system-consul-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.overthinker.cloud.system</groupId>
+                <groupId>com.overthinker.cloud.system.starter</groupId>
                 <artifactId>system-log-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.overthinker.cloud.system</groupId>
+                <groupId>com.overthinker.cloud.system.starter</groupId>
                 <artifactId>system-redis-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.overthinker.cloud.system</groupId>
+                <groupId>com.overthinker.cloud.system.starter</groupId>
                 <artifactId>system-auth-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.overthinker.cloud.system</groupId>
+                <groupId>com.overthinker.cloud.system.starter</groupId>
                 <artifactId>system-audit-log-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
-                <groupId>com.overthinker.cloud.system</groupId>
+                <groupId>com.overthinker.cloud.system.starter</groupId>
                 <artifactId>system-rabbitmq-starter</artifactId>
                 <version>${revision}</version>
             </dependency>

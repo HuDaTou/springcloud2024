@@ -84,7 +84,7 @@ public class FeignClientCredentialsInterceptor implements feign.RequestIntercept
                 return cachedToken;
             }
 
-            log.info("Fetching client_credentials token from: {}", tokenUri);
+            log.info("从 {} 获取 client_credentials Token", tokenUri);
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(tokenUri))
                     .header("Authorization", basicAuthHeader)
@@ -105,11 +105,11 @@ public class FeignClientCredentialsInterceptor implements feign.RequestIntercept
             int expiresIn = json.getIntValue("expires_in", 1800); // 默认 30 分钟
             this.expiresAt = Instant.now().plusSeconds(expiresIn).minus(REFRESH_AHEAD);
 
-            log.info("Client credentials token obtained, expires in {}s", expiresIn);
+            log.info("Client credentials Token 获取成功，有效期 {} 秒", expiresIn);
 
         } catch (Exception e) {
-            log.error("Failed to obtain client_credentials token", e);
-            throw new IllegalStateException("Unable to obtain service token for internal API call", e);
+            log.error("获取 client_credentials Token 失败", e);
+            throw new IllegalStateException("无法获取内部 API 调用的服务 Token", e);
         } finally {
             lock.unlock();
         }

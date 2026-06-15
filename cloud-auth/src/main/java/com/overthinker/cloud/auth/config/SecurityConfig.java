@@ -15,7 +15,6 @@ import org.springframework.security.access.expression.method.MethodSecurityExpre
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
@@ -47,7 +46,7 @@ public class SecurityConfig {
 
 
     /**
-     * JSON 格式认证过滤器
+     * JSON 登录接口认证过滤器
      * @return
      * @throws Exception
      */

@@ -1,5 +1,11 @@
 import http from "@/utils/http.ts";
-import {AxiosResponse} from "axios";
+
+export interface ApiResult<T> {
+    code: number;
+    msg: string;
+    data: T;
+    timestamp: number;
+}
 
 export interface UserInfo {
     nickname: string;
@@ -15,20 +21,62 @@ export interface UserInfo {
     createTime: string;
 }
 
-// 用户登录
-export function login(data: any) {
+export interface LoginRequest {
+    username: string;
+    password: string;
+}
+
+export interface LoginResponse {
+    accessToken: string;
+    expire: string;
+}
+
+export interface RegisterRequest {
+    username: string;
+    password: string;
+    code: string;
+    email: string;
+}
+
+export function login(data: LoginRequest): Promise<ApiResult<LoginResponse>> {
     return http({
         url: '/cloud-auth/auth/login',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
         data: data,
         method: 'post'
     })
 }
 
+export interface ResetConfirmRequest {
+    code: string;
+    email: string;
+}
+
+export interface ResetPasswordRequest {
+    password: string;
+    code: string;
+    email: string;
+}
+
+export interface UpdateEmailRequest {
+    code: string;
+    email: string;
+    password: string;
+}
+
+export interface UpdateUserRequest {
+    nickname: string;
+    gender: number;
+    avatar: string;
+    intro: string;
+}
+
+export interface OauthLoginData {
+    username: string;
+    password: string;
+}
+
 // 退出登录
-export function logout() {
+export function logout(): Promise<ApiResult<void>> {
     return http({
         url: '/user/logout',
         method: 'post'
@@ -36,7 +84,7 @@ export function logout() {
 }
 
 // 第三方登录
-export function oauthLogin(accessToken: string,type: string,username: string) {
+export function oauthLogin(accessToken: string, type: string, username: string): Promise<ApiResult<LoginResponse>> {
     return http({
         url: '/user/login',
         headers: {
@@ -53,7 +101,7 @@ export function oauthLogin(accessToken: string,type: string,username: string) {
 }
 
 // 获取用户信息
-export function getUserInfo():Promise<AxiosResponse<UserInfo>> {
+export function getUserInfo(): Promise<ApiResult<UserInfo>> {
     return http({
         url: '/user/auth/info',
         method: 'get'
@@ -61,7 +109,7 @@ export function getUserInfo():Promise<AxiosResponse<UserInfo>> {
 }
 
 // 用户注册
-export function register(data: any) {
+export function register(data: RegisterRequest): Promise<ApiResult<void>> {
     return http({
         url: '/cloud-auth/auth/register',
         data: data,
@@ -70,7 +118,7 @@ export function register(data: any) {
 }
 
 // 重置密码步骤一
-export function resetPasswordStepOne(data: any) {
+export function resetPasswordStepOne(data: ResetConfirmRequest): Promise<ApiResult<void>> {
     return http({
         url: '/user/reset-confirm',
         data: data,
@@ -79,7 +127,7 @@ export function resetPasswordStepOne(data: any) {
 }
 
 // 重置密码步骤二
-export function resetPasswordStepTwo(data: any) {
+export function resetPasswordStepTwo(data: ResetPasswordRequest): Promise<ApiResult<void>> {
     return http({
         url: '/user/reset-password',
         data: data,
@@ -88,7 +136,7 @@ export function resetPasswordStepTwo(data: any) {
 }
 
 // 修改用户信息
-export function updateUserAccount(data: any) {
+export function updateUserAccount(data: UpdateUserRequest): Promise<ApiResult<void>> {
     return http({
         url: '/user/auth/update',
         data: data,
@@ -97,7 +145,7 @@ export function updateUserAccount(data: any) {
 }
 
 // 修改电子邮箱
-export function updateEmail(data: any) {
+export function updateEmail(data: UpdateEmailRequest): Promise<ApiResult<void>> {
     return http({
         url: '/user/auth/update/email',
         data: data,
@@ -106,7 +154,7 @@ export function updateEmail(data: any) {
 }
 
 // 修改第三方登录电子邮箱
-export function updateThirdEmail(data: any) {
+export function updateThirdEmail(data: UpdateEmailRequest): Promise<ApiResult<void>> {
     return http({
         url: '/user/auth/third/update/email',
         data: data,

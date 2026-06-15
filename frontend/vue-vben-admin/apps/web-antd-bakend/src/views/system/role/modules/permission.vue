@@ -88,7 +88,10 @@ async function loadData() {
 async function handleSave() {
   if (!roleId) return;
   try {
-    await assignRolePermissionsApi(roleId, checkedKeys.value);
+    const permissionIds = checkedKeys.value.filter(function (key) {
+      return !key.startsWith('cat_');
+    });
+    await assignRolePermissionsApi(roleId, permissionIds);
     message.success('权限分配成功');
     modalApi.close();
     emit('success');
@@ -112,7 +115,6 @@ defineExpose({
       v-model:expandedKeys="expandedKeys"
       :tree-data="toTreeNodes(treeData)"
       checkable
-      check-strictly
       default-expand-all
       block-node
     />

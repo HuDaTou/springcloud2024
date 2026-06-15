@@ -75,7 +75,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     treeConfig: {
       parentField: 'parentId',
       rowField: 'id',
-      transform: true,
+      transform: false,
     },
   } as VxeTableGridOptions<MenuApi.MenuListVO>,
 });
@@ -84,7 +84,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
  * 将扁平数组构建为树形结构
  */
 function buildTree(items: MenuApi.MenuListVO[]): MenuApi.MenuListVO[] {
-  const map = new Map<string, MenuApi.MenuListVO>();
+  const map = new Map<string | null | undefined, MenuApi.MenuListVO>();
   const roots: MenuApi.MenuListVO[] = [];
 
   for (const item of items) {
@@ -93,12 +93,9 @@ function buildTree(items: MenuApi.MenuListVO[]): MenuApi.MenuListVO[] {
 
   for (const item of items) {
     const node = map.get(item.id)!;
-    if (
-      item.parentId !== null &&
-      item.parentId !== undefined &&
-      map.has(item.parentId)
-    ) {
-      const parent = map.get(item.parentId)!;
+    const parentId = item.parentId;
+    if (parentId !== null && parentId !== undefined && parentId !== '' && map.has(parentId)) {
+      const parent = map.get(parentId)!;
       if (!parent.children) parent.children = [];
       parent.children.push(node);
     } else {

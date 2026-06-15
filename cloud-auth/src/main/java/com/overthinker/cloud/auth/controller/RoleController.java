@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Tag(name = "角色管理", description = "系统角色数据的增删改查接口")
 @RestController
 @RequestMapping("/roles")
@@ -41,7 +44,7 @@ public class RoleController {
     @PreAuthorize("hasAuthority('auth:role:edit')")
     @PutMapping("/{id}")
     public ResultData<Void> updateRole(
-            @Parameter(description = "角色ID", required = true) @PathVariable Long id,
+            @Parameter(description = "角色ID", required = true) @PathVariable("id") Long id,
             @RequestBody @Valid SysRole role) {
         role.setId(id);
         roleService.updateById(role);
@@ -52,7 +55,7 @@ public class RoleController {
     @PreAuthorize("hasAuthority('auth:role:delete')")
     @DeleteMapping("/{id}")
     public ResultData<Void> deleteRole(
-            @Parameter(description = "角色ID", required = true) @PathVariable Long id) {
+            @Parameter(description = "角色ID", required = true) @PathVariable("id") Long id) {
         roleService.removeById(id);
         return ResultData.success();
     }
@@ -61,7 +64,7 @@ public class RoleController {
     @PreAuthorize("hasAuthority('auth:role:permission:query')")
     @GetMapping("/{roleId}/permissions")
     public ResultData<List<Long>> getPermissionIdsByRoleId(
-            @Parameter(description = "角色ID", required = true) @PathVariable Long roleId) {
+            @Parameter(description = "角色ID", required = true) @PathVariable("roleId") Long roleId) {
         return ResultData.success(rolePermissionService.getPermissionIdsByRoleId(roleId));
     }
 
@@ -69,9 +72,13 @@ public class RoleController {
     @PreAuthorize("hasAuthority('auth:role:permission:edit')")
     @PutMapping("/{roleId}/permissions")
     public ResultData<Void> assignPermissionsToRole(
-            @Parameter(description = "角色ID", required = true) @PathVariable Long roleId,
-            @Parameter(description = "权限ID列表", required = true) @RequestBody @Valid List<Long> permissionIds) {
-        rolePermissionService.assignPermissionsToRole(roleId, permissionIds);
+            @Parameter(description = "角色ID", required = true) @PathVariable("roleId") Long roleId,
+            @Parameter(description = "权限ID列表", required = true) @RequestBody List<String> permissionIds) {
+        List<Long> ids = permissionIds.stream()
+                .map(Long::parseLong)
+                .toList();
+        log.info("为角色 {} 分配 {} 个权限", roleId, ids.size());
+        rolePermissionService.assignPermissionsToRole(roleId, ids);
         return ResultData.success();
     }
 }
