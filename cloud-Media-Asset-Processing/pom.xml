@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.overthinker.cloud</groupId>
@@ -10,26 +10,49 @@
     </parent>
 
     <artifactId>cloud-Media-Asset-Processing</artifactId>
+    <name>cloud-Media-Asset-Processing</name>
+    <description>媒体资产处理服务，负责处理媒体资产的上传、下载、转换等操作</description>
     <packaging>jar</packaging>
 
-    <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
     <dependencies>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
         <!-- Consul 服务注册与发现 -->
         <dependency>
             <groupId>com.overthinker.cloud.system.starter</groupId>
             <artifactId>system-consul-starter</artifactId>
         </dependency>
 
+        <!-- starter -->
+        <!-- Redis Starter -->
+        <dependency>
+            <groupId>com.overthinker.cloud.system.starter</groupId>
+            <artifactId>system-redis-starter</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.overthinker.cloud.system.starter</groupId>
+            <artifactId>system-auth-starter</artifactId>
+        </dependency>
+        <!-- <dependency>
+            <groupId>com.overthinker.cloud</groupId>
+            <artifactId>cloud-api</artifactId>
+        </dependency> -->
+
+
+        <!-- common -->
+
+        <!-- 数据库相关 -->
+        <dependency>
+            <groupId>com.overthinker.cloud.common</groupId>
+            <artifactId>cloud-common-db</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.overthinker.cloud.common</groupId>
+            <artifactId>cloud-common-web</artifactId>
+        </dependency>
+
+       
         <dependency>
             <groupId>io.minio</groupId>
             <artifactId>minio</artifactId>
@@ -41,18 +64,6 @@
             <artifactId>springdoc-openapi-starter-common</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.overthinker.cloud.common</groupId>
-            <artifactId>cloud-common-db</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.overthinker.cloud.system.starter</groupId>
-            <artifactId>system-auth-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.overthinker.cloud.system.starter</groupId>
-            <artifactId>system-redis-starter</artifactId>
-        </dependency>
     </dependencies>
 
 </project>

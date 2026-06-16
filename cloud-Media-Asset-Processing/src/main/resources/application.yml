@@ -1,34 +1,55 @@
-server:
-  port: 8010
-# ==========applicationName + druid-mysql8 driver===================
 spring:
-  application:
-    name: cloud-Media-Asset-Processing-service
-  datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:cloud}?currentSchema=web
-    username: ${DB_USER:root}
-    password: ${DB_PASS:123456}
-    driver-class-name: org.postgresql.Driver
-
+  profiles:
+    active: dev # 激活的配置文件，可以根据环境修改
+  security:
+    oauth2:
+      authorizationserver:
+        issuer: http://localhost:9123 # 授权服务器的Issuer URI，与AuthorizationServerConfig中配置的保持一致
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9123 # 资源服务器验证JWT的Issuer URI
+          jwk-set-uri: http://localhost:9123/oauth2/jwks # 资源服务器获取公钥的地址
   data:
     redis:
       host: localhost
       port: 6379
-      lettuce:
-        pool:
-          enabled: false
+      database: 0
+      timeout: 10000
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:web}?currentSchema=web
+    username: ${DB_USER:root}
+    password: ${DB_PASS:123456}
+    driver-class-name: org.postgresql.Driver
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      filters: stat,wall,log4j
+      use-global-data-source-stat: true
+      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: ${RABBITMQ_DEFAULT_USER}
+    password: ${RABBITMQ_DEFAULT_PASS}
+server:
+  port: 8010
 
 mybatis-plus:
-  check-config-location: true
-  configuration:
-    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
-    map-underscore-to-camel-case: true
   global-config:
     db-config:
-      id-type: assign_id
-      logic-delete-field: is_deleted
-      logic-delete-value: true
-      logic-not-delete-value: false
+      logic-delete-field: isDeleted
+      logic-delete-value: "true"
+      logic-not-delete-value: "false"
 
 
 ## 连接 minio
@@ -49,7 +70,12 @@ media:
     cleanup:
       enabled: true # 是否启用清理任务
       stale-threshold-hours: 24 # 任务过期阈值（小时）
-
+# Logging Configuration (Log4j2 will pick up log4j2-spring.xml from common-core)
+logging:
+  level:
+    root: INFO
+    org.springframework.security: DEBUG # 方便调试Spring Security
+    org.springframework.security.oauth2: DEBUG # 方便调试OAuth2流程
 # SpringDoc OpenAPI 全局配置
 springdoc:
   api-docs:

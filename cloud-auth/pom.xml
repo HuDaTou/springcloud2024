@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.overthinker.cloud</groupId>
@@ -12,6 +13,42 @@
     <description>认证授权中心服务，负责OAuth2.1 Token颁发与管理</description>
 
     <dependencies>
+
+        <!-- Consul 服务注册与发现 -->
+        <dependency>
+            <groupId>com.overthinker.cloud.system.starter</groupId>
+            <artifactId>system-consul-starter</artifactId>
+        </dependency>
+
+        <!-- Redis Starter -->
+        <dependency>
+            <groupId>com.overthinker.cloud.system.starter</groupId>
+            <artifactId>system-redis-starter</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.overthinker.cloud.system.starter</groupId>
+            <artifactId>system-auth-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.overthinker.cloud</groupId>
+            <artifactId>cloud-api</artifactId>
+        </dependency>
+
+
+        <!-- 数据库相关 -->
+        <dependency>
+            <groupId>com.overthinker.cloud.common</groupId>
+            <artifactId>cloud-common-db</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.overthinker.cloud.common</groupId>
+            <artifactId>cloud-common-web</artifactId>
+        </dependency>
+
+
         <!-- OAuth2 Authorization Server 核心依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -24,21 +61,10 @@
             <artifactId>spring-boot-starter-oauth2-client</artifactId>
         </dependency>
 
-        <!-- Consul 服务注册与发现 -->
-        <dependency>
-            <groupId>com.overthinker.cloud.system.starter</groupId>
-            <artifactId>system-consul-starter</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
-        </dependency>
-
-        <!-- 数据库相关 -->
-        <dependency>
-            <groupId>com.overthinker.cloud.common</groupId>
-            <artifactId>cloud-common-db</artifactId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
         <!-- 邮件发送与解析 -->
@@ -47,22 +73,12 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
 
-
-        <!-- Redis Starter -->
-        <dependency>
-            <groupId>com.overthinker.cloud.system.starter</groupId>
-            <artifactId>system-redis-starter</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.overthinker.cloud.common</groupId>
-            <artifactId>cloud-common-web</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -74,15 +90,6 @@
             <groupId>com.xkcoding.justauth</groupId>
             <artifactId>justauth-spring-boot-starter</artifactId>
 
-        </dependency>
-        <dependency>
-            <groupId>com.overthinker.cloud</groupId>
-            <artifactId>cloud-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.overthinker.cloud.system.starter</groupId>
-            <artifactId>system-auth-starter</artifactId>
         </dependency>
 
     </dependencies>
