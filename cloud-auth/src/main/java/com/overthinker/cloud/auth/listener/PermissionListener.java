@@ -15,9 +15,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 权限注册监听器
@@ -96,7 +97,8 @@ public class PermissionListener {
     /**
      * 替换服务权限
      * <p>
-     * 先根据服务名称删除该服务下的所有权限，再批量新增新的权限。
+     * 根据 permissionCode 判断是更新还是新增，保留原有ID。
+     * 删除服务上报中不再存在的权限。
      * 适用于服务启动时全量上报权限的场景。
      * </p>
      *
@@ -104,89 +106,90 @@ public class PermissionListener {
      * @param permissions 权限列表
      */
     private void replaceServicePermissions(String serviceName, List<PermissionDTO> permissions) {
-        // 1. 删除该服务下的所有权限
-        int deleteCount = permissionService.getBaseMapper().delete(
-                new LambdaQueryWrapper<SysPermission>()
-                        .eq(SysPermission::getServiceName, serviceName)
+        // 1. 获取该服务下已有的权限
+        List<SysPermission> existingPermissions = permissionService.list(
+                new LambdaQueryWrapper<SysPermission>().eq(SysPermission::getServiceName, serviceName)
         );
-        log.info("已删除服务 [{}] 的 {} 条旧权限记录", serviceName, deleteCount);
 
-        // 2. 批量新增权限
-        if (!permissions.isEmpty()) {
-            List<SysPermission> permissionList = new ArrayList<>();
-            for (PermissionDTO dto : permissions) {
-                SysPermission permission = new SysPermission()
+        // 2. 按 serviceName + permissionCode + path 构建唯一标识Map（应对同一permissionCode不同路径的情况）
+        Map<String, SysPermission> existingMap = existingPermissions.stream()
+                .collect(Collectors.toMap(
+                        p -> buildUniqueKey(p.getServiceName(), p.getPermissonCode(), p.getPath()),
+                        p -> p,
+                        (existing, replacement) -> existing  // 冲突时保留旧的
+                ));
+
+        int updateCount = 0;
+        int insertCount = 0;
+
+        // 3. 遍历新权限，更新或新增
+        for (PermissionDTO dto : permissions) {
+            String uniqueKey = buildUniqueKey(dto.getServiceName(), dto.getPermissonCode(), dto.getPath());
+            SysPermission existing = existingMap.get(uniqueKey);
+            if (existing != null) {
+                // 更新（保留原ID）
+                boolean needUpdate = false;
+
+                if (!Objects.equals(dto.getName(), existing.getName())) {
+                    existing.setName(dto.getName());
+                    needUpdate = true;
+                }
+                if (!Objects.equals(dto.getHttpMethod(), existing.getHttpMethod())) {
+                    existing.setHttpMethod(dto.getHttpMethod());
+                    needUpdate = true;
+                }
+                if (!Objects.equals(dto.getCategory(), existing.getCategory())) {
+                    existing.setCategory(dto.getCategory());
+                    needUpdate = true;
+                }
+
+                if (needUpdate) {
+                    permissionService.updateById(existing);
+                    updateCount++;
+                }
+                // 从Map中移除，剩下的就是需要删除的
+                existingMap.remove(uniqueKey);
+            } else {
+                // 新增
+                SysPermission newPermission = new SysPermission()
                         .setPermissonCode(dto.getPermissonCode())
                         .setName(dto.getName())
                         .setPath(dto.getPath())
                         .setHttpMethod(dto.getHttpMethod())
                         .setCategory(dto.getCategory())
                         .setServiceName(dto.getServiceName());
-                permissionList.add(permission);
+                permissionService.save(newPermission);
+                insertCount++;
             }
-            permissionService.saveBatch(permissionList);
-            log.info("已新增服务 [{}] 的 {} 条权限记录", serviceName, permissionList.size());
         }
+
+        // 4. 删除不再存在的权限（已移除的服务接口）
+        int deleteCount = 0;
+        if (!existingMap.isEmpty()) {
+            List<Long> deleteIds = existingMap.values().stream()
+                    .map(SysPermission::getId)
+                    .collect(Collectors.toList());
+            permissionService.removeByIds(deleteIds);
+            deleteCount = deleteIds.size();
+        }
+
+        log.info("服务 [{}] 权限处理完成：更新 {} 条，新增 {} 条，删除 {} 条",
+                serviceName, updateCount, insertCount, deleteCount);
     }
 
     /**
-     * 保存或更新权限信息（保留，暂不使用）
+     * 构建权限唯一标识
      * <p>
-     * 根据权限标识（permissionCode）判断是新增还是更新。
-     * 实现幂等性，同一权限标识多次上报不会创建重复记录。
+     * 使用 serviceName + permissionCode + path 组合确保唯一性，
+     * 因为同一 permissionCode 可能对应多个不同的接口路径。
      * </p>
      *
-     * @param dto 权限 DTO 对象
+     * @param serviceName    服务名称
+     * @param permissionCode 权限标识
+     * @param path           接口路径
+     * @return 唯一标识字符串
      */
-    private void saveOrUpdatePermission(PermissionDTO dto) {
-        String code = dto.getPermissonCode();
-
-        // 1. 根据权限标识查询是否已存在
-        SysPermission existing = permissionService.getOne(new LambdaQueryWrapper<SysPermission>()
-                .eq(SysPermission::getPermissonCode, code));
-
-        if (existing != null) {
-            // 2. 已存在，检查字段是否需要更新
-            boolean needUpdate = false;
-
-            if (!Objects.equals(dto.getName(), existing.getName())) {
-                existing.setName(dto.getName());
-                needUpdate = true;
-            }
-            if (!Objects.equals(dto.getPath(), existing.getPath())) {
-                existing.setPath(dto.getPath());
-                needUpdate = true;
-            }
-            if (!Objects.equals(dto.getHttpMethod(), existing.getHttpMethod())) {
-                existing.setHttpMethod(dto.getHttpMethod());
-                needUpdate = true;
-            }
-            if (dto.getCategory() != null && !dto.getCategory().equals(existing.getCategory())) {
-                existing.setCategory(dto.getCategory());
-                needUpdate = true;
-            }
-            if (dto.getServiceName() != null && !dto.getServiceName().equals(existing.getServiceName())) {
-                existing.setServiceName(dto.getServiceName());
-                needUpdate = true;
-            }
-
-            // 3. 有变化则更新
-            if (needUpdate) {
-                permissionService.updateById(existing);
-                log.debug("更新权限: {} - {}", code, dto.getName());
-            }
-        } else {
-            // 4. 不存在，新增权限
-            SysPermission newPermission = new SysPermission()
-                    .setPermissonCode(code)
-                    .setName(dto.getName())
-                    .setPath(dto.getPath())
-                    .setHttpMethod(dto.getHttpMethod())
-                    .setCategory(dto.getCategory())
-                    .setServiceName(dto.getServiceName());
-
-            permissionService.save(newPermission);
-            log.debug("新增权限: {} - {}", code, dto.getName());
-        }
+    private String buildUniqueKey(String serviceName, String permissionCode, String path) {
+        return serviceName + ":" + permissionCode + ":" + path;
     }
 }

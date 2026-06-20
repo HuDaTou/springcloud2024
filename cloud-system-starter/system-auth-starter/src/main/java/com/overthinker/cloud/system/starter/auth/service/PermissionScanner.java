@@ -28,8 +28,8 @@ public class PermissionScanner {
     private final ApplicationContext applicationContext;
     private final Environment environment;
 
-    // 正则表达式，用于从 @PreAuthorize 注解中提取第一个单引号包裹的内容（权限标识）
-    private static final Pattern PRE_AUTHORIZE_PATTERN = Pattern.compile("'([^']+)'");
+    // 正则表达式，只匹配 hasAuthority('xxx') 格式的权限表达式
+    private static final Pattern HAS_AUTHORITY_PATTERN = Pattern.compile("hasAuthority\\s*\\(\\s*'([^']+)'\\s*\\)");
 
     public PermissionScanner(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
@@ -124,18 +124,19 @@ public class PermissionScanner {
     }
 
     /**
-     * 解析 @PreAuthorize 注解内容，提取权限标识
+     * 解析 @PreAuthorize 注解内容，只提取 hasAuthority('xxx') 格式的权限标识
+     * 其他格式如 hasRole、hasAnyAuthority、permitAll 等将被忽略
      */
     private String getPermissionCode(Method method) {
         PreAuthorize preAuthorize = method.getAnnotation(PreAuthorize.class);
         if (preAuthorize != null) {
             String expression = preAuthorize.value();
-            Matcher matcher = PRE_AUTHORIZE_PATTERN.matcher(expression);
+            Matcher matcher = HAS_AUTHORITY_PATTERN.matcher(expression);
             if (matcher.find()) {
                 return matcher.group(1);
             }
-            // 如果正则表达式不匹配，直接返回表达式本身（可能就是简单的字符串，或者使用了其他SpEL）
-            return expression;
+            // 如果不是 hasAuthority 格式，跳过该方法
+            log.debug("跳过非 hasAuthority 格式的权限表达式: {}", expression);
         }
         return null;
     }

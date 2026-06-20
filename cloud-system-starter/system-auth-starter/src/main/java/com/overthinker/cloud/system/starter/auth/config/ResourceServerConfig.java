@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
@@ -76,7 +77,23 @@ public class ResourceServerConfig {
                     // 第一优先级：服务 Token 内部调用完全放行
                     .requestMatchers("/**").access(internalServiceBypass())
                     // 公开白名单
-                    .requestMatchers("/actuator/**", "/swagger-ui/**", "/v3/api-docs/**", "/login").permitAll()
+                    .requestMatchers(
+                        "/actuator/**",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**",
+                        "/login",
+                        // 博客公开接口
+                        "/article/**",
+                        "/banners/**",
+                        "/comment/getComment",
+                        "/leaveWord/list",
+                        "/link/list",
+                        "/photo/list",
+                        "/video/list",
+                        "/websiteInfo/**",
+                        "/category/**",
+                        "/tag/**"
+                    ).permitAll()
                     // 其余需认证
                     .anyRequest().authenticated()
             )
