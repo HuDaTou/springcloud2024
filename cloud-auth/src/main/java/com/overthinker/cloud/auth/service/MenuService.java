@@ -20,4 +20,11 @@ public interface MenuService extends IService<SysMenu> {
      * @return 树形菜单列表
      */
     List<MenuVO> getAllMenus();
+
+    /**
+     * 删除菜单（包含子菜单）
+     *
+     * @param id 菜单ID
+     */
+    void deleteMenu(Long id);
 }

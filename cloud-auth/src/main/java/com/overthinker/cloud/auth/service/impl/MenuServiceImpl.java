@@ -25,6 +25,21 @@ import java.util.stream.Collectors;
 @Service
 public class MenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> implements MenuService {
 
+    public void deleteMenu(Long id) {
+        deleteMenuRecursively(id);
+    }
+
+    private void deleteMenuRecursively(Long parentId) {
+        List<SysMenu> children = this.list(new LambdaQueryWrapper<SysMenu>()
+                .eq(SysMenu::getParentId, parentId));
+        
+        for (SysMenu child : children) {
+            deleteMenuRecursively(child.getId());
+        }
+        
+        this.removeById(parentId);
+    }
+
     @Override
     public List<MenuVO> getAllMenus() {
         // 查询所有未禁用的菜单

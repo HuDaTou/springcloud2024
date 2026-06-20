@@ -43,7 +43,7 @@ public class MenuController {
     @PreAuthorize("hasAuthority('auth:menu:list')")
     @GetMapping("/{id}")
     public ResultData<SysMenu> getMenuById(
-            @Parameter(description = "菜单ID", required = true) @PathVariable Long id) {
+            @Parameter(description = "菜单ID", required = true) @PathVariable("id") Long id) {
         return ResultData.success(menuService.getById(id));
     }
 
@@ -67,7 +67,7 @@ public class MenuController {
     @PreAuthorize("hasAuthority('auth:menu:edit')")
     @PutMapping("/{id}")
     public ResultData<Void> updateMenu(
-            @Parameter(description = "菜单ID", required = true) @PathVariable Long id,
+            @Parameter(description = "菜单ID", required = true) @PathVariable("id") Long id,
             @RequestBody @Valid MenuDTO menuDTO) {
         SysMenu menu = menuDTO.copyProperties(SysMenu.class, m -> m.setId(id));
         menuService.updateById(menu);
@@ -78,8 +78,8 @@ public class MenuController {
     @PreAuthorize("hasAuthority('auth:menu:delete')")
     @DeleteMapping("/{id}")
     public ResultData<Void> deleteMenu(
-            @Parameter(description = "菜单ID", required = true) @PathVariable Long id) {
-        menuService.removeById(id);
+            @Parameter(description = "菜单ID", required = true) @PathVariable("id") Long id) {
+        menuService.deleteMenu(id);
         return ResultData.success();
     }
 }
