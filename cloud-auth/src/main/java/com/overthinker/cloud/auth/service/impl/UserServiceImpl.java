@@ -248,10 +248,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public ResultData<String> uploadAvatar(MultipartFile avatarFile) throws Exception {
-        String fileName = UUID.randomUUID().toString() + "." + 
-                avatarFile.getOriginalFilename().split("\\.")[1];
-        String avatarUrl = "https://example.com/avatar/" + fileName;
+    public ResultData<String> uploadAvatar(String avatarUrl) {
+        Long userId = SecurityUtils.getUserId();
+        User user = userMapper.selectById(userId);
+        if (Objects.isNull(user)) {
+            return ResultData.failure("用户不存在");
+        }
+        user.setAvatar(avatarUrl);
+        userMapper.updateById(user);
         return ResultData.success(avatarUrl);
     }
 

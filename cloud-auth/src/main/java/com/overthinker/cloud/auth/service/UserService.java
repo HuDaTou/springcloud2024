@@ -9,7 +9,6 @@ import com.overthinker.cloud.auth.entity.VO.UserDetailsVO;
 import com.overthinker.cloud.auth.entity.VO.UserListVO;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -112,12 +111,12 @@ public interface UserService extends IService<User>, UserDetailsService {
     ResultData<Void> updateUser(UserUpdateDTO userUpdateDTO);
 
     /**
-     * 上传用户头像
+     * 更新用户头像路径
      *
-     * @param avatarFile 头像
+     * @param avatarUrl 头像路径
      * @return 是否成功, 返回头像地址
      */
-    ResultData<String> uploadAvatar(MultipartFile avatarFile) throws Exception;
+    ResultData<String> uploadAvatar(String avatarUrl);
 
     /**
      * 修改邮箱
