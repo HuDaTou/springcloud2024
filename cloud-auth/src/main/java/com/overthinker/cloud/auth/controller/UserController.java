@@ -14,12 +14,12 @@ import com.overthinker.cloud.common.core.resp.ResultData;
 import com.overthinker.cloud.system.starter.auth.utils.SecurityUtils;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,51 +34,51 @@ public class UserController extends BaseController {
 
     private final UserService userService;
 
+    // ==================== 认证用户接口 ====================
 
     @Operation(summary = "获取当前用户信息", description = "获取当前登录用户的账号详细信息")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/auth/info")
     public ResultData<UserAccountVO> getInfo() {
         return messageHandler(() -> userService.findAccountById(SecurityUtils.getUserId()));
     }
 
     @Operation(summary = "修改用户信息", description = "修改当前登录用户的昵称、简介等基本信息")
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/auth/update")
     public ResultData<Void> updateUser(@RequestBody @Valid UserUpdateDTO userUpdateDTO) {
         return userService.updateUser(userUpdateDTO);
     }
 
-    @Operation(summary = "上传用户头像", description = "上传并更新当前用户的头像")
+    @Operation(summary = "上传用户头像", description = "更新当前用户的头像路径")
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/auth/upload/avatar")
-    public ResultData<String> uploadAvatar(@RequestParam("avatarFile") MultipartFile avatarFile) throws Exception {
-        return userService.uploadAvatar(avatarFile);
+    public ResultData<String> uploadAvatar(
+            @Parameter(description = "头像URL") @RequestParam("avatarUrl") String avatarUrl) {
+        return userService.uploadAvatar(avatarUrl);
     }
 
     @Operation(summary = "修改用户绑定邮箱", description = "验证旧邮箱并绑定新邮箱")
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/auth/update/email")
     public ResultData<Void> updateEmail(@RequestBody @Valid UpdateEmailDTO updateEmailDTO) {
         return userService.updateEmailAndVerify(updateEmailDTO);
     }
 
     @Operation(summary = "第三方登录用户绑定邮箱", description = "第三方账号首次登录绑定邮箱")
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/auth/third/update/email")
     public ResultData<Void> thirdUpdateEmail(@RequestBody @Valid UpdateEmailDTO updateEmailDTO) {
         return userService.thirdUpdateEmail(updateEmailDTO);
     }
 
+    // ==================== 管理员用户接口 ====================
 
-
-    @Operation(summary = "获取用户列表", description = "【管理员】获取系统所有用户列表")
+    @Operation(summary = "获取用户列表", description = "【管理员】获取系统所有用户列表，支持条件搜索")
     @PreAuthorize("hasAuthority('auth:user:list')")
-    @GetMapping("/list")
-    public ResultData<List<UserListVO>> getUserList() {
-        return messageHandler(() -> userService.getUserOrSearch(null));
-    }
-
-    @Operation(summary = "搜索用户列表", description = "【管理员】根据条件搜索用户")
-    @PreAuthorize("hasAuthority('auth:user:list')")
-    @PostMapping("/search")
-    public ResultData<List<UserListVO>> searchUserList(@RequestBody UserSearchDTO userSearchDTO) {
-        return messageHandler(() -> userService.getUserOrSearch(userSearchDTO));
+    @PostMapping("/list")
+    public ResultData<List<UserListVO>> list(@RequestBody(required = false) UserSearchDTO searchDTO) {
+        return messageHandler(() -> userService.getUserOrSearch(searchDTO));
     }
 
     @Operation(summary = "更新用户状态", description = "【管理员】启用或禁用用户")
@@ -91,14 +91,15 @@ public class UserController extends BaseController {
     @Operation(summary = "获取用户详细信息", description = "【管理员】根据ID获取用户详细信息")
     @PreAuthorize("hasAuthority('auth:user:query')")
     @GetMapping("/details/{id}")
-    public ResultData<UserDetailsVO> getUserDetails(@PathVariable("id") Long id) {
+    public ResultData<UserDetailsVO> getUserDetails(
+            @Parameter(description = "用户ID", required = true) @PathVariable("id") Long id) {
         return messageHandler(() -> userService.findUserDetailsById(id));
     }
 
     @Operation(summary = "删除用户", description = "【管理员】批量删除用户")
     @PreAuthorize("hasAuthority('auth:user:delete')")
     @DeleteMapping("/delete")
-    public ResultData<Void> deleteUser(@RequestBody UserDeleteDTO userDeleteDTO) {
+    public ResultData<Void> deleteUser(@RequestBody @Valid UserDeleteDTO userDeleteDTO) {
         return userService.deleteUser(userDeleteDTO.getIds());
     }
 
@@ -109,23 +110,36 @@ public class UserController extends BaseController {
         return userService.adminCreateUser(adminCreateUserDTO);
     }
 
+    // ==================== 内部服务调用接口 ====================
+
+    @Operation(summary = "获取用户总数", description = "获取系统用户总数")
+    @PreAuthorize("hasAuthority('auth:user:query')")
     @GetMapping("/count")
     public ResultData<Long> getUserCount() {
         return messageHandler(() -> userService.count());
     }
 
+    @Operation(summary = "根据ID获取用户名", description = "根据用户ID获取用户名")
+    @PreAuthorize("hasAuthority('auth:user:query')")
     @GetMapping("/username")
-    public ResultData<String> getUsernameById(@RequestParam Long userId) {
+    public ResultData<String> getUsernameById(
+            @Parameter(description = "用户ID") @RequestParam Long userId) {
         return messageHandler(() -> userService.findAccountById(userId).getUsername());
     }
 
+    @Operation(summary = "根据ID获取用户邮箱", description = "根据用户ID获取用户邮箱")
+    @PreAuthorize("hasAuthority('auth:user:query')")
     @GetMapping("/email")
-    public ResultData<String> getEmailById(@RequestParam Long userId) {
+    public ResultData<String> getEmailById(
+            @Parameter(description = "用户ID") @RequestParam Long userId) {
         return messageHandler(() -> userService.findAccountById(userId).getEmail());
     }
 
+    @Operation(summary = "根据ID获取用户基本信息", description = "根据用户ID获取用户名、邮箱、昵称、头像")
+    @PreAuthorize("hasAuthority('auth:user:query')")
     @GetMapping("/info")
-    public ResultData<Map<String, Object>> getUserInfoById(@RequestParam Long userId) {
+    public ResultData<Map<String, Object>> getUserInfoById(
+            @Parameter(description = "用户ID") @RequestParam Long userId) {
         UserAccountVO account = userService.findAccountById(userId);
         Map<String, Object> info = new HashMap<>();
         info.put("username", account.getUsername());
@@ -135,8 +149,11 @@ public class UserController extends BaseController {
         return ResultData.success(info);
     }
 
+    @Operation(summary = "根据用户名搜索用户ID列表", description = "根据用户名模糊搜索获取匹配的用户ID列表")
+    @PreAuthorize("hasAuthority('auth:user:query')")
     @GetMapping("/search")
-    public ResultData<List<Long>> searchUserIdsByUsername(@RequestParam String username) {
+    public ResultData<List<Long>> searchUserIdsByUsername(
+            @Parameter(description = "用户名") @RequestParam String username) {
         UserSearchDTO searchDTO = new UserSearchDTO();
         searchDTO.setUsername(username);
         return messageHandler(() -> userService.getUserOrSearch(searchDTO)

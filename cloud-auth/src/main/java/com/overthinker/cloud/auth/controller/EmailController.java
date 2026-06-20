@@ -30,7 +30,7 @@ import java.util.Map;
  * @since 2025-06-13
  */
 @RestController
-@RequestMapping("Email")
+@RequestMapping("/email")
 @RequiredArgsConstructor
 @Validated
 public class EmailController implements EmailClient {

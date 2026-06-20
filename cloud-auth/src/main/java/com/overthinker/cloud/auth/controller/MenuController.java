@@ -1,5 +1,6 @@
 package com.overthinker.cloud.auth.controller;
 
+import com.overthinker.cloud.auth.entity.DTO.MenuDTO;
 import com.overthinker.cloud.auth.entity.PO.SysMenu;
 import com.overthinker.cloud.auth.entity.VO.MenuVO;
 import com.overthinker.cloud.auth.service.MenuService;
@@ -56,7 +57,8 @@ public class MenuController {
     @Operation(summary = "创建菜单", description = "创建一个新的菜单")
     @PreAuthorize("hasAuthority('auth:menu:add')")
     @PostMapping
-    public ResultData<Void> createMenu(@RequestBody @Valid SysMenu menu) {
+    public ResultData<Void> createMenu(@RequestBody @Valid MenuDTO menuDTO) {
+        SysMenu menu = menuDTO.copyProperties(SysMenu.class);
         menuService.save(menu);
         return ResultData.success();
     }
@@ -66,8 +68,8 @@ public class MenuController {
     @PutMapping("/{id}")
     public ResultData<Void> updateMenu(
             @Parameter(description = "菜单ID", required = true) @PathVariable Long id,
-            @RequestBody @Valid SysMenu menu) {
-        menu.setId(id);
+            @RequestBody @Valid MenuDTO menuDTO) {
+        SysMenu menu = menuDTO.copyProperties(SysMenu.class, m -> m.setId(id));
         menuService.updateById(menu);
         return ResultData.success();
     }
