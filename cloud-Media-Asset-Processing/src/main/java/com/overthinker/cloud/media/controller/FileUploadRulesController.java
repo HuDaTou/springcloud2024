@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @Validated
 @RestController
-@RequestMapping("/api/media/rules")
+@RequestMapping("/media/rules")
 @Tag(name = "文件上传规则管理", description = "用于管理文件上传的规则，如大小、类型和存储路径")
 @RequiredArgsConstructor
 public class FileUploadRulesController extends BaseController {

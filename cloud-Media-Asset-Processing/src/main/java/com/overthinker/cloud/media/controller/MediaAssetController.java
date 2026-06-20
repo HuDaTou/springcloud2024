@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * 媒体资产管理控制器
  * <p>
- * 提供媒体资产实体表的增删改查接口
+ * 提供媒体资产的管理接口（增删改查），需要权限控制
  * </p>
  *
  * @author overthinker
@@ -35,9 +35,9 @@ import java.util.List;
 @Slf4j
 @Validated
 @RestController
-@RequestMapping("/api/media/assets")
+@RequestMapping("/media/assets")
 @RequiredArgsConstructor
-@Tag(name = "媒体资产管理", description = "媒体资产的增删改查接口")
+@Tag(name = "媒体资产管理", description = "提供媒体资产的管理接口，需要权限控制")
 public class MediaAssetController {
 
     private final MediaAssetService mediaAssetService;

@@ -44,8 +44,9 @@ public interface UploadService {
      * </p>
      *
      * @param uploadId 初始化时获取的上传ID
+     * @return 完成的媒体资产ID
      */
-    void completeMultipartUpload(String uploadId);
+    Long completeMultipartUpload(String uploadId);
 
     /**
      * 分页列出媒体文件
@@ -126,6 +127,7 @@ public interface UploadService {
      * </p>
      *
      * @param objectName 文件对象名
+     * @return 完成的媒体资产ID
      */
-    void completeUpload(String objectName);
+    Long completeUpload(String objectName);
 }

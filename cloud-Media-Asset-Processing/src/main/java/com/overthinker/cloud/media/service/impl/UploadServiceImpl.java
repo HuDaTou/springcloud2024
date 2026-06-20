@@ -175,7 +175,7 @@ public class UploadServiceImpl implements UploadService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void completeMultipartUpload(String uploadId) {
+    public Long completeMultipartUpload(String uploadId) {
         log.info("开始完成分片上传，uploadId: {}", uploadId);
 
         Map<String, String> cacheValue = redisCache.getCacheObject(UPLOAD_ID_CACHE_PREFIX + uploadId);
@@ -235,11 +235,12 @@ public class UploadServiceImpl implements UploadService {
             mediaAssetMapper.update(assetUpdate, new LambdaQueryWrapper<MediaAsset>()
                     .eq(MediaAsset::getObjectName, objectName));
 
-            log.info("成功完成文件分片上传并校验通过: objectName: {}, uploadId: {}", objectName, uploadId);
-
             MediaAsset completedAsset = mediaAssetMapper.selectOne(
                     new LambdaQueryWrapper<MediaAsset>().eq(MediaAsset::getObjectName, objectName));
             mediaAssetService.processMediaAsset(completedAsset);
+
+            log.info("成功完成文件分片上传并校验通过: objectName: {}, uploadId: {}, assetId: {}", objectName, uploadId, completedAsset.getId());
+            return completedAsset.getId();
 
         } catch (BusinessException | FileUploadException e) {
             throw e;
@@ -490,7 +491,7 @@ public class UploadServiceImpl implements UploadService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void completeUpload(String objectName) {
+    public Long completeUpload(String objectName) {
         log.info("开始完成普通上传，objectName: {}", objectName);
 
         MediaAsset asset = mediaAssetMapper.selectOne(
@@ -523,7 +524,8 @@ public class UploadServiceImpl implements UploadService {
                 new LambdaQueryWrapper<MediaAsset>().eq(MediaAsset::getObjectName, objectName));
         mediaAssetService.processMediaAsset(completedAsset);
 
-        log.info("成功完成普通上传: objectName: {}", objectName);
+        log.info("成功完成普通上传: objectName: {}, assetId: {}", objectName, completedAsset.getId());
+        return completedAsset.getId();
     }
 
     @Override
