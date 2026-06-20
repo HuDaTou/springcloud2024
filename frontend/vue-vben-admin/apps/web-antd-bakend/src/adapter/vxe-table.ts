@@ -65,6 +65,80 @@ setupVbenVxeTable({
       },
     });
 
+    // 注册表格的操作按钮渲染器
+    vxeUI.renderer.add('CellOperation', {
+      renderTableDefault({ attrs, options, props }, { column, row }) {
+        const defaultProps = { size: 'small', type: 'link', ...props };
+        let align: string;
+        switch (column.align) {
+          case 'center': {
+            align = 'center';
+            break;
+          }
+          case 'left': {
+            align = 'start';
+            break;
+          }
+          default: {
+            align = 'end';
+            break;
+          }
+        }
+        const presets: Recordable<Recordable<any>> = {
+          delete: {
+            danger: true,
+            text: '删除',
+          },
+          edit: {
+            text: '编辑',
+          },
+        };
+        const operations: Array<Recordable<any>> = (options || ['edit', 'delete'])
+          .map((opt) => {
+            if (typeof opt === 'string') {
+              return presets[opt]
+                ? { code: opt, ...presets[opt], ...defaultProps }
+                : {
+                    code: opt,
+                    text: opt,
+                    ...defaultProps,
+                  };
+            } else {
+              return { ...defaultProps, ...presets[opt.code], ...opt };
+            }
+          })
+          .filter((opt) => opt.show !== false);
+
+        function renderBtn(opt: Recordable<any>, listen = true) {
+          return h(
+            Button,
+            {
+              ...props,
+              ...opt,
+              onClick: listen
+                ? () =>
+                    attrs?.onClick?.({
+                      code: opt.code,
+                      row,
+                    })
+                : undefined,
+            },
+            { default: () => opt.text },
+          );
+        }
+
+        const btns = operations.map((opt) => renderBtn(opt));
+        return h(
+          'div',
+          {
+            class: 'flex',
+            style: { justifyContent: align, gap: '8px' },
+          },
+          btns,
+        );
+      },
+    });
+
     // 这里可以自行扩展 vxe-table 的全局配置，比如自定义格式化
     // vxeUI.formats.add
   },

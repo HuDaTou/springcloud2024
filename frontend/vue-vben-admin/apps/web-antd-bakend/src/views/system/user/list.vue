@@ -9,7 +9,6 @@ import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import {
   deleteUserApi,
   getUserListApi,
-  searchUserApi,
   updateUserStatusApi,
 } from '#/api/core/user';
 import type { UserApi } from '#/api/core/user';
@@ -92,11 +91,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
           if (formValues.isDisable !== undefined && formValues.isDisable !== null)
             params.isDisable = formValues.isDisable;
 
-          const hasSearchParams =
-            params.username || params.email || params.isDisable !== undefined;
-          const res = hasSearchParams
-            ? await searchUserApi(params)
-            : await getUserListApi();
+          const res = await getUserListApi(params);
 
           const allItems = Array.isArray(res) ? res : [];
           const start = (page.currentPage - 1) * page.pageSize;

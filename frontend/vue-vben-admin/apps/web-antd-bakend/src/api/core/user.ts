@@ -95,17 +95,9 @@ export async function getUserInfoApi() {
 
 // ==================== 用户管理 API ====================
 
-/** 获取用户列表 */
-export async function getUserListApi() {
-  return requestClient.get<UserApi.UserListVO[]>('/cloud-auth/user/list');
-}
-
-/** 搜索用户 */
-export async function searchUserApi(data: UserApi.UserSearchParams) {
-  return requestClient.post<UserApi.UserListVO[]>(
-    '/cloud-auth/user/search',
-    data,
-  );
+/** 获取用户列表（支持条件搜索） */
+export async function getUserListApi(data?: UserApi.UserSearchParams) {
+  return requestClient.post<UserApi.UserListVO[]>('/cloud-auth/user/list', data);
 }
 
 /** 获取用户详情 */

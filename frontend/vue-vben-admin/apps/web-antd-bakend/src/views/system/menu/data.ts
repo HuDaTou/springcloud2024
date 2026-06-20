@@ -63,6 +63,7 @@ export function useColumns(
           'edit',
           'delete',
         ],
+        props: {},
       },
       field: 'operation',
       fixed: 'right',
