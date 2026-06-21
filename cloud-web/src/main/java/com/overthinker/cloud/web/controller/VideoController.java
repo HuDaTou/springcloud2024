@@ -11,32 +11,40 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
 
-
 /**
- * @author overH
+ * 视频控制器
  * <p>
- * 创建时间：2023/12/26 16:15
+ * 处理视频的管理接口，包括视频上传、封面上传、信息管理、列表查询等操作
+ * </p>
+ *
+ * @author overH
+ * @since 2023-12-26
  */
-@Tag(name = "文件上传")
+@Tag(name = "视频相关接口")
 @RestController
 @RequestMapping("/video")
+@RequiredArgsConstructor
 public class VideoController extends BaseController {
 
-    @Resource
-    VideoService videoService;
+    private final VideoService videoService;
 
-
+    /**
+     * 上传视频
+     *
+     * @param videoFile 视频文件
+     * @return 视频信息
+     */
     @Operation(summary = "上传视频")
-    @RequestMapping("/upload/video")
+    @PostMapping("/upload/video")
     @Parameters({
             @Parameter(name = "videoFile", description = "视频文件"),
     })
@@ -44,26 +52,40 @@ public class VideoController extends BaseController {
         return messageHandler(() -> videoService.uploadVideo(videoFile));
     }
 
-
+    /**
+     * 上传视频封面
+     *
+     * @param videoCover 视频封面文件
+     * @return 封面URL
+     */
     @Operation(summary = "上传封面信息")
-    @RequestMapping("/upload/cover")
+    @PostMapping("/upload/cover")
     @Parameters({
             @Parameter(name = "videoCover", description = "视频封面"),
     })
-    public ResultData<String> uploadVideoCover(
-            @RequestParam("videocover") MultipartFile videoCover
-    ) {
+    public ResultData<String> uploadVideoCover(@RequestParam("videocover") MultipartFile videoCover) {
         return messageHandler(() -> videoService.uploadVideoCover(videoCover));
     }
 
-
+    /**
+     * 添加或更新视频信息
+     *
+     * @param videoInfoTDO 视频信息
+     * @return 操作结果
+     */
     @Operation(summary = "添加或更改视频信息")
     @PostMapping("/upload/videoInfo")
     public ResultData<Void> saveVideoInfo(@Valid @RequestBody VideoInfoTDO videoInfoTDO) {
         return videoService.updateVideoInfo(videoInfoTDO);
     }
 
-
+    /**
+     * 获取视频列表
+     *
+     * @param pageNum  页码
+     * @param pageSize 每页数量
+     * @return 视频列表
+     */
     @Operation(summary = "获取视频列表")
     @GetMapping("/list")
     @Parameters({
@@ -71,34 +93,54 @@ public class VideoController extends BaseController {
             @Parameter(name = "pageSize", description = "每页数量", required = true)
     })
     public ResultData<List<VideoInfoVO>> getVideoList(
-            @NotNull @RequestParam(name = "pageNum") Integer pageNum,
-            @NotNull @RequestParam(name = "pageSize") Integer pageSize
+            @NotNull @RequestParam("pageNum") Integer pageNum,
+            @NotNull @RequestParam("pageSize") Integer pageSize
     ) {
         return messageHandler(() -> videoService.getUserAndPublicVideoList(pageNum, pageSize));
     }
 
-
+    /**
+     * 删除视频
+     *
+     * @param ids 视频ID列表
+     * @return 操作结果
+     */
     @Operation(summary = "删除视频")
     @DeleteMapping("/delete")
     public ResultData<Void> deleteVideo(@RequestParam("ids") @NotNull List<Long> ids) {
         return videoService.deleteVideo(ids);
     }
 
-
+    /**
+     * 发布视频
+     *
+     * @param videoId 视频ID
+     * @return 操作结果
+     */
     @Operation(summary = "发布视频")
     @PostMapping("/publish")
     public ResultData<String> publishVideo(@RequestParam("videoId") Long videoId) {
         return messageHandler(() -> videoService.publishVideo(videoId));
     }
 
-
+    /**
+     * 获取视频缓存地址
+     *
+     * @param videoId 视频ID
+     * @return 缓存地址
+     */
     @Operation(summary = "获取视频的缓存地址")
     @GetMapping("/cachepath")
     public ResultData<String> getVideoCachePath(@RequestParam("videoId") Integer videoId) {
-        return messageHandler(() -> videoService.getVideoCachePath());
+        return messageHandler(videoService::getVideoCachePath);
     }
 
-
+    /**
+     * 视频访问量+1
+     *
+     * @param id 视频ID
+     * @return 操作结果
+     */
     @Operation(summary = "视频访问量+1")
     @Parameter(name = "id", description = "视频id", required = true)
     @AccessLimit(seconds = 60, maxCount = 60)
@@ -108,27 +150,41 @@ public class VideoController extends BaseController {
         return messageHandler(() -> null);
     }
 
-
-    //    @PreAuthorize("hasAnyAuthority('blog:video:list')")
+    /**
+     * 获取所有视频列表（后台）
+     *
+     * @return 视频列表
+     */
     @Operation(summary = "获取所有的视频列表")
-//    @LogAnnotation(module = "视频管理", operation = LogConst.GET)
     @AccessLimit(seconds = 60, maxCount = 30)
     @GetMapping("/back/list")
     public ResultData<List<VideoInfoVO>> listArticle() {
-        return messageHandler(() -> videoService.listVideo());
+        return messageHandler(videoService::listVideo);
     }
 
-
+    /**
+     * 搜索视频信息
+     *
+     * @param searchVideoDTO 搜索条件
+     * @return 视频列表
+     */
     @Operation(summary = "获取视频信息")
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResultData<List<VideoInfoVO>> getVideoInfo(@RequestBody SearchVideoDTO searchVideoDTO) {
         return messageHandler(() -> videoService.searchVideoInfo(searchVideoDTO));
     }
 
+    /**
+     * 修改视频权限
+     *
+     * @param videoId   视频ID
+     * @param permission 权限标识
+     * @return 操作结果
+     */
     @Operation(summary = "修改视频的权限")
     @PutMapping("/permission")
-    public ResultData<Void> updateVideoPermission(@RequestParam("videoId") Long videoId, @RequestParam("permission") boolean permission) {
+    public ResultData<Void> updateVideoPermission(@RequestParam("videoId") Long videoId,
+                                                  @RequestParam("permission") boolean permission) {
         return messageHandler(() -> videoService.updateVideoPermission(videoId, permission));
     }
-
 }
