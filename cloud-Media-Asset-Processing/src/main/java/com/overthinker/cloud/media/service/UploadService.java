@@ -6,6 +6,8 @@ import com.overthinker.cloud.media.entity.VO.MediaAssetVO;
 
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartFile;
+
 /**
  * 文件上传服务接口
  *
@@ -130,4 +132,30 @@ public interface UploadService {
      * @return 完成的媒体资产ID
      */
     Long completeUpload(String objectName);
+
+    /**
+     * 使用上传规则直接上传文件
+     * <p>
+     * 根据指定的上传规则校验文件并上传到MinIO，同时创建媒体资产记录
+     * </p>
+     *
+     * @param userId  上传用户ID
+     * @param file    上传的文件
+     * @param ruleId  上传规则ID
+     * @return 包含 assetId、objectName、fileUrl 等信息的Map
+     */
+    Map<String, Object> uploadFileWithRule(Long userId, MultipartFile file, Long ruleId);
+
+    /**
+     * 使用枚举规则直接上传文件
+     * <p>
+     * 根据预定义的上传规则枚举校验文件并上传到MinIO，同时创建媒体资产记录
+     * </p>
+     *
+     * @param userId   上传用户ID
+     * @param file     上传的文件
+     * @param ruleName 上传规则名称（枚举值，如：ARTICLE_COVER、USER_AVATAR）
+     * @return 包含 assetId、objectName、fileUrl 等信息的Map
+     */
+    Map<String, Object> uploadFileWithRuleName(Long userId, MultipartFile file, String ruleName);
 }

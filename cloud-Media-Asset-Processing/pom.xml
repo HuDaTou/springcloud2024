@@ -32,10 +32,10 @@
             <groupId>com.overthinker.cloud.system.starter</groupId>
             <artifactId>system-auth-starter</artifactId>
         </dependency>
-        <!-- <dependency>
+        <dependency>
             <groupId>com.overthinker.cloud</groupId>
             <artifactId>cloud-api</artifactId>
-        </dependency> -->
+        </dependency>
 
 
         <!-- common -->

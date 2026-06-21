@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -120,5 +121,28 @@ public class MediaController extends BaseController {
             @Parameter(description = "文件的唯一对象名", required = true, in = ParameterIn.PATH)
             @PathVariable("objectName") @NotBlank(message = "objectName不能为空") String objectName) {
         return ResultData.success(uploadService.getPresignedDownloadUrl(objectName));
+    }
+
+    @Operation(summary = "直接上传文件（使用上传规则）", description = "直接上传文件到服务器，根据上传规则进行校验和存储")
+    @PostMapping(value = "/upload", consumes = "multipart/form-data")
+    @AccessLimit(seconds = 60, maxCount = 10, msg = "上传操作过于频繁，请稍后再试")
+    @LogAnnotation(module = "媒体服务", operation = LogConst.INSERT)
+    public ResultData<Map<String, Object>> uploadFile(
+            @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId,
+            @Parameter(description = "上传的文件", required = true) @RequestPart("file") MultipartFile file,
+            @Parameter(description = "上传规则ID", required = true) @RequestParam("ruleId") Long ruleId) {
+        return ResultData.success(uploadService.uploadFileWithRule(userId, file, ruleId));
+    }
+
+    @Operation(summary = "直接上传文件（使用枚举规则）", description = "根据预定义的上传规则枚举直接上传文件到服务器，无需获取预签名URL")
+    @PostMapping(value = "/upload/rule", consumes = "multipart/form-data")
+    @AccessLimit(seconds = 60, maxCount = 10, msg = "上传操作过于频繁，请稍后再试")
+    @LogAnnotation(module = "媒体服务", operation = LogConst.INSERT)
+    public ResultData<Map<String, Object>> uploadFileWithRuleName(
+            @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId,
+            @Parameter(description = "上传的文件", required = true) @RequestPart("file") MultipartFile file,
+            @Parameter(description = "上传规则名称（枚举值，如：ARTICLE_COVER、USER_AVATAR）", required = true)
+            @RequestParam("ruleName") String ruleName) {
+        return ResultData.success(uploadService.uploadFileWithRuleName(userId, file, ruleName));
     }
 }
