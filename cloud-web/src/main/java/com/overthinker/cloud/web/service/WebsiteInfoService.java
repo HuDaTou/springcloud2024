@@ -6,7 +6,7 @@ import com.overthinker.cloud.web.entity.DTO.StationmasterInfoDTO;
 import com.overthinker.cloud.web.entity.DTO.WebsiteInfoDTO;
 import com.overthinker.cloud.web.entity.PO.WebsiteInfo;
 import com.overthinker.cloud.web.entity.VO.WebsiteInfoVO;
-import com.overthinker.cloud.web.entity.enums.UploadEnum;
+import com.overthinker.cloud.api.apis.media.ENUM.MediaUploadRuleEnum;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -26,7 +26,7 @@ public interface WebsiteInfoService extends IService<WebsiteInfo> {
      * @param type       类型
      * @return 是否成功&图片地址
      */
-    ResultData<String> uploadImageInsertOrUpdate(UploadEnum uploadEnum, MultipartFile avatar, Integer type);
+    ResultData<String> uploadImageInsertOrUpdate(MediaUploadRuleEnum uploadEnum, MultipartFile avatar, Integer type);
 
     /**
      * 查询网站信息

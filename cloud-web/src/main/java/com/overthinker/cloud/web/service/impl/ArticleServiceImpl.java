@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.overthinker.cloud.common.core.exception.FileUploadException;
+import com.overthinker.cloud.api.apis.media.ENUM.MediaUploadRuleEnum;
+import com.overthinker.cloud.api.apis.media.api.MediaClient;
 import com.overthinker.cloud.common.core.resp.ResultData;
+import com.overthinker.cloud.common.core.resp.ReturnCodeEnum;
 import com.overthinker.cloud.system.starter.redis.constants.RedisConstants;
 import com.overthinker.cloud.system.starter.redis.utils.MyRedisCache;
 import com.overthinker.cloud.web.entity.DTO.ArticleDTO;
@@ -19,8 +21,6 @@ import com.overthinker.cloud.web.entity.enums.*;
 import com.overthinker.cloud.web.mapper.*;
 import com.overthinker.cloud.web.service.*;
 import com.overthinker.cloud.system.starter.auth.utils.SecurityUtils;
-import com.overthinker.cloud.web.utils.FileUploadUtils;
-
 import com.overthinker.cloud.common.core.utils.MyStringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,12 +55,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     private final LikeService likeService;
     private final CommentService commentService;
     private final MyRedisCache myRedisCache;
-    private final FileUploadUtils fileUploadUtils;
     private final com.overthinker.cloud.api.apis.auth.api.UserClient userClient;
     private final LikeMapper likeMapper;
     private final FavoriteMapper favoriteMapper;
     private final CommentMapper commentMapper;
     private final ArticleTagService articleTagService;
+private final MediaClient mediaClient;
 
     @Value("${minio.bucketName}")
     private String bucketName;
@@ -221,16 +221,18 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public ResultData<String> uploadArticleCover(MultipartFile articleCover) {
         try {
-            String articleCoverUrl = null;
-            try {
-                articleCoverUrl = fileUploadUtils.uploadImage(UploadEnum.ARTICLE_COVER, articleCover);
-            } catch (FileUploadException e) {
-                return ResultData.failure(e.getMessage());
+            ResultData<Map<String, Object>> result = mediaClient.uploadFileWithRuleName(
+                    SecurityUtils.getUserId(),
+                    articleCover,
+                    MediaUploadRuleEnum.ARTICLE_COVER.name()
+            );
+            if (result.getCode().equals(ReturnCodeEnum.SUCCESS.getCode()) && result.getData() != null) {
+                String fileUrl = (String) result.getData().get("fileUrl");
+                if (MyStringUtils.isNotNull(fileUrl)) {
+                    return ResultData.success(fileUrl);
+                }
             }
-            if (MyStringUtils.isNotNull(articleCoverUrl))
-                return ResultData.success(articleCoverUrl);
-            else
-                return ResultData.failure("上传格式错误");
+            return ResultData.failure("上传失败");
         } catch (Exception e) {
             log.error("文章封面上传失败", e);
             return ResultData.failure("文章封面上传失败");
@@ -259,28 +261,55 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public ResultData<Void> deleteArticleCover(String articleCoverUrl) {
         try {
-            // 提取图片名称
-            String articleCoverName = articleCoverUrl.substring(articleCoverUrl.indexOf(bucketName) + bucketName.length());
-            fileUploadUtils.deleteFiles(List.of(articleCoverName));
-            return ResultData.success();
+            String objectName = extractObjectName(articleCoverUrl);
+            ResultData<Void> result = mediaClient.deleteFile(SecurityUtils.getUserId(), objectName);
+            if (result.getCode().equals(ReturnCodeEnum.SUCCESS.getCode())) {
+                return ResultData.success();
+            }
+            return ResultData.failure(result.getMsg());
         } catch (Exception e) {
             log.error("删除文章封面失败", e);
-            return ResultData.failure();
+            return ResultData.failure("删除文章封面失败");
         }
+    }
+
+    /**
+     * 从文件URL中提取objectName
+     *
+     * @param fileUrl 文件URL
+     * @return objectName
+     */
+    private String extractObjectName(String fileUrl) {
+        if (MyStringUtils.isNull(fileUrl)) {
+            return "";
+        }
+        int bucketIndex = fileUrl.indexOf(bucketName);
+        if (bucketIndex != -1) {
+            String pathAfterBucket = fileUrl.substring(bucketIndex + bucketName.length());
+            return pathAfterBucket.startsWith("/") ? pathAfterBucket.substring(1) : pathAfterBucket;
+        }
+        return fileUrl;
     }
 
     @Override
     public ResultData<String> uploadArticleImage(MultipartFile articleImage) {
         try {
-            String url = fileUploadUtils.uploadImage(UploadEnum.ARTICLE_IMAGE, articleImage);
-            if (MyStringUtils.isNotNull(url))
-                return ResultData.success(url);
-            else
-                return ResultData.failure("上传格式错误");
+            ResultData<Map<String, Object>> result = mediaClient.uploadFileWithRuleName(
+                    SecurityUtils.getUserId(),
+                    articleImage,
+                    MediaUploadRuleEnum.ARTICLE_IMAGE.name()
+            );
+            if (result.getCode().equals(ReturnCodeEnum.SUCCESS.getCode()) && result.getData() != null) {
+                String fileUrl = (String) result.getData().get("fileUrl");
+                if (MyStringUtils.isNotNull(fileUrl)) {
+                    return ResultData.success(fileUrl);
+                }
+            }
+            return ResultData.failure(result.getMsg());
         } catch (Exception e) {
             log.error("文章图片上传失败", e);
+            return ResultData.failure("文章图片上传失败");
         }
-        return null;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.overthinker.cloud.api.apis.media.dto;
+package com.overthinker.cloud.api.apis.media.DTO;
 
 import lombok.Data;
 

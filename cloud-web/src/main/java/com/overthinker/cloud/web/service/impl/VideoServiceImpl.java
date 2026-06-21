@@ -1,12 +1,14 @@
 package com.overthinker.cloud.web.service.impl;
 
-
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.overthinker.cloud.api.apis.auth.api.UserClient;
+import com.overthinker.cloud.api.apis.media.ENUM.MediaUploadRuleEnum;
+import com.overthinker.cloud.api.apis.media.api.MediaClient;
 import com.overthinker.cloud.common.core.resp.ResultData;
+import com.overthinker.cloud.common.core.resp.ReturnCodeEnum;
 import com.overthinker.cloud.web.entity.DTO.SearchVideoDTO;
 import com.overthinker.cloud.web.entity.DTO.VideoInfoTDO;
 import com.overthinker.cloud.web.entity.PO.Tag;
@@ -14,19 +16,18 @@ import com.overthinker.cloud.web.entity.PO.Video;
 import com.overthinker.cloud.web.entity.PO.VideoTag;
 import com.overthinker.cloud.web.entity.VO.VideoInfoVO;
 import com.overthinker.cloud.system.starter.redis.constants.RedisConstants;
-import com.overthinker.cloud.web.entity.enums.UploadEnum;
 import com.overthinker.cloud.web.mapper.*;
 import com.overthinker.cloud.web.service.VideoService;
 import com.overthinker.cloud.web.service.VideoTagService;
 import com.overthinker.cloud.system.starter.redis.utils.MyRedisCache;
 import com.overthinker.cloud.system.starter.auth.utils.SecurityUtils;
 import com.overthinker.cloud.common.core.utils.MyStringUtils;
-import com.overthinker.cloud.web.utils.VideoUploadUtils;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -35,9 +36,9 @@ import java.util.Map;
 @Slf4j
 @Service("videoService")
 @RequiredArgsConstructor
+@Validated
 public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements VideoService {
 
-    private final VideoUploadUtils videoUploadUtils;
     private final MyRedisCache myRedisCache;
     private final VideoMapper videoMapper;
     private final CategoryMapper categoryMapper;
@@ -45,19 +46,30 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
     private final VideoTagMapper videoTagMapper;
     private final TagMapper tagMapper;
     private final VideoTagService videoTagService;
-
-    private final UploadEnum videoUploadEnum = UploadEnum.VIDEO_PATH;
-    private final UploadEnum videoCoverUploadEnum = UploadEnum.VEDIO_COVER;
+    private final MediaClient mediaClient;
 
     @Override
     public Map<String, Object> uploadVideo(MultipartFile videoFile) {
+        try {
+            ResultData<Map<String, Object>> result = mediaClient.uploadFileWithRuleName(
+                    SecurityUtils.getUserId(),
+                    videoFile,
+                    MediaUploadRuleEnum.VIDEO_PRIVATE.name()
+            );
 
-//        参数校验
-        videoUploadUtils.validateFile(videoUploadEnum, videoFile);
-        // 生成统一存储路径
-        String Path = videoUploadUtils.buildPath(videoUploadEnum, videoFile.getOriginalFilename());
-        String s = videoUploadUtils.uploadToMinio(Path, videoFile);
-        return Map.of("video", s, "videoSize", videoUploadUtils.convertVideoSize(videoFile.getSize()), "videoType", videoFile.getContentType());
+            if (result.getCode().equals(ReturnCodeEnum.SUCCESS.getCode()) && result.getData() != null) {
+                String videoUrl = (String) result.getData().get("fileUrl");
+                return Map.of(
+                        "video", videoUrl,
+                        "videoSize", videoFile.getSize() / 1024.0,
+                        "videoType", videoFile.getContentType()
+                );
+            }
+            return Map.of("error", "上传失败");
+        } catch (Exception e) {
+            log.error("视频上传失败", e);
+            return Map.of("error", "上传失败：" + e.getMessage());
+        }
     }
 
     @Override
@@ -68,9 +80,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
             video.setUserId(SecurityUtils.getUserId());
         }
         if (this.saveOrUpdate(video)) {
-            // 处理标签
             videoTagMapper.delete(new LambdaQueryWrapper<VideoTag>().eq(VideoTag::getVideoId, video.getId()));
-//            新增标签
             List<VideoTag> tags = videoInfoTDO.getTagId().stream().map(tagId -> new VideoTag().setVideoId(video.getId()).setTagId(tagId)).toList();
             videoTagService.saveBatch(tags);
             return ResultData.success();
@@ -78,13 +88,11 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         return ResultData.failure();
     }
 
-
     @Override
     public List<VideoInfoVO> getUserAndPublicVideoList(@NotNull Integer pageNum, @NotNull Integer pageSize) {
         LambdaQueryWrapper<Video> queryWrapper = new LambdaQueryWrapper<>();
         if (SecurityUtils.isAuthenticated()) {
             Long userId = SecurityUtils.getUserId();
-            // 组合条件：公开视频 或 (私有视频 且 属于当前用户)
             queryWrapper
                     .eq(Video::getPermission, false)
                     .or(w -> w
@@ -93,7 +101,6 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
                             .orderByDesc(Video::getCreateTime)
                     );
         } else {
-            // 未登录用户只能查看公开视频
             queryWrapper.eq(Video::getPermission, false);
         }
         List<Video> videos = videoMapper.selectList(queryWrapper);
@@ -113,20 +120,15 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         return null;
     }
 
-
     @Transactional
     @Override
     public ResultData<Void> deleteVideo(List<Long> ids) {
-        // 删除视频
-        // 创建更新条件
         LambdaUpdateWrapper<Video> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.set(Video::isDeleted, true)
                 .in(Video::getId, ids);
 
-        // 执行更新操作
         boolean result = this.update(updateWrapper);
         if (result) {
-            // 删除标签关系
             videoTagMapper.delete(new LambdaQueryWrapper<VideoTag>().in(VideoTag::getVideoId, ids));
             return ResultData.success();
         }
@@ -138,12 +140,23 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         return "";
     }
 
-
     @Override
     public String uploadVideoCover(MultipartFile videoCover) {
-        videoUploadUtils.validateFile(videoCoverUploadEnum, videoCover);
-        String Path = videoUploadUtils.buildPath(videoCoverUploadEnum, videoCover.getOriginalFilename());
-        return videoUploadUtils.uploadToMinio(Path, videoCover);
+        try {
+            ResultData<Map<String, Object>> result = mediaClient.uploadFileWithRuleName(
+                    SecurityUtils.getUserId(),
+                    videoCover,
+                    MediaUploadRuleEnum.VIDEO_COVER.name()
+            );
+
+            if (result.getCode().equals(ReturnCodeEnum.SUCCESS.getCode()) && result.getData() != null) {
+                return (String) result.getData().get("fileUrl");
+            }
+            return null;
+        } catch (Exception e) {
+            log.error("视频封面上传失败", e);
+            return null;
+        }
     }
 
     @Override
@@ -195,12 +208,10 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
 
     @Override
     public Void updateVideoPermission(Long videoId, boolean permission) {
-        // 构建更新条件
         LambdaUpdateWrapper<Video> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(Video::getId, videoId)
                 .set(Video::getPermission, permission);
 
-        // 执行更新
         boolean success = this.update(updateWrapper);
 
         if (!success) {
@@ -209,20 +220,14 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
         return null;
     }
 
-
     @Override
     public String publishVideo(Long videoId) {
-        // 根据videoId获取视频
         Video video = this.getById(videoId);
         if (video == null) {
             return "视频不存在";
         }
-        // 取反status状态
         video.setStatus(!video.getStatus());
-        // 更新数据库
         boolean result = this.updateById(video);
         return result ? "操作成功" : "操作失败";
     }
-
-
 }

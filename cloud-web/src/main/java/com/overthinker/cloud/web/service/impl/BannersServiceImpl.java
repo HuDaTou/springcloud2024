@@ -3,22 +3,25 @@ package com.overthinker.cloud.web.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.overthinker.cloud.common.core.exception.FileUploadException;
+import com.overthinker.cloud.api.apis.media.ENUM.MediaUploadRuleEnum;
+import com.overthinker.cloud.api.apis.media.api.MediaClient;
 import com.overthinker.cloud.common.core.resp.ResultData;
+import com.overthinker.cloud.common.core.resp.ReturnCodeEnum;
 import com.overthinker.cloud.web.entity.PO.Banners;
 import com.overthinker.cloud.web.entity.constants.RespConst;
 import com.overthinker.cloud.web.entity.constants.SQLConst;
-import com.overthinker.cloud.web.entity.enums.UploadEnum;
 import com.overthinker.cloud.web.mapper.BannersMapper;
 import com.overthinker.cloud.web.service.BannersService;
-import com.overthinker.cloud.web.utils.FileUploadUtils;
 import com.overthinker.cloud.system.starter.auth.utils.SecurityUtils;
+import com.overthinker.cloud.common.core.utils.MyStringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * (Banners)表服务实现类
@@ -32,7 +35,10 @@ import java.util.List;
 public class BannersServiceImpl extends ServiceImpl<BannersMapper, Banners> implements BannersService {
 
     private final BannersMapper bannersMapper;
-    private final FileUploadUtils fileUploadUtils;
+    private final MediaClient mediaClient;
+
+    @Value("${minio.bucketName}")
+    private String bucketName;
 
     @Override
     public List<String> getBanners() {
@@ -53,25 +59,32 @@ public class BannersServiceImpl extends ServiceImpl<BannersMapper, Banners> impl
     @Override
     public ResultData<Banners> uploadBannerImage(MultipartFile bannerImage) {
         try {
-            String bannerUrl;
-            try {
-                // 是否到达Banner数量上限
-                if (bannersMapper.selectCount(null) >= SQLConst.BANNER_MAX_COUNT) {
-                    return ResultData.failure(RespConst.BANNER_MAX_COUNT_MSG);
-                }
-                bannerUrl = fileUploadUtils.uploadImage(UploadEnum.UI_BANNERS, bannerImage);
-                Banners banner = new Banners().setSize(bannerImage.getSize())
-                        .setType(bannerImage.getContentType())
-                        .setUserId(SecurityUtils.getUserId())
-                        .setSortOrder((int) (bannersMapper.selectCount(null) + 1))
-                        .setPath(bannerUrl);
-                bannersMapper.insert(banner);
-                return ResultData.success(banner);
-            } catch (FileUploadException e) {
-                return ResultData.failure(e.getMessage());
+            // 是否到达Banner数量上限
+            if (bannersMapper.selectCount(null) >= SQLConst.BANNER_MAX_COUNT) {
+                return ResultData.failure(RespConst.BANNER_MAX_COUNT_MSG);
             }
+
+            ResultData<Map<String, Object>> result = mediaClient.uploadFileWithRuleName(
+                    SecurityUtils.getUserId(),
+                    bannerImage,
+                    MediaUploadRuleEnum.UI_BANNERS.name()
+            );
+
+            if (result.getCode().equals(ReturnCodeEnum.SUCCESS.getCode()) && result.getData() != null) {
+                String bannerUrl = (String) result.getData().get("fileUrl");
+                if (MyStringUtils.isNotNull(bannerUrl)) {
+                    Banners banner = new Banners().setSize(bannerImage.getSize())
+                            .setType(bannerImage.getContentType())
+                            .setUserId(SecurityUtils.getUserId())
+                            .setSortOrder((int) (bannersMapper.selectCount(null) + 1))
+                            .setPath(bannerUrl);
+                    bannersMapper.insert(banner);
+                    return ResultData.success(banner);
+                }
+            }
+            return ResultData.failure("上传失败");
         } catch (Exception e) {
-            log.error(UploadEnum.UI_BANNERS.getDescription() + "上传失败", e);
+            log.error(MediaUploadRuleEnum.UI_BANNERS.getDescription() + "上传失败", e);
             return ResultData.failure();
         }
     }
@@ -80,19 +93,19 @@ public class BannersServiceImpl extends ServiceImpl<BannersMapper, Banners> impl
     public ResultData<String> removeBannerById(Long id) {
         Banners banner = bannersMapper.selectById(id);
         if (this.removeById(id)) {
-            // minio是否存在
-            if (fileUploadUtils.isFileExist(UploadEnum.UI_BANNERS.getDir(), fileUploadUtils.getFileName(banner.getPath()))) {
-                fileUploadUtils.deleteFile(UploadEnum.UI_BANNERS.getDir(), fileUploadUtils.getFileName(banner.getPath()));
+            String objectName = extractObjectName(banner.getPath());
+            ResultData<Void> result = mediaClient.deleteFile(SecurityUtils.getUserId(), objectName);
+            if (result.getCode().equals(ReturnCodeEnum.SUCCESS.getCode())) {
+                return ResultData.success("删除成功");
             }
-        } else return ResultData.failure("删除失败");
-        return ResultData.success("删除成功");
+            return ResultData.failure("删除失败：" + result.getMsg());
+        }
+        return ResultData.failure("删除失败");
     }
 
     @Override
     public ResultData<String> updateSortOrder(List<Banners> banners) {
-        // 删除全部
         bannersMapper.delete(Wrappers.emptyWrapper());
-        //  重新排序
         for (int i = 0; i < banners.size(); i++) {
             banners.get(i).setSortOrder(i + 1);
             bannersMapper.insert(banners.get(i));
@@ -100,4 +113,15 @@ public class BannersServiceImpl extends ServiceImpl<BannersMapper, Banners> impl
         return ResultData.success();
     }
 
+    private String extractObjectName(String fileUrl) {
+        if (MyStringUtils.isNull(fileUrl)) {
+            return "";
+        }
+        int bucketIndex = fileUrl.indexOf(bucketName);
+        if (bucketIndex != -1) {
+            String pathAfterBucket = fileUrl.substring(bucketIndex + bucketName.length());
+            return pathAfterBucket.startsWith("/") ? pathAfterBucket.substring(1) : pathAfterBucket;
+        }
+        return fileUrl;
+    }
 }

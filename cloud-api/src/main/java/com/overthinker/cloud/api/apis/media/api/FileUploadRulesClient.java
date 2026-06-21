@@ -1,6 +1,6 @@
 package com.overthinker.cloud.api.apis.media.api;
 
-import com.overthinker.cloud.api.apis.media.dto.FileUploadRulesRequest;
+import com.overthinker.cloud.api.apis.media.DTO.FileUploadRulesRequest;
 import com.overthinker.cloud.api.config.FeignClientCredentialsConfig;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import org.springframework.cloud.openfeign.FeignClient;

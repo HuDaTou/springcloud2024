@@ -1,7 +1,7 @@
 package com.overthinker.cloud.api.apis.media.api;
 
-import com.overthinker.cloud.api.apis.media.dto.InitiateMultipartUploadRequest;
-import com.overthinker.cloud.api.apis.media.dto.PresignedUploadRequest;
+import com.overthinker.cloud.api.apis.media.DTO.InitiateMultipartUploadRequest;
+import com.overthinker.cloud.api.apis.media.DTO.PresignedUploadRequest;
 import com.overthinker.cloud.api.config.FeignClientCredentialsConfig;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -28,7 +28,7 @@ public interface MediaClient {
      * @param request 初始化上传参数
      * @return 包含 uploadId、objectName 和预签名URL映射的结果
      */
-    @PostMapping("/api/media/initiate")
+    @PostMapping("/media/initiate")
     ResultData<Map<String, Object>> initiateMultipartUpload(
             @RequestHeader("X-User-Id") Long userId,
             @RequestBody InitiateMultipartUploadRequest request);
@@ -39,8 +39,8 @@ public interface MediaClient {
      * @param uploadId 初始化时获取的上传ID
      * @return 操作结果
      */
-    @PostMapping("/api/media/complete")
-    ResultData<Void> completeMultipartUpload(@RequestParam("uploadId") String uploadId);
+    @PostMapping("/media/complete")
+    ResultData<Long> completeMultipartUpload(@RequestParam("uploadId") String uploadId);
 
     /**
      * 获取普通上传预签名URL
@@ -49,7 +49,7 @@ public interface MediaClient {
      * @param request 上传参数
      * @return 包含 objectName、assetId 和 presignedUrl 的结果
      */
-    @PostMapping("/api/media/presign")
+    @PostMapping("/media/presign")
     ResultData<Map<String, Object>> getPresignedUploadUrl(
             @RequestHeader("X-User-Id") Long userId,
             @RequestBody PresignedUploadRequest request);
@@ -60,29 +60,8 @@ public interface MediaClient {
      * @param objectName 文件对象名
      * @return 操作结果
      */
-    @PostMapping("/api/media/presign/complete")
-    ResultData<Void> completeUpload(@RequestParam("objectName") String objectName);
-
-    /**
-     * 分页列出媒体文件
-     *
-     * @param pageNo   页码
-     * @param pageSize 每页数量
-     * @return 媒体资产分页列表
-     */
-    @GetMapping("/api/media/list")
-    ResultData<Map<String, Object>> listFiles(
-            @RequestParam(value = "pageNo", defaultValue = "1") Long pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "10") Long pageSize);
-
-    /**
-     * 获取媒体资产详情
-     *
-     * @param id 媒体资产ID
-     * @return 媒体资产详情
-     */
-    @GetMapping("/api/media/{id}")
-    ResultData<Map<String, Object>> getAssetDetail(@PathVariable("id") Long id);
+    @PostMapping("/media/presign/complete")
+    ResultData<Long> completeUpload(@RequestParam("objectName") String objectName);
 
     /**
      * 删除文件
@@ -91,7 +70,7 @@ public interface MediaClient {
      * @param objectName 文件对象名
      * @return 操作结果
      */
-    @DeleteMapping("/api/media/delete/{objectName}")
+    @DeleteMapping("/media/delete/{objectName}")
     ResultData<Void> deleteFile(
             @RequestHeader("X-User-Id") Long userId,
             @PathVariable("objectName") String objectName);
@@ -102,7 +81,7 @@ public interface MediaClient {
      * @param objectName 文件对象名
      * @return 文件浏览URL
      */
-    @GetMapping("/api/media/url/{objectName}")
+    @GetMapping("/media/url/{objectName}")
     ResultData<String> getFileUrl(@PathVariable("objectName") String objectName);
 
     /**
@@ -111,6 +90,23 @@ public interface MediaClient {
      * @param objectName 文件对象名
      * @return 文件下载URL
      */
-    @GetMapping("/api/media/download/{objectName}")
+    @GetMapping("/media/download/{objectName}")
     ResultData<String> getDownloadUrl(@PathVariable("objectName") String objectName);
+
+    /**
+     * 直接上传文件（使用枚举规则）
+     * <p>
+     * 根据预定义的上传规则枚举直接上传文件到服务器，无需获取预签名URL
+     * </p>
+     *
+     * @param userId     上传用户ID
+     * @param file       上传的文件
+     * @param ruleName   上传规则名称（枚举值）
+     * @return 包含 assetId、objectName、fileUrl 等信息的Map
+     */
+    @PostMapping(value = "/media/upload/rule", consumes = "multipart/form-data")
+    ResultData<Map<String, Object>> uploadFileWithRuleName(
+            @RequestHeader("X-User-Id") Long userId,
+            @RequestPart("file") org.springframework.web.multipart.MultipartFile file,
+            @RequestParam("ruleName") String ruleName);
 }
