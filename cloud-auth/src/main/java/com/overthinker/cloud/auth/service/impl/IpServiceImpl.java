@@ -16,6 +16,8 @@ import com.overthinker.cloud.auth.service.IpService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -31,9 +33,10 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Service
-@RequiredArgsConstructor // 核心：为 final 字段生成构造器
-public class IpServiceImpl implements IpService, DisposableBean {
+@RequiredArgsConstructor
+@Order(Ordered.HIGHEST_PRECEDENCE)
 
+public class IpServiceImpl implements IpService, DisposableBean {
     /**
      * 静态常量：未捕获异常处理器 (保持原样，它是类级别的)
      */
@@ -61,7 +64,7 @@ public class IpServiceImpl implements IpService, DisposableBean {
      */
     private final UserMapper userMapper;
 
- /**
+    /**
      * 异步刷新ip详情获取
      *
      * @param bid 黑名单id

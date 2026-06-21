@@ -1,3 +1,4 @@
+com.overthinker.cloud.system.starter.auth.config.InternalServiceAuthAutoConfiguration
 com.overthinker.cloud.system.starter.auth.config.PermissionAutoConfiguration
 com.overthinker.cloud.system.starter.auth.config.ResourceServerConfig
 com.overthinker.cloud.system.starter.auth.config.JwtAuthenticationConverterConfig

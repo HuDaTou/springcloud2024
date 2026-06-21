@@ -2,19 +2,18 @@ package com.overthinker.cloud.api.apis.auth.api;
 
 import com.overthinker.cloud.api.apis.auth.dto.AddBlackListRequest;
 import com.overthinker.cloud.api.apis.auth.dto.BlackListCheckResponse;
-import com.overthinker.cloud.api.config.FeignClientCredentialsConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "cloud-auth", configuration = FeignClientCredentialsConfig.class)
+@FeignClient(name = "cloud-auth", contextId = "blackListClient")
 public interface BlackListClient {
 
     @GetMapping("/blackList/check")
-    BlackListCheckResponse checkBlacklist(@RequestParam String ip, @RequestParam(required = false) Long userId);
+    BlackListCheckResponse checkBlacklist(@RequestParam("ip") String ip, @RequestParam(value = "userId", required = false) Long userId);
 
     @PostMapping("/blackList/api-add")
     void addBlacklist(@RequestBody AddBlackListRequest request);
 
     @DeleteMapping("/blackList/expire")
-    void expireBlacklist(@RequestParam(required = false) String ip, @RequestParam(required = false) Long userId);
+    void expireBlacklist(@RequestParam(value = "ip", required = false) String ip, @RequestParam(value = "userId", required = false) Long userId);
 }

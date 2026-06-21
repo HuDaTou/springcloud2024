@@ -12,7 +12,6 @@ import com.overthinker.cloud.common.core.annotation.LogAnnotation;
 import com.overthinker.cloud.common.core.annotation.LogConst;
 import com.overthinker.cloud.common.core.base.BaseController;
 import com.overthinker.cloud.common.core.resp.ResultData;
-import com.overthinker.cloud.system.starter.redis.annotation.AccessLimit;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -83,7 +82,7 @@ public class BlackListController extends BaseController implements BlackListClie
     @Operation(summary = "检查黑名单", description = "检查指定 IP 或用户是否在黑名单中（内部服务调用）")
     @GetMapping("/check")
     public BlackListCheckResponse checkBlacklist(
-            @Parameter(description = "客户端 IP 地址") @RequestParam String ip,
+            @Parameter(description = "客户端 IP 地址") @RequestParam String ip, 
             @Parameter(description = "当前登录用户 ID") @RequestParam(required = false) Long userId) {
         return blackListService.checkBlacklist(ip, userId);
     }

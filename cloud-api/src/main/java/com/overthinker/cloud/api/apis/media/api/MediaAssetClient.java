@@ -1,7 +1,6 @@
 package com.overthinker.cloud.api.apis.media.api;
 
 import com.overthinker.cloud.api.apis.media.VO.MediaAssetVO;
-import com.overthinker.cloud.api.config.FeignClientCredentialsConfig;
 import com.overthinker.cloud.common.core.resp.ResultData;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +18,7 @@ import java.util.Map;
  * @author overthinker
  * @since 2025-08-02
  */
-@FeignClient(name = "cloud-media-asset-processing", configuration = FeignClientCredentialsConfig.class)
+@FeignClient(name = "cloud-media-asset-processing", contextId = "mediaAssetClient")
 public interface MediaAssetClient {
 
     /**
