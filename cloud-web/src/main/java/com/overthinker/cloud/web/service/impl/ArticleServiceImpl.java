@@ -25,7 +25,6 @@ import com.overthinker.cloud.common.core.utils.MyStringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -62,8 +61,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     private final ArticleTagService articleTagService;
 private final MediaClient mediaClient;
 
-    @Value("${minio.bucketName}")
-    private String bucketName;
+
 
     @Override
     public PageVO<List<ArticleVO>> listAllArticle(Integer pageNum, Integer pageSize) {
@@ -274,7 +272,7 @@ private final MediaClient mediaClient;
     }
 
     /**
-     * 从文件URL中提取objectName
+     * 从文件URL中提取objectName（通过解析URL路径，跳过bucket段）
      *
      * @param fileUrl 文件URL
      * @return objectName
@@ -283,10 +281,16 @@ private final MediaClient mediaClient;
         if (MyStringUtils.isNull(fileUrl)) {
             return "";
         }
-        int bucketIndex = fileUrl.indexOf(bucketName);
-        if (bucketIndex != -1) {
-            String pathAfterBucket = fileUrl.substring(bucketIndex + bucketName.length());
-            return pathAfterBucket.startsWith("/") ? pathAfterBucket.substring(1) : pathAfterBucket;
+        try {
+            java.net.URI uri = java.net.URI.create(fileUrl);
+            String path = uri.getPath();
+            if (path != null && path.startsWith("/")) {
+                int secondSlash = path.indexOf('/', 1);
+                if (secondSlash != -1) {
+                    return path.substring(secondSlash + 1);
+                }
+            }
+        } catch (Exception ignored) {
         }
         return fileUrl;
     }

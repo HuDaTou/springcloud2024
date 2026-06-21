@@ -19,7 +19,6 @@ import com.overthinker.cloud.system.starter.auth.utils.SecurityUtils;
 import com.overthinker.cloud.common.core.utils.MyStringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,9 +36,6 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
 
     private final PhotoMapper photoMapper;
     private final MediaClient mediaClient;
-
-    @Value("${minio.bucketName}")
-    private String bucketName;
 
     @Override
     public PageVO<List<PhotoAndAlbumListVO>> getBackPhotoList(Long pageNum, Long pageSize, Long parentId) {
@@ -170,10 +166,16 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo> implements
         if (MyStringUtils.isNull(fileUrl)) {
             return "";
         }
-        int bucketIndex = fileUrl.indexOf(bucketName);
-        if (bucketIndex != -1) {
-            String pathAfterBucket = fileUrl.substring(bucketIndex + bucketName.length());
-            return pathAfterBucket.startsWith("/") ? pathAfterBucket.substring(1) : pathAfterBucket;
+        try {
+            java.net.URI uri = java.net.URI.create(fileUrl);
+            String path = uri.getPath();
+            if (path != null && path.startsWith("/")) {
+                int secondSlash = path.indexOf('/', 1);
+                if (secondSlash != -1) {
+                    return path.substring(secondSlash + 1);
+                }
+            }
+        } catch (Exception ignored) {
         }
         return fileUrl;
     }

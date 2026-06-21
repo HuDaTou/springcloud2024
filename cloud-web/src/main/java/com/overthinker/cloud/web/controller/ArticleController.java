@@ -38,7 +38,6 @@ import java.util.List;
 @Tag(name = "文章相关接口")
 @RequestMapping("/article")
 @Validated
-
 @RequiredArgsConstructor
 public class ArticleController extends BaseController {
 

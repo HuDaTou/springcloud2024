@@ -16,7 +16,6 @@ import com.overthinker.cloud.system.starter.auth.utils.SecurityUtils;
 import com.overthinker.cloud.common.core.utils.MyStringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,9 +35,6 @@ public class BannersServiceImpl extends ServiceImpl<BannersMapper, Banners> impl
 
     private final BannersMapper bannersMapper;
     private final MediaClient mediaClient;
-
-    @Value("${minio.bucketName}")
-    private String bucketName;
 
     @Override
     public List<String> getBanners() {
@@ -117,10 +113,16 @@ public class BannersServiceImpl extends ServiceImpl<BannersMapper, Banners> impl
         if (MyStringUtils.isNull(fileUrl)) {
             return "";
         }
-        int bucketIndex = fileUrl.indexOf(bucketName);
-        if (bucketIndex != -1) {
-            String pathAfterBucket = fileUrl.substring(bucketIndex + bucketName.length());
-            return pathAfterBucket.startsWith("/") ? pathAfterBucket.substring(1) : pathAfterBucket;
+        try {
+            java.net.URI uri = java.net.URI.create(fileUrl);
+            String path = uri.getPath();
+            if (path != null && path.startsWith("/")) {
+                int secondSlash = path.indexOf('/', 1);
+                if (secondSlash != -1) {
+                    return path.substring(secondSlash + 1);
+                }
+            }
+        } catch (Exception ignored) {
         }
         return fileUrl;
     }
