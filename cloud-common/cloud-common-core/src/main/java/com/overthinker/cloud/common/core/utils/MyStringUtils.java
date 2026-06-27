@@ -8,6 +8,7 @@ import org.springframework.util.AntPathMatcher;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -118,7 +119,7 @@ public class MyStringUtils {
      * @return 如果相等返回 true
      */
     public static boolean equals(String str1, String str2) {
-        return StringUtils.equals(str1, str2);
+        return Objects.equals(str1, str2);
     }
 
     /**
@@ -129,7 +130,13 @@ public class MyStringUtils {
      * @return 如果相等返回 true
      */
     public static boolean equalsIgnoreCase(String str1, String str2) {
-        return StringUtils.equalsIgnoreCase(str1, str2);
+        if (str1 == null && str2 == null) {
+            return true;
+        }
+        if (str1 == null || str2 == null) {
+            return false;
+        }
+        return str1.equalsIgnoreCase(str2);
     }
 
     /**
@@ -140,7 +147,10 @@ public class MyStringUtils {
      * @return 如果以指定前缀开始返回 true
      */
     public static boolean startsWith(String str, String prefix) {
-        return StringUtils.startsWith(str, prefix);
+        if (str == null || prefix == null) {
+            return false;
+        }
+        return str.startsWith(prefix);
     }
 
     /**
@@ -151,7 +161,10 @@ public class MyStringUtils {
      * @return 如果以指定后缀结束返回 true
      */
     public static boolean endsWith(String str, String suffix) {
-        return StringUtils.endsWith(str, suffix);
+        if (str == null || suffix == null) {
+            return false;
+        }
+        return str.endsWith(suffix);
     }
 
     /**
@@ -162,7 +175,10 @@ public class MyStringUtils {
      * @return 如果包含返回 true
      */
     public static boolean contains(String str, String searchStr) {
-        return StringUtils.contains(str, searchStr);
+        if (str == null || searchStr == null) {
+            return false;
+        }
+        return str.contains(searchStr);
     }
 
     /**
@@ -207,7 +223,10 @@ public class MyStringUtils {
      * @return 替换后的字符串
      */
     public static String replace(String str, String target, String replacement) {
-        return StringUtils.replace(str, target, replacement);
+        if (str == null || target == null || replacement == null) {
+            return str;
+        }
+        return str.replace(target, replacement);
     }
 
     /**
@@ -339,7 +358,10 @@ public class MyStringUtils {
      * @return 子串第一次出现的位置，未找到返回 -1
      */
     public static int indexOf(String str, String searchStr) {
-        return StringUtils.indexOf(str, searchStr);
+        if (str == null || searchStr == null) {
+            return -1;
+        }
+        return str.indexOf(searchStr);
     }
 
     /**
@@ -610,7 +632,7 @@ public class MyStringUtils {
      * @return 如果是 HTTP/HTTPS 链接返回 true
      */
     public static boolean ishttp(String link) {
-        return StringUtils.startsWithAny(link, HttpConst.HTTP, HttpConst.HTTPS);
+        return link != null && (link.startsWith(HttpConst.HTTP) || link.startsWith(HttpConst.HTTPS));
     }
 
     /**
