@@ -98,7 +98,7 @@ public class TreeHoleServiceImpl extends ServiceImpl<TreeHoleMapper, TreeHole> i
 
     @Override
     public ResultData<Void> deleteTreeHole(List<Long> ids) {
-        if (treeHoleMapper.deleteBatchIds(ids) > 0) {
+        if (treeHoleMapper.deleteByIds(ids) > 0) {
             return ResultData.success();
         }
         return ResultData.failure();

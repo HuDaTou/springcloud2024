@@ -113,7 +113,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
                 ResultData<String> usernameResult = userClient.getUsernameById(videoInfoVO.getUserId());
                 videoInfoVO.setUserName(usernameResult.getData() != null ? usernameResult.getData() : "");
                 List<Long> tagIds = videoTagMapper.selectList(new LambdaQueryWrapper<VideoTag>().eq(VideoTag::getVideoId, videoInfoVO.getId())).stream().map(VideoTag::getTagId).toList();
-                videoInfoVO.setTagsName(tagMapper.selectBatchIds(tagIds).stream().map(Tag::getTagName).toList());
+                videoInfoVO.setTagsName(tagMapper.selectByIds(tagIds).stream().map(Tag::getTagName).toList());
             });
             return videoInfoVOS;
         }
@@ -179,7 +179,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
                 ResultData<String> usernameResult = userClient.getUsernameById(videoInfoVO.getUserId());
                 videoInfoVO.setUserName(usernameResult.getData() != null ? usernameResult.getData() : "");
                 List<Long> tagIds = videoTagMapper.selectList(new LambdaQueryWrapper<VideoTag>().eq(VideoTag::getVideoId, videoInfoVO.getId())).stream().map(VideoTag::getTagId).toList();
-                videoInfoVO.setTagsName(tagMapper.selectBatchIds(tagIds).stream().map(Tag::getTagName).toList());
+                videoInfoVO.setTagsName(tagMapper.selectByIds(tagIds).stream().map(Tag::getTagName).toList());
             });
             return videoInfoVOS;
         }
@@ -199,7 +199,7 @@ public class VideoServiceImpl extends ServiceImpl<VideoMapper, Video> implements
                 ResultData<String> usernameResult = userClient.getUsernameById(videoInfoVO.getUserId());
                 videoInfoVO.setUserName(usernameResult.getData() != null ? usernameResult.getData() : "");
                 List<Long> tagIds = videoTagMapper.selectList(new LambdaQueryWrapper<VideoTag>().eq(VideoTag::getVideoId, videoInfoVO.getId())).stream().map(VideoTag::getTagId).toList();
-                videoInfoVO.setTagsName(tagMapper.selectBatchIds(tagIds).stream().map(Tag::getTagName).toList());
+                videoInfoVO.setTagsName(tagMapper.selectByIds(tagIds).stream().map(Tag::getTagName).toList());
             });
             return videoInfoVOS;
         }

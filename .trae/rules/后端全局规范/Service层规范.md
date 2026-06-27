@@ -265,7 +265,7 @@ return article.copyProperties(ArticleDetailVO.class, vo -> {
 });
 ```
 
-
+> **参考文档**：[实体转换规范.md](实体转换规范.md) - 详细的 DTO/PO/VO 转换标准
 
 ### 1. Service 层使用链式组装对象
 

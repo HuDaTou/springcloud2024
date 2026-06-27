@@ -140,7 +140,7 @@ public class LeaveWordServiceImpl extends ServiceImpl<LeaveWordMapper, LeaveWord
     @Transactional
     @Override
     public ResultData<Void> deleteLeaveWord(List<Long> ids) {
-        if (leaveWordMapper.deleteBatchIds(ids) > 0) {
+        if (leaveWordMapper.deleteByIds(ids) > 0) {
             // 删除点赞、收藏、评论
             likeMapper.delete(new LambdaQueryWrapper<Like>().eq(Like::getType, LikeEnum.LIKE_TYPE_LEAVE_WORD.getType()).and(a -> a.in(Like::getTypeId, ids)));
             favoriteMapper.delete(new LambdaQueryWrapper<Favorite>().eq(Favorite::getType, FavoriteEnum.FAVORITE_TYPE_LEAVE_WORD.getType()).and(a -> a.in(Favorite::getTypeId, ids)));

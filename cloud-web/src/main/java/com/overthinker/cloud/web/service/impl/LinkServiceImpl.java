@@ -139,7 +139,7 @@ public class LinkServiceImpl extends ServiceImpl<LinkMapper, Link> implements Li
 
     @Override
     public ResultData<Void> deleteLink(List<Long> ids) {
-        if (linkMapper.deleteBatchIds(ids) > 0) {
+        if (linkMapper.deleteByIds(ids) > 0) {
             return ResultData.success();
         }
         return ResultData.failure();

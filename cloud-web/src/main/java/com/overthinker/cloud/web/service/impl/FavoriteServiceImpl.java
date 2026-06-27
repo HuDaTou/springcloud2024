@@ -130,7 +130,7 @@ public class FavoriteServiceImpl extends ServiceImpl<FavoriteMapper, Favorite> i
 
     @Override
     public ResultData<Void> deleteFavorite(List<Long> ids) {
-        if (favoriteMapper.deleteBatchIds(ids) > 0) return ResultData.success();
+        if (favoriteMapper.deleteByIds(ids) > 0) return ResultData.success();
         return ResultData.failure();
     }
 }

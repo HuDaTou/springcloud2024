@@ -72,11 +72,11 @@ private final MediaClient mediaClient;
         List<Article> list = page.getRecords();
         // 文章分类
         // 1. 优化：使用 Map 存储分类和标签信息，避免 N+1 问题
-        Map<Long, String> categoryMap = categoryMapper.selectBatchIds(list.stream().map(Article::getCategoryId).toList())
+        Map<Long, String> categoryMap = categoryMapper.selectByIds(list.stream().map(Article::getCategoryId).toList())
                 .stream().collect(Collectors.toMap(Category::getId, Category::getCategoryName));
 
-        List<ArticleTag> articleTags = articleTagMapper.selectBatchIds(list.stream().map(Article::getId).toList());
-        Map<Long, String> tagMap = tagMapper.selectBatchIds(articleTags.stream().map(ArticleTag::getTagId).toList())
+        List<ArticleTag> articleTags = articleTagMapper.selectByIds(list.stream().map(Article::getId).toList());
+        Map<Long, String> tagMap = tagMapper.selectByIds(articleTags.stream().map(ArticleTag::getTagId).toList())
                 .stream().collect(Collectors.toMap(Tag::getId, Tag::getTagName));
 
         List<ArticleVO> articleVOS = list.stream().map(article -> {
@@ -146,7 +146,7 @@ private final MediaClient mediaClient;
         // 文章关系
         List<ArticleTag> articleTags = articleTagMapper.selectList(new LambdaQueryWrapper<ArticleTag>().eq(ArticleTag::getArticleId, article.getId()));
         // 标签
-        List<Tag> tags = tagMapper.selectBatchIds(articleTags.stream().map(ArticleTag::getTagId).toList());
+        List<Tag> tags = tagMapper.selectByIds(articleTags.stream().map(ArticleTag::getTagId).toList());
         // 当前文章的上一篇文章与下一篇文章,大于当前文章的最小文章与小于当前文章的最大文章
         LambdaQueryWrapper<Article> preAndNextWrapper = new LambdaQueryWrapper<>();
         preAndNextWrapper.lt(Article::getId, id);
@@ -195,13 +195,13 @@ private final MediaClient mediaClient;
             articles = articleMapper.selectList(new LambdaQueryWrapper<Article>().eq(Article::getCategoryId, typeId));
         else if (type == 2) {
             List<Long> articleIds = articleTagMapper.selectList(new LambdaQueryWrapper<ArticleTag>().eq(ArticleTag::getTagId, typeId)).stream().map(ArticleTag::getArticleId).toList();
-            if (!articleIds.isEmpty()) articles = articleMapper.selectBatchIds(articleIds);
+            if (!articleIds.isEmpty()) articles = articleMapper.selectByIds(articleIds);
             else articles = List.of();
         } else articles = List.of();
 
         if (Objects.isNull(articles) || articles.isEmpty()) return null;
-        List<ArticleTag> articleTags = articleTagMapper.selectBatchIds(articles.stream().map(Article::getId).toList());
-        List<Tag> tags = tagMapper.selectBatchIds(articleTags.stream().map(ArticleTag::getTagId).toList());
+        List<ArticleTag> articleTags = articleTagMapper.selectByIds(articles.stream().map(Article::getId).toList());
+        List<Tag> tags = tagMapper.selectByIds(articleTags.stream().map(ArticleTag::getTagId).toList());
 
         return articles.stream().map(article -> article.copyProperties(CategoryArticleVO.class, item -> {
             item.setCategoryId(articles.stream().filter(art -> Objects.equals(art.getId(), article.getId())).findFirst().orElseThrow().getCategoryId());
@@ -327,7 +327,7 @@ private final MediaClient mediaClient;
                 ResultData<String> usernameResult = userClient.getUsernameById(articleListVO.getUserId());
                 articleListVO.setUserName(usernameResult.getData() != null ? usernameResult.getData() : "");
                 List<Long> tagIds = articleTagMapper.selectList(new LambdaQueryWrapper<ArticleTag>().eq(ArticleTag::getArticleId, articleListVO.getId())).stream().map(ArticleTag::getTagId).toList();
-                articleListVO.setTagsName(tagMapper.selectBatchIds(tagIds).stream().map(Tag::getTagName).toList());
+                articleListVO.setTagsName(tagMapper.selectByIds(tagIds).stream().map(Tag::getTagName).toList());
             });
             return articleListVOS;
         }
@@ -348,7 +348,7 @@ private final MediaClient mediaClient;
                 ResultData<String> usernameResult = userClient.getUsernameById(articleListVO.getUserId());
                 articleListVO.setUserName(usernameResult.getData() != null ? usernameResult.getData() : "");
                 List<Long> tagIds = articleTagMapper.selectList(new LambdaQueryWrapper<ArticleTag>().eq(ArticleTag::getArticleId, articleListVO.getId())).stream().map(ArticleTag::getTagId).toList();
-                articleListVO.setTagsName(tagMapper.selectBatchIds(tagIds).stream().map(Tag::getTagName).toList());
+                articleListVO.setTagsName(tagMapper.selectByIds(tagIds).stream().map(Tag::getTagName).toList());
             });
             return articleListVOS;
         }
