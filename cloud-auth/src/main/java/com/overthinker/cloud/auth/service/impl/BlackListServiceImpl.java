@@ -183,7 +183,7 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
     @Transactional
     public ResultData<Void> deleteBlackList(List<Long> ids) {
         // 清除缓存
-        blackListMapper.selectBatchIds(ids).forEach(blackList -> {
+        blackListMapper.selectByIds(ids).forEach(blackList -> {
             if (BlackListConst.BLACK_LIST_TYPE_BOT.equals(blackList.getType())) {
                 // 清除缓存
                 myRedisCache.deleteCacheMapValue(BlackListConst.BLACK_LIST_IP_KEY, blackList.getIpInfo().getCreateIp());
@@ -203,8 +203,9 @@ public class BlackListServiceImpl extends ServiceImpl<BlackListMapper, BlackList
         Long timestampByUID = userId != null ? myRedisCache.getCacheMapValue(BlackListConst.BLACK_LIST_UID_KEY, userId.toString()) : null;
 
         if (timestampByIP != null || timestampByUID != null) {
-            Long timestamp = timestampByIP != null ? timestampByIP : timestampByUID;
-            if (System.currentTimeMillis() > timestamp.longValue()) {
+            // timestampByIP 或 timestampByUID 至少一个非 null（由外层 if 保证）
+            Long timestamp = java.util.Objects.requireNonNullElse(timestampByIP, timestampByUID);
+            if (System.currentTimeMillis() > timestamp) {
                 expireBlacklist(ip, userId);
                 return BlackListCheckResponse.builder().blocked(false).build();
             } else {

@@ -2,6 +2,7 @@ package com.overthinker.cloud.ai.enums;
 
 import lombok.Getter;
 import org.springframework.ai.model.ChatModelDescription;
+import org.springframework.lang.NonNull;
 
 /**
  * AI 模型枚举
@@ -155,6 +156,7 @@ public enum MyModel implements ChatModelDescription {
     }
 
     @Override
+    @NonNull
     public String getName() {
         return this.id;
     }

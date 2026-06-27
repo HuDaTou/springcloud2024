@@ -10,6 +10,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.StreamUtils;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -37,7 +38,7 @@ public class JsonUsernamePasswordAuthenticationFilter extends UsernamePasswordAu
                                                        HttpServletResponse response) throws AuthenticationException {
         try {
             String body = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
-            Map<String, Object> jsonMap = objectMapper.readValue(body, Map.class);
+            Map<String, Object> jsonMap = objectMapper.readValue(body, new TypeReference<Map<String, Object>>() {});
 
             String username = (String) jsonMap.get(getUsernameParameter());
             String password = (String) jsonMap.get(getPasswordParameter());

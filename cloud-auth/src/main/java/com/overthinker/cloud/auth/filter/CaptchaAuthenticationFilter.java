@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -27,9 +28,9 @@ public class CaptchaAuthenticationFilter extends OncePerRequestFilter {
     private static final String LOGIN_URL = "/auth/login";
     
     @Override
-    protected void doFilterInternal(HttpServletRequest request, 
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) 
+    protected void doFilterInternal(@NonNull HttpServletRequest request, 
+                                    @NonNull HttpServletResponse response,
+                                    @NonNull FilterChain filterChain) 
             throws ServletException, IOException {
         
         // 只处理登录请求

@@ -227,7 +227,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Transactional
     public ResultData<Void> deleteUser(List<Long> ids) {
         userRoleMapper.delete(new LambdaQueryWrapper<UserRole>().in(UserRole::getUserId, ids));
-        userMapper.deleteBatchIds(ids);
+        userMapper.deleteByIds(ids);
         return ResultData.success();
     }
 
@@ -317,7 +317,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return Collections.emptyList();
         }
         List<Long> permissionIds = rolePermissions.stream().map(RolePermission::getPermissionId).toList();
-        return sysPermissionMapper.selectBatchIds(permissionIds).stream().map(SysPermission::getPermissonCode).toList();
+        return sysPermissionMapper.selectByIds(permissionIds).stream().map(SysPermission::getPermissonCode).toList();
     }
 
     @Override
@@ -327,7 +327,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return Collections.emptyList();
         }
         List<Long> roleIds = userRoles.stream().map(UserRole::getRoleId).toList();
-        return roleMapper.selectBatchIds(roleIds).stream().map(SysRole::getRoleName).toList();
+        return roleMapper.selectByIds(roleIds).stream().map(SysRole::getRoleName).toList();
     }
 
     @Override
