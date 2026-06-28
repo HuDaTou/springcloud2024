@@ -19,7 +19,6 @@ import lombok.experimental.Accessors;
  * @author overH
  * @since 2023-10-15 02:29:14
  */
-@SuppressWarnings("serial")
 @Data
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor

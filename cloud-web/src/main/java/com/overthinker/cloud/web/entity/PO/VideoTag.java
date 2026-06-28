@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 
-@SuppressWarnings("serial")
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
