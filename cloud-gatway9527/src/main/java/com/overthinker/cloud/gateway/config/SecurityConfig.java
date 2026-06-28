@@ -24,7 +24,8 @@ public class SecurityConfig {
                 // 放行白名单路径 (如登录页、静态资源、认证服务的端点)
                 // 注意：/cloud-auth/** 需要放行，让用户能访问认证服务
                 .pathMatchers("/actuator/**",
-                        "/cloud-auth/**"  // 放行 cloud-auth 服务的所有端点
+                        "/cloud-auth/**",  // 放行 cloud-auth 服务的所有端点
+                        "/cloud-web/**"   // 放行 cloud-web 服务的所有端点
                                  ).permitAll()
                 // 其他所有请求都必须经过认证 (必须带有效Token)
                 .anyExchange().authenticated()

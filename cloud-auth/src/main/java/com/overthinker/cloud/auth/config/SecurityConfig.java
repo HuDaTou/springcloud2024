@@ -71,7 +71,7 @@ public class SecurityConfig {
                 .requestMatchers("/**").access(internalServiceBypassAuthorizationManager)
                 // 公开白名单
                 .requestMatchers("/actuator/**", "/css/**", "/js/**", "/favicon.ico", "/error").permitAll()
-                .requestMatchers("/auth/register", "/auth/send-code", "/auth/captcha", "/auth/login", "/auth/logout", "/Email/send-code").permitAll()
+                .requestMatchers("/auth/register", "/auth/captcha", "/auth/login", "/auth/logout", "/auth/reset-confirm", "/auth/reset-password", "/email/send-code").permitAll()
                 // 其余需认证
                 .anyRequest().authenticated()
             )

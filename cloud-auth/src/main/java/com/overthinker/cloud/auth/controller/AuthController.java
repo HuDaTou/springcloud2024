@@ -1,6 +1,8 @@
 package com.overthinker.cloud.auth.controller;
 
 import com.overthinker.cloud.auth.entity.DTO.UserRegisterDTO;
+import com.overthinker.cloud.auth.entity.DTO.UserResetConfirmDTO;
+import com.overthinker.cloud.auth.entity.DTO.UserResetPasswordDTO;
 import com.overthinker.cloud.auth.service.AuthService;
 import com.overthinker.cloud.auth.service.UserService;
 import com.overthinker.cloud.common.core.resp.ResultData;
@@ -49,5 +51,17 @@ public class AuthController {
     public ResultData<List<String>> getUserCodes(
             @Parameter(description = "用户ID", required = true) @RequestParam @NotNull Long userId) {
         return ResultData.success(userService.getUserAuthorities(userId));
+    }
+
+    @Operation(summary = "重置密码确认", description = "验证邮箱验证码，确认重置密码操作")
+    @PostMapping("/reset-confirm")
+    public ResultData<Void> resetConfirm(@RequestBody @Valid UserResetConfirmDTO dto) {
+        return authService.resetConfirm(dto);
+    }
+
+    @Operation(summary = "重置密码", description = "通过邮箱验证码重置用户密码")
+    @PostMapping("/reset-password")
+    public ResultData<Void> resetPassword(@RequestBody @Valid UserResetPasswordDTO dto) {
+        return authService.resetPassword(dto);
     }
 }
