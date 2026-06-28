@@ -18,7 +18,7 @@ let eventSource: EventSource
 
 const getSseData = () => {
   if (!!window.EventSource) {
-    eventSource = new EventSource('/api/sse/user/count')
+    eventSource = new EventSource('/api/cloud-web/sse/user/count')
   eventSource.onmessage = (event) => {
     console.log(event.lastEventId)
 

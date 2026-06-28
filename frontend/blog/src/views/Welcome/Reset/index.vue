@@ -18,7 +18,7 @@ const form = reactive({
 })
 
 // 验证重复密码
-const validatePassword = (rule, value, callback) => {
+const validatePassword = (_rule: any, value: any, callback: any) => {
   if (value === '') {
     callback(new Error('请再次输入密码'))
   } else if (value !== form.password) {
@@ -38,7 +38,7 @@ const rules = {
   ],
   email: [
     {required: true, message: '请输入邮件地址', trigger: 'blur'},
-    {type: 'email', message: '请输入合法的电子邮件地址', trigger: ['blur', 'change']}
+    {type: 'email' as const, message: '请输入合法的电子邮件地址', trigger: ['blur', 'change']}
   ],
   code: [
     {required: true, message: '请输入获取的验证码', trigger: 'blur'},
@@ -48,8 +48,8 @@ const rules = {
 function askCode() {
   if (isEmailValid) {
     coldTime.value = 60
-    sendEmail(form.email, "reset").then(res => {
-      if (res.code === 200) {
+    sendEmail(form.email, "reset").then((res: any) => {
+      if (res.code === '200') {
         ElMessage.success(`验证码已发送到邮箱：${form.email}，请注意查收`)
         setInterval(() => coldTime.value--, 1000)
       } else {
@@ -66,10 +66,10 @@ function askCode() {
 const isEmailValid = computed(() => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(form.email))
 
 function confirmReset() {
-  formRef.value.validate((valid) => {
+  formRef.value.validate((valid: boolean) => {
     if (valid) {
-      resetPasswordStepOne(form).then(res => {
-        if (res.code === 200) {
+      resetPasswordStepOne(form).then((res: any) => {
+        if (res.code === '200') {
           console.log(res)
           active.value++
         } else {
@@ -81,10 +81,10 @@ function confirmReset() {
 }
 
 function doReset() {
-  formRef.value.validate((valid) => {
+  formRef.value.validate((valid: boolean) => {
     if (valid) {
-      resetPasswordStepTwo(form).then(res => {
-        if (res.code === 200) {
+      resetPasswordStepTwo(form).then((res: any) => {
+        if (res.code === '200') {
           ElMessage.success('密码重置成功，请重新登录')
           router.push('/login')
         } else {

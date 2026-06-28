@@ -31,7 +31,7 @@ function updateUser() {
   baseFormRef.value.validate((isValid: boolean) => {
     if (isValid) {
       updateUserAccount(accountForm.value).then((resp: any) => {
-        if (resp.code == 200) {
+        if (resp.code === '200') {
           ElMessage.success('信息更新成功')
           userStore.getInfo()
         } else {
@@ -54,14 +54,14 @@ const submitUploadAntUpdate = () => {
 const env = import.meta.env;
 
 // 上传头像
-const uploadAvatar = env.MODE === 'development' ? '/api/user/auth/upload/avatar' : env.VITE_SERVE + '/api/user/auth/upload/avatar'
+const uploadAvatar = env.MODE === 'development' ? '/api/cloud-auth/user/auth/upload/avatar' : env.VITE_SERVE + '/api/cloud-auth/user/auth/upload/avatar'
 // token
 const token = localStorage.getItem('Token') || sessionStorage.getItem('Token') || ''
 
 const handleAvatarSuccess: UploadProps['onSuccess'] = (
     response
 ) => {
-  if (response.code !== 200) {
+  if (response.code !== '200') {
     ElMessage.error('头像上传失败！' + response.msg)
     return
   }
@@ -136,7 +136,7 @@ function updateEmailFunc(){
     return
   }
   updateEmail(emailForm).then((resp: any) => {
-    if(resp.code == 200){
+    if(resp.code === '200'){
       ElMessage.success('邮件地址更新成功')
       emailForm.code = ''
       userStore.getInfo()
@@ -161,7 +161,7 @@ function thirdPartyLoginEmail(){
       emailForm.password = '第三方登录'
       // 发送请求
       updateThirdEmail(emailForm).then((resp: any) => {
-        if(resp.code == 200){
+        if(resp.code === '200'){
           ElMessage.success('邮件地址更新成功')
           emailForm.code = ''
           userStore.getInfo()
@@ -188,7 +188,7 @@ function getEmailCode(){
   if(isEmailValid){
     coldTime.value = 60
     sendEmail(emailForm.email, 'resetEmail').then((resp: any) => {
-      if (resp.code == 200) {
+      if (resp.code === '200') {
         ElMessage.success(`验证码已发送到邮箱：${emailForm.email}，请注意查收`)
         const intervalId = setInterval(() => {
           if (coldTime.value === 0) {

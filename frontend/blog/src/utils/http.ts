@@ -10,7 +10,7 @@ import {REQUEST_LOADING_PATH} from "@/utils/enum.ts";
 
 // 创建axios实例
 const http: AxiosInstance = axios.create({
-    baseURL: import.meta.env.VITE_APP_BASE_API ?? '/', // api的base_url
+    baseURL: '/api', // api的base_url
     timeout: 60000, // 请求超时时间
     headers: {
         'Content-Type': 'application/json;charset=UTF-8'
@@ -71,10 +71,6 @@ http.interceptors.response.use(
                 NProgress.done();
             }
         } else NProgress.done();
-
-        if (response.data && typeof response.data.code === 'string') {
-            response.data.code = Number(response.data.code)
-        }
 
         if(response.data && response.data.code === 1012){
             ElNotification({

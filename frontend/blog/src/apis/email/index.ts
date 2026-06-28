@@ -7,7 +7,7 @@ import http from "@/utils/http.ts";
  */
 export function sendEmail(email: any, type: any) {
     return http({
-        url: '/cloud-auth/auth/send-code',
+        url: '/cloud-auth/email/send-code',
         data: {
             email: email,
             type: type

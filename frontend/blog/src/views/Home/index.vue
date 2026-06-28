@@ -2,7 +2,14 @@
 import Main from "@/views/Home/Main/index.vue";
 import Images from "@/views/Home/Images/index.vue";
 import Brand from "@/views/Home/Brand/index.vue";
+import http from "@/utils/http.ts";
 
+// 测试网关连通性
+http.get('/cloud-web/test').then(res => {
+  console.log('网关连通测试成功:', res);
+}).catch(err => {
+  console.error('网关连通测试失败:', err);
+});
 </script>
 <template>
   <div class="home_container">

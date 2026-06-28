@@ -3,7 +3,7 @@ import http from "@/utils/http.ts";
 // 收藏
 export const userFavorite = (type: number,typeId: string) => {
     return http.request({
-        url: '/favorite/auth/favorite',
+        url: '/cloud-web/favorite/auth/favorite',
         method: "post",
         params: {
             type,
@@ -15,7 +15,7 @@ export const userFavorite = (type: number,typeId: string) => {
 // 取消收藏
 export const cancelFavorite = (type: number,typeId: string) => {
     return http.request({
-        url: '/favorite/auth/favorite',
+        url: '/cloud-web/favorite/auth/favorite',
         method: "delete",
         params: {
             type,
@@ -27,7 +27,7 @@ export const cancelFavorite = (type: number,typeId: string) => {
 // 是否收藏
 export const isFavorite = (type: number,typeId: string) => {
     return http.request({
-        url: '/favorite/whether/favorite',
+        url: '/cloud-web/favorite/whether/favorite',
         method: "get",
         params: {
             type,

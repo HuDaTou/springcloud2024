@@ -2,7 +2,7 @@ import http from "@/utils/http.ts";
 // 点赞
 export const userLike = (type: number, typeId: string) => {
     return http.request({
-        url: '/like/auth/like',
+        url: '/cloud-web/like/auth/like',
         method: "post",
         params: {
             type,
@@ -14,7 +14,7 @@ export const userLike = (type: number, typeId: string) => {
 // 取消点赞文章
 export const cancelLike = (type: number, typeId: string) => {
     return http.request({
-        url: '/like/auth/like',
+        url: '/cloud-web/like/auth/like',
         method: "delete",
         params: {
             type,
@@ -26,7 +26,7 @@ export const cancelLike = (type: number, typeId: string) => {
 // 是否点赞
 export const isLike = (type: number, typeId?: string) => {
     return http.request({
-        url: '/like/whether/like',
+        url: '/cloud-web/like/whether/like',
         method: "get",
         params: {
             type,

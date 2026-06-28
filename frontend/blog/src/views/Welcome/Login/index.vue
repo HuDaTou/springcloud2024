@@ -38,7 +38,7 @@ function userLogin() {
         username: form.username,
         password: form.password
       }).then(res => {
-        if (res.code === 200) {
+        if (res.code === '200') {
           SET_TOKEN(res.data.accessToken, res.data.expire, form.remember)
           ElMessage.success('登录成功')
           router.push('/')
